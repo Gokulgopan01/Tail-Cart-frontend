@@ -476,7 +476,7 @@ def login():
     """Authenticate user via API"""
     email = email_entry.get()
     password = password_entry.get()
-    url = "http://192.168.3.48:8002/hybrid/api/v1/auth/signin"
+    url = "http://192.168.3.48:8000/hybrid/api/v1/auth/signin"
 
     payload = {"email": email, "password": password}
     try:
