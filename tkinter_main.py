@@ -1,36 +1,18 @@
-<<<<<<< HEAD
+
 import tkinter as tk
 from portal.Proteck import PortalLogin
 from tkinter_login import UserSelectionApp
 
-
 if __name__ == "__main__":
     # Initialize the Tkinter root window
     root = tk.Tk()
-    client_data = {}  # Your client data should be initialized here
+    #client_data = {}  # Initialize client data
+
     # Create the PortalLogin instance
-    portal_login = PortalLogin(client_data)
+    #portal_login = PortalLogin(client_data)
 
     # Create the UI for client login
-    ui = UserSelectionApp(root, portal_login)
+    ui = UserSelectionApp(root) 
 
     # Run the Tkinter mainloop
-=======
-import tkinter as tk
-from portal.Proteck import PortalLogin
-from tkinter_login import UserSelectionApp
-
-
-if __name__ == "__main__":
-    # Initialize the Tkinter root window
-    root = tk.Tk()
-    client_data = {}  # Your client data should be initialized here
-    # Create the PortalLogin instance
-    portal_login = PortalLogin(client_data)
-
-    # Create the UI for client login
-    ui = UserSelectionApp(root, portal_login)
-
-    # Run the Tkinter mainloop
->>>>>>> 7198042edd4345e0b879117faa838dba10b28b93
     root.mainloop()
