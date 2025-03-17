@@ -9,6 +9,8 @@ import time
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 # from utility.helper import log_login_status,initialize_driver
 from selenium.webdriver.chrome.service import Service
+
+from utility.helper import handle_login_status
 class PortalLogin:
     def __init__(self, client_data):
         self.client_data = client_data
@@ -55,14 +57,9 @@ class PortalLogin:
             WebDriverWait(self.driver, 60).until(EC.title_contains("Partner Portal"))
 
             title = self.driver.title
-            if "Partner Portal" not in title:
-                #self.log_login_status(username, portal_name, "Login Failed", None, "Invalid credentials or login error")
-                logging.error("Login failed due to incorrect credentials or an error.")
-                messagebox.showerror("Login Failed", "Invalid credentials or login error.")
-            else:
-                #self.log_login_status(username, portal_name, "Login Successful", None)
-                logging.info(f"Successfully logged in to {portal_name}.")
-                messagebox.showinfo("Login Successful", f"Successfully logged in to {portal_name}.")
+            login_check_keyword="Partner Portal"
+
+            handle_login_status(title, username, login_check_keyword,portal_name)
 
             # # Maximize the window and set position
             # self.driver.set_window_position(0, 0)
@@ -74,6 +71,7 @@ class PortalLogin:
                 logging.error(f"Error during login to {portal_name}: {e}")
                 messagebox.showerror("Error", f"Login failed: {e}")
 
-        finally:
-            if self.driver:
-                self.driver.quit()
+        # finally:
+        #     pass
+        #     # if self.driver:
+        #     #     self.driver.quit()
