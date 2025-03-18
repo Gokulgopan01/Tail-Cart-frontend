@@ -33,25 +33,52 @@ class UserSelectionApp:
     def __init__(self, root):
         self.root = root
         self.root.title("ECESIS - Login")
-        self.root.geometry("500x600")
+        self.root.geometry("500x550")
         self.root.resizable(False, False)
 
-        # Generate gradient image if not exists
-        if not os.path.exists("gradient.png"):
-            self.create_gradient_image()
+        # Bring the window to the front
+        self.root.lift()
+        self.root.attributes('-topmost', True)
+        self.root.after(1000, lambda: self.root.attributes('-topmost', False))
 
-        # Apply background gradient
-        self.create_gradient_background()
+        # Apply background color
+        self.root.configure(bg="#F0F0F0")  # Light gray background
+
+        """Create a login UI with a dark blue, yellow, and white color scheme."""
+        self.login_frame = tk.Frame(self.root, bg="#F0F0F0")  # Light gray background
+        self.login_frame.pack(fill="both", expand=True)
+
+        # Now create the LabelFrame with the correct style
+        self.input_frame = ttk.LabelFrame(self.login_frame, padding=10, style="Custom.TLabelframe")
+        self.input_frame.pack(pady=10, padx=20, ipadx=10, fill="x")
 
         # Define styles
         self.style = ttk.Style()
-        self.style.configure("TFrame", background="#331A48")
-        self.style.configure("TLabel", background="#331A48", foreground="white",
-                           font=("Arial", 11))
-        self.style.configure("TButton", font=("Arial", 12, "bold"), padding=5, relief="flat")
-        self.style.configure("Title.TLabel", foreground="yellow", font=("Arial", 14, "bold"))
-        self.style.configure("Welcome.TLabel", foreground="green", font=("Arial", 14, "bold"))
 
+        # Set background color for frames
+        self.style.configure("TFrame", background="#F0F0F0")  # Light gray background
+
+        # Set global styles for labels
+        self.style.configure("TLabel", foreground="black", font=("Arial", 11))  # Black text
+
+        # Define styles for specific labels
+        self.style.configure("Title.TLabel", foreground="#4285F4", font=("Arial", 14, "bold"))  # Blue header
+        self.style.configure("Welcome.TLabel", foreground="black", font=("Arial", 14, "bold"))
+
+        # Define a style for LabelFrame (REMOVE BACKGROUND HERE)
+        self.style.configure("TLabelFrame", foreground="black", borderwidth=2, relief="solid")
+        self.style.configure("TLabelFrame.Label", foreground="#4285F4", font=("Arial", 12, "bold"))
+
+        # Define styles for buttons
+        self.style.configure("TButton", font=("Arial", 12, "bold"), padding=5, relief="flat", background="#1E90FF", foreground="white")  # Bright blue button
+
+        self.style.theme_use("clam")
+
+        # Define styles correctly
+        self.style.configure("Custom.TLabelframe", borderwidth=2, relief="solid")  # Removed background here
+        self.style.configure("Custom.TLabelframe.Label", foreground="#4285F4", font=("Arial", 12, "bold"))
+
+        # Initialize client data
         self.client_data = {}
         self.create_login_frame()
 
@@ -75,81 +102,194 @@ class UserSelectionApp:
         self.canvas.place(x=0, y=0, relwidth=1, relheight=1)
 
         # Load gradient image
-        self.gradient_bg = Image.open("gradient.png").resize((500, 600))
-        self.gradient_bg = ImageTk.PhotoImage(self.gradient_bg)
-        self.canvas.create_image(0, 0, anchor="nw", image=self.gradient_bg)
+        try:
+            self.gradient_bg = Image.open("gradient.png").resize((500, 600))
+            self.gradient_bg = ImageTk.PhotoImage(self.gradient_bg)
+            self.canvas.create_image(0, 0, anchor="nw", image=self.gradient_bg)
+        except FileNotFoundError:
+            print("Error: gradient.png not found.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     def create_login_frame(self):
-        """Create a modern login UI with rounded fields and gradient buttons."""
-        """Create a login frame that fills the entire window."""
-        self.login_frame = ttk.Frame(self.root, style="TFrame") # create frame
-        self.login_frame.place(relwidth=1, relheight=1) # fill the window
-        self.login_frame = tk.Frame(self.root, bg="#331A48")
-        self.login_frame.place(relx=0.5, rely=0.5, anchor="center")
+        ttk.Label(self.login_frame, text="ECESIS", font=("Arial", 14, "bold"), background="#F0F0F0").pack(pady=10)
+        ttk.Label(self.login_frame, text="HYBRID CLIENT LOGIN", font=("Arial", 16, "bold"), background="#F0F0F0").pack(pady=20)
+        ttk.Label(self.login_frame, text="Welcome back! Please login to your account to continue", font=("Arial", 10), background="#F0F0F0").pack(pady=5)
 
-        # Welcome text
-        ttk.Label(self.login_frame, text="Welcome back", font=("Arial", 18, "bold"),
-                  foreground="white", background="#331A48").pack(pady=5)
-        ttk.Label(self.login_frame, text="Please Enter your Account details", font=("Arial", 10),
-                  foreground="gray", background="#331A48").pack(pady=5)
+        self.input_frame = ttk.LabelFrame(self.login_frame, padding=10, style="Custom.TLabelframe")
+        self.input_frame.pack(pady=10, padx=20, ipadx=10, fill="x")
 
-        # Email Input
-        ttk.Label(self.login_frame, text="Email", font=("Arial", 10), foreground="white",
-                  background="#331A48").pack(anchor="w", padx=10)
-        self.email_entry = self.create_rounded_entry("Johndoe@gmail.com")
-        self.email_entry.pack(pady=5)
+        # Email Entry (No Label)
+        self.email_var = tk.StringVar()
+        self.email_entry = ttk.Entry(self.input_frame, font=("Arial", 11), textvariable=self.email_var, foreground="gray", background="white")
+        self.email_entry.pack(pady=10, padx=10, fill="x", ipady=5)
+        self.email_var.set("Enter your email")
 
-        # Password Input
-        ttk.Label(self.login_frame, text="Password", font=("Arial", 10), foreground="white",
-                  background="#331A48").pack(anchor="w", padx=10)
-        self.password_entry = self.create_rounded_entry("**********", show="*")
-        self.password_entry.pack(pady=5)
+        # Password Entry (No Label)
+        password_frame = tk.Frame(self.input_frame, bd=1, relief="solid", bg="white")
+        password_frame.pack(pady=10, padx=10, fill="x")
+
+        self.password_var = tk.StringVar()
+        self.password_entry = tk.Entry(password_frame, font=("Arial", 11), textvariable=self.password_var, foreground="gray", background="white", relief="flat", bd=0)
+        self.password_entry.pack(side="left", fill="x", expand=True, ipady=5, padx=(5, 0))
+        self.password_var.set("Enter your password")
+
+        # Toggle Button Inside the Password Box
+        self.show_password_btn = tk.Button(password_frame, text="👁", font=("Arial", 10), relief="flat", bd=0, cursor="hand2", bg="white", command=self.toggle_password)
+        self.show_password_btn.pack(side="right", padx=(0, 5))
 
         # Forgot Password
-        forgot_password_frame = tk.Frame(self.login_frame, bg="#331A48")
-        forgot_password_frame.pack(pady=10)
+        forgot_password_frame = tk.Frame(self.login_frame, bg="#F0F0F0")
+        forgot_password_frame.pack(pady=15)
         tk.Button(forgot_password_frame, text="Forgot Password", font=("Arial", 9, "bold"), fg="white",
-                  bg="#331A48", relief="flat", cursor="hand2", command=self.forgot_password).pack()
+                  bg="#1E90FF", relief="flat", cursor="hand2", command=self.forgot_password).pack(pady=5)
 
         # Login Button
-        self.sign_in_btn = tk.Button(self.login_frame, text="Login", font=("Arial", 12, "bold"),
-                                     fg="black", bg="#FF8C66", activebackground="#FF5733", bd=0,
-                                     relief="flat", height=2, width=15, command=self.login)
-        self.sign_in_btn.pack(pady=15)
+        self.sign_in_btn = tk.Button(self.login_frame, text="Login", font=("Arial", 14, "bold"),
+                                      fg="white", bg="#1E90FF", activebackground="#1E90FF", bd=0,
+                                      relief="flat", height=2, width=20, command=self.login)
+        self.sign_in_btn.pack(pady=30, ipadx=20)
 
-    def create_rounded_entry(self, placeholder, show=None):
-        """Create a rounded entry field with a placeholder and password toggle (no canvas)."""
+        # Center the elements
+        self.login_frame.pack_propagate(False)
+
+        # Bind focus events for placeholder behavior
+        self.email_entry.bind("<FocusIn>", lambda event: self.clear_placeholder(self.email_entry, "Enter your email"))
+        self.email_entry.bind("<FocusOut>", lambda event: self.restore_placeholder(self.email_entry, "Enter your email"))
+
+        self.password_entry.bind("<FocusIn>", lambda event: self.clear_placeholder(self.password_entry, "Enter your password", hide_text=True))
+        self.password_entry.bind("<FocusOut>", lambda event: self.restore_placeholder(self.password_entry, "Enter your password", hide_text=True))
+
+
+
+    def clear_placeholder(self, entry, placeholder, hide_text=False):
+        """Clears the placeholder text when the user clicks inside the field."""
+        if entry.get() == placeholder:
+            entry.delete(0, tk.END)
+            entry.config(foreground="black")
+            if hide_text:
+                entry.config(show="*")
+
+    def restore_placeholder(self, entry, placeholder, hide_text=False):
+        """Restores the placeholder if the field is left empty."""
+        if entry.get() == "":
+            entry.insert(0, placeholder)
+            entry.config(foreground="gray")
+            if hide_text:
+                entry.config(show="")
+
+
+    # def create_rounded_entry(self, placeholder, show=None):
+    #     """Create a rounded entry field with a placeholder and password toggle (no canvas)."""
+    #     entry_frame = ttk.Frame(self.login_frame, padding=(10, 5))
+    #     entry_frame.pack(fill="x")
+
+    #     # Rounded background for entry
+    #     rounded_bg = ttk.Frame(entry_frame, style="RoundedBg.TFrame")
+    #     rounded_bg.pack(fill="x")
+
+    #     # Entry Style
+    #     style = ttk.Style()
+    #     style.configure("RoundedEntry.TEntry", fieldbackground="#4A315F", foreground="black",
+    #                     insertcolor="white", borderwidth=0, padding=(5, 5)) # Set insertcolor here
+    #     style.map("RoundedEntry.TEntry",
+    #             fieldbackground=[("focus", "#664A7F"), ("!focus", "#4A315F")])
+
+    #     entry = ttk.Entry(rounded_bg, font=("Arial", 11), style="RoundedEntry.TEntry", show=show)
+    #     entry.pack(side="left", fill="x", expand=True, padx=(5,0)) # add padx to the entry
+
+    #     entry.insert(0, placeholder)
+
+    #     def clear_placeholder(event):
+    #         if entry.get() == placeholder:
+    #             entry.delete(0, tk.END)
+    #             entry.unbind("<FocusIn>", clear_placeholder_id) # unbind the event
+
+    #     clear_placeholder_id = entry.bind("<FocusIn>", clear_placeholder)
+
+    #     # Password Toggle Button (if show is '*')
+    #     if show == '*':
+    #         show_password_btn = ttk.Button(entry, text="👁", style="Toggle.TButton",
+    #                                         command=lambda: toggle())
+    #         show_password_btn.place(relx=1.0, rely=0.5, anchor="e", x=-5) # Place inside entry
+
+    #         def toggle():
+    #             """Toggle password visibility using closure."""
+    #             if entry.cget('show') == '*':
+    #                 entry.config(show='')
+    #                 show_password_btn.config(text='🙈')
+    #             else:
+    #                 entry.config(show='*')
+    #                 show_password_btn.config(text='👁')
+
+    #     entry.bind("<Button-1>", lambda event: entry.focus()) # Ensure focus
+    #     entry.focus() # Ensure focus
+
+    #     return entry
+
+    def toggle_password(self):
+        """Toggle password visibility."""
+        if self.password_entry.cget('show') == '*':
+            self.password_entry.config(show='')
+            self.show_password_btn.config(text='🙈')  # Change text to hide password
+        else:
+            self.password_entry.config(show='*')
+            self.show_password_btn.config(text='👁')  # Change text to show password
+    
+    def create_rounded_entry(self, placeholder, field_type="email", show=None):
+        """Create a rounded entry field with a placeholder and password toggle."""
         entry_frame = ttk.Frame(self.login_frame, padding=(10, 5))
-        entry_frame.pack(fill="x")
+        entry_frame.pack(fill="x")  # Use pack
 
         # Rounded background for entry
         rounded_bg = ttk.Frame(entry_frame, style="RoundedBg.TFrame")
-        rounded_bg.pack(fill="x")
+        rounded_bg.pack(fill="x")  # Use pack
 
         # Entry Style
         style = ttk.Style()
-        style.configure("RoundedEntry.TEntry", fieldbackground="#4A315F", foreground="black",
-                        insertcolor="white", borderwidth=0, padding=(5, 5)) # Set insertcolor here
+        if field_type == "email":
+            style.configure("RoundedEntry.TEntry", fieldbackground="#4A315F", foreground="white",
+                            insertcolor="white", borderwidth=1, relief="solid", padding=(5, 5))
+        elif field_type == "password":
+            style.configure("RoundedEntry.TEntry", fieldbackground="#5A416F", foreground="white",
+                            insertcolor="white", borderwidth=1, relief="solid", padding=(5, 5))  # Different background
+
         style.map("RoundedEntry.TEntry",
-                fieldbackground=[("focus", "#664A7F"), ("!focus", "#4A315F")])
+                  fieldbackground=[("focus", "#664A7F"), ("!focus", "#4A315F")],
+                  borderwidth=[("focus", 2), ("!focus", 1)],
+                  relief=[("focus", "solid"), ("!focus", "solid")],
+                  foreground=[("focus", "black"), ("!focus", "white")])
 
         entry = ttk.Entry(rounded_bg, font=("Arial", 11), style="RoundedEntry.TEntry", show=show)
-        entry.pack(side="left", fill="x", expand=True, padx=(5,0)) # add padx to the entry
+        entry.grid(row=0, column=0, sticky="ew") # Use grid inside rounded_bg
+        rounded_bg.columnconfigure(0, weight=1)
 
         entry.insert(0, placeholder)
 
         def clear_placeholder(event):
             if entry.get() == placeholder:
                 entry.delete(0, tk.END)
-                entry.unbind("<FocusIn>", clear_placeholder_id) # unbind the event
+                entry.unbind("<FocusIn>", clear_placeholder_id)
 
         clear_placeholder_id = entry.bind("<FocusIn>", clear_placeholder)
 
+        def remove_placeholder(event):
+            if entry.get() == placeholder:
+                entry.delete(0, tk.END)
+                entry.unbind("<Key>", remove_placeholder_id)
+
+        remove_placeholder_id = entry.bind("<Key>", remove_placeholder)
+
         # Password Toggle Button (if show is '*')
         if show == '*':
-            show_password_btn = ttk.Button(entry, text="👁", style="Toggle.TButton",
-                                            command=lambda: toggle())
-            show_password_btn.place(relx=1.0, rely=0.5, anchor="e", x=-5) # Place inside entry
+            # Style for the toggle button
+            style.configure("Toggle.TButton", font=("Arial", 8), padding=(2, 2),
+                            borderwidth=0, relief="flat", background="#5A416F", foreground="white") #background matching password box
+
+            show_password_btn = ttk.Button(rounded_bg, text="👁",
+                                          style="Toggle.TButton",
+                                          command=lambda: toggle())
+            show_password_btn.grid(row=0, column=1, padx=(1, 1), pady=(1, 1), sticky="e") # Use grid inside rounded_bg
 
             def toggle():
                 """Toggle password visibility using closure."""
@@ -160,8 +300,8 @@ class UserSelectionApp:
                     entry.config(show='*')
                     show_password_btn.config(text='👁')
 
-        entry.bind("<Button-1>", lambda event: entry.focus()) # Ensure focus
-        entry.focus() # Ensure focus
+        entry.bind("<Button-1>", lambda event: entry.focus())
+        entry.focus()
 
         return entry
 
@@ -200,46 +340,61 @@ class UserSelectionApp:
         """Shows the client selection UI after successful login."""
         if hasattr(self, "login_frame"):
             self.login_frame.destroy()
-        self.client_frame = ttk.Frame(self.root, style="TFrame")
-        self.client_frame.place(relx=0.5, rely=0.5, anchor="center")
-        self.inner_frame = ttk.Frame(self.client_frame, padding=20, style="TFrame")
-        self.inner_frame.grid(row=0, column=0)
 
-        ttk.Label(self.inner_frame, text=f"Welcome, {username}!", style="Welcome.TLabel").grid(row=0, column=0, columnspan=2, pady=(0, 15))
-        ttk.Label(self.inner_frame, text="Select Client Details", style="Title.TLabel").grid(row=1, column=0, columnspan=2, pady=(0, 15))
+        self.client_frame = ttk.Frame(self.root, style="TFrame")
+        self.client_frame.pack(fill="both", expand=True)
+
+        self.inner_frame = ttk.Frame(self.client_frame, padding=20, style="TFrame")
+        self.inner_frame.pack(pady=50, padx=50, expand=True)
+
+        ttk.Label(self.inner_frame, text=f"Welcome, {username}!", style="Welcome.TLabel").pack(pady=(0, 15))
+        ttk.Label(self.inner_frame, text="Select Client Details", style="Title.TLabel").pack(pady=(0, 25))
 
         label_font = ("Arial", 11)
         dropdown_width = 30
 
-        ttk.Label(self.inner_frame, text="Main Client:", font=label_font).grid(row=2, column=0, sticky="w", padx=10, pady=5)
+        # Main Client
+        main_client_frame = ttk.Frame(self.inner_frame, style="TFrame")
+        main_client_frame.pack(fill="x", pady=5)
+        ttk.Label(main_client_frame, text="Main Client:", font=label_font, width=12, anchor="w").pack(side="left", padx=(0, 10))
         self.main_client_var = tk.StringVar()
-        self.main_client_dropdown = ttk.Combobox(self.inner_frame, textvariable=self.main_client_var, width=dropdown_width)
-        self.main_client_dropdown.grid(row=2, column=1, padx=10, pady=5)
+        self.main_client_dropdown = ttk.Combobox(main_client_frame, textvariable=self.main_client_var, width=dropdown_width)
+        self.main_client_dropdown.pack(side="left", fill="x", expand=True)
         self.main_client_dropdown.bind("<<ComboboxSelected>>", self.on_main_client_select)
 
-        ttk.Label(self.inner_frame, text="Sub Client:", font=label_font).grid(row=3, column=0, sticky="w", padx=10, pady=5)
+        # Sub Client
+        sub_client_frame = ttk.Frame(self.inner_frame, style="TFrame")
+        sub_client_frame.pack(fill="x", pady=5)
+        ttk.Label(sub_client_frame, text="Sub Client:", font=label_font, width=12, anchor="w").pack(side="left", padx=(0, 10))
         self.sub_client_var = tk.StringVar()
-        self.sub_client_dropdown = ttk.Combobox(self.inner_frame, textvariable=self.sub_client_var, width=dropdown_width)
-        self.sub_client_dropdown.grid(row=3, column=1, padx=10, pady=5)
+        self.sub_client_dropdown = ttk.Combobox(sub_client_frame, textvariable=self.sub_client_var, width=dropdown_width)
+        self.sub_client_dropdown.pack(side="left", fill="x", expand=True)
         self.sub_client_dropdown.bind("<<ComboboxSelected>>", self.on_sub_client_select)
 
-        ttk.Label(self.inner_frame, text="Portal:", font=label_font).grid(row=4, column=0, sticky="w", padx=10, pady=5)
+        # Portal
+        portal_frame = ttk.Frame(self.inner_frame, style="TFrame")
+        portal_frame.pack(fill="x", pady=5)
+        ttk.Label(portal_frame, text="Portal:", font=label_font, width=12, anchor="w").pack(side="left", padx=(0, 10))
         self.portal_var = tk.StringVar()
-        self.portal_dropdown = ttk.Combobox(self.inner_frame, textvariable=self.portal_var, width=dropdown_width)
-        self.portal_dropdown.grid(row=4, column=1, padx=10, pady=5)
+        self.portal_dropdown = ttk.Combobox(portal_frame, textvariable=self.portal_var, width=dropdown_width)
+        self.portal_dropdown.pack(side="left", fill="x", expand=True)
         self.portal_dropdown.bind("<<ComboboxSelected>>", self.on_portal_select)
 
-        ttk.Label(self.inner_frame, text="Account:", font=label_font).grid(row=5, column=0, sticky="w", padx=10, pady=5)
+        # Account
+        account_frame = ttk.Frame(self.inner_frame, style="TFrame")
+        account_frame.pack(fill="x", pady=5)
+        ttk.Label(account_frame, text="Account:", font=label_font, width=12, anchor="w").pack(side="left", padx=(0, 10))
         self.account_var = tk.StringVar()
-        self.account_dropdown = ttk.Combobox(self.inner_frame, textvariable=self.account_var, width=dropdown_width)
-        self.account_dropdown.grid(row=5, column=1, padx=10, pady=5)
+        self.account_dropdown = ttk.Combobox(account_frame, textvariable=self.account_var, width=dropdown_width)
+        self.account_dropdown.pack(side="left", fill="x", expand=True)
         self.account_dropdown.bind("<<ComboboxSelected>>", self.on_account_select)
 
-        self.login_button = ttk.Button(self.inner_frame, text="Login to Portal", command=self.confirm_selection)
-        self.login_button.grid(row=6, column=0, columnspan=2, pady=15)
+        # Login to Portal Button (Blue)
+        self.login_button = ttk.Button(self.inner_frame, text="Login to Portal", command=self.confirm_selection, style="TButton")
+        self.login_button.pack(pady=20)
 
         self.logout_button = ttk.Button(self.inner_frame, text="Logout", command=self.logout)
-        self.logout_button.grid(row=7, column=0, columnspan=2, pady=5)
+        self.logout_button.pack(pady=5)
 
         threading.Thread(target=self.load_main_clients, daemon=True).start()
 
