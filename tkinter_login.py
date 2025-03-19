@@ -3,9 +3,9 @@ import tkinter as tk
 from tkinter import DISABLED, NORMAL, ttk, messagebox
 import threading
 import requests
-from portal.Proteck import PortalLogin  #Import the class from proteck.py
 from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageTk
+from portal_login import PortalLogin
 
 
 # Load variables from .env file
@@ -305,6 +305,7 @@ class UserSelectionApp:
         self.password_label = ttk.Label(self.root, text="Password: ")
         self.session_label = ttk.Label(self.root, text="Session: ")
         self.portal_url_label = ttk.Label(self.root, text="Portal URL: ")
+        self.proxy_label=ttk.Label(self.root, text="Proxy: ")
         self.client_frame = ttk.Frame(self.root, style="TFrame")
         self.client_frame.pack(fill="both", expand=True)
 
@@ -436,6 +437,7 @@ class UserSelectionApp:
         self.password_label.config(text=f"Password: {account['password']}")
         self.session_label.config(text=f"Session: {account['session']}")
         self.portal_url_label.config(text=f"Portal URL: {self.selected_portal_url}")
+        self.proxy_label.config(text=f"Proxy: {account['proxy']}")
 
     
     def confirm_selection(self):
@@ -453,10 +455,10 @@ class UserSelectionApp:
         """Login to the portal with the selected account details."""
         portal = self.portal_var.get()
         if portal:
-            portal_login = PortalLogin(self.client_data)
+            portal_login = PortalLogin.portals(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"])  # Create PortalLogin instance using portals
             threading.Thread(
-                target=portal_login.login_to_portal,
-                args=(selected_account["username"], selected_account["password"], self.selected_portal_url, portal),
+                target=portal_login.login_to_portal,  # Correct thread target
+                args=(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"]),
                 daemon=True
             ).start()
         else:

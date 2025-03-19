@@ -1,6 +1,5 @@
 
 import tkinter as tk
-from portal.Proteck import PortalLogin
 from tkinter_login import UserSelectionApp
 
 if __name__ == "__main__":

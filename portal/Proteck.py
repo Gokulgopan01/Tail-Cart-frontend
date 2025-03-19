@@ -11,9 +11,9 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.chrome.service import Service
 
 from utility.helper import handle_login_status
-class PortalLogin:
-    def __init__(self, client_data):
-        self.client_data = client_data
+class Proteck:
+    def __init__(self, username, password, portal_url, portal_name, proxy):
+        #self.client_data = client_data
         self.driver = None  #Store Selenium WebDriver instance
         logging.basicConfig(level=logging.INFO)
 
