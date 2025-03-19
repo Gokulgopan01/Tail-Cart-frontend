@@ -48,6 +48,14 @@ class UserSelectionApp:
         self.login_frame = tk.Frame(self.root, bg="#F0F0F0")  # Light gray background
         self.login_frame.pack(fill="both", expand=True)
 
+        # Load logo image
+        try:
+            img = Image.open("logo.ico")
+            logo_image = ImageTk.PhotoImage(img)
+            self.root.iconphoto(False, logo_image)
+        except tk.TclError:
+            print("Error: Logo file not found or invalid format.")
+
         # Now create the LabelFrame with the correct style
         self.input_frame = ttk.LabelFrame(self.login_frame, padding=10, style="Custom.TLabelframe")
         self.input_frame.pack(pady=10, padx=20, ipadx=10, fill="x")
