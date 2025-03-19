@@ -22,15 +22,7 @@ def initialize_driver(self):
         except Exception as e:
                 logging.error(f"Error initializing WebDriver: {e}")
                 return None
-# def __init__(self, client_data, order_details):
-#         self.client_data = client_data  # Contains username and password
-#         self.order_details = order_details  # Contains order details
-#         self.session = None  # Will store session after successful login
-#         self.driver = None  # Will store the driver instance
-#         logging.basicConfig(level=logging.INFO)
-# def log_login_status(self, username, portal_name, status, session=None, error_message=None):
-#         """Log the login status."""
-#         logging.info(f"{username} logged into {portal_name}: {status} - {error_message if error_message else ''}")
+
 
 
 def handle_login_status(login_title_or_url, username,log_check_value, portal_name):
