@@ -292,7 +292,11 @@ class UserSelectionApp:
         """Shows the client selection UI after successful login."""
         if hasattr(self, "login_frame"):
             self.login_frame.destroy()
-
+        #  Initialize labels
+        self.username_label = ttk.Label(self.root, text="Username: ")
+        self.password_label = ttk.Label(self.root, text="Password: ")
+        self.session_label = ttk.Label(self.root, text="Session: ")
+        self.portal_url_label = ttk.Label(self.root, text="Portal URL: ")
         self.client_frame = ttk.Frame(self.root, style="TFrame")
         self.client_frame.pack(fill="both", expand=True)
 
@@ -420,10 +424,10 @@ class UserSelectionApp:
 
     def load_selected_account_info(self, account):
         """Display selected account details."""
-        self.main_client_dropdown.config(text=f"Username: {account['username']}")
-        self.sub_client_dropdown.config(text=f"Password: {account['password']}")
-        self.portal_dropdown.config(text=f"Session: {account['session']}")
-        self.account_dropdown.config(text=f"Portal URL: {self.selected_portal_url}")
+        self.username_label.config(text=f"Username: {account['username']}")
+        self.password_label.config(text=f"Password: {account['password']}")
+        self.session_label.config(text=f"Session: {account['session']}")
+        self.portal_url_label.config(text=f"Portal URL: {self.selected_portal_url}")
 
     
     def confirm_selection(self):
