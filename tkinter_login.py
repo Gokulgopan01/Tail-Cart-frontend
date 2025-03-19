@@ -56,7 +56,7 @@ class UserSelectionApp:
         self.style = ttk.Style()
 
         # Set background color for frames
-        self.style.configure("TFrame", background="#F0F0F0")  # Light gray background
+        self.style.configure("TFrame",  background="#FFFFFF")  # Light gray background
 
         # Set global styles for labels
         self.style.configure("TLabel", foreground="black", font=("Arial", 11))  # Black text
@@ -116,8 +116,9 @@ class UserSelectionApp:
         ttk.Label(self.login_frame, text="HYBRID CLIENT LOGIN", font=("Arial", 16, "bold"), background="#F0F0F0").pack(pady=20)
         ttk.Label(self.login_frame, text="Welcome back! Please login to your account to continue", font=("Arial", 10), background="#F0F0F0").pack(pady=5)
 
-        self.input_frame = ttk.LabelFrame(self.login_frame, padding=10, style="Custom.TLabelframe")
-        self.input_frame.pack(pady=10, padx=20, ipadx=10, fill="x")
+        # Use a Frame instead of ttk.LabelFrame
+        self.input_frame = tk.Frame(self.login_frame, bg="#F0F0F0", bd=2, relief="solid", padx=10, pady=10)
+        self.input_frame.pack(pady=10, padx=20, fill="x")
 
         # Email Entry (No Label)
         self.email_var = tk.StringVar()
@@ -177,55 +178,6 @@ class UserSelectionApp:
             entry.config(foreground="gray")
             if hide_text:
                 entry.config(show="")
-
-
-    # def create_rounded_entry(self, placeholder, show=None):
-    #     """Create a rounded entry field with a placeholder and password toggle (no canvas)."""
-    #     entry_frame = ttk.Frame(self.login_frame, padding=(10, 5))
-    #     entry_frame.pack(fill="x")
-
-    #     # Rounded background for entry
-    #     rounded_bg = ttk.Frame(entry_frame, style="RoundedBg.TFrame")
-    #     rounded_bg.pack(fill="x")
-
-    #     # Entry Style
-    #     style = ttk.Style()
-    #     style.configure("RoundedEntry.TEntry", fieldbackground="#4A315F", foreground="black",
-    #                     insertcolor="white", borderwidth=0, padding=(5, 5)) # Set insertcolor here
-    #     style.map("RoundedEntry.TEntry",
-    #             fieldbackground=[("focus", "#664A7F"), ("!focus", "#4A315F")])
-
-    #     entry = ttk.Entry(rounded_bg, font=("Arial", 11), style="RoundedEntry.TEntry", show=show)
-    #     entry.pack(side="left", fill="x", expand=True, padx=(5,0)) # add padx to the entry
-
-    #     entry.insert(0, placeholder)
-
-    #     def clear_placeholder(event):
-    #         if entry.get() == placeholder:
-    #             entry.delete(0, tk.END)
-    #             entry.unbind("<FocusIn>", clear_placeholder_id) # unbind the event
-
-    #     clear_placeholder_id = entry.bind("<FocusIn>", clear_placeholder)
-
-    #     # Password Toggle Button (if show is '*')
-    #     if show == '*':
-    #         show_password_btn = ttk.Button(entry, text="👁", style="Toggle.TButton",
-    #                                         command=lambda: toggle())
-    #         show_password_btn.place(relx=1.0, rely=0.5, anchor="e", x=-5) # Place inside entry
-
-    #         def toggle():
-    #             """Toggle password visibility using closure."""
-    #             if entry.cget('show') == '*':
-    #                 entry.config(show='')
-    #                 show_password_btn.config(text='🙈')
-    #             else:
-    #                 entry.config(show='*')
-    #                 show_password_btn.config(text='👁')
-
-    #     entry.bind("<Button-1>", lambda event: entry.focus()) # Ensure focus
-    #     entry.focus() # Ensure focus
-
-    #     return entry
 
     def toggle_password(self):
         """Toggle password visibility."""
@@ -468,10 +420,10 @@ class UserSelectionApp:
 
     def load_selected_account_info(self, account):
         """Display selected account details."""
-        self.username_label.config(text=f"Username: {account['username']}")
-        self.password_label.config(text=f"Password: {account['password']}")
-        self.session_label.config(text=f"Session: {account['session']}")
-        self.portal_url_label.config(text=f"Portal URL: {self.selected_portal_url}")
+        self.main_client_dropdown.config(text=f"Username: {account['username']}")
+        self.sub_client_dropdown.config(text=f"Password: {account['password']}")
+        self.portal_dropdown.config(text=f"Session: {account['session']}")
+        self.account_dropdown.config(text=f"Portal URL: {self.selected_portal_url}")
 
     
     def confirm_selection(self):
