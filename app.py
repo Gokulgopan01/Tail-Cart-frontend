@@ -6,11 +6,9 @@ from screens.settings_screen import SettingsScreen
 class Application(tk.Tk):
     def __init__(self,root):
         super().__init__()
-        self.title("My Tkinter App")
-        self.geometry("800x600")
         self.root = root
         self.root.title("ECESIS - Login")
-        self.root.geometry("500x550")
+        self.root.geometry("800x600")
         self.root.resizable(False, False)
 
         # Bring the window to the front
