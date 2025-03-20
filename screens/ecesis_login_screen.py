@@ -52,8 +52,6 @@ class EcesisLoginScreen(tk.Frame):
     def __init__(self, root,parent, controller):
         super().__init__(parent)
         self.controller = controller
-        self.root = root #store root.
-
         # Load Image
         img_path = resource_path("logo.jpg")
         image = Image.open(img_path)
