@@ -1,16 +1,33 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import Image, ttk
 from screens.ecesis_login_screen import EcesisLoginScreen
 from screens.settings_screen import SettingsScreen
 from screens.mls_screen import MlsScreen
 import sys
+from PIL import Image, ImageDraw, ImageTk
+
+from utils.file_util import resource_path
 
 class Application(tk.Tk):
     def __init__(self): #root passed but not used.
         super().__init__() #super init.
-        self.title("ECESIS - Login")
-        self.geometry("800x600") #corrected geometry.
-        self.resizable(False, False)
+        self.title("ECESIS - Login")  # Set window title
+        self.geometry("800x600")  # Default window size
+        self.minsize(600, 450)  # Minimum size
+        self.configure(bg="#F2F2F2")
+        self.resizable(True, True)  # Enables resizing
+
+
+        img_path = resource_path("logo.jpg")
+        image = Image.open(img_path)
+        image = image.resize((100, 100))  # Resize if needed
+        self.logo = ImageTk.PhotoImage(image)
+        self.iconphoto(False, self.logo)  # Set the window icon
+        
+
+        # # Display Image (Logo at the Top)
+        # self.logo_label = tk.Label(self, image=self.logo, bg="#F2F2F2")
+        # self.logo_label.pack(pady=10)
 
         # Bring the window to the front
         self.lift()

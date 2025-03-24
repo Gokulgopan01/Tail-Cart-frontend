@@ -42,10 +42,10 @@ class EcesisLoginScreen(tk.Frame):
         super().__init__(parent)
         self.controller = controller
         # Load Image
-        img_path = resource_path("logo.jpg")
-        image = Image.open(img_path)
-        image = image.resize((100, 100))  # Resize if needed
-        self.logo = ImageTk.PhotoImage(image)
+        # img_path = resource_path("logo.jpg")
+        # image = Image.open(img_path)
+        # image = image.resize((100, 100))  # Resize if needed
+        # self.logo = ImageTk.PhotoImage(image)
 
         # # Display Image
         # label = tk.Label(self, image=self.logo)
@@ -208,69 +208,55 @@ class EcesisLoginScreen(tk.Frame):
         self.inner_frame = tk.Frame(self.client_frame, bg="white", bd=2, relief="solid")  # White Box with Border
         self.inner_frame.pack(pady=50, padx=50, expand=True)
 
-        # Labels
+        # Logout Button (Top Right)
+        self.logout_button = tk.Button(self, text="Logout", command=self.logout,
+                                       font=("Arial", 10, "bold"), fg="white", bg="#FF0000", bd=0, relief="flat", height=1, width=10)
+        self.logout_button.pack(anchor="ne", padx=20, pady=10)  # Top-right outside inner frame
+
+        # Inner Frame (White Box)
+        self.inner_frame = tk.Frame(self.client_frame, bg="white", bd=2, relief="solid")
+        self.inner_frame.pack(pady=50, padx=50, expand=True)
+
+        # Welcome Message
         ttk.Label(self.inner_frame, text=f"Welcome, {username}!", font=("Arial", 14, "bold"), background="white").pack(pady=(10, 15))
         ttk.Label(self.inner_frame, text="Select Client Details", font=("Arial", 12, "bold"), background="white").pack(pady=(0, 20))
 
-        label_font = ("Arial", 11)
+        # Dropdown Styling
         dropdown_width = 30
 
-        # Dropdown Styling
-        style = ttk.Style()
-        style.configure("TCombobox", padding=5)
-
-        # Main Client
-        ttk.Label(self.inner_frame, text="Main Client:", font=label_font, background="white").pack(anchor="w", padx=20, pady=2)
+        # Main Client Dropdown
         self.main_client_var = tk.StringVar()
-        self.main_client_dropdown = ttk.Combobox(self.inner_frame, textvariable=self.main_client_var, width=dropdown_width)
+        self.main_client_dropdown = self.create_combobox(self.inner_frame, self.main_client_var, "Select Main Client", self.on_main_client_select)
         self.main_client_dropdown.pack(pady=5, padx=20, fill="x")
-        self.main_client_dropdown.bind("<<ComboboxSelected>>", self.on_main_client_select)
 
-
-        # Sub Client
-        ttk.Label(self.inner_frame, text="Sub Client:", font=label_font, background="white").pack(anchor="w", padx=20, pady=2)
+        # Sub Client Dropdown
         self.sub_client_var = tk.StringVar()
-        self.sub_client_dropdown = ttk.Combobox(self.inner_frame, textvariable=self.sub_client_var, width=dropdown_width)
+        self.sub_client_dropdown = self.create_combobox(self.inner_frame, self.sub_client_var, "Select Sub Client", self.on_sub_client_select)
         self.sub_client_dropdown.pack(pady=5, padx=20, fill="x")
-        self.sub_client_dropdown.bind("<<ComboboxSelected>>", self.on_sub_client_select)
 
-
-        # Portal
-        ttk.Label(self.inner_frame, text="Portal:", font=label_font, background="white").pack(anchor="w", padx=20, pady=2)
+        # Portal Dropdown
         self.portal_var = tk.StringVar()
-        self.portal_dropdown = ttk.Combobox(self.inner_frame, textvariable=self.portal_var, width=dropdown_width)
+        self.portal_dropdown = self.create_combobox(self.inner_frame, self.portal_var, "Select Portal", self.on_portal_select)
         self.portal_dropdown.pack(pady=5, padx=20, fill="x")
-        self.portal_dropdown.bind("<<ComboboxSelected>>", self.on_portal_select)
 
-        # Account
-        ttk.Label(self.inner_frame, text="Account:", font=label_font, background="white").pack(anchor="w", padx=20, pady=2)
+        # Account Dropdown
         self.account_var = tk.StringVar()
-        self.account_dropdown = ttk.Combobox(self.inner_frame, textvariable=self.account_var, width=dropdown_width)
+        self.account_dropdown = self.create_combobox(self.inner_frame, self.account_var, "Select Account", self.on_account_select)
         self.account_dropdown.pack(pady=5, padx=20, fill="x")
-        self.account_dropdown.bind("<<ComboboxSelected>>", self.on_account_select)
 
-        # Buttons Styling
-        button_style = {
-            "font": ("Arial", 12, "bold"),
-            "fg": "white",
-            "bg": "#007BFF",  # Blue color
-            "activebackground": "#0056b3",
-            "cursor": "hand2",
-            "bd": 0,
-            "relief": "flat",
-            "height": 2,
-            "width": 20
-        }
-
-        # Login to Portal Button (Blue)
-        self.login_button = tk.Button(self.inner_frame, text="Login to Portal", command=self.confirm_selection, **button_style)
-        self.login_button.pack(pady=5)
-
-        # Logout Button (Blue)
-        self.logout_button = tk.Button(self.inner_frame, text="Logout", command=self.logout, **button_style)
-        self.logout_button.pack(pady=5)
+        # Login Button
+        self.login_button = tk.Button(self.inner_frame, text="Login to Portal", command=self.confirm_selection,
+                                      font=("Arial", 12, "bold"), fg="white", bg="#007BFF", bd=0, relief="flat", height=2, width=20)
+        self.login_button.pack(pady=10)
 
         threading.Thread(target=self.load_main_clients, daemon=True).start()
+
+    def create_combobox(self, parent, var, placeholder, callback):
+        """Create a searchable dropdown with a placeholder."""
+        cb = ttk.Combobox(parent, textvariable=var, width=30, state="readonly")
+        cb.set(placeholder)
+        cb.bind("<<ComboboxSelected>>", callback)
+        return cb
 
     def logout(self):
         """Logs out and returns to the login screen."""
