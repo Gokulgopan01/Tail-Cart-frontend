@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import Image, ttk
 from screens.ecesis_login_screen import EcesisLoginScreen
 from screens.settings_screen import SettingsScreen
+from screens.mls_screen import MlsScreen
+import sys
 from PIL import Image, ImageDraw, ImageTk
 
 from utils.file_util import resource_path
@@ -70,12 +72,14 @@ class Application(tk.Tk):
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
 
-        for F in (EcesisLoginScreen, SettingsScreen):
+        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen):
+            print(f"value in loop : {F}")
             page_name = F.__name__
             frame = F(parent=self.container, controller=self) #correct parent pass.
             self.frames[page_name] = frame
-            frame.grid(row=0, column=0, sticky="nsew")
+            frame.grid(row=0, column=0, sticky="nsew")    
 
+        # login screen      
         self.show_frame("EcesisLoginScreen")
 
     def show_frame(self, page_name):
