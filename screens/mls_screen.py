@@ -3,7 +3,9 @@ from tkinter import ttk
 from integrations.hybrid_bpo_api import HybridBPOApi
 from integrations.mls_automation.gamls import Gamls
 from integrations.mls_automation.fmls import Fmls
+from utils.pic_pdf_downloads.vpn_connection import vpn_checking
 import sys
+
 
 class MlsScreen(tk.Frame):
 
@@ -11,9 +13,10 @@ class MlsScreen(tk.Frame):
         super().__init__(parent)
         self.controller = controller
         self.hybridIntegration = HybridBPOApi()
-        arg2 = sys.argv[2] 
-        print(f"Args inside the mls_automation function : {arg2}")
         args = sys.argv[1:]  # Get command line arguments
+        if len(args) < 1:
+            print("Insufficient arguments provided.")
+            return
         args1 = sys.argv[1] 
         arg2 = sys.argv[2] 
         print(f"Arguments passed: {args}")
@@ -31,21 +34,24 @@ class MlsScreen(tk.Frame):
     def check_if_any_argument_passed(self, orderId):
             
             try:
-                mls_data={'GAMLS':Gamls,'FMLS':Fmls}
-                order_data=self.hybridIntegration.get_order(orderId)
-                print(order_data["MLS"])
-                mls_type = order_data["MLS"]
-                if mls_type in mls_data:
+                is_vpn_connected = vpn_checking()
+                if is_vpn_connected:
+                    mls_data={'GAMLS':Gamls,'FMLS':Fmls}
+                    order_data=self.hybridIntegration.get_order(orderId)
+                    print(order_data["MLS"])
+                    mls_type = order_data["MLS"]
+                    if mls_type in mls_data:
 
-                    # If order data is found, proceed with the login
-                    # init=GaMls()
+                        # If order data is found, proceed with the login
+                        # init=GaMls()
 
-                    init=mls_data[mls_type]()
-                    init.process_mls_actions(order_data)              
+                        init=mls_data[mls_type]()
+                        init.process_mls_actions(order_data)              
+                    else:
+                        print("No order data found for the given orderId.")
+                        # Handle the case where no order data is found
                 else:
-                    print("No order data found for the given orderId.")
-                    # Handle the case where no order data is found
-
+                    print('VPN not connected')
             except Exception as e:
                 print(f"Error in the program: {e}")
 
