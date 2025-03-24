@@ -56,6 +56,12 @@ class EcesisLoginScreen(tk.Frame):
         # btn = ttk.Button(self, text="Go to Settings", command=self.launch_browser)
         btn.pack(pady=10)
 
+
+
+        # ttk.Button(self, text="MLS_Login",command=lambda:controller.show_frame("MlsScreen")).pack(pady=10)
+
+
+
         """Create a login UI with a dark blue, yellow, and white color scheme."""
         self.login_frame = tk.Frame(self, bg="#F0F0F0")  # Light gray background
         self.login_frame.pack(fill="both", expand=True)
