@@ -80,7 +80,12 @@ class Application(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")    
 
         # login screen      
-        self.show_frame("EcesisLoginScreen")
+        args = sys.argv[1:]  # Get command line arguments
+        if len(args) > 1:
+            print("Insufficient arguments provided.")
+            self.show_frame("MlsScreen")
+        else:    
+            self.show_frame("EcesisLoginScreen")
 
     def show_frame(self, page_name):
         """Bring the requested screen to the front."""

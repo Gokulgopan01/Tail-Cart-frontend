@@ -5,6 +5,7 @@ from integrations.mls_automation.gamls import Gamls
 from integrations.mls_automation.fmls import Fmls
 from utils.pic_pdf_downloads.vpn_connection import vpn_checking
 import sys
+import threading
 
 
 class MlsScreen(tk.Frame):
@@ -13,6 +14,13 @@ class MlsScreen(tk.Frame):
         super().__init__(parent)
         self.controller = controller
         self.hybridIntegration = HybridBPOApi()
+
+        label = ttk.Label(self, text="Downloading Comparable PIC and PDF....", font=("Arial", 17))
+        label.pack(pady=20)
+        progress = ttk.Progressbar(self, orient="horizontal", length=200, mode="indeterminate")
+        progress.pack(pady=10)
+        progress.start()
+
         args = sys.argv[1:]  # Get command line arguments
         if len(args) < 1:
             print("Insufficient arguments provided.")
@@ -23,43 +31,44 @@ class MlsScreen(tk.Frame):
         print(f"Second argument passed: {arg2}")   
 
         if(args1=='mlsdownloader'):
-            self.check_if_any_argument_passed(arg2)
+
+            threading.Thread(target=self.check_if_any_argument_passed, args=(arg2,), daemon=True).start()
+            print("Process execution started")
+
         else:
-             print("Orders not found")    
+             print("Orders not found") 
 
-
-        # ttk.Button(self, text="MLS_Process_Start",command=lambda:self.check_if_any_argument_passed(1010)).pack(pady=10)
-        ttk.Label(self, text="MLS Automation", style="Title.TLabel")
+                 
+        
 
     def check_if_any_argument_passed(self, orderId):
             
             try:
                 is_vpn_connected = vpn_checking()
                 if is_vpn_connected:
+
                     mls_data={'GAMLS':Gamls,'FMLS':Fmls}
                     order_data=self.hybridIntegration.get_order(orderId)
                     print(order_data["MLS"])
                     mls_type = order_data["MLS"]
                     if mls_type in mls_data:
-
                         # If order data is found, proceed with the login
                         # init=GaMls()
-
                         init=mls_data[mls_type]()
-                        init.process_mls_actions(order_data)              
+                        init.process_mls_actions(order_data)
+                        for widget in self.winfo_children():
+                            widget.destroy() 
+                        label = ttk.Label(self, text="Downloading Comparable PIC and PDF Completed", font=("Arial", 18))
+                        label.pack(pady=20) 
+                             
                     else:
                         print("No order data found for the given orderId.")
                         # Handle the case where no order data is found
+
                 else:
                     print('VPN not connected')
             except Exception as e:
                 print(f"Error in the program: {e}")
-
-
-
-
-
-
 
 
         # check if autologin version is correct
