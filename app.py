@@ -1,29 +1,16 @@
+import sys
 import tkinter as tk
 from tkinter import Image, ttk
 from screens.ecesis_login_screen import EcesisLoginScreen
+from screens.mls_screen import MlsScreen
 from screens.settings_screen import SettingsScreen
-from utility.file_util import resource_path
-from PIL import Image, ImageDraw, ImageTk
 
 class Application(tk.Tk):
     def __init__(self): #root passed but not used.
         super().__init__() #super init.
         self.title("ECESIS - Login")
-        # Load Image
-        img_path = resource_path("logo.jpg")
-        image = Image.open(img_path)
-        image = image.resize((100, 100))  # Resize if needed
-        self.logo = ImageTk.PhotoImage(image)
-        self.iconphoto(False, self.logo)  # Set the window icon
-        # # Display Image
-        # label = tk.Label(self, image=self.logo)
-        # label.pack(pady=20)
-        
-        self.geometry("800x600")  # Larger window for better UI layout
-        self.minsize(600, 450)  # Minimum size for responsiveness
-        self.resizable(True, True)  # Enables resizing
-        self.client_data = {"main_clients": [], "sub_clients": [], "portals": [], "accounts": []}
-
+        self.geometry("800x600") #corrected geometry.
+        self.resizable(False, False)
 
         # Bring the window to the front
         self.lift()
@@ -68,13 +55,20 @@ class Application(tk.Tk):
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
 
-        for F in (EcesisLoginScreen, SettingsScreen):
+        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen):
+            print(f"value in loop : {F}")
             page_name = F.__name__
             frame = F(parent=self.container, controller=self) #correct parent pass.
             self.frames[page_name] = frame
-            frame.grid(row=0, column=0, sticky="nsew")
+            frame.grid(row=0, column=0, sticky="nsew")    
 
-        self.show_frame("EcesisLoginScreen")
+        # login screen      
+        args = sys.argv[1:]  # Get command line arguments
+        if len(args) > 1:
+            print("Insufficient arguments provided.")
+            self.show_frame("MlsScreen")
+        else:    
+            self.show_frame("EcesisLoginScreen")
 
     def show_frame(self, page_name):
         """Bring the requested screen to the front."""

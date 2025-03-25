@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-from utility.file_util import resource_path
+from utils.file_util import resource_path
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -42,11 +42,26 @@ class EcesisLoginScreen(tk.Frame):
     def __init__(self,parent, controller):
         super().__init__(parent)
         self.controller = controller
+        # Load Image
+        img_path = resource_path("logo.jpg")
+        image = Image.open(img_path)
+        image = image.resize((100, 100))  # Resize if needed
+        self.logo = ImageTk.PhotoImage(image)
+
+        # # Display Image
+        # label = tk.Label(self, image=self.logo)
+        # label.pack(pady=20)
 
         # Button to go to another screen
         btn = ttk.Button(self, text="Go to Settings", command=lambda: controller.show_frame("SettingsScreen"))
         # btn = ttk.Button(self, text="Go to Settings", command=self.launch_browser)
         btn.pack(pady=10)
+
+
+
+        # ttk.Button(self, text="MLS_Login",command=lambda:controller.show_frame("MlsScreen")).pack(pady=10)
+
+
 
         """Create a login UI with a dark blue, yellow, and white color scheme."""
         self.login_frame = tk.Frame(self, bg="#F0F0F0")  # Light gray background
@@ -172,23 +187,24 @@ class EcesisLoginScreen(tk.Frame):
         messagebox.showinfo("Success", f"Welcome, {username}!")
 
     def show_client_login(self, username):
-        """Shows the client selection UI after successful login."""
+        # """Shows the client selection UI after successful login."""
+        # if hasattr(self, "login_frame"):
+        #     self.login_frame.destroy()
+
+        # If the login_frame exists, hide it instead of destroying it
         if hasattr(self, "login_frame"):
-            self.login_frame.destroy()
-
-        self.configure(bg="#F2F2F2")
-
-        #  Initialize labels
+            self.login_frame.pack_forget()  # Hide the login frame
+        # #  Initialize labels
         self.username_label = ttk.Label(self, text="Username: ")
         self.password_label = ttk.Label(self, text="Password: ")
         self.session_label = ttk.Label(self, text="Session: ")
         self.portal_url_label = ttk.Label(self, text="Portal URL: ")
         self.proxy_label=ttk.Label(self, text="Proxy: ")
-        self.client_frame = ttk.Frame(self, style="TFrame")
-        self.client_frame.pack(fill="both", expand=True)
-        # Outer Frame
-        self.client_frame = tk.Frame(self, bg="#F2F2F2")
-        self.client_frame.pack(fill="both", expand=True)
+      
+
+        # Set background color
+        self.configure(bg="#F2F2F2")  # Light Gray Background
+        
 
             # **Top Frame for Logout Button**
         self.top_frame = tk.Frame(self, bg="#F2F2F2")
@@ -198,8 +214,11 @@ class EcesisLoginScreen(tk.Frame):
         self.logout_button_top = tk.Button(self.top_frame, text="Logout", command=self.logout,
                                         font=("Arial", 10, "bold"), fg="white", bg="#FF0000",
                                         bd=0, relief="flat", height=1, width=10)
-        self.logout_button_top.pack(side="right", padx=10, pady=5)  # Align top-right
+        self.logout_button_top.pack(side="right", anchor="ne", padx=10, pady=5)
 
+        # Main client frame
+        self.client_frame = tk.Frame(self, bg="#F2F2F2")
+        self.client_frame.pack(fill="both", expand=True)
 
         # Inner Frame (White Box)
         self.inner_frame = tk.Frame(self.client_frame, bg="white", bd=2, relief="solid")
@@ -245,7 +264,6 @@ class EcesisLoginScreen(tk.Frame):
         cb.set(placeholder)
         cb.bind("<<ComboboxSelected>>", callback)
         return cb
-
 
     def logout(self):
         """Logs out the user and resets UI."""
