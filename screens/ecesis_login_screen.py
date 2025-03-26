@@ -266,18 +266,26 @@ class EcesisLoginScreen(tk.Frame):
         return cb
 
     def logout(self):
-        """Logs out the user and resets UI."""
+        """Logs out the user, resets UI, and clears login fields."""
         confirm = messagebox.askyesno("Logout", "Are you sure you want to log out?")
         if confirm:
-            # # Clear stored session data (if applicable)
-            # self.email_var.set("Enter your email")
-            # self.password_var.set("Enter your password")
-
-            # # Destroy any UI elements related to the user session
+            # Hide the client frame
             if hasattr(self, "client_frame"):
-                self.client_frame.destroy()
-            # if hasattr(self, "bottom_frame"):
-            #     self.bottom_frame.destroy()
+                self.client_frame.pack_forget()
+
+            # Unhide the login frame
+            if hasattr(self, "login_frame"):
+                self.login_frame.pack(fill="both", expand=True)
+
+            # **Clear the username and password fields**
+            if hasattr(self, "email_var"):
+                self.email_var.set("")  # Clear email field
+            if hasattr(self, "password_var"):
+                self.password_var.set("")  # Clear password field
+
+            # **Hide the logout button on the login screen**
+            if hasattr(self, "logout_button_top"):
+                self.logout_button_top.pack_forget()  # Hide the logout button
 
             # Switch to the login screen
             self.controller.show_frame("EcesisLoginScreen")
