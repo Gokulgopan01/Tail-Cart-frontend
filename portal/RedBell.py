@@ -47,7 +47,7 @@ class RedBell:
             response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
 
             api_response = response.json()
-            portal_url="https://valuationops.homegenius.com/VendorPortal"
+            #portal_url="https://valuationops.homegenius.com/VendorPortal"
             if api_response.get("status") == "success":
                 redbell_cookie = api_response["cookies"].get(".ASPXAUTH")
                 if redbell_cookie:
@@ -57,7 +57,8 @@ class RedBell:
                     
                     # Wait for the page to load.
                     # Wait for login success by checking page title
-                    WebDriverWait(self.driver, 60).until(EC.title_contains("Partner Portal"))
+                    WebDriverWait(self.driver, 120).until(EC.presence_of_element_located((By.ID, "Partner portal")))
+
 
                     title = self.driver.current_url
                     login_check_keyword="Returnurl"

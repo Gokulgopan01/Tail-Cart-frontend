@@ -19,11 +19,6 @@ class Application(tk.Tk):
         self.logo = ImageTk.PhotoImage(image)
         # Set the window icon
         self.iconphoto(False, self.logo)  # False ensures the icon applies to all windows
-
-        # # Display Image
-        # label = tk.Label(self, image=self.logo)
-        # label.pack(pady=20)
-
         # Bring the window to the front
         self.lift()
         self.attributes('-topmost', True)

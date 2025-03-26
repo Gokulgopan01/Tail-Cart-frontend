@@ -81,6 +81,9 @@ class EcesisLoginScreen(tk.Frame):
         self.email_entry.pack(pady=10, padx=10, fill="x", ipady=5)
         self.email_var.set("Enter your email")
 
+        # Bind Enter key to focus on the password field when Enter is pressed
+        self.email_entry.bind("<Return>", lambda event: self.password_entry.focus_set())
+
         # Password Entry (No Label)
         password_frame = tk.Frame(self.input_frame, bd=1, relief="solid", bg="white")
         password_frame.pack(pady=10, padx=10, fill="x")
@@ -99,12 +102,15 @@ class EcesisLoginScreen(tk.Frame):
         forgot_password_frame.pack(pady=15)
         tk.Button(forgot_password_frame, text="Forgot Password", font=("Arial", 9, "bold"), fg="white",
                   bg="#1E90FF", relief="flat", cursor="hand2", command=self.forgot_password).pack(pady=5)
-
+        # Bind Enter key to password entry (triggers login when pressed)
+        self.password_entry.bind("<Return>", self.login)
         # Login Button
         self.sign_in_btn = tk.Button(self.login_frame, text="Login", font=("Arial", 14, "bold"),
                                       fg="white", bg="#1E90FF", activebackground="#1E90FF", bd=0,
                                       relief="flat", height=2, width=20, command=self.login)
         self.sign_in_btn.pack(pady=30, ipadx=20)
+        # Bind Enter key to login function
+        self.bind("<Return>", lambda event: self.login())
 
         # Center the elements
         self.login_frame.pack_propagate(False)
@@ -147,7 +153,7 @@ class EcesisLoginScreen(tk.Frame):
             self.show_password_btn.config(text='👁')  # Change text to show password
     
 
-    def login(self):
+    def login(self, event=None):  # Accept event to handle Enter key press
         """Handles user login via API."""
         email = self.email_entry.get()
         password = self.password_entry.get()
@@ -160,7 +166,6 @@ class EcesisLoginScreen(tk.Frame):
                     data = response.json()
                     if data.get("status_code") == 200 and data.get("content", {}).get("data", {}).get("success"):
                         username = data["content"]["data"]["username"]
-                        #self.after(0, lambda: self.show_welcome_message(username))
                         self.after(0, lambda: self.show_client_login(username))
                     else:
                         self.after(0, lambda: messagebox.showerror("Error", "Invalid credentials"))
@@ -170,6 +175,7 @@ class EcesisLoginScreen(tk.Frame):
                 self.after(0, lambda: messagebox.showerror("Error", f"Request failed: {e}"))
 
         threading.Thread(target=login_request, daemon=True).start()
+
 
     def forgot_password(self):
         messagebox.showinfo("Forgot Password", "Redirecting to password recovery page.")
@@ -227,21 +233,29 @@ class EcesisLoginScreen(tk.Frame):
         self.main_client_var = tk.StringVar()
         self.main_client_dropdown = self.create_combobox(self.inner_frame, self.main_client_var, "Select Main Client", self.on_main_client_select)
         self.main_client_dropdown.pack(pady=5, padx=20, fill="x")
+        self.main_client_dropdown.bind("<Return>", lambda event: self.sub_client_dropdown.focus_set())  # Move to Sub Client
+
 
         # Sub Client Dropdown
         self.sub_client_var = tk.StringVar()
         self.sub_client_dropdown = self.create_combobox(self.inner_frame, self.sub_client_var, "Select Sub Client", self.on_sub_client_select)
         self.sub_client_dropdown.pack(pady=5, padx=20, fill="x")
+        self.sub_client_dropdown.bind("<Return>", lambda event: self.portal_dropdown.focus_set())  # Move to Portal
+
 
         # Portal Dropdown
         self.portal_var = tk.StringVar()
         self.portal_dropdown = self.create_combobox(self.inner_frame, self.portal_var, "Select Portal", self.on_portal_select)
         self.portal_dropdown.pack(pady=5, padx=20, fill="x")
+        self.portal_dropdown.bind("<Return>", lambda event: self.account_dropdown.focus_set())  # Move to Account
+    # Move to the Login Button
+
 
         # Account Dropdown
         self.account_var = tk.StringVar()
         self.account_dropdown = self.create_combobox(self.inner_frame, self.account_var, "Select Account", self.on_account_select)
         self.account_dropdown.pack(pady=5, padx=20, fill="x")
+        self.account_dropdown.bind("<Return>", lambda event: self.confirm_selection())  # Move to the Login Button
 
         # Login Button
         self.login_button = tk.Button(self.inner_frame, text="Login to Portal", command=self.confirm_selection,
