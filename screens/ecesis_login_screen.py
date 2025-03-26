@@ -43,14 +43,6 @@ class EcesisLoginScreen(tk.Frame):
         super().__init__(parent)
         self.controller = controller
         # Load Image
-        img_path = resource_path("logo.jpg")
-        image = Image.open(img_path)
-        image = image.resize((100, 100))  # Resize if needed
-        self.logo = ImageTk.PhotoImage(image)
-
-        # # Display Image
-        # label = tk.Label(self, image=self.logo)
-        # label.pack(pady=20)
 
         # Button to go to another screen
         btn = ttk.Button(self, text="Go to Settings", command=lambda: controller.show_frame("SettingsScreen"))
@@ -265,6 +257,36 @@ class EcesisLoginScreen(tk.Frame):
         cb.bind("<<ComboboxSelected>>", callback)
         return cb
 
+    # def logout(self):
+    #     """Logs out the user, resets UI, and clears login fields."""
+    #     confirm = messagebox.askyesno("Logout", "Are you sure you want to log out?")
+    #     if confirm:
+    #         # Hide the client frame
+    #         if hasattr(self, "client_frame"):
+    #             self.client_frame.pack_forget()
+
+    #         # Unhide the login frame
+    #         if hasattr(self, "login_frame"):
+    #             self.login_frame.pack(fill="both", expand=True)
+
+    #             # **Restore placeholders for email and password fields**
+    #         if hasattr(self, "email_entry"):
+    #             self.email_entry.delete(0, tk.END)  # Clear the field
+    #             self.email_entry.insert(0, "Enter your email")  # Restore placeholder
+    #         if hasattr(self, "password_entry"):
+    #             self.password_entry.delete(0, tk.END)  # Clear the field
+    #             self.password_entry.insert(0, "Enter your password")  # Restore placeholder
+    #             #self.password_entry.config(show="")  # Ensure it appears as placeholder text
+
+    #         # **Hide the logout button on the login screen**
+    #         if hasattr(self, "logout_button_top"):
+    #             self.logout_button_top.pack_forget()  # Hide the logout button
+
+    #         # Set focus to login button after logout
+    #         self.after(100, self.login_button.focus_set)
+    #         # Switch to the login screen
+    #         self.controller.show_frame("EcesisLoginScreen")
+
     def logout(self):
         """Logs out the user, resets UI, and clears login fields."""
         confirm = messagebox.askyesno("Logout", "Are you sure you want to log out?")
@@ -276,20 +298,26 @@ class EcesisLoginScreen(tk.Frame):
             # Unhide the login frame
             if hasattr(self, "login_frame"):
                 self.login_frame.pack(fill="both", expand=True)
-
-            # **Clear the username and password fields**
-            if hasattr(self, "email_var"):
-                self.email_var.set("")  # Clear email field
-            if hasattr(self, "password_var"):
-                self.password_var.set("")  # Clear password field
-
-            # **Hide the logout button on the login screen**
+            
+            # Restore placeholders for email and password fields
+            if hasattr(self, "email_entry"):
+                self.email_entry.delete(0, tk.END)  # Clear the field
+                self.email_entry.insert(0, "Enter your email")  # Restore placeholder
+            
+            if hasattr(self, "password_entry"):
+                self.password_entry.delete(0, tk.END)  # Clear the field
+                self.password_entry.insert(0, "Enter your password")  # Restore placeholder
+            
+            # Hide the logout button if present
             if hasattr(self, "logout_button_top"):
-                self.logout_button_top.pack_forget()  # Hide the logout button
+                self.logout_button_top.pack_forget()
 
-            # Switch to the login screen
+            # Ensure the login frame is brought to the front
             self.controller.show_frame("EcesisLoginScreen")
-
+            
+            # Delay focus setting to ensure UI update
+            if hasattr(self, "login_button"):
+                self.after(200, self.login_button.focus_set)  # Use root.after to avoid timing issues
 
 
     def clear_screen(self):
