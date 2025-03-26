@@ -57,11 +57,11 @@ class RedBell:
                     
                     # Wait for the page to load.
                     # Wait for login success by checking page title
-                    WebDriverWait(self.driver, 120).until(EC.presence_of_element_located((By.ID, "Partner portal")))
+                    #WebDriverWait(self.driver, 120).until(EC.presence_of_element_located((By.ID, "Partner portal")))
 
 
                     title = self.driver.current_url
-                    login_check_keyword="Returnurl"
+                    login_check_keyword="VendorPortal/Index"
 
                     handle_login_status(title, username, login_check_keyword,portal_name)
                      
