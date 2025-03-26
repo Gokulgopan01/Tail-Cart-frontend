@@ -19,7 +19,7 @@ import json
 import os
 from selenium.webdriver.chrome.options import Options
 
-from utility.helper import handle_login_status
+from utils.helper import handle_login_status
 
 class RedBell:
     def __init__(self, username, password, portal_url, portal_name, proxy):

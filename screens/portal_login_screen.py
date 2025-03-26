@@ -5,7 +5,6 @@ from PIL import Image, ImageTk
 
 from portal.Proteck import Proteck
 from portal.RedBell import RedBell
-from utils.file_util import resource_path
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By

@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageTk
 
 from screens.portal_login_screen import PortalLoginScreen
+import app
 
 # Load variables from .env file
 load_dotenv()
@@ -42,10 +43,10 @@ class EcesisLoginScreen(tk.Frame):
         super().__init__(parent)
         self.controller = controller
         # Load Image
-        # img_path = resource_path("logo.jpg")
-        # image = Image.open(img_path)
-        # image = image.resize((100, 100))  # Resize if needed
-        # self.logo = ImageTk.PhotoImage(image)
+        img_path = resource_path("logo.jpg")
+        image = Image.open(img_path)
+        image = image.resize((100, 100))  # Resize if needed
+        self.logo = ImageTk.PhotoImage(image)
 
         # # Display Image
         # label = tk.Label(self, image=self.logo)
@@ -186,32 +187,38 @@ class EcesisLoginScreen(tk.Frame):
         messagebox.showinfo("Success", f"Welcome, {username}!")
 
     def show_client_login(self, username):
-        """Shows the client selection UI after successful login."""
+        # """Shows the client selection UI after successful login."""
+        # if hasattr(self, "login_frame"):
+        #     self.login_frame.destroy()
+
+        # If the login_frame exists, hide it instead of destroying it
         if hasattr(self, "login_frame"):
-            self.login_frame.destroy()
-        #  Initialize labels
+            self.login_frame.pack_forget()  # Hide the login frame
+        # #  Initialize labels
         self.username_label = ttk.Label(self, text="Username: ")
         self.password_label = ttk.Label(self, text="Password: ")
         self.session_label = ttk.Label(self, text="Session: ")
         self.portal_url_label = ttk.Label(self, text="Portal URL: ")
         self.proxy_label=ttk.Label(self, text="Proxy: ")
-        self.client_frame = ttk.Frame(self, style="TFrame")
-        self.client_frame.pack(fill="both", expand=True)
+      
 
         # Set background color
         self.configure(bg="#F2F2F2")  # Light Gray Background
+        
 
-        # Client Frame
+            # **Top Frame for Logout Button**
+        self.top_frame = tk.Frame(self, bg="#F2F2F2")
+        self.top_frame.pack(fill="x", side="top", pady=10, padx=10)  # Attach to top with padding
+
+        # **Logout Button (Top-Right Corner)**
+        self.logout_button_top = tk.Button(self.top_frame, text="Logout", command=self.logout,
+                                        font=("Arial", 10, "bold"), fg="white", bg="#FF0000",
+                                        bd=0, relief="flat", height=1, width=10)
+        self.logout_button_top.pack(side="right", anchor="ne", padx=10, pady=5)
+
+        # Main client frame
         self.client_frame = tk.Frame(self, bg="#F2F2F2")
         self.client_frame.pack(fill="both", expand=True)
-
-        self.inner_frame = tk.Frame(self.client_frame, bg="white", bd=2, relief="solid")  # White Box with Border
-        self.inner_frame.pack(pady=50, padx=50, expand=True)
-
-        # Logout Button (Top Right)
-        self.logout_button = tk.Button(self, text="Logout", command=self.logout,
-                                       font=("Arial", 10, "bold"), fg="white", bg="#FF0000", bd=0, relief="flat", height=1, width=10)
-        self.logout_button.pack(anchor="ne", padx=20, pady=10)  # Top-right outside inner frame
 
         # Inner Frame (White Box)
         self.inner_frame = tk.Frame(self.client_frame, bg="white", bd=2, relief="solid")
@@ -259,9 +266,36 @@ class EcesisLoginScreen(tk.Frame):
         return cb
 
     def logout(self):
-        """Logs out and returns to the login screen."""
-        self.client_frame.destroy()
-        self.create_login_frame()
+        """Logs out the user, resets UI, and clears login fields."""
+        confirm = messagebox.askyesno("Logout", "Are you sure you want to log out?")
+        if confirm:
+            # Hide the client frame
+            if hasattr(self, "client_frame"):
+                self.client_frame.pack_forget()
+
+            # Unhide the login frame
+            if hasattr(self, "login_frame"):
+                self.login_frame.pack(fill="both", expand=True)
+
+            # **Clear the username and password fields**
+            if hasattr(self, "email_var"):
+                self.email_var.set("")  # Clear email field
+            if hasattr(self, "password_var"):
+                self.password_var.set("")  # Clear password field
+
+            # **Hide the logout button on the login screen**
+            if hasattr(self, "logout_button_top"):
+                self.logout_button_top.pack_forget()  # Hide the logout button
+
+            # Switch to the login screen
+            self.controller.show_frame("EcesisLoginScreen")
+
+
+
+    def clear_screen(self):
+        """Clears the current UI."""
+        for widget in self.winfo_children():
+            widget.destroy()
 
     def load_main_clients(self):
         """Fetch and populate main clients."""

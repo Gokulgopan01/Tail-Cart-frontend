@@ -10,7 +10,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 # from utility.helper import log_login_status,initialize_driver
 from selenium.webdriver.chrome.service import Service
 
-from utility.helper import handle_login_status
+from utils.helper import handle_login_status
 class Proteck:
     def __init__(self, username, password, portal_url, portal_name, proxy):
         #self.client_data = client_data
