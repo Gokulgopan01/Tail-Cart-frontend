@@ -42,6 +42,7 @@ class EcesisLoginScreen(tk.Frame):
     def __init__(self,parent, controller):
         super().__init__(parent)
         self.controller = controller
+        self.active_portal_instances = []
         # Load Image
 
         # Button to go to another screen
@@ -189,9 +190,11 @@ class EcesisLoginScreen(tk.Frame):
         # if hasattr(self, "login_frame"):
         #     self.login_frame.destroy()
 
+
+
         # If the login_frame exists, hide it instead of destroying it
-        if hasattr(self, "login_frame"):
-            self.login_frame.pack_forget()  # Hide the login frame
+        # if hasattr(self, "login_frame"):
+        #     self.login_frame.pack_forget()  # Hide the login frame
         # #  Initialize labels
         self.username_label = ttk.Label(self, text="Username: ")
         self.password_label = ttk.Label(self, text="Password: ")
@@ -422,16 +425,44 @@ class EcesisLoginScreen(tk.Frame):
         else:
             messagebox.showwarning("Incomplete", "Please select all details to proceed.")
 
+    # def login_to_portal(self, selected_account):
+    #     """Login to the portal with the selected account details."""
+    #     portal = self.portal_var.get()
+    #     if portal:
+    #         portal_login = PortalLoginScreen.portals(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"])  # Create PortalLogin instance using portals
+    #         threading.Thread(
+    #             target=portal_login.login_to_portal,  # Correct thread target
+    #             args=(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"]),
+    #             daemon=True
+    #         ).start()
+    #     else:
+    #         messagebox.showerror("Error", "Portal login function not found.")
+
     def login_to_portal(self, selected_account):
         """Login to the portal with the selected account details."""
         portal = self.portal_var.get()
         if portal:
-            portal_login = PortalLoginScreen.portals(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"])  # Create PortalLogin instance using portals
-            threading.Thread(
-                target=portal_login.login_to_portal,  # Correct thread target
-                args=(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"]),
-                daemon=True
-            ).start()
+            # Create a new instance of the portal class for each login attempt
+            portal_instance = PortalLoginScreen.portals(
+                selected_account["username"],
+                selected_account["password"],
+                self.selected_portal_url,
+                portal,
+                selected_account["proxy"]
+            )
+            if portal_instance:
+                self.active_portal_instances.append(portal_instance) # Store the instance
+                threading.Thread(
+                    target=portal_instance.login_to_portal,
+                    args=(
+                        selected_account["username"],
+                        selected_account["password"],
+                        self.selected_portal_url,
+                        portal,
+                        selected_account["proxy"],
+                    ),
+                    daemon=True,
+                ).start()
         else:
             messagebox.showerror("Error", "Portal login function not found.")
 

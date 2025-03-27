@@ -64,9 +64,10 @@ class PortalLoginScreen(tk.Frame):
             portal_name_instance = RedBell(username, password, portal_url, portal_name,proxy)  # Create Proteck instance
             portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy)
             session = portal_name_instance.login_to_portal(username, password, portal_url, portal_name, proxy)
-            if type(session)==str:
-                if "Login error" in session or 'Login issue' in session:  # Perform Proteck login
-                    print("Login error")
+            # if type(session)==str:
+            #     if "Login error" in session or 'Login issue' in session:  # Perform Proteck login
+            #         print("Login error")
         else:
             # Add default login logic here
             print(f"Default login called: {username}, {portal_name}")
+        self.after(0, self.perform_login)        
