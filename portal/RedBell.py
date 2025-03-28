@@ -61,7 +61,7 @@ class RedBell:
 
 
                     title = self.driver.current_url
-                    login_check_keyword="VendorPortal/Index"
+                    login_check_keyword=["VendorPortal/Index","DailyUpdates"]
 
                     handle_login_status(title, username, login_check_keyword,portal_name)
                      
@@ -69,33 +69,33 @@ class RedBell:
                 else:
                     logging.error("Cookie '.ASPXAUTH' not found in API response.")
                     title="MFA FAILED"
-                    login_check_keyword="False"
+                    login_check_keyword=["False"]
                     handle_login_status(title, username, login_check_keyword,portal_name)
                     #return False
                    
             else:
                 logging.error(f"API call failed: {api_response.get('status')}")
                 title="MFA FAILED"
-                login_check_keyword="False"
+                login_check_keyword=["False"]
                 handle_login_status(title, username, login_check_keyword,portal_name)
                 #return False
 
         except requests.exceptions.RequestException as e:
             logging.error(f"API request failed: {e}")
             title="MFA FAILED"
-            login_check_keyword="False"
+            login_check_keyword=["False"]
             handle_login_status(title, username, login_check_keyword,portal_name)
             #return False
         except json.JSONDecodeError as e:
             logging.error(f"Failed to decode JSON response: {e}")
             title="MFA FAILED"
-            login_check_keyword="False"
+            login_check_keyword=["False"]
             handle_login_status(title, username, login_check_keyword,portal_name)
             #return False
         except Exception as e:
             logging.exception(f"An error occurred: {e}")
             title="MFA FAILED"
-            login_check_keyword="False"
+            login_check_keyword=["False"]
             handle_login_status(title, username, login_check_keyword,portal_name)
             #return False
         # finally:

@@ -2,6 +2,7 @@ import sys
 import tkinter as tk
 from tkinter import Image, ttk
 from screens.ecesis_login_screen import EcesisLoginScreen
+from screens.entry_screen import EntryScreen
 from screens.mls_screen import MlsScreen
 from screens.settings_screen import SettingsScreen
 from urllib.parse import urlparse, parse_qs
@@ -64,7 +65,7 @@ class Application(tk.Tk):
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
 
-        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen):
+        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen,EntryScreen):
             print(f"value in loop : {F}")
             page_name = F.__name__
             frame = F(parent=self.container, controller=self) #correct parent pass.
@@ -72,16 +73,14 @@ class Application(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")    
 
         # login screen  
-        arg1= params_check()    
+        arg1,arg2= params_check()    
         
         if arg1:
             if 'mlsdownloader' in arg1 :
                 print("mls creen called")
                 self.show_frame("MlsScreen")
             elif 'SmartEntry' in arg1 :
-                self.show_frame("MlsScreen") #call the class created for entry
-            else:     
-                self.show_frame("MlsScreen") # call the class created for portal login
+                self.show_frame("EntryScreen") #call the class created for entry
         else:  
             self.show_frame("EcesisLoginScreen")
 

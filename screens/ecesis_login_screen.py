@@ -43,7 +43,7 @@ class EcesisLoginScreen(tk.Frame):
         super().__init__(parent)
         self.controller = controller
         self.active_portal_instances = []
-        # Load Image
+          # Load Image
 
         # Button to go to another screen
         btn = ttk.Button(self, text="Go to Settings", command=lambda: controller.show_frame("SettingsScreen"))
@@ -52,6 +52,8 @@ class EcesisLoginScreen(tk.Frame):
 
 
 
+        # Center the main application window after the EcesisLoginScreen is created
+        self.after(100, lambda: self.center_window(self.controller))
         # ttk.Button(self, text="MLS_Login",command=lambda:controller.show_frame("MlsScreen")).pack(pady=10)
 
 
@@ -493,6 +495,17 @@ class EcesisLoginScreen(tk.Frame):
         except requests.exceptions.RequestException as e:
             messagebox.showerror("Error", f"Request failed: {e}")
             return {"status_code": 500, "content": {"data": []}}
+    
+    def center_window(self, window):
+        """Centers a tkinter window."""
+        window.update_idletasks()
+        width = window.winfo_width()
+        height = window.winfo_height()
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        x = (screen_width - width) // 2
+        y = (screen_height - height) // 2
+        window.geometry(f"{width}x{height}+{x}+{y}")
 
     
 

@@ -27,23 +27,17 @@ def initialize_driver(self):
 
 
 
-def handle_login_status(login_title_or_url, username,log_check_value, portal_name):
-    """Handle login success or failure based on title or URL."""
-    # Check if login_title_or_url contains 'Partner Portal'
-    if log_check_value not in login_title_or_url:
-        # Log the login failure
-        logging.error(f"Login failed for {username} on {portal_name} due to incorrect credentials or login error.")
-        
-        # Show error message to the user
-        messagebox.showerror("Login Failed", "Invalid credentials or login error.")
-        
+def handle_login_status(login_title_or_url, username,login_check_keywords, portal_name):
+    """Handle login success or failure by checking the current URL."""
 
+    # Check if the current URL contains any of the success indicators
+    if any(keyword in login_title_or_url for keyword in login_check_keywords):
+        logging.info(f"Successfully logged in to {portal_name} as {username}.")
+        messagebox.showinfo("Login Successful", f"Successfully logged in to {portal_name} .")
     else:
-        # Log the login success
-        logging.info(f"Successfully logged in to {portal_name} with username {username}.")
+        logging.error(f"Login failed for {username} on {portal_name}. Possible incorrect credentials or login issue.")
+        messagebox.showerror("Login Failed", "Invalid credentials or login error for {portal_name}.")
         
-        # Show success message to the user
-        messagebox.showinfo("Login Successful", f"Successfully logged in to {portal_name}.")
         
 
 def handle_exception(self, e):
@@ -63,6 +57,6 @@ def params_check():
             arg1 = args.get('arg1', [None])[0]  # Get 'arg1' or None if not present
             arg2 = args.get('arg2', [None])[0]
             print(f"Args : {arg1}")   
-            return arg1
+            return arg1,arg2
     else:
-          return None        
+          return None,None        
