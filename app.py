@@ -72,7 +72,7 @@ class Application(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")    
 
         # login screen  
-        arg1= params_check()    
+        arg1,arg2= params_check()    
         
         if arg1:
             if 'mlsdownloader' in arg1 :
@@ -84,6 +84,7 @@ class Application(tk.Tk):
                 self.show_frame("MlsScreen") # call the class created for portal login
         else:  
             self.show_frame("EcesisLoginScreen")
+
 
     def show_frame(self, page_name):
         """Bring the requested screen to the front."""

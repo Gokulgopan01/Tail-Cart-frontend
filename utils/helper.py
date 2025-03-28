@@ -63,6 +63,11 @@ def params_check():
             arg1 = args.get('arg1', [None])[0]  # Get 'arg1' or None if not present
             arg2 = args.get('arg2', [None])[0]
             print(f"Args : {arg1}")   
-            return arg1
+            return arg1,arg2
     else:
-          return None        
+          return None,None        
+    
+
+def on_closing(self):
+    if messagebox.askokcancel("Quit", "Do you really want to exit?"):
+        self.destroy()  # Close the application    

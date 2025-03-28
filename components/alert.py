@@ -1,4 +1,4 @@
-class aklert:
+class Alert:
     IndentationError
 
 

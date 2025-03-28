@@ -7,7 +7,8 @@ from utils.pic_pdf_downloads.vpn_connection import vpn_checking
 import sys
 import threading
 from urllib.parse import urlparse, parse_qs
-
+from utils.helper import params_check
+from screens.loaded_screen import LoadedScreen
 
 class MlsScreen(tk.Frame):
 
@@ -15,25 +16,19 @@ class MlsScreen(tk.Frame):
         super().__init__(parent)
         self.controller = controller
         self.hybridIntegration = HybridBPOApi()
-
-        label = ttk.Label(self, text="Downloading Comparable PIC and PDF....", font=("Arial", 17))
-        label.pack(pady=20)
-
-        progress = ttk.Progressbar(self, orient="horizontal", length=200, mode="indeterminate")
-        progress.pack(pady=10)
-        progress.start()
-         # Get command line arguments 
+        self.container = tk.Frame(self)
+        self.container.pack(fill="both", expand=True)
+        title_text="Starting Hybrid Comp_PIC_PDF Download..."
+        status_text="Downloading started"
+        # Create LoadedScreen Instance
+        self.loaded_screen = LoadedScreen(self.container, self, title_text, status_text)
+        self.loaded_screen.pack(fill="both", expand=True)
 
         if len(sys.argv) < 2:
             print("Insufficient arguments provided.")
             return
-        url = sys.argv[1]  # Example: 'myapp://?arg1=mlsdownloader&arg2=order123'
-        parsed_url = urlparse(url)
-        args = parse_qs(parsed_url.query)
-        arg1 = args.get('arg1', [None])[0]  # Get 'arg1' or None if not present
-        arg2 = args.get('arg2', [None])[0]  # Get 'arg2' or None if not present  
-
-        # if(arg1=='mlsdownloader'):
+        
+        arg1,arg2= params_check() # Get 'arg2' or None if not present  
         if('mlsdownloader' in arg1):
             threading.Thread(target=self.check_if_any_argument_passed, args=(arg2,), daemon=True).start()
         else:
@@ -53,22 +48,16 @@ class MlsScreen(tk.Frame):
                     if mls_type in mls_data:
                         # If order data is found, proceed with the login
                         init=mls_data[mls_type]()
-                        init.process_mls_actions(order_data)
-                        for widget in self.winfo_children():
-                            widget.destroy() 
-                        label = ttk.Label(self, text="Downloading Comparable PIC and PDF Completed", font=("Arial", 18))
-                        label.pack(pady=20) 
-                             
+                        final_output=init.process_mls_actions(order_data)
+                        final_output
+                        self.after(2000, lambda: self.loaded_screen.update_status(title="Downloading Comparable PIC and PDF Completed", status=f"{final_output} download failed", loading='Clear'))                    
                     else:
                         print("No order data found for the given orderId.")
                         # Handle the case where no order data is found
 
                 else:
                     print('VPN not connected')
-                    for widget in self.winfo_children():
-                            widget.destroy() 
-                    label = ttk.Label(self, text="VPN Not Connected... Please connect and retry", font=("Arial", 18))
-                    label.pack(pady=20)
+                    self.after(2000, lambda: self.loaded_screen.update_status(title="VPN Not Connected... Please connect and retry", status="Download Failed",loading='Clear'))
             except Exception as e:
                 print(f"Error in the program: {e}")
 
