@@ -60,6 +60,7 @@ class Proteck:
             login_check_keyword="Partner Portal"
 
             handle_login_status(title, username, login_check_keyword,portal_name)
+            time.sleep(10800)
 
             # # Maximize the window and set position
             # self.driver.set_window_position(0, 0)

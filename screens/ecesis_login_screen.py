@@ -42,15 +42,8 @@ class EcesisLoginScreen(tk.Frame):
     def __init__(self,parent, controller):
         super().__init__(parent)
         self.controller = controller
+        self.active_portal_instances = []
         # Load Image
-        img_path = resource_path("logo.jpg")
-        image = Image.open(img_path)
-        image = image.resize((100, 100))  # Resize if needed
-        self.logo = ImageTk.PhotoImage(image)
-
-        # # Display Image
-        # label = tk.Label(self, image=self.logo)
-        # label.pack(pady=20)
 
         # Button to go to another screen
         btn = ttk.Button(self, text="Go to Settings", command=lambda: controller.show_frame("SettingsScreen"))
@@ -89,6 +82,9 @@ class EcesisLoginScreen(tk.Frame):
         self.email_entry.pack(pady=10, padx=10, fill="x", ipady=5)
         self.email_var.set("Enter your email")
 
+        # Bind Enter key to focus on the password field when Enter is pressed
+        self.email_entry.bind("<Return>", lambda event: self.password_entry.focus_set())
+
         # Password Entry (No Label)
         password_frame = tk.Frame(self.input_frame, bd=1, relief="solid", bg="white")
         password_frame.pack(pady=10, padx=10, fill="x")
@@ -107,12 +103,15 @@ class EcesisLoginScreen(tk.Frame):
         forgot_password_frame.pack(pady=15)
         tk.Button(forgot_password_frame, text="Forgot Password", font=("Arial", 9, "bold"), fg="white",
                   bg="#1E90FF", relief="flat", cursor="hand2", command=self.forgot_password).pack(pady=5)
-
+        # Bind Enter key to password entry (triggers login when pressed)
+        self.password_entry.bind("<Return>", self.login)
         # Login Button
         self.sign_in_btn = tk.Button(self.login_frame, text="Login", font=("Arial", 14, "bold"),
                                       fg="white", bg="#1E90FF", activebackground="#1E90FF", bd=0,
                                       relief="flat", height=2, width=20, command=self.login)
         self.sign_in_btn.pack(pady=30, ipadx=20)
+        # Bind Enter key to login function
+        self.bind("<Return>", lambda event: self.login())
 
         # Center the elements
         self.login_frame.pack_propagate(False)
@@ -155,7 +154,7 @@ class EcesisLoginScreen(tk.Frame):
             self.show_password_btn.config(text='👁')  # Change text to show password
     
 
-    def login(self):
+    def login(self, event=None):  # Accept event to handle Enter key press
         """Handles user login via API."""
         email = self.email_entry.get()
         password = self.password_entry.get()
@@ -168,7 +167,6 @@ class EcesisLoginScreen(tk.Frame):
                     data = response.json()
                     if data.get("status_code") == 200 and data.get("content", {}).get("data", {}).get("success"):
                         username = data["content"]["data"]["username"]
-                        #self.after(0, lambda: self.show_welcome_message(username))
                         self.after(0, lambda: self.show_client_login(username))
                     else:
                         self.after(0, lambda: messagebox.showerror("Error", "Invalid credentials"))
@@ -178,6 +176,7 @@ class EcesisLoginScreen(tk.Frame):
                 self.after(0, lambda: messagebox.showerror("Error", f"Request failed: {e}"))
 
         threading.Thread(target=login_request, daemon=True).start()
+
 
     def forgot_password(self):
         messagebox.showinfo("Forgot Password", "Redirecting to password recovery page.")
@@ -191,9 +190,11 @@ class EcesisLoginScreen(tk.Frame):
         # if hasattr(self, "login_frame"):
         #     self.login_frame.destroy()
 
+
+
         # If the login_frame exists, hide it instead of destroying it
-        if hasattr(self, "login_frame"):
-            self.login_frame.pack_forget()  # Hide the login frame
+        # if hasattr(self, "login_frame"):
+        #     self.login_frame.pack_forget()  # Hide the login frame
         # #  Initialize labels
         self.username_label = ttk.Label(self, text="Username: ")
         self.password_label = ttk.Label(self, text="Password: ")
@@ -235,21 +236,29 @@ class EcesisLoginScreen(tk.Frame):
         self.main_client_var = tk.StringVar()
         self.main_client_dropdown = self.create_combobox(self.inner_frame, self.main_client_var, "Select Main Client", self.on_main_client_select)
         self.main_client_dropdown.pack(pady=5, padx=20, fill="x")
+        self.main_client_dropdown.bind("<Return>", lambda event: self.sub_client_dropdown.focus_set())  # Move to Sub Client
+
 
         # Sub Client Dropdown
         self.sub_client_var = tk.StringVar()
         self.sub_client_dropdown = self.create_combobox(self.inner_frame, self.sub_client_var, "Select Sub Client", self.on_sub_client_select)
         self.sub_client_dropdown.pack(pady=5, padx=20, fill="x")
+        self.sub_client_dropdown.bind("<Return>", lambda event: self.portal_dropdown.focus_set())  # Move to Portal
+
 
         # Portal Dropdown
         self.portal_var = tk.StringVar()
         self.portal_dropdown = self.create_combobox(self.inner_frame, self.portal_var, "Select Portal", self.on_portal_select)
         self.portal_dropdown.pack(pady=5, padx=20, fill="x")
+        self.portal_dropdown.bind("<Return>", lambda event: self.account_dropdown.focus_set())  # Move to Account
+    # Move to the Login Button
+
 
         # Account Dropdown
         self.account_var = tk.StringVar()
         self.account_dropdown = self.create_combobox(self.inner_frame, self.account_var, "Select Account", self.on_account_select)
         self.account_dropdown.pack(pady=5, padx=20, fill="x")
+        self.account_dropdown.bind("<Return>", lambda event: self.confirm_selection())  # Move to the Login Button
 
         # Login Button
         self.login_button = tk.Button(self.inner_frame, text="Login to Portal", command=self.confirm_selection,
@@ -265,6 +274,36 @@ class EcesisLoginScreen(tk.Frame):
         cb.bind("<<ComboboxSelected>>", callback)
         return cb
 
+    # def logout(self):
+    #     """Logs out the user, resets UI, and clears login fields."""
+    #     confirm = messagebox.askyesno("Logout", "Are you sure you want to log out?")
+    #     if confirm:
+    #         # Hide the client frame
+    #         if hasattr(self, "client_frame"):
+    #             self.client_frame.pack_forget()
+
+    #         # Unhide the login frame
+    #         if hasattr(self, "login_frame"):
+    #             self.login_frame.pack(fill="both", expand=True)
+
+    #             # **Restore placeholders for email and password fields**
+    #         if hasattr(self, "email_entry"):
+    #             self.email_entry.delete(0, tk.END)  # Clear the field
+    #             self.email_entry.insert(0, "Enter your email")  # Restore placeholder
+    #         if hasattr(self, "password_entry"):
+    #             self.password_entry.delete(0, tk.END)  # Clear the field
+    #             self.password_entry.insert(0, "Enter your password")  # Restore placeholder
+    #             #self.password_entry.config(show="")  # Ensure it appears as placeholder text
+
+    #         # **Hide the logout button on the login screen**
+    #         if hasattr(self, "logout_button_top"):
+    #             self.logout_button_top.pack_forget()  # Hide the logout button
+
+    #         # Set focus to login button after logout
+    #         self.after(100, self.login_button.focus_set)
+    #         # Switch to the login screen
+    #         self.controller.show_frame("EcesisLoginScreen")
+
     def logout(self):
         """Logs out the user, resets UI, and clears login fields."""
         confirm = messagebox.askyesno("Logout", "Are you sure you want to log out?")
@@ -276,20 +315,26 @@ class EcesisLoginScreen(tk.Frame):
             # Unhide the login frame
             if hasattr(self, "login_frame"):
                 self.login_frame.pack(fill="both", expand=True)
-
-            # **Clear the username and password fields**
-            if hasattr(self, "email_var"):
-                self.email_var.set("")  # Clear email field
-            if hasattr(self, "password_var"):
-                self.password_var.set("")  # Clear password field
-
-            # **Hide the logout button on the login screen**
+            
+            # Restore placeholders for email and password fields
+            if hasattr(self, "email_entry"):
+                self.email_entry.delete(0, tk.END)  # Clear the field
+                self.email_entry.insert(0, "Enter your email")  # Restore placeholder
+            
+            if hasattr(self, "password_entry"):
+                self.password_entry.delete(0, tk.END)  # Clear the field
+                self.password_entry.insert(0, "Enter your password")  # Restore placeholder
+            
+            # Hide the logout button if present
             if hasattr(self, "logout_button_top"):
-                self.logout_button_top.pack_forget()  # Hide the logout button
+                self.logout_button_top.pack_forget()
 
-            # Switch to the login screen
+            # Ensure the login frame is brought to the front
             self.controller.show_frame("EcesisLoginScreen")
-
+            
+            # Delay focus setting to ensure UI update
+            if hasattr(self, "login_button"):
+                self.after(200, self.login_button.focus_set)  # Use root.after to avoid timing issues
 
 
     def clear_screen(self):
@@ -380,16 +425,44 @@ class EcesisLoginScreen(tk.Frame):
         else:
             messagebox.showwarning("Incomplete", "Please select all details to proceed.")
 
+    # def login_to_portal(self, selected_account):
+    #     """Login to the portal with the selected account details."""
+    #     portal = self.portal_var.get()
+    #     if portal:
+    #         portal_login = PortalLoginScreen.portals(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"])  # Create PortalLogin instance using portals
+    #         threading.Thread(
+    #             target=portal_login.login_to_portal,  # Correct thread target
+    #             args=(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"]),
+    #             daemon=True
+    #         ).start()
+    #     else:
+    #         messagebox.showerror("Error", "Portal login function not found.")
+
     def login_to_portal(self, selected_account):
         """Login to the portal with the selected account details."""
         portal = self.portal_var.get()
         if portal:
-            portal_login = PortalLoginScreen.portals(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"])  # Create PortalLogin instance using portals
-            threading.Thread(
-                target=portal_login.login_to_portal,  # Correct thread target
-                args=(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"]),
-                daemon=True
-            ).start()
+            # Create a new instance of the portal class for each login attempt
+            portal_instance = PortalLoginScreen.portals(
+                selected_account["username"],
+                selected_account["password"],
+                self.selected_portal_url,
+                portal,
+                selected_account["proxy"]
+            )
+            if portal_instance:
+                self.active_portal_instances.append(portal_instance) # Store the instance
+                threading.Thread(
+                    target=portal_instance.login_to_portal,
+                    args=(
+                        selected_account["username"],
+                        selected_account["password"],
+                        self.selected_portal_url,
+                        portal,
+                        selected_account["proxy"],
+                    ),
+                    daemon=True,
+                ).start()
         else:
             messagebox.showerror("Error", "Portal login function not found.")
 

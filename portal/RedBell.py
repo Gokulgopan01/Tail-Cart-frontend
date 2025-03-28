@@ -47,7 +47,7 @@ class RedBell:
             response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
 
             api_response = response.json()
-            portal_url="https://valuationops.homegenius.com/VendorPortal"
+            #portal_url="https://valuationops.homegenius.com/VendorPortal"
             if api_response.get("status") == "success":
                 redbell_cookie = api_response["cookies"].get(".ASPXAUTH")
                 if redbell_cookie:
@@ -57,47 +57,50 @@ class RedBell:
                     
                     # Wait for the page to load.
                     # Wait for login success by checking page title
-                    WebDriverWait(self.driver, 60).until(EC.title_contains("Partner Portal"))
+                    #WebDriverWait(self.driver, 120).until(EC.presence_of_element_located((By.ID, "Partner portal")))
+
 
                     title = self.driver.current_url
-                    login_check_keyword="Returnurl"
+                    login_check_keyword="VendorPortal/Index"
 
                     handle_login_status(title, username, login_check_keyword,portal_name)
                      
-                    return True
+                    return self.driver  # Return the driver instance
                 else:
                     logging.error("Cookie '.ASPXAUTH' not found in API response.")
                     title="MFA FAILED"
                     login_check_keyword="False"
                     handle_login_status(title, username, login_check_keyword,portal_name)
-                    return False
+                    #return False
                    
             else:
                 logging.error(f"API call failed: {api_response.get('status')}")
                 title="MFA FAILED"
                 login_check_keyword="False"
                 handle_login_status(title, username, login_check_keyword,portal_name)
-                return False
+                #return False
 
         except requests.exceptions.RequestException as e:
             logging.error(f"API request failed: {e}")
             title="MFA FAILED"
             login_check_keyword="False"
             handle_login_status(title, username, login_check_keyword,portal_name)
-            return False
+            #return False
         except json.JSONDecodeError as e:
             logging.error(f"Failed to decode JSON response: {e}")
             title="MFA FAILED"
             login_check_keyword="False"
             handle_login_status(title, username, login_check_keyword,portal_name)
-            return False
+            #return False
         except Exception as e:
             logging.exception(f"An error occurred: {e}")
             title="MFA FAILED"
             login_check_keyword="False"
             handle_login_status(title, username, login_check_keyword,portal_name)
-            return False
-
-    def close_browser(self):
-        if self.driver:
-            self.driver.quit()
+            #return False
+        # finally:
+        #     if self.driver:
+        #         self.driver.quit()
+    # def close_browser(self):
+    #     if self.driver:
+    #         self.driver.quit()

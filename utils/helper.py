@@ -42,6 +42,7 @@ def handle_login_status(login_title_or_url, username,log_check_value, portal_nam
         
         # Show success message to the user
         messagebox.showinfo("Login Successful", f"Successfully logged in to {portal_name}.")
+        
 
 def handle_exception(self, e):
         """Handle exceptions and log the error."""
