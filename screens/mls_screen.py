@@ -6,6 +6,7 @@ from integrations.mls_automation.fmls import Fmls
 from utils.pic_pdf_downloads.vpn_connection import vpn_checking
 import sys
 import threading
+from urllib.parse import urlparse, parse_qs
 
 
 class MlsScreen(tk.Frame):
@@ -17,29 +18,27 @@ class MlsScreen(tk.Frame):
 
         label = ttk.Label(self, text="Downloading Comparable PIC and PDF....", font=("Arial", 17))
         label.pack(pady=20)
+
         progress = ttk.Progressbar(self, orient="horizontal", length=200, mode="indeterminate")
         progress.pack(pady=10)
         progress.start()
+         # Get command line arguments 
 
-        args = sys.argv[1:]  # Get command line arguments
-        if len(args) < 1:
+        if len(sys.argv) < 2:
             print("Insufficient arguments provided.")
             return
-        args1 = sys.argv[1] 
-        arg2 = sys.argv[2] 
-        print(f"Arguments passed: {args}")
-        print(f"Second argument passed: {arg2}")   
+        url = sys.argv[1]  # Example: 'myapp://?arg1=mlsdownloader&arg2=order123'
+        parsed_url = urlparse(url)
+        args = parse_qs(parsed_url.query)
+        arg1 = args.get('arg1', [None])[0]  # Get 'arg1' or None if not present
+        arg2 = args.get('arg2', [None])[0]  # Get 'arg2' or None if not present  
 
-        if(args1=='mlsdownloader'):
-
+        # if(arg1=='mlsdownloader'):
+        if('mlsdownloader' in arg1):
             threading.Thread(target=self.check_if_any_argument_passed, args=(arg2,), daemon=True).start()
-            print("Process execution started")
-
         else:
              print("Orders not found") 
 
-                 
-        
 
     def check_if_any_argument_passed(self, orderId):
             
@@ -53,7 +52,6 @@ class MlsScreen(tk.Frame):
                     mls_type = order_data["MLS"]
                     if mls_type in mls_data:
                         # If order data is found, proceed with the login
-                        # init=GaMls()
                         init=mls_data[mls_type]()
                         init.process_mls_actions(order_data)
                         for widget in self.winfo_children():
@@ -67,6 +65,10 @@ class MlsScreen(tk.Frame):
 
                 else:
                     print('VPN not connected')
+                    for widget in self.winfo_children():
+                            widget.destroy() 
+                    label = ttk.Label(self, text="VPN Not Connected... Please connect and retry", font=("Arial", 18))
+                    label.pack(pady=20)
             except Exception as e:
                 print(f"Error in the program: {e}")
 

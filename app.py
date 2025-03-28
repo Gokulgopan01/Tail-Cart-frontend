@@ -4,6 +4,8 @@ from tkinter import Image, ttk
 from screens.ecesis_login_screen import EcesisLoginScreen
 from screens.mls_screen import MlsScreen
 from screens.settings_screen import SettingsScreen
+from urllib.parse import urlparse, parse_qs
+from utils.helper import params_check
 from utils.file_util import resource_path
 from PIL import Image, ImageDraw, ImageTk
 
@@ -43,7 +45,7 @@ class Application(tk.Tk):
         # Define a style for LabelFrame (REMOVE BACKGROUND HERE)
         self.style.configure("TLabelFrame", foreground="black", borderwidth=2, relief="solid")
         self.style.configure("TLabelFrame.Label", foreground="#4285F4", font=("Arial", 12, "bold"))
-
+        
         # Define styles for buttons
         self.style.configure("TButton", font=("Arial", 12, "bold"), padding=5, relief="flat", background="#1E90FF", foreground="white")  # Bright blue button
 
@@ -69,12 +71,18 @@ class Application(tk.Tk):
             self.frames[page_name] = frame
             frame.grid(row=0, column=0, sticky="nsew")    
 
-        # login screen      
-        args = sys.argv[1:]  # Get command line arguments
-        if len(args) > 1:
-            print("Insufficient arguments provided.")
-            self.show_frame("MlsScreen")
-        else:    
+        # login screen  
+        arg1= params_check()    
+        
+        if arg1:
+            if 'mlsdownloader' in arg1 :
+                print("mls creen called")
+                self.show_frame("MlsScreen")
+            elif 'SmartEntry' in arg1 :
+                self.show_frame("MlsScreen") #call the class created for entry
+            else:     
+                self.show_frame("MlsScreen") # call the class created for portal login
+        else:  
             self.show_frame("EcesisLoginScreen")
 
     def show_frame(self, page_name):

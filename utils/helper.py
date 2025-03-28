@@ -8,6 +8,8 @@ import logging
 from selenium.webdriver.chrome.service import Service
 import logging
 from tkinter import messagebox
+import sys
+from urllib.parse import urlparse, parse_qs
 
 def initialize_driver(self):
         """Initialize Selenium WebDriver."""
@@ -50,3 +52,17 @@ def handle_exception(self, e):
         if stack_trace:
             e = stack_trace
         self.update_report_data(None, str(e), 'UNABLE TO LOGIN')        
+
+
+def params_check():
+    
+    if len(sys.argv) >= 2:
+            url = sys.argv[1]  # Example: 'myapp://?arg1=mlsdownloader&arg2=order123'
+            parsed_url = urlparse(url)
+            args = parse_qs(parsed_url.query)
+            arg1 = args.get('arg1', [None])[0]  # Get 'arg1' or None if not present
+            arg2 = args.get('arg2', [None])[0]
+            print(f"Args : {arg1}")   
+            return arg1
+    else:
+          return None        
