@@ -9,6 +9,8 @@ from utils.helper import params_check
 from utils.pic_pdf_downloads.vpn_connection import vpn_checking
 import sys
 import threading
+from integrations import hybrid_bpo_api
+from screens import portal_login_screen
 
 
 class EntryScreen(tk.Frame):
@@ -30,6 +32,7 @@ class EntryScreen(tk.Frame):
         # Simulating Updates from Another Script
         # login screen  
         arg1,arg2= params_check()    
+        arg1="SmartEntry"
 
         # if(arg1=='mlsdownloader'):
         if('SmartEntry' in arg1):
@@ -51,23 +54,26 @@ class EntryScreen(tk.Frame):
             try:
                 is_vpn_connected = vpn_checking()
                 if is_vpn_connected:
-
-                    # mls_data={'GAMLS':Gamls,'FMLS':Fmls}
-                    # order_data=self.hybridIntegration.get_order(orderId)
-                    # print(order_data["MLS"])
-                    # mls_type = order_data["MLS"]
-                    # if mls_type in mls_data:
-                    #     # If order data is found, proceed with the login
-                    #     init=mls_data[mls_type]()
-                    #     init.process_mls_actions(order_data)
-                    #     for widget in self.winfo_children():
-                    #         widget.destroy() 
-                    #     label = ttk.Label(self, text="Downloading Comparable PIC and PDF Completed", font=("Arial", 18))
-                    #     label.pack(pady=20) 
-                             
-                    # else:
-                        print("No order data found for the given orderId.")
-                        # Handle the case where no order data is found
+                     # Retrieve order details
+                    orders = HybridBPOApi.get_entry_order()
+                    if not orders:  # Check if the order list is empty
+                        print("No orders found.")
+                        return
+                    
+                    # Process each order
+                    for order in orders:
+                        portal_name = order.get("portal_name", "")
+                        username = order.get("username", "")
+                        password = order.get("password", "")
+                        portal_url = order.get("portal_url", "")
+                        proxy = order.get("proxy", None)  # Optional proxy
+                        
+                        if portal_name:
+                            print(f"Logging into portal: {portal_name}")
+                            portal_login_screen.PortalLoginScreen.login_to_portal(self,username, password, portal_url, portal_name, proxy)
+                        else:
+                            print("Portal name missing in order data.")
+                                    
 
                 else:
                     print('VPN not connected')

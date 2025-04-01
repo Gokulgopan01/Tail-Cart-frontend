@@ -421,7 +421,7 @@ class EcesisLoginScreen(tk.Frame):
         if self.main_client_var.get() and self.sub_client_var.get() and self.portal_var.get() and self.account_var.get():
             selected_account = next((acc for acc in self.accounts if acc["account_id"] == int(self.account_var.get())), None)
             if selected_account:
-                self.login_to_portal(selected_account)
+                self.login_to_portal_self(selected_account)
             else:
                 messagebox.showerror("Error", "Selected account not found.")
         else:
@@ -440,7 +440,7 @@ class EcesisLoginScreen(tk.Frame):
     #     else:
     #         messagebox.showerror("Error", "Portal login function not found.")
 
-    def login_to_portal(self, selected_account):
+    def login_to_portal_self(self, selected_account):
         """Login to the portal with the selected account details."""
         portal = self.portal_var.get()
         if portal:
