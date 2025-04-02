@@ -3,12 +3,14 @@ import tkinter as tk
 from tkinter import Image, ttk
 from screens.ecesis_login_screen import EcesisLoginScreen
 from screens.mls_screen import MlsScreen
+from screens.portal_login_screen import PortalLoginScreen
 from screens.settings_screen import SettingsScreen
 from urllib.parse import urlparse, parse_qs
 from utils.helper import params_check
 from utils.file_util import resource_path
 from PIL import Image, ImageDraw, ImageTk
-
+from utils import user_data
+from screens.profile_screen import ProfileScreen
 class Application(tk.Tk):
     def __init__(self): #root passed but not used.
         super().__init__() #super init.
@@ -64,7 +66,7 @@ class Application(tk.Tk):
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
 
-        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen):
+        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen, ProfileScreen):
             print(f"value in loop : {F}")
             page_name = F.__name__
             frame = F(parent=self.container, controller=self) #correct parent pass.
@@ -83,7 +85,14 @@ class Application(tk.Tk):
             else:     
                 self.show_frame("MlsScreen") # call the class created for portal login
         else:  
-            self.show_frame("EcesisLoginScreen")
+        
+            # check if logged In :
+            test = user_data.load_login_data()
+            print("login data",test['logged_in'])
+            if test['logged_in']:
+                self.show_frame("ProfileScreen")
+            else:
+                self.show_frame("EcesisLoginScreen")
 
 
     def show_frame(self, page_name):

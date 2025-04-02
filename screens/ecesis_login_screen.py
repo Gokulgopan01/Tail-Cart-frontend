@@ -18,6 +18,7 @@ from PIL import Image, ImageDraw, ImageTk
 
 from screens.portal_login_screen import PortalLoginScreen
 import app
+from utils.user_data import save_login_data, load_login_data
 
 # Load variables from .env file
 load_dotenv()
@@ -168,6 +169,12 @@ class EcesisLoginScreen(tk.Frame):
                     if data.get("status_code") == 200 and data.get("content", {}).get("data", {}).get("success"):
                         username = data["content"]["data"]["username"]
                         self.after(0, lambda: self.show_client_login(username))
+                        token = data["content"]["data"]["token"]
+                        user_details = data["content"]["data"]
+                        logged_in = True
+                        # store the data:
+                        save_login_data(logged_in,token,user_details)
+
                     else:
                         self.after(0, lambda: messagebox.showerror("Error", "Invalid credentials"))
                 else:
@@ -274,35 +281,6 @@ class EcesisLoginScreen(tk.Frame):
         cb.bind("<<ComboboxSelected>>", callback)
         return cb
 
-    # def logout(self):
-    #     """Logs out the user, resets UI, and clears login fields."""
-    #     confirm = messagebox.askyesno("Logout", "Are you sure you want to log out?")
-    #     if confirm:
-    #         # Hide the client frame
-    #         if hasattr(self, "client_frame"):
-    #             self.client_frame.pack_forget()
-
-    #         # Unhide the login frame
-    #         if hasattr(self, "login_frame"):
-    #             self.login_frame.pack(fill="both", expand=True)
-
-    #             # **Restore placeholders for email and password fields**
-    #         if hasattr(self, "email_entry"):
-    #             self.email_entry.delete(0, tk.END)  # Clear the field
-    #             self.email_entry.insert(0, "Enter your email")  # Restore placeholder
-    #         if hasattr(self, "password_entry"):
-    #             self.password_entry.delete(0, tk.END)  # Clear the field
-    #             self.password_entry.insert(0, "Enter your password")  # Restore placeholder
-    #             #self.password_entry.config(show="")  # Ensure it appears as placeholder text
-
-    #         # **Hide the logout button on the login screen**
-    #         if hasattr(self, "logout_button_top"):
-    #             self.logout_button_top.pack_forget()  # Hide the logout button
-
-    #         # Set focus to login button after logout
-    #         self.after(100, self.login_button.focus_set)
-    #         # Switch to the login screen
-    #         self.controller.show_frame("EcesisLoginScreen")
 
     def logout(self):
         """Logs out the user, resets UI, and clears login fields."""
