@@ -7,7 +7,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 import time
-
 import os
 import tkinter as tk
 from tkinter import DISABLED, NORMAL, ttk, messagebox
@@ -18,6 +17,7 @@ from PIL import Image, ImageDraw, ImageTk
 
 from screens.portal_login_screen import PortalLoginScreen
 import app
+from utils.user_data import save_login_data, load_login_data
 
 # Load variables from .env file
 load_dotenv()
@@ -43,25 +43,24 @@ class EcesisLoginScreen(tk.Frame):
         super().__init__(parent)
         self.controller = controller
         self.active_portal_instances = []
-          # Load Image
+        # Load Image
 
-        # Button to go to another screen
-        btn = ttk.Button(self, text="Go to Settings", command=lambda: controller.show_frame("SettingsScreen"))
-        # btn = ttk.Button(self, text="Go to Settings", command=self.launch_browser)
-        btn.pack(pady=10)
+        img_path = resource_path("settings.jpg")
+        image = Image.open(img_path)
+        image = image.resize((30, 30))  # Resize if needed
+        self.logo = ImageTk.PhotoImage(image)
+        # Set the window icon
 
-
-
-        # Center the main application window after the EcesisLoginScreen is created
-        self.after(100, lambda: self.center_window(self.controller))
-        # ttk.Button(self, text="MLS_Login",command=lambda:controller.show_frame("MlsScreen")).pack(pady=10)
-
-
+        top_frame = tk.Frame(self, bg="white")
+        top_frame.pack(fill="x", side="top")
+        style = ttk.Style()
+        style.configure("Custom.TButton", background="white", relief="flat")
+        btn = ttk.Button(top_frame, image=self.logo, command=lambda: controller.show_frame("SettingsScreen"),style="Custom.TButton",cursor="hand2")
+        btn.pack(side="right", padx=5, pady=5)
 
         """Create a login UI with a dark blue, yellow, and white color scheme."""
-        self.login_frame = tk.Frame(self, bg="#F0F0F0")  # Light gray background
+        self.login_frame = tk.Frame(self, bg="#FFFFFF")  # White
         self.login_frame.pack(fill="both", expand=True)
-
 
         # Now create the LabelFrame with the correct style
         self.input_frame = ttk.LabelFrame(self.login_frame, padding=10, style="Custom.TLabelframe")
@@ -69,49 +68,60 @@ class EcesisLoginScreen(tk.Frame):
         # Initialize client data
         self.client_data = {}
         self.create_login_frame()
+
     def create_login_frame(self):
-        ttk.Label(self.login_frame, text="ECESIS", font=("Arial", 14, "bold"), background="#F0F0F0").pack(pady=10)
-        ttk.Label(self.login_frame, text="HYBRID CLIENT LOGIN", font=("Arial", 16, "bold"), background="#F0F0F0").pack(pady=20)
-        ttk.Label(self.login_frame, text="Welcome back! Please login to your account to continue", font=("Arial", 10), background="#F0F0F0").pack(pady=5)
+
+        ttk.Label(self.login_frame, text="ECESIS", font=("sans-serif", 14, "bold"), background="#FFFFFF").pack(pady=10)
+        ttk.Label(self.login_frame, text="HYBRID CLIENT LOGIN", font=("sans-serif", 16, "bold"), background="#FFFFFF").pack(pady=20)
+        ttk.Label(self.login_frame, text="Welcome back! Please login to your account to continue", font=("sans-serif", 10), background="#FFFFFF").pack(pady=5)
 
         # Use a Frame instead of ttk.LabelFrame
-        self.input_frame = tk.Frame(self.login_frame, bg="#F0F0F0", bd=2, relief="solid", padx=10, pady=10)
-        self.input_frame.pack(pady=10, padx=20, fill="x")
+        self.input_frame = tk.Frame(self.login_frame, bg="#FFFFFF", relief="solid", padx=15, pady=15)
+        self.input_frame.pack(pady=5, padx=50)
 
         # Email Entry (No Label)
         self.email_var = tk.StringVar()
-        self.email_entry = ttk.Entry(self.input_frame, font=("Arial", 11), textvariable=self.email_var, foreground="gray", background="white")
-        self.email_entry.pack(pady=10, padx=10, fill="x", ipady=5)
+        self.email_entry = ttk.Entry(self.input_frame, font=("sans-serif", 10), textvariable=self.email_var, foreground="gray", background="white")
+        self.email_entry.pack(pady=6, padx=6, fill="x", ipady=5)
         self.email_var.set("Enter your email")
 
         # Bind Enter key to focus on the password field when Enter is pressed
         self.email_entry.bind("<Return>", lambda event: self.password_entry.focus_set())
 
         # Password Entry (No Label)
-        password_frame = tk.Frame(self.input_frame, bd=1, relief="solid", bg="white")
-        password_frame.pack(pady=10, padx=10, fill="x")
+        self.password_frame = tk.Frame(self.input_frame, bd=1, relief="solid", bg="white")
+        self.password_frame.pack(pady=6, padx=6, fill="x")
 
         self.password_var = tk.StringVar()
-        self.password_entry = tk.Entry(password_frame, font=("Arial", 11), textvariable=self.password_var, foreground="gray", background="white", relief="flat", bd=0)
-        self.password_entry.pack(side="left", fill="x", expand=True, ipady=5, padx=(5, 0))
+        self.password_entry = tk.Entry(self.password_frame, font=("sans-serif", 10), textvariable=self.password_var, foreground="gray", background="white", relief="flat")
+        self.password_entry.pack(side="left", fill="x", expand=True,  padx=(1, 0))
         self.password_var.set("Enter your password")
 
         # Toggle Button Inside the Password Box
-        self.show_password_btn = tk.Button(password_frame, text="👁", font=("Arial", 10), relief="flat", bd=0, cursor="hand2", bg="white", command=self.toggle_password)
-        self.show_password_btn.pack(side="right", padx=(0, 5))
+        self.show_password_btn = tk.Button(self.password_frame, text="👁", font=("sans-serif", 10), relief="flat", cursor="hand2", bg="white", command=self.toggle_password)
+        self.show_password_btn.pack(side="right", padx=(0, 3))
 
-        # Forgot Password
-        forgot_password_frame = tk.Frame(self.login_frame, bg="#F0F0F0")
-        forgot_password_frame.pack(pady=15)
-        tk.Button(forgot_password_frame, text="Forgot Password", font=("Arial", 9, "bold"), fg="white",
-                  bg="#1E90FF", relief="flat", cursor="hand2", command=self.forgot_password).pack(pady=5)
+        forgot_password_frame = tk.Frame(self.input_frame, bg="#FFFFFF")
+        forgot_password_frame.pack(pady=1, anchor="e")
+        forgot_password_label = tk.Label(
+            forgot_password_frame, 
+            text="Forgot Password?", 
+            font=("sans-serif", 10, "underline"),  # Underlined text
+            fg="black",  # Hyperlink-like color
+            bg="#FFFFFF",
+            cursor="hand2"  # Hand cursor like a link
+    )
+              
+        forgot_password_label.pack(anchor="e",pady=5,padx=10)
+        # Bind click event to act like a button
+        forgot_password_label.bind("<Button-1>", lambda e: self.forgot_password())
         # Bind Enter key to password entry (triggers login when pressed)
         self.password_entry.bind("<Return>", self.login)
         # Login Button
-        self.sign_in_btn = tk.Button(self.login_frame, text="Login", font=("Arial", 14, "bold"),
-                                      fg="white", bg="#1E90FF", activebackground="#1E90FF", bd=0,
-                                      relief="flat", height=2, width=20, command=self.login)
-        self.sign_in_btn.pack(pady=30, ipadx=20)
+        self.sign_in_btn = tk.Button(self.login_frame, text="Login", font=("sans-serif", 12, "bold"),
+                                      fg="white", bg="#1877F2", activebackground="#1E90FF", bd=0,cursor="hand2",
+                                      relief="flat", height=1, width=10, command=self.login)
+        self.sign_in_btn.pack(pady=10, ipadx=10)
         # Bind Enter key to login function
         self.bind("<Return>", lambda event: self.login())
 
@@ -170,6 +180,12 @@ class EcesisLoginScreen(tk.Frame):
                     if data.get("status_code") == 200 and data.get("content", {}).get("data", {}).get("success"):
                         username = data["content"]["data"]["username"]
                         self.after(0, lambda: self.show_client_login(username))
+                        token = data["content"]["data"]["token"]
+                        user_details = data["content"]["data"]
+                        logged_in = True
+                        # store the data:
+                        save_login_data(logged_in,token,user_details)
+
                     else:
                         self.after(0, lambda: messagebox.showerror("Error", "Invalid credentials"))
                 else:
@@ -276,35 +292,6 @@ class EcesisLoginScreen(tk.Frame):
         cb.bind("<<ComboboxSelected>>", callback)
         return cb
 
-    # def logout(self):
-    #     """Logs out the user, resets UI, and clears login fields."""
-    #     confirm = messagebox.askyesno("Logout", "Are you sure you want to log out?")
-    #     if confirm:
-    #         # Hide the client frame
-    #         if hasattr(self, "client_frame"):
-    #             self.client_frame.pack_forget()
-
-    #         # Unhide the login frame
-    #         if hasattr(self, "login_frame"):
-    #             self.login_frame.pack(fill="both", expand=True)
-
-    #             # **Restore placeholders for email and password fields**
-    #         if hasattr(self, "email_entry"):
-    #             self.email_entry.delete(0, tk.END)  # Clear the field
-    #             self.email_entry.insert(0, "Enter your email")  # Restore placeholder
-    #         if hasattr(self, "password_entry"):
-    #             self.password_entry.delete(0, tk.END)  # Clear the field
-    #             self.password_entry.insert(0, "Enter your password")  # Restore placeholder
-    #             #self.password_entry.config(show="")  # Ensure it appears as placeholder text
-
-    #         # **Hide the logout button on the login screen**
-    #         if hasattr(self, "logout_button_top"):
-    #             self.logout_button_top.pack_forget()  # Hide the logout button
-
-    #         # Set focus to login button after logout
-    #         self.after(100, self.login_button.focus_set)
-    #         # Switch to the login screen
-    #         self.controller.show_frame("EcesisLoginScreen")
 
     def logout(self):
         """Logs out the user, resets UI, and clears login fields."""
@@ -421,26 +408,14 @@ class EcesisLoginScreen(tk.Frame):
         if self.main_client_var.get() and self.sub_client_var.get() and self.portal_var.get() and self.account_var.get():
             selected_account = next((acc for acc in self.accounts if acc["account_id"] == int(self.account_var.get())), None)
             if selected_account:
-                self.login_to_portal_self(selected_account)
+                self.login_to_portal(selected_account)
             else:
                 messagebox.showerror("Error", "Selected account not found.")
         else:
             messagebox.showwarning("Incomplete", "Please select all details to proceed.")
 
-    # def login_to_portal(self, selected_account):
-    #     """Login to the portal with the selected account details."""
-    #     portal = self.portal_var.get()
-    #     if portal:
-    #         portal_login = PortalLoginScreen.portals(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"])  # Create PortalLogin instance using portals
-    #         threading.Thread(
-    #             target=portal_login.login_to_portal,  # Correct thread target
-    #             args=(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"]),
-    #             daemon=True
-    #         ).start()
-    #     else:
-    #         messagebox.showerror("Error", "Portal login function not found.")
 
-    def login_to_portal_self(self, selected_account):
+    def login_to_portal(self, selected_account):
         """Login to the portal with the selected account details."""
         portal = self.portal_var.get()
         if portal:
@@ -495,17 +470,6 @@ class EcesisLoginScreen(tk.Frame):
         except requests.exceptions.RequestException as e:
             messagebox.showerror("Error", f"Request failed: {e}")
             return {"status_code": 500, "content": {"data": []}}
-    
-    def center_window(self, window):
-        """Centers a tkinter window."""
-        window.update_idletasks()
-        width = window.winfo_width()
-        height = window.winfo_height()
-        screen_width = window.winfo_screenwidth()
-        screen_height = window.winfo_screenheight()
-        x = (screen_width - width) // 2
-        y = (screen_height - height) // 2
-        window.geometry(f"{width}x{height}+{x}+{y}")
 
     
 

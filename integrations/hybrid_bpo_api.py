@@ -7,7 +7,6 @@ load_dotenv()
 # Retrieve the API key from the environment variables
 API_KEY = os.getenv('API_KEY')
 
-
 class HybridBPOApi:
 
     def __init__(self):
@@ -42,11 +41,12 @@ class HybridBPOApi:
             return order      
         except Exception as e:
             print(f"Error in the program: {e}")
+
     def get_entry_order():
         """Returns the order details as a dictionary."""
         order_details = [
         {
-            "order_id": 123,
+            "order_id": 3,
             "client_name": "Roselyn",
             "main_client": "Roselyn",
             "portal_name": "RedBell",
@@ -57,27 +57,6 @@ class HybridBPOApi:
             "session": "<><><><>",
             "proxy": "",
             "account_status": "Active"
-        },
-        # {
-        #     "order_id": 1233,
-        #     "client_name": "Roselyn",
-        #     "main_client": "Roselyn",
-        #     "portal_name": "Proteck",
-        #     "portal_id": 12,
-        #     "portal_url": "https://valuationops.homegenius.com/VendorPortal",
-        #     "username": "silvercirclebpos@gmail.com",
-        #     "password": "Re@2025bpo",
-        #     "session": "<><><><>",
-        #     "proxy": "12120",
-        #     "account_status": "Active"
-        # }
-    ]
+        }]
+
     
-        
-        # Return the dictionary directly
-        return order_details
-
-    # # Example Usage:
-    # order_dict = get_entry_order()
-    # print(order_dict)
-

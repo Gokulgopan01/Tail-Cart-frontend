@@ -1,4 +1,7 @@
+import json
+import os
 import traceback
+import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -10,6 +13,14 @@ import logging
 from tkinter import messagebox
 import sys
 from urllib.parse import urlparse, parse_qs
+from dotenv import load_dotenv
+
+
+# Load variables from .env file
+load_dotenv()
+
+# Retrieve API URLs from environment variables
+ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")    
 
 def initialize_driver(self):
         """Initialize Selenium WebDriver."""
@@ -60,3 +71,35 @@ def params_check():
             return arg1,arg2
     else:
           return None,None        
+# Function to fetch stored token (assuming it was saved as JSON)
+def get_saved_token():
+    try:
+        with open("login_data.json", "r") as file:
+            data = json.load(file)
+            return data.get("token", None)
+    except FileNotFoundError:
+        return None
+
+# Fetch order address using stored token
+def get_order_address(order_id):
+    token = get_saved_token()
+    if not token:
+        return "Authentication token not found. Please log in again."
+
+    url = f"{ASSIGNEDORDERS_URL}{order_id}"
+    headers = {"Authorization": f"Bearer {token}"}  # Include token in headers
+
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "content" in data and "data" in data["content"]:
+                return data["content"]["data"].get("sub_address", "Address Not Found")
+            else:
+                return "Invalid Response Format"
+        else:
+            return f"Error: {response.status_code} - {response.text}"
+    
+    except Exception as e:
+        return f"Request Failed: {str(e)}"
+

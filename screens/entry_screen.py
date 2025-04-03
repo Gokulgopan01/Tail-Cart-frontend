@@ -4,6 +4,7 @@ from urllib.parse import parse_qs, urlparse
 from integrations.hybrid_bpo_api import HybridBPOApi
 from integrations.mls_automation.gamls import Gamls
 from integrations.mls_automation.fmls import Fmls
+from portal.RedBell_Entry import RedBellEntry
 from screens.loaded_screen import LoadedScreen
 from utils.helper import params_check
 from utils.pic_pdf_downloads.vpn_connection import vpn_checking
@@ -67,13 +68,18 @@ class EntryScreen(tk.Frame):
                         password = order.get("password", "")
                         portal_url = order.get("portal_url", "")
                         proxy = order.get("proxy", None)  # Optional proxy
-                        
+                        session=order.get("session",None)
                         if portal_name:
-                            print(f"Logging into portal: {portal_name}")
-                            portal_login_screen.PortalLoginScreen.login_to_portal(self,username, password, portal_url, portal_name, proxy)
+                            if portal_name=="RedBell":
+                                print(f"Logging into portal: {portal_name}")
+                               # Create an instance of RedBellEntry
+                                redbell = RedBellEntry(username, password, portal_url, portal_name, proxy, session)
+                            else:     
+                                print(f"Logging into portal: {portal_name}")
+                                portal_login_screen.PortalLoginScreen.login_to_portal(self,username, password, portal_url, portal_name, proxy)
                         else:
                             print("Portal name missing in order data.")
-                                    
+                                
 
                 else:
                     print('VPN not connected')
