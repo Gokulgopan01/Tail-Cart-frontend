@@ -6,6 +6,7 @@ from screens.entry_screen import EntryScreen
 from screens.mls_screen import MlsScreen
 from screens.settings_screen import SettingsScreen
 from urllib.parse import urlparse, parse_qs
+from utils import user_data
 from utils.helper import params_check
 from utils.file_util import resource_path
 from PIL import Image, ImageDraw, ImageTk
@@ -86,8 +87,13 @@ class Application(tk.Tk):
                 print("Entry Screen called")
                 self.show_frame("EntryScreen")  # Show the Entry screen
         else:
-            print("Ecesis login screen called")
-            self.show_frame("EcesisLoginScreen")  # Default to the login screen
+             # check if logged In :
+            test = user_data.load_login_data()
+            print("login data",test['logged_in'])
+            if test['logged_in']:
+                self.show_frame("ProfileScreen")
+            else:
+                self.show_frame("EcesisLoginScreen")
 
 
         # for F in (EcesisLoginScreen, SettingsScreen):
