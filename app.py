@@ -29,7 +29,7 @@ class Application(tk.Tk):
         self.after(1000, lambda: self.attributes('-topmost', False))
 
         # Apply background color
-        self.configure(bg="#F0F0F0")  # Light gray background
+        self.configure(bg="#FFFFFF")  # Light gray background
 
         # Define styles
         self.style = ttk.Style()
@@ -56,7 +56,7 @@ class Application(tk.Tk):
         # Define styles correctly
         self.style.configure("Custom.TLabelframe", borderwidth=2, relief="solid")  # Removed background here
         self.style.configure("Custom.TLabelframe.Label", foreground="#4285F4", font=("Arial", 12, "bold"))
-
+        
         # Initialize client data
         self.client_data = {}
 
