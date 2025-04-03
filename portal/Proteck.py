@@ -57,7 +57,7 @@ class Proteck:
             WebDriverWait(self.driver, 60).until(EC.title_contains("Partner Portal"))
 
             title = self.driver.title
-            login_check_keyword="Partner Portal"
+            login_check_keyword=["Partner Portal"]
 
             handle_login_status(title, username, login_check_keyword,portal_name)
             time.sleep(10800)

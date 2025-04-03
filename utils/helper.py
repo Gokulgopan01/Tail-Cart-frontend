@@ -1,4 +1,7 @@
+import json
+import os
 import traceback
+import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -10,6 +13,14 @@ import logging
 from tkinter import messagebox
 import sys
 from urllib.parse import urlparse, parse_qs
+from dotenv import load_dotenv
+
+
+# Load variables from .env file
+load_dotenv()
+
+# Retrieve API URLs from environment variables
+ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")    
 
 def initialize_driver(self):
         """Initialize Selenium WebDriver."""
@@ -27,23 +38,17 @@ def initialize_driver(self):
 
 
 
-def handle_login_status(login_title_or_url, username,log_check_value, portal_name):
-    """Handle login success or failure based on title or URL."""
-    # Check if login_title_or_url contains 'Partner Portal'
-    if log_check_value not in login_title_or_url:
-        # Log the login failure
-        logging.error(f"Login failed for {username} on {portal_name} due to incorrect credentials or login error.")
-        
-        # Show error message to the user
-        messagebox.showerror("Login Failed", "Invalid credentials or login error.")
-        
+def handle_login_status(login_title_or_url, username,login_check_keywords, portal_name):
+    """Handle login success or failure by checking the current URL."""
 
+    # Check if the current URL contains any of the success indicators
+    if any(keyword in login_title_or_url for keyword in login_check_keywords):
+        logging.info(f"Successfully logged in to {portal_name} as {username}.")
+        messagebox.showinfo("Login Successful", f"Successfully logged in to {portal_name} .")
     else:
-        # Log the login success
-        logging.info(f"Successfully logged in to {portal_name} with username {username}.")
+        logging.error(f"Login failed for {username} on {portal_name}. Possible incorrect credentials or login issue.")
+        messagebox.showerror("Login Failed", "Invalid credentials or login error for {portal_name}.")
         
-        # Show success message to the user
-        messagebox.showinfo("Login Successful", f"Successfully logged in to {portal_name}.")
         
 
 def handle_exception(self, e):
@@ -66,8 +71,35 @@ def params_check():
             return arg1,arg2
     else:
           return None,None        
-    
+# Function to fetch stored token (assuming it was saved as JSON)
+def get_saved_token():
+    try:
+        with open("login_data.json", "r") as file:
+            data = json.load(file)
+            return data.get("token", None)
+    except FileNotFoundError:
+        return None
 
-def on_closing(self):
-    if messagebox.askokcancel("Quit", "Do you really want to exit?"):
-        self.destroy()  # Close the application    
+# Fetch order address using stored token
+def get_order_address(order_id):
+    token = get_saved_token()
+    if not token:
+        return "Authentication token not found. Please log in again."
+
+    url = f"{ASSIGNEDORDERS_URL}{order_id}"
+    headers = {"Authorization": f"Bearer {token}"}  # Include token in headers
+
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "content" in data and "data" in data["content"]:
+                return data["content"]["data"].get("sub_address", "Address Not Found")
+            else:
+                return "Invalid Response Format"
+        else:
+            return f"Error: {response.status_code} - {response.text}"
+    
+    except Exception as e:
+        return f"Request Failed: {str(e)}"
+

@@ -2,15 +2,15 @@ import sys
 import tkinter as tk
 from tkinter import Image, ttk
 from screens.ecesis_login_screen import EcesisLoginScreen
+from screens.entry_screen import EntryScreen
 from screens.mls_screen import MlsScreen
-from screens.portal_login_screen import PortalLoginScreen
 from screens.settings_screen import SettingsScreen
 from urllib.parse import urlparse, parse_qs
+from utils import user_data
 from utils.helper import params_check
 from utils.file_util import resource_path
 from PIL import Image, ImageDraw, ImageTk
-from utils import user_data
-from screens.profile_screen import ProfileScreen
+
 class Application(tk.Tk):
     def __init__(self): #root passed but not used.
         super().__init__() #super init.
@@ -29,7 +29,7 @@ class Application(tk.Tk):
         self.after(1000, lambda: self.attributes('-topmost', False))
 
         # Apply background color
-        self.configure(bg="#FFFFFF")  # Light gray background
+        self.configure(bg="#F0F0F0")  # Light gray background
 
         # Define styles
         self.style = ttk.Style()
@@ -56,7 +56,7 @@ class Application(tk.Tk):
         # Define styles correctly
         self.style.configure("Custom.TLabelframe", borderwidth=2, relief="solid")  # Removed background here
         self.style.configure("Custom.TLabelframe.Label", foreground="#4285F4", font=("Arial", 12, "bold"))
-        
+
         # Initialize client data
         self.client_data = {}
 
@@ -66,33 +66,46 @@ class Application(tk.Tk):
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
 
-        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen, ProfileScreen):
+            # Assuming you have a container to hold frames
+        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen,EntryScreen):
             print(f"value in loop : {F}")
-            page_name = F.__name__
-            frame = F(parent=self.container, controller=self) #correct parent pass.
-            self.frames[page_name] = frame
-            frame.grid(row=0, column=0, sticky="nsew")    
+            page_name = F.__name__  # Getting the class name as the page name
+            frame = F(parent=self.container, controller=self)  # Creating the frame
+            self.frames[page_name] = frame  # Store the frame in a dictionary for easy access
+            frame.grid(row=0, column=0, sticky="nsew")  # Place the frame using grid layout
 
-        # login screen  
-        arg1,arg2= params_check()    
-        
+        # Login screen logic
+        arg1, arg2 = params_check()  # Assuming params_check() parses the arguments
+        arg1 = "SmartEntry"  # You set arg1 manually here for testing
+
+        # Check if arg1 contains specific parameters and show the appropriate screen
         if arg1:
-            if 'mlsdownloader' in arg1 :
-                print("mls creen called")
-                self.show_frame("MlsScreen")
-            elif 'SmartEntry' in arg1 :
-                self.show_frame("MlsScreen") #call the class created for entry
-            else:     
-                self.show_frame("MlsScreen") # call the class created for portal login
-        else:  
-        
-            # check if logged In :
+            if 'mlsdownloader' in arg1:
+                print("MLS screen called")
+                self.show_frame("MlsScreen")  # Show the MLS screen
+            elif 'SmartEntry' in arg1:
+                print("Entry Screen called")
+                self.show_frame("EntryScreen")  # Show the Entry screen
+        else:
+             # check if logged In :
             test = user_data.load_login_data()
             print("login data",test['logged_in'])
             if test['logged_in']:
                 self.show_frame("ProfileScreen")
             else:
                 self.show_frame("EcesisLoginScreen")
+
+
+        # for F in (EcesisLoginScreen, SettingsScreen):
+        #     print(f"value in loop : {F}")
+        #     page_name = F.__name__
+        #     frame = F(parent=self.container, controller=self) #correct parent pass.
+        #     self.frames[page_name] = frame
+        #     frame.grid(row=0, column=0, sticky="nsew")    
+
+        # # login screen  
+       
+        # self.show_frame("EcesisLoginScreen")
 
 
     def show_frame(self, page_name):

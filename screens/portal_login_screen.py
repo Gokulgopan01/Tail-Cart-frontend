@@ -54,7 +54,7 @@ class PortalLoginScreen(tk.Frame):
             print("New portal")
             # return PortalLogin(username, password, portal_url, portal_name,proxy) #or create a default portal.
 
-    def login_to_portal(self, username, password, portal_url, portal_name,proxy):
+    def login_to_portal(self, username, password, portal_url, portal_name,proxy=None):
         """Login to the portal with the selected account details."""
         portal_name = portal_name.strip()
         if portal_name == 'Proteck':

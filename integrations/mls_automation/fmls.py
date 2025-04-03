@@ -28,9 +28,7 @@ class Fmls:
                     if comp_process_status['pic']==False:
                         failed_list.append(f"{comp_name} pic")
                 driver.quit()  
-                failed_list=', '.join(failed_list)
                 print(f"failed_list : {failed_list}")
-                return failed_list
             else:
                 print('login failed. Status changed')  
                 driver.quit()
