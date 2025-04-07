@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
 
-from utils.helper import get_order_address
+from utils.helper import get_order_address_from_assigned_order
 
 
 # Load variables from .env file
@@ -156,6 +156,6 @@ class RedBellEntry:
     
         # Example Usage
     order_id = 3  # Replace with actual order_id
-    address = get_order_address(order_id)
+    address = get_order_address_from_assigned_order(order_id)
     print("Order Address:", address)
     

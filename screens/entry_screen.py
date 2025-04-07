@@ -12,7 +12,7 @@ import sys
 import threading
 from integrations import hybrid_bpo_api
 from screens import portal_login_screen
-
+from exact_address_check.redbell_check_exact_address import redbell_check_exact_address
 
 class EntryScreen(tk.Frame):
 
@@ -56,7 +56,7 @@ class EntryScreen(tk.Frame):
                 is_vpn_connected = vpn_checking()
                 if is_vpn_connected:
                      # Retrieve order details
-                    orders = HybridBPOApi.get_entry_order()
+                    orders = HybridBPOApi.get_entry_order() 
                     if not orders:  # Check if the order list is empty
                         print("No orders found.")
                         return
@@ -74,6 +74,8 @@ class EntryScreen(tk.Frame):
                                 print(f"Logging into portal: {portal_name}")
                                # Create an instance of RedBellEntry
                                 redbell = RedBellEntry(username, password, portal_url, portal_name, proxy, session)
+                                # Now call the function with the required arguments
+                                redbell_check_exact_address( orders, session, merged_json=None)
                             else:     
                                 print(f"Logging into portal: {portal_name}")
                                 portal_login_screen.PortalLoginScreen.login_to_portal(self,username, password, portal_url, portal_name, proxy)

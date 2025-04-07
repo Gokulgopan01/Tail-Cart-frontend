@@ -4,6 +4,7 @@ from tkinter import Image, ttk
 from screens.ecesis_login_screen import EcesisLoginScreen
 from screens.entry_screen import EntryScreen
 from screens.mls_screen import MlsScreen
+from screens.profile_screen import ProfileScreen
 from screens.settings_screen import SettingsScreen
 from urllib.parse import urlparse, parse_qs
 from utils import user_data
@@ -67,7 +68,7 @@ class Application(tk.Tk):
         self.container.grid_columnconfigure(0, weight=1)
 
             # Assuming you have a container to hold frames
-        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen,EntryScreen):
+        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen,EntryScreen,ProfileScreen):
             print(f"value in loop : {F}")
             page_name = F.__name__  # Getting the class name as the page name
             frame = F(parent=self.container, controller=self)  # Creating the frame
