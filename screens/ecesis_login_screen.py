@@ -51,11 +51,11 @@ class EcesisLoginScreen(tk.Frame):
         self.logo = ImageTk.PhotoImage(image)
         # Set the window icon
 
-        top_frame = tk.Frame(self, bg="white")
-        top_frame.pack(fill="x", side="top")
+        self.top_frame = tk.Frame(self, bg="white")
+        self.top_frame.pack(fill="x", side="top")
         style = ttk.Style()
         style.configure("Custom.TButton", background="white", relief="flat")
-        btn = ttk.Button(top_frame, image=self.logo, command=lambda: controller.show_frame("SettingsScreen"),style="Custom.TButton",cursor="hand2")
+        btn = ttk.Button(self.top_frame, image=self.logo, command=lambda: controller.show_frame("SettingsScreen"),style="Custom.TButton",cursor="hand2")
         btn.pack(side="right", padx=5, pady=5)
 
         """Create a login UI with a dark blue, yellow, and white color scheme."""
@@ -111,23 +111,23 @@ class EcesisLoginScreen(tk.Frame):
         self.show_password_btn.pack(side="right", padx=(0, 3))
 
 
-        forgot_password_frame = tk.Frame(self.input_frame, bg="#FFFFFF")
-        forgot_password_frame.pack(pady=1, anchor="e")
-        forgot_password_label = tk.Label(
-            forgot_password_frame, 
-            text="Forgot Password?", 
-            font=("sans-serif", 11, "underline"),  # Underlined text
-            fg="black",  # Hyperlink-like color
-            bg="#FFFFFF",
-            cursor="hand2"  # Hand cursor like a link
-    )
+    #     forgot_password_frame = tk.Frame(self.input_frame, bg="#FFFFFF")
+    #     forgot_password_frame.pack(pady=1, anchor="e")
+    #     forgot_password_label = tk.Label(
+    #         forgot_password_frame, 
+    #         text="Forgot Password?", 
+    #         font=("sans-serif", 11, "underline"),  # Underlined text
+    #         fg="black",  # Hyperlink-like color
+    #         bg="#FFFFFF",
+    #         cursor="hand2"  # Hand cursor like a link
+    # )
               
-        forgot_password_label.pack(anchor="e",pady=5,padx=1)
-        # Bind click event to act like a button
-        forgot_password_label.bind("<Button-1>", lambda e: self.forgot_password())
-        # Bind Enter key to password entry (triggers login when pressed)
-        self.password_entry.bind("<Return>", self.login)
-        # Login Button
+    #     forgot_password_label.pack(anchor="e",pady=5,padx=1)
+    #     # Bind click event to act like a button
+    #     forgot_password_label.bind("<Button-1>", lambda e: self.forgot_password())
+    #     # Bind Enter key to password entry (triggers login when pressed)
+    #     self.password_entry.bind("<Return>", self.login)
+    #     # Login Button
 
 
         canvas = tk.Canvas(self.input_frame, width=200, height=50, bg="#FFFFFF", highlightthickness=0,cursor="hand2")
@@ -162,7 +162,17 @@ class EcesisLoginScreen(tk.Frame):
         self.email_var.set("Enter your email")
         self.password_var.set("Enter your password")
 
-        # self.pack(fill="both", expand=True)
+
+        bottom_frame = tk.Frame(self, bg="white")
+        bottom_frame.pack(fill="x", side="bottom")
+        copyright_label = tk.Label(
+            bottom_frame,
+            text="Copyright © 2025 Ecesis. All rights reserved.",
+            font=("Arial", 9),
+            bg='white',
+            fg="gray"
+        )
+        copyright_label.pack(side="bottom", pady=5, padx=5)
 
 
     def clear_placeholder(self, entry, placeholder, hide_text=False):
@@ -248,26 +258,11 @@ class EcesisLoginScreen(tk.Frame):
     
         # Set background color
         self.configure(bg="#FFFFFF")  # Light Gray Background
-
-        self.clear_screen()
-
-    #         # **Top Frame for Logout Button**
-    #     self.top_frame = tk.Frame(self.login_frame, bg="#FFFFFF")
-    #     self.top_frame.pack(fill="x", side="top", pady=10, padx=10)  # Attach to top with padding
-
-
-    #     # **Logout Button (Top-Right Corner)**
-
-        btn = ttk.Button(self, image=self.logo,style="Custom.TButton",cursor="hand2")
-        btn.pack(side="right", anchor="ne",padx=5, pady=0)
-
-
-        self.logout_button_top = tk.Button(self, text="Logout", command=self.logout,
+    
+        self.logout_button_top = tk.Button(self.top_frame, text="Logout", command=self.logout,
                                         font=("Arial", 10, "bold"), fg="white", bg="#FF5630",
                                         bd=0, relief="flat", height=1, width=10)
-        self.logout_button_top.pack(side="right", anchor="ne", padx=10, pady=7)
-
-        
+        self.logout_button_top.pack(side='right',padx=10, pady=7)
 
     #     # Main client frame
         self.client_frame = tk.Frame(self, bg="#FFFFFF")
@@ -275,52 +270,55 @@ class EcesisLoginScreen(tk.Frame):
 
         # Inner Frame (White Box)
         self.inner_frame = tk.Frame(self.client_frame, bg="white", relief="solid")
-        self.inner_frame.pack(padx=(175,20),fill="both", expand=True)
+        self.inner_frame.pack(padx=(175,160),fill="both", expand=True)
 
         # Welcome Message
-        ttk.Label(self.inner_frame, text=f"Welcome, {username}!", font=("sans-serif", 14), background="white").pack(pady=(10, 15))
-        ttk.Label(self.inner_frame, text="Select Client Details", font=("sans-serif", 12), background="white").pack(pady=(0, 20))
-
-        # Dropdown Styling
-        # dropdown_width = 30
+        ttk.Label(self.inner_frame, text=f"Welcome, {username}!", font=("sans-serif", 16), background="white").pack(pady=(10, 15))
+        ttk.Label(self.inner_frame, text="Select Client Details", font=("sans-serif", 14), background="white").pack(pady=(0, 20))
 
         # Main Client Dropdown
         self.main_client_var = tk.StringVar()
-        font = ('Arial', 10)
-        self.main_client_dropdown = self.create_combobox(self.inner_frame, self.main_client_var, "Select Main Client", self.on_main_client_select)
-        self.main_client_dropdown.config(font=font)
-        self.main_client_dropdown.pack(pady=3, padx=0)
+        style = ttk.Style()
+        style.configure('TCombobox', padding=5, font=('sans-serif', 13), height=30)
+        self.main_client_dropdown = self.create_combobox(self.inner_frame, self.main_client_var, "Select Mainclient", self.on_main_client_select)
+        self.main_client_dropdown.config(style='TCombobox')
+        self.main_client_dropdown.pack(pady=8, padx=30, fill='x')
         self.main_client_dropdown.bind("<Return>", lambda event: self.sub_client_dropdown.focus_set())  # Move to Sub Client
+
+    
 
     #     # Sub Client Dropdown
         self.sub_client_var = tk.StringVar()
-        font = ('Arial', 10)
-        self.sub_client_dropdown = self.create_combobox(self.inner_frame, self.sub_client_var, "Select Sub Client", self.on_sub_client_select)
-        self.sub_client_dropdown.config(font=font)
-        self.sub_client_dropdown.pack(pady=3, padx=0)
+        style = ttk.Style()
+        style.configure('TCombobox', padding=5, font=('sans-serif', 13), height=30)
+        self.sub_client_dropdown = self.create_combobox(self.inner_frame, self.sub_client_var, "Select Subclient", self.on_sub_client_select)
+        self.sub_client_dropdown.config(style='TCombobox')
+        self.sub_client_dropdown.pack(pady=8, padx=30, fill='x')
         self.sub_client_dropdown.bind("<Return>", lambda event: self.portal_dropdown.focus_set())  # Move to Portal
 
     #     # Portal Dropdown
         self.portal_var = tk.StringVar()
-        font = ('Arial', 10)
+        style = ttk.Style()
+        style.configure('TCombobox', padding=5, font=('sans-serif', 13), height=30)
         self.portal_dropdown = self.create_combobox(self.inner_frame, self.portal_var, "Select Portal", self.on_portal_select)
-        self.portal_dropdown.config(font=font)
-        self.portal_dropdown.pack(pady=3, padx=0)
+        self.portal_dropdown.config(style='TCombobox')
+        self.portal_dropdown.pack(pady=8, padx=30, fill='x')
         self.portal_dropdown.bind("<Return>", lambda event: self.account_dropdown.focus_set())  # Move to Account
     # # Move to the Login Button
 
 
     #     # Account Dropdown
         self.account_var = tk.StringVar()
-        font = ('Arial', 10)
+        style = ttk.Style()
+        style.configure('TCombobox', padding=5, font=('sans-serif', 13), height=30)
         self.account_dropdown = self.create_combobox(self.inner_frame, self.account_var, "Select Account", self.on_account_select)
-        self.account_dropdown.config(font=font)
-        self.account_dropdown.pack(pady=3, padx=0)
+        self.account_dropdown.config(style='TCombobox')
+        self.account_dropdown.pack(pady=8, padx=30, fill='x')
         self.account_dropdown.bind("<Return>", lambda event: self.confirm_selection())  # Move to the Login Button
 
     #     # Login Button
 
-        canvas = tk.Canvas(self.inner_frame, width=200, height=50, bg="#FFFFFF", highlightthickness=0,cursor="hand2")
+        canvas = tk.Canvas(self.inner_frame, width=200, height=100, bg="#FFFFFF", highlightthickness=0,cursor="hand2")
         canvas.pack(pady=30)
 
         # Draw rounded rectangle (simplified)
@@ -336,13 +334,8 @@ class EcesisLoginScreen(tk.Frame):
         text = canvas.create_text((x0 + x1)//2, (y0 + y1)//2, text="Login to Portal", fill="white", font=("sans-serif", 13, "bold"))
 
         # Bind click
-        canvas.bind("<Button-1>", lambda event: self.login())
+        canvas.bind("<Button-1>", lambda event: self.confirm_selection())
 
-
-
-        # self.login_button = tk.Button(self.inner_frame, text="Login to Portal", command=self.confirm_selection,
-        #                               font=("Arial", 12, "bold"), fg="white", bg="#007BFF", bd=0, relief="flat", height=2, width=20)
-        # self.login_button.pack(pady=10)
 
         threading.Thread(target=self.load_main_clients, daemon=True).start()
 
