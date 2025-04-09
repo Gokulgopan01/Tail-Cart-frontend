@@ -4,14 +4,14 @@ from tkinter import Image, ttk
 from screens.ecesis_login_screen import EcesisLoginScreen
 from screens.entry_screen import EntryScreen
 from screens.mls_screen import MlsScreen
-from screens.profile_screen import ProfileScreen
+from screens.portal_login_screen import PortalLoginScreen
 from screens.settings_screen import SettingsScreen
 from urllib.parse import urlparse, parse_qs
-from utils import user_data
 from utils.helper import params_check
 from utils.file_util import resource_path
 from PIL import Image, ImageDraw, ImageTk
-
+from utils import user_data
+from screens.profile_screen import ProfileScreen
 class Application(tk.Tk):
     def __init__(self): #root passed but not used.
         super().__init__() #super init.
@@ -30,7 +30,7 @@ class Application(tk.Tk):
         self.after(1000, lambda: self.attributes('-topmost', False))
 
         # Apply background color
-        self.configure(bg="#F0F0F0")  # Light gray background
+        self.configure(bg="#FFFFFF")  # White background
 
         # Define styles
         self.style = ttk.Style()
@@ -77,7 +77,7 @@ class Application(tk.Tk):
 
         # Login screen logic
         arg1, arg2 = params_check()  # Assuming params_check() parses the arguments
-        arg1 = "SmartEntry"  # You set arg1 manually here for testing
+        # arg1 = "SmartEntry"  # You set arg1 manually here for testing
 
         # Check if arg1 contains specific parameters and show the appropriate screen
         if arg1:

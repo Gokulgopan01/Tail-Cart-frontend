@@ -23,24 +23,27 @@ class LoadedScreen(tk.Frame):
         self.controller = controller
 
          # Frame Background Color
-        self.configure(bg="#F2F2F2")
+        self.configure(bg="#FFFFFF")
+
+        self.inner_frame = tk.Frame(self, bg="white")
+        self.inner_frame.pack(padx=50, expand=True) #created to center the frame
 
         # Title Label (Dynamic)
-        self.title_label = ttk.Label(self, text=title_text, font=("Arial", 20, "bold"), background="#F2F2F2")
+        self.title_label = ttk.Label(self.inner_frame, text=title_text, font=("sans-serif", 17), background="#FFFFFF")
         self.title_label.pack(pady=15)
 
-        # Progress Bar with Modern Look
-        self.progress = ttk.Progressbar(self, orient="horizontal", length=300, mode="indeterminate", style="TProgressbar")
+        # Progress Bar with Modern Look       
+        self.progress = ttk.Progressbar(self.inner_frame, orient="horizontal", length=300, mode="indeterminate", style="TProgressbar")
         self.progress.pack(pady=10)
         self.progress.start()
 
         # Status Label (Dynamic)
-        self.status_label = ttk.Label(self, text=status_text, font=("Arial", 14, "italic"), foreground="gray", background="#F2F2F2")
+        self.status_label = ttk.Label(self.inner_frame, text=status_text, font=("sans-serif", 14, "italic"), foreground="black", background="#FFFFFF")
         self.status_label.pack(pady=5)
 
         # Exit Button with Hover Effect
-        self.exit_button = tk.Button(self, text="Close", command=self.on_exit,
-                                     font=("Arial", 12, "bold"), fg="white", bg="#FF5555",
+        self.exit_button = tk.Button(self.inner_frame, text="Close", command=self.on_exit,
+                                     font=("sans-serif", 12, "bold"), fg="white", bg="#1877F2",
                                      bd=0, relief="flat", height=1, width=12)
         self.exit_button.pack(pady=15)
 
@@ -52,12 +55,14 @@ class LoadedScreen(tk.Frame):
         self.pack(fill="both", expand=True)
 
 
-    def update_status(self, title=None, status=None):
+    def update_status(self, title=None, status=None,loading=None):
         """Update title and status dynamically from another script."""
         if title:
             self.title_label.config(text=title)
         if status:
             self.status_label.config(text=status)
+        if loading:
+            self.progress.destroy()          
         self.update_idletasks()  # Force UI update
 
     def on_exit(self):
@@ -68,8 +73,8 @@ class LoadedScreen(tk.Frame):
 
     def on_hover_in(self, event):
         """Change button color when mouse enters."""
-        self.exit_button.config(bg="#FF3333")
+        self.exit_button.config(bg="#1565D8")
 
     def on_hover_out(self, event):
         """Revert button color when mouse leaves."""
-        self.exit_button.config(bg="#FF5555")
+        self.exit_button.config(bg="#1877F2")
