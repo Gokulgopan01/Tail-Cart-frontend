@@ -1,18 +1,18 @@
 import tkinter as tk
 from tkinter import ttk
 from urllib.parse import parse_qs, urlparse
+from check_and_form_open.redbell_check_and_form_open import formopen_fill
 from integrations.hybrid_bpo_api import HybridBPOApi
 from integrations.mls_automation.gamls import Gamls
 from integrations.mls_automation.fmls import Fmls
 from portal.RedBell_Entry import RedBellEntry
 from screens.loaded_screen import LoadedScreen
-from utils.helper import params_check
+from utils.helper import get_order_address_from_assigned_order, params_check
 from utils.pic_pdf_downloads.vpn_connection import vpn_checking
 import sys
 import threading
 from integrations import hybrid_bpo_api
 from screens import portal_login_screen
-
 
 class EntryScreen(tk.Frame):
 
@@ -56,7 +56,7 @@ class EntryScreen(tk.Frame):
                 is_vpn_connected = vpn_checking()
                 if is_vpn_connected:
                      # Retrieve order details
-                    orders = HybridBPOApi.get_entry_order()
+                    orders = HybridBPOApi.get_entry_order() 
                     if not orders:  # Check if the order list is empty
                         print("No orders found.")
                         return
@@ -69,11 +69,15 @@ class EntryScreen(tk.Frame):
                         portal_url = order.get("portal_url", "")
                         proxy = order.get("proxy", None)  # Optional proxy
                         session=order.get("session",None)
+                        order_id=order.get("order_id","")
+                        order_details=get_order_address_from_assigned_order(order_id)
                         if portal_name:
                             if portal_name=="RedBell":
                                 print(f"Logging into portal: {portal_name}")
                                # Create an instance of RedBellEntry
-                                redbell = RedBellEntry(username, password, portal_url, portal_name, proxy, session)
+                                orders, session = RedBellEntry(self,username, password, portal_url, portal_name, proxy, session)
+                               
+                                formopen_fill(orders, session, merged_json=None, order_details=order_details,order_id=order_id)
                             else:     
                                 print(f"Logging into portal: {portal_name}")
                                 portal_login_screen.PortalLoginScreen.login_to_portal(self,username, password, portal_url, portal_name, proxy)

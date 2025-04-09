@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import traceback
 import requests
 from selenium import webdriver
@@ -81,7 +82,7 @@ def get_saved_token():
         return None
 
 # Fetch order address using stored token
-def get_order_address(order_id):
+def get_order_address_from_assigned_order(order_id):
     token = get_saved_token()
     if not token:
         return "Authentication token not found. Please log in again."
@@ -103,3 +104,10 @@ def get_order_address(order_id):
     except Exception as e:
         return f"Request Failed: {str(e)}"
 
+
+def clean_address(address):
+    """Clean and normalize address for comparison."""
+    address = address.replace(",", "")
+    address = re.sub(r'[\"\'\-,:/]', '', address)
+    address = re.sub(r'\s+', '', address)
+    return address.upper()
