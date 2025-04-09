@@ -10,7 +10,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 # from utility.helper import log_login_status,initialize_driver
 from selenium.webdriver.chrome.service import Service
 
-from utility.helper import handle_login_status
+from utils.helper import handle_login_status
 class Proteck:
     def __init__(self, username, password, portal_url, portal_name, proxy):
         #self.client_data = client_data
@@ -57,9 +57,10 @@ class Proteck:
             WebDriverWait(self.driver, 60).until(EC.title_contains("Partner Portal"))
 
             title = self.driver.title
-            login_check_keyword="Partner Portal"
+            login_check_keyword=["Partner Portal"]
 
             handle_login_status(title, username, login_check_keyword,portal_name)
+            time.sleep(10800)
 
             # # Maximize the window and set position
             # self.driver.set_window_position(0, 0)

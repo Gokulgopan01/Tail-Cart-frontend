@@ -1,39 +1,36 @@
+import sys
 import tkinter as tk
 from tkinter import Image, ttk
 from screens.ecesis_login_screen import EcesisLoginScreen
+from screens.entry_screen import EntryScreen
+from screens.mls_screen import MlsScreen
+from screens.portal_login_screen import PortalLoginScreen
 from screens.settings_screen import SettingsScreen
-from PIL import Image, ImageDraw, ImageTk
-
+from urllib.parse import urlparse, parse_qs
+from utils.helper import params_check
 from utils.file_util import resource_path
-
+from PIL import Image, ImageDraw, ImageTk
+from utils import user_data
+from screens.profile_screen import ProfileScreen
 class Application(tk.Tk):
     def __init__(self): #root passed but not used.
         super().__init__() #super init.
-        self.title("ECESIS - Login")  # Set window title
-        self.geometry("800x600")  # Default window size
-        self.minsize(600, 450)  # Minimum size
-        self.configure(bg="#F2F2F2")
-        self.resizable(True, True)  # Enables resizing
-
-
+        self.title("ECESIS - Login")
+        self.geometry("800x650") #corrected geometry.
+        self.resizable(True, True)
         img_path = resource_path("logo.jpg")
         image = Image.open(img_path)
         image = image.resize((100, 100))  # Resize if needed
         self.logo = ImageTk.PhotoImage(image)
-        self.iconphoto(False, self.logo)  # Set the window icon
-        
-
-        # # Display Image (Logo at the Top)
-        # self.logo_label = tk.Label(self, image=self.logo, bg="#F2F2F2")
-        # self.logo_label.pack(pady=10)
-
+        # Set the window icon
+        self.iconphoto(False, self.logo)  # False ensures the icon applies to all windows
         # Bring the window to the front
         self.lift()
         self.attributes('-topmost', True)
         self.after(1000, lambda: self.attributes('-topmost', False))
 
         # Apply background color
-        self.configure(bg="#F0F0F0")  # Light gray background
+        self.configure(bg="#FFFFFF")  # White background
 
         # Define styles
         self.style = ttk.Style()
@@ -51,7 +48,7 @@ class Application(tk.Tk):
         # Define a style for LabelFrame (REMOVE BACKGROUND HERE)
         self.style.configure("TLabelFrame", foreground="black", borderwidth=2, relief="solid")
         self.style.configure("TLabelFrame.Label", foreground="#4285F4", font=("Arial", 12, "bold"))
-
+        
         # Define styles for buttons
         self.style.configure("TButton", font=("Arial", 12, "bold"), padding=5, relief="flat", background="#1E90FF", foreground="white")  # Bright blue button
 
@@ -70,13 +67,47 @@ class Application(tk.Tk):
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
 
-        for F in (EcesisLoginScreen, SettingsScreen):
-            page_name = F.__name__
-            frame = F(parent=self.container, controller=self) #correct parent pass.
-            self.frames[page_name] = frame
-            frame.grid(row=0, column=0, sticky="nsew")
+            # Assuming you have a container to hold frames
+        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen,EntryScreen,ProfileScreen):
+            print(f"value in loop : {F}")
+            page_name = F.__name__  # Getting the class name as the page name
+            frame = F(parent=self.container, controller=self)  # Creating the frame
+            self.frames[page_name] = frame  # Store the frame in a dictionary for easy access
+            frame.grid(row=0, column=0, sticky="nsew")  # Place the frame using grid layout
 
-        self.show_frame("EcesisLoginScreen")
+        # Login screen logic
+        arg1, arg2 = params_check()  # Assuming params_check() parses the arguments
+        # arg1 = "SmartEntry"  # You set arg1 manually here for testing
+
+        # Check if arg1 contains specific parameters and show the appropriate screen
+        if arg1:
+            if 'mlsdownloader' in arg1:
+                print("MLS screen called")
+                self.show_frame("MlsScreen")  # Show the MLS screen
+            elif 'SmartEntry' in arg1:
+                print("Entry Screen called")
+                self.show_frame("EntryScreen")  # Show the Entry screen
+        else:
+             # check if logged In :
+            test = user_data.load_login_data()
+            print("login data",test['logged_in'])
+            if test['logged_in']:
+                self.show_frame("ProfileScreen")
+            else:
+                self.show_frame("EcesisLoginScreen")
+
+
+        # for F in (EcesisLoginScreen, SettingsScreen):
+        #     print(f"value in loop : {F}")
+        #     page_name = F.__name__
+        #     frame = F(parent=self.container, controller=self) #correct parent pass.
+        #     self.frames[page_name] = frame
+        #     frame.grid(row=0, column=0, sticky="nsew")    
+
+        # # login screen  
+       
+        # self.show_frame("EcesisLoginScreen")
+
 
     def show_frame(self, page_name):
         """Bring the requested screen to the front."""

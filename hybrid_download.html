@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid_BPO</title>
+</head>
+<body>
+    <h1>Comp PIC_PDF Download Initiation</h1>
+    <a href="myapp://?arg1={mlsdownloader}&arg2={orderid}">Download comp PDF and PIC</a>
+    <br><br>
+    <a href="myapp://?arg1={SmartEntry}&arg2={orderid}">Smart Entry</a>
+    <br><br>
+    <a href="myapp://?arg1={PortalLogin}&arg2={orderid}">Login to Portal</a>
+</body>
+</html>
+
+<!-- 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hybrid_BPO</title>
+</head>
+<body>
+  <h1>Comp PIC_PDF Download Initiation</h1>
+
+  <button onclick="launchHelper('mlsdownloader', 'orderid123')">Download comp PDF and PIC</button>
+  <br><br>
+  <button onclick="launchHelper('SmartEntry', 'orderid123')">Smart Entry</button>
+  <br><br>
+  <button onclick="launchHelper('PortalLogin', 'orderid123')">Login to Portal</button>
+
+  <script>
+    function launchHelper(arg1, arg2) {
+      try {
+        var shell = new ActiveXObject("WScript.Shell");
+        shell.Run(`D:\\Hybrid_autologin\\HybridBPO_AutoLogin\\launch_myapp.bat ${arg1} ${arg2}`);
+      } catch (e) {
+        alert(e);
+      }
+    }
+  </script>
+</body>
+</html> -->

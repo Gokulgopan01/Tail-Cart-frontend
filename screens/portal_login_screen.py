@@ -5,7 +5,6 @@ from PIL import Image, ImageTk
 
 from portal.Proteck import Proteck
 from portal.RedBell import RedBell
-from utils.file_util import resource_path
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -55,7 +54,7 @@ class PortalLoginScreen(tk.Frame):
             print("New portal")
             # return PortalLogin(username, password, portal_url, portal_name,proxy) #or create a default portal.
 
-    def login_to_portal(self, username, password, portal_url, portal_name,proxy):
+    def login_to_portal(self, username, password, portal_url, portal_name,proxy=None):
         """Login to the portal with the selected account details."""
         portal_name = portal_name.strip()
         if portal_name == 'Proteck':
@@ -65,9 +64,10 @@ class PortalLoginScreen(tk.Frame):
             portal_name_instance = RedBell(username, password, portal_url, portal_name,proxy)  # Create Proteck instance
             portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy)
             session = portal_name_instance.login_to_portal(username, password, portal_url, portal_name, proxy)
-            if type(session)==str:
-                if "Login error" in session or 'Login issue' in session:  # Perform Proteck login
-                    print("Login error")
+            # if type(session)==str:
+            #     if "Login error" in session or 'Login issue' in session:  # Perform Proteck login
+            #         print("Login error")
         else:
             # Add default login logic here
             print(f"Default login called: {username}, {portal_name}")
+        self.after(0, self.perform_login)        
