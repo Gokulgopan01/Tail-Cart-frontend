@@ -12,7 +12,6 @@ import requests
 import mysql.connector
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from scrapy.http import HtmlResponse
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -20,7 +19,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from exact_address_check.redbell_check_exact_address import find_matching_order
+from exact_address_check.proteck_check_exact_address import find_matching_order
 from utils.helper import clean_address
 
 
@@ -34,16 +33,13 @@ def proteck_formopen_fill(orders, driver, session, merged_json, order_details, o
         'Exterior valuation with 3 sales comps and 3 listing comps', 'Exterior BPO', 'Fannie BPO', 'Evaluation'
     ]
     
-    # Check if there are any orders in the portal
-    if not orders:
-        logging.info("No orders in ProTeck portal")
-        return
+
 
     # Create a list to store addresses from orders
     address_list = []
 
     # Attempt to find a matching order by checking against the target address
-    matched, order, status = find_matching_order(orders, target_address, form_types, order_id)
+    matched, order, status = find_matching_order(orders, target_address, form_types, order_id,driver)
 
     if matched:
         # If a matching order is found, and the form type matches

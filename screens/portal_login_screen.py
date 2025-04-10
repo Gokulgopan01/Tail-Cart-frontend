@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 
+from exact_address_check.proteck_check_exact_address import find_matching_order
 from portal.Proteck import Proteck
 from portal.RedBell import RedBell
 from selenium import webdriver
@@ -56,10 +57,12 @@ class PortalLoginScreen(tk.Frame):
 
     def login_to_portal(self, username, password, portal_url, portal_name,proxy=None ,session=None):
         """Login to the portal with the selected account details."""
+     
         portal_name = portal_name.strip()
         if portal_name == 'Proteck':
             portal_name_instance = Proteck(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
             portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy,session)  # Perform Proteck login
+            return session, portal_name_instance.driver  # Return orders, session, and driver after login
         elif portal_name == 'RedBell':
             portal_name_instance = RedBell(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
             portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy,session)
@@ -70,4 +73,4 @@ class PortalLoginScreen(tk.Frame):
         else:
             # Add default login logic here
             print(f"Default login called: {username}, {portal_name}")
-        self.after(0, self.perform_login)        
+        #self.after(0, self.perform_login)        

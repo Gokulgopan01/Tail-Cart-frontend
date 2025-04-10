@@ -14,6 +14,7 @@ import sys
 import threading
 from integrations import hybrid_bpo_api
 from screens import portal_login_screen
+from check_and_form_open.proteck_check_and_form_open import proteck_formopen_fill
 
 class EntryScreen(tk.Frame):
 
@@ -81,9 +82,9 @@ class EntryScreen(tk.Frame):
                                 redbell_formopen_fill(orders, driver,session, merged_json=None, order_details=order_details,order_id=order_id)
                             else:     
                                 print(f"Logging into portal: {portal_name}")
-                                orders, session,driver=portal_login_screen.PortalLoginScreen.login_to_portal(self,username, password, portal_url, portal_name, proxy,session)
-                                # Dynamically call the corresponding form open function
-                                form_open_func_name = f"{portal_name}_form_open"
+                                session,driver=portal_login_screen.PortalLoginScreen.login_to_portal(self,username, password, portal_url, portal_name, proxy,session)  
+                                # # Dynamically call the corresponding form open function
+                                form_open_func_name = f"{portal_name.lower()}_formopen_fill"
                                 print(form_open_func_name)
                                 form_open_func = globals().get(form_open_func_name)
 

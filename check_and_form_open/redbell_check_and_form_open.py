@@ -5,8 +5,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
-from exact_address_check.redbell_check_exact_address import find_matching_order
 
+from exact_address_check.redbell_check_exact_address import find_matching_order
 from launch_browser_and_open_form.redbell_launch_browser_and_open_form import redbell_launch_browser_and_open_form
 from utils.helper import clean_address
 

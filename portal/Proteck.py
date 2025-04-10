@@ -10,6 +10,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 # from utility.helper import log_login_status,initialize_driver
 from selenium.webdriver.chrome.service import Service
 
+from exact_address_check.proteck_check_exact_address import find_matching_order
 from utils.helper import handle_login_status
 class Proteck:
     def __init__(self, username, password, portal_url, portal_name, proxy,session):
@@ -30,7 +31,7 @@ class Proteck:
             logging.error(f"Error initializing WebDriver: {e}")
             return None
 
-    def login_to_portal(self, username, password, portal_url, portal_name,proxy,session):
+    def login_to_portal(self,username, password, portal_url, portal_name,proxy,session):
         """Login to a generic portal (extendable)."""
         try:
             self.driver = self.initialize_driver()
@@ -60,12 +61,11 @@ class Proteck:
             login_check_keyword=["Partner Portal"]
 
             handle_login_status(title, username, login_check_keyword,portal_name)
-            time.sleep(10800)
 
             # # Maximize the window and set position
             # self.driver.set_window_position(0, 0)
             # self.driver.maximize_window()
-
+            return self.driver
         except Exception as e:
             if self.driver:
                 #self.log_login_status(username, portal_name, "Login Failed", None, str(e))
