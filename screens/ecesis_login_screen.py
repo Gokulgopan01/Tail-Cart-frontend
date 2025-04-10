@@ -70,16 +70,6 @@ class EcesisLoginScreen(tk.Frame):
         self.create_login_frame()
 
     def create_login_frame(self):
-<<<<<<< HEAD
-        #  """Creates the login UI."""
-        # if hasattr(self, "login_frame"):
-        #     self.login_frame.pack_forget()  # Hide the previous login frame if it exists
-
-        ttk.Label(self.login_frame, text="ECESIS", font=("Arial", 14, "bold"), background="#F0F0F0").pack(pady=10)
-        ttk.Label(self.login_frame, text="HYBRID CLIENT LOGIN", font=("Arial", 16, "bold"), background="#F0F0F0").pack(pady=20)
-        ttk.Label(self.login_frame, text="Welcome back! Please login to your account to continue", font=("Arial", 10), background="#F0F0F0").pack(pady=5)
-=======
->>>>>>> f5013d6c85f208d2a83866efbfdb178191c29ee3
 
         # ttk.Label(self.login_frame, text="ECESIS", font=("sans-serif", 14, "bold"), background="#FFFFFF").pack(pady=10)
         ttk.Label(self.login_frame, text="HYBRID CLIENT LOGIN", font=("sans-serif", 16, "bold"), background="#FFFFFF").pack(pady=20)
@@ -253,44 +243,17 @@ class EcesisLoginScreen(tk.Frame):
         # if hasattr(self, "login_frame"):
         #     self.login_frame.destroy()
 
-<<<<<<< HEAD
-        # If the login_frame exists, hide it instead of destroying it
-        if hasattr(self, "login_frame"):
-            self.login_frame.pack_forget()  # Hide the login frame
-=======
 
 
         # If the login_frame exists, hide it instead of destroying it
         # if hasattr(self, "login_frame"):
         #     self.login_frame.pack_forget()  # Hide the login frame
->>>>>>> f5013d6c85f208d2a83866efbfdb178191c29ee3
         # #  Initialize labels
         self.username_label = ttk.Label(self, text="Username: ")
         self.password_label = ttk.Label(self, text="Password: ")
         self.session_label = ttk.Label(self, text="Session: ")
         self.portal_url_label = ttk.Label(self, text="Portal URL: ")
         self.proxy_label=ttk.Label(self, text="Proxy: ")
-<<<<<<< HEAD
-      
-
-        # Set background color
-        self.configure(bg="#F2F2F2")  # Light Gray Background
-        
-
-            # **Top Frame for Logout Button**
-        self.top_frame = tk.Frame(self, bg="#F2F2F2")
-        self.top_frame.pack(fill="x", side="top", pady=10, padx=10)  # Attach to top with padding
-
-        # **Logout Button (Top-Right Corner)**
-        self.logout_button_top = tk.Button(self.top_frame, text="Logout", command=self.logout,
-                                        font=("Arial", 10, "bold"), fg="white", bg="#FF0000",
-                                        bd=0, relief="flat", height=1, width=10)
-        self.logout_button_top.pack(side="right", anchor="ne", padx=10, pady=5)
-
-        # Main client frame
-        self.client_frame = tk.Frame(self, bg="#F2F2F2")
-        self.client_frame.pack(fill="both", expand=True)
-=======
         
     
         # Set background color
@@ -304,7 +267,6 @@ class EcesisLoginScreen(tk.Frame):
     #     # Main client frame
         self.client_frame = tk.Frame(self, bg="#FFFFFF")
         self.client_frame.pack(fill="x", expand=True)
->>>>>>> f5013d6c85f208d2a83866efbfdb178191c29ee3
 
         # Inner Frame (White Box)
         self.inner_frame = tk.Frame(self.client_frame, bg="white", relief="solid")
@@ -415,19 +377,6 @@ class EcesisLoginScreen(tk.Frame):
     #         self.controller.show_frame("EcesisLoginScreen")
 
     def logout(self):
-<<<<<<< HEAD
-        """Handles user logout and shows the login screen again."""
-        if hasattr(self, "client_frame"):
-            self.client_frame.pack_forget()  # Hide the client frame
-
-        # Show the login frame again
-        self.create_login_frame()  # If the login frame does not exist, create it again
-        self.login_frame.pack(fill="both", expand=True)  # Re-display the login frame at the same position
-
-        messagebox.showinfo("Logout", "You have successfully logged out.")
-
-            
-=======
         """Logs out the user, resets UI, and clears login fields."""
         confirm = messagebox.askyesno("Logout", "Are you sure you want to log out?")
         if confirm:
@@ -464,7 +413,6 @@ class EcesisLoginScreen(tk.Frame):
         """Clears the current UI."""
         for widget in self.winfo_children():
             widget.destroy()
->>>>>>> f5013d6c85f208d2a83866efbfdb178191c29ee3
 
     def load_main_clients(self):
         """Fetch and populate main clients."""
@@ -572,7 +520,8 @@ class EcesisLoginScreen(tk.Frame):
                 selected_account["password"],
                 self.selected_portal_url,
                 portal,
-                selected_account["proxy"]
+                selected_account["proxy"],
+                selected_account["session"]
             )
             if portal_instance:
                 self.active_portal_instances.append(portal_instance) # Store the instance
@@ -584,6 +533,7 @@ class EcesisLoginScreen(tk.Frame):
                         self.selected_portal_url,
                         portal,
                         selected_account["proxy"],
+                        selected_account["session"]
                     ),
                     daemon=True,
                 ).start()

@@ -29,8 +29,6 @@ class Gamls:
                         failed_list.append(f"{comp_name} pic")
                 driver.quit()  
                 print(f"failed_list : {failed_list}")
-                failed_list=', '.join(failed_list)
-                return failed_list
             else:
                 print('login failed. Status changed')  
                 driver.quit()

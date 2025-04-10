@@ -28,7 +28,7 @@ class RedBell:
         self.driver = None  # Store Selenium WebDriver instance
         logging.basicConfig(level=logging.INFO)
 
-    def login_to_portal(self, username, password, portal_url, portal_name, proxy):
+    def login_to_portal(self, username, password, portal_url, portal_name, proxy,session):
         try:
             options = Options()
             options.add_argument("--start-maximized")

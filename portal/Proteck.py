@@ -12,7 +12,7 @@ from selenium.webdriver.chrome.service import Service
 
 from utils.helper import handle_login_status
 class Proteck:
-    def __init__(self, username, password, portal_url, portal_name, proxy):
+    def __init__(self, username, password, portal_url, portal_name, proxy,session):
         #self.client_data = client_data
         self.driver = None  #Store Selenium WebDriver instance
         logging.basicConfig(level=logging.INFO)
@@ -30,7 +30,7 @@ class Proteck:
             logging.error(f"Error initializing WebDriver: {e}")
             return None
 
-    def login_to_portal(self, username, password, portal_url, portal_name):
+    def login_to_portal(self, username, password, portal_url, portal_name,proxy,session):
         """Login to a generic portal (extendable)."""
         try:
             self.driver = self.initialize_driver()

@@ -7,7 +7,7 @@ from screens.mls_screen import MlsScreen
 from screens.portal_login_screen import PortalLoginScreen
 from screens.settings_screen import SettingsScreen
 from urllib.parse import urlparse, parse_qs
-from utils.helper import params_check
+from utils.helper import center_window, params_check
 from utils.file_util import resource_path
 from PIL import Image, ImageDraw, ImageTk
 from utils import user_data
@@ -18,6 +18,8 @@ class Application(tk.Tk):
         self.title("ECESIS - Login")
         self.geometry("800x650") #corrected geometry.
         self.resizable(True, True)
+        # Center the window
+        center_window(self, 800, 650)
         img_path = resource_path("logo.jpg")
         image = Image.open(img_path)
         image = image.resize((100, 100))  # Resize if needed

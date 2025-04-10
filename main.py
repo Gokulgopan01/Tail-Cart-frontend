@@ -1,12 +1,3 @@
-# import tkinter as tk
-# from app import Application
-
-# if __name__ == "__main__": 
-#     app = Application()  # No need to pass root
-#     app.mainloop()
-
-# import tkinter as tk
-import os
 import winreg as reg
 from app import Application
 
@@ -43,7 +34,7 @@ def register_url_protocol(protocol_name, exe_path):
 
 if __name__ == "__main__":
     protocol_name = "myapp"
-    exe_path = r"D:\Hybrid_autologin\HybridBPO_AutoLogin\dist\main.exe"
+    exe_path = r"D:\Hybrid_autologin\dist\main.exe"
 
     if not is_protocol_registered(protocol_name):
         register_url_protocol(protocol_name, exe_path)
@@ -52,4 +43,5 @@ if __name__ == "__main__":
 
     app = Application()
     app.mainloop()
+
 

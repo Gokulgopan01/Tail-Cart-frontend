@@ -44,26 +44,26 @@ class PortalLoginScreen(tk.Frame):
         self.driver = None  #Store Selenium WebDriver instance
         logging.basicConfig(level=logging.INFO)
     @staticmethod
-    def portals(username, password, portal_url, portal_name,proxy):  # Added client_data parameter
+    def portals(username, password, portal_url, portal_name,proxy,session):  # Added client_data parameter
         portal_name = portal_name.strip()
         if portal_name == 'Proteck':
-            return Proteck(username, password, portal_url, portal_name,proxy)
+            return Proteck(username, password, portal_url, portal_name,proxy,session)
         elif portal_name == 'RedBell':
-            return RedBell(username, password, portal_url, portal_name,proxy)
+            return RedBell(username, password, portal_url, portal_name,proxy,session)
         else:
             print("New portal")
             # return PortalLogin(username, password, portal_url, portal_name,proxy) #or create a default portal.
 
-    def login_to_portal(self, username, password, portal_url, portal_name,proxy=None):
+    def login_to_portal(self, username, password, portal_url, portal_name,proxy=None ,session=None):
         """Login to the portal with the selected account details."""
         portal_name = portal_name.strip()
         if portal_name == 'Proteck':
-            portal_name_instance = Proteck(username, password, portal_url, portal_name,proxy)  # Create Proteck instance
-            portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy)  # Perform Proteck login
+            portal_name_instance = Proteck(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
+            portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy,session)  # Perform Proteck login
         elif portal_name == 'RedBell':
-            portal_name_instance = RedBell(username, password, portal_url, portal_name,proxy)  # Create Proteck instance
-            portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy)
-            session = portal_name_instance.login_to_portal(username, password, portal_url, portal_name, proxy)
+            portal_name_instance = RedBell(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
+            portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy,session)
+            session = portal_name_instance.login_to_portal(username, password, portal_url, portal_name, proxy,session)
             # if type(session)==str:
             #     if "Login error" in session or 'Login issue' in session:  # Perform Proteck login
             #         print("Login error")
