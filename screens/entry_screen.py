@@ -36,20 +36,64 @@ class EntryScreen(tk.Frame):
         # login screen  
         arg1,arg2= params_check()    
         arg1="SmartEntry"
-
-        # if(arg1=='mlsdownloader'):
-        if('SmartEntry' in arg1):
-            threading.Thread(target=self.check_if_any_argument_passed, args=(arg2,), daemon=True).start()
-            self.after(2000, lambda: self.loaded_screen.update_status(title="Parsing Order Data...", status="Fetching required details..."))
-        else:
-             print("Orders not found") 
-             self.after(2000, lambda: self.loaded_screen.update_status(title="Orders not found", status="Fetching required details..."))
+        self.handle_argument(arg1, arg2)
+        # # if(arg1=='mlsdownloader'):
+        # if('SmartEntry' in arg1):
+        #     threading.Thread(target=self.check_if_any_argument_passed, args=(arg2,), daemon=True).start()
+        #     self.after(2000, lambda: self.loaded_screen.update_status(title="Parsing Order Data...", status="Fetching required details..."))
+        # else:
+        #      print("Orders not found") 
+        #      self.after(2000, lambda: self.loaded_screen.update_status(title="Orders not found", status="Fetching required details..."))
     
-        self.after(4000, lambda: self.loaded_screen.update_status(title="Validating Data...", status="Checking order integrity..."))
-        self.after(6000, lambda: self.loaded_screen.update_status(title="Completed", status="Hybrid Entry Processing Finished."))
+        # self.after(4000, lambda: self.loaded_screen.update_status(title="Validating Data...", status="Checking order integrity..."))
+        # self.after(6000, lambda: self.loaded_screen.update_status(title="Completed", status="Hybrid Entry Processing Finished."))
+
+    def run_smart_entry_process(self, arg2):
+        def process():
+            try:
+                # Step 1: Update UI - Start Parsing
+                self.loaded_screen.update_status(
+                    title="Parsing Order Data...",
+                    status="Fetching required details..."
+                )
+
+                # Step 2: Parse & fetch required data
+                self.check_if_any_argument_passed(arg2)
+
+                # Step 3: Update UI - Validating
+                self.loaded_screen.update_status(
+                    title="Validating Data...",
+                    status="Checking order integrity..."
+                )
+
+                # Optional: If you have validation logic, call it here
+                # self.validate_data()
+
+                # Step 4: Update UI - Completed
+                self.loaded_screen.update_status(
+                    title="Completed",
+                    status="Hybrid Entry Processing Finished."
+                )
+
+            except Exception as e:
+                self.loaded_screen.update_status(
+                    title="Error",
+                    status=f"Something went wrong: {str(e)}"
+                )
+                logging.error(f"SmartEntry process failed: {e}")
+
+        # Run in background thread to avoid freezing GUI
+        threading.Thread(target=process, daemon=True).start()
 
 
-
+    def handle_argument(self, arg1, arg2):
+        if 'SmartEntry' in arg1:
+            self.run_smart_entry_process(arg2)
+        else:
+            self.loaded_screen.update_status(
+                title="Orders not found",
+                status="No SmartEntry tag detected."
+            )
 
 
     def check_if_any_argument_passed(self, orderId):

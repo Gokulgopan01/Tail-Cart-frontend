@@ -46,32 +46,32 @@ class HybridBPOApi:
         """Returns the order details as a dictionary."""
         order_details = [
      
-        # {
-        #     "order_id": 9,
-        #     "client_name": "Karen",
-        #     "main_client": "Karen",
-        #     "portal_name": "RedBell",
-        #     "portal_id": 12,
-        #     "portal_url": "https://valuationops.homegenius.com/VendorPortal",
-        #     "username": "reokarenfolgheraiter@gmail.com",
-        #     "password": "$K@ren!!247",
-        #     "session": "59167B58E93F25E72A0424EB7BDCBB9F3C4DA746DD609AD72C6CD4EE5EC3EF2A87D69148F1EDD7F89EC75401B78AC3F0B3C2B833E13955B03655825584A4F7E435C055FBD52B566D0A0571B3E606AA9D30688335CD6486ACC05634CC7DCF9C305F35534A61BD5C90FBDAE1D5CAC82A1AC75C424D3FC9746DC94E2072B20918CA9095E33677F417CABE3FC20E3A77A4853E79C364BD3278F47E3A939966C9C03CB9C809FE2C6C612A11959545A9952960FFC3160B528FBB94E7666A9F79B43720A795616683C76508F000BBAC1036D09C887175A003288DB1B5CD4EF5E23CCD82AB3EBD79578A2A81FE52161E48495CE93560ACB331DC262A188F312FCC44D63C589764F6287C72400B50C4D1F8E22A6FC980B8C27ED814EBF299E4BDDC584ECA7CBA745BC6520CCE4E779D8B7241D3DC916179B355FDBB39C760331CCE5661FEAD7DFC7EB1CB9762A7714CA9384372371F221028698376F5BCD5A056C237E74A44F46E64",
-        #     "proxy": "",
-        #     "account_status": "Active"
-        # },
         {
             "order_id": 10,
             "client_name": "Keystone Holdings",
-            "main_client": "KSH_AudreyWilliams",
-            "portal_name": "Proteck",
+            "main_client": "KSH_GeoffFolkerth",
+            "portal_name": "RedBell",
             "portal_id": 12,
-            "portal_url": "https://www.protk.com/net/Entry.aspx",
-            "username": "Audrey63",
-            "password": "0cg3hyKq",
-            "session": "",
+            "portal_url": "https://valuationops.homegenius.com/VendorPortal",
+            "username": "geoffre858@gmail.com",
+            "password": "SwapMeet13!",
+            "session": "E10240DEF95A6563B89F2E5C3447999EEFEC388530F19765A5E23740801A8F9761C2F1EAE0077719825E9E58FBD4BD9E1AC5E7AD22CB2593D36BC86E44BFBCA2ED5466A84FBCA674C89486D9BEB0F2131D570DB51D727B2C0C3BD62D7B5FCB4B1EB7D6B7261DE94C36EF0C893B6AC6C565C7804F8CC622D3A31F3A6930BA7073082221AB596AAE107CD1F53C9439091EF1F5A80E92C5C4759410BBF84B5F672DF5B668048CDDC2CE7A9883A89982F4C900B5729C87436244019F1F92A16A33CC90E20F3C6313BE3FC4815E4E96FF68B83B3D9AE5A9370DB0B3E98A93B59C6A78E08887AA3D87A8A4FC6454842861455FA761259E57A659EF8F5EDAAE54B9383428B0098FB2356F7FF2D8B685F24E42E65C5F7C088C9CBD638A759E2CAA3D977F680F0DAB7D28A8884B08D6EAC665AEB289E2D1B341C5DD6CA3F1B9569088FBEE6CD3254027B058AD06F7A352942D6B808A710706",
             "proxy": "",
             "account_status": "Active"
         }
+        # {
+        #     "order_id": 10,
+        #     "client_name": "Keystone Holdings",
+        #     "main_client": "KSH_AudreyWilliams",
+        #     "portal_name": "Proteck",
+        #     "portal_id": 12,
+        #     "portal_url": "https://www.protk.com/net/Entry.aspx",
+        #     "username": "Audrey63",
+        #     "password": "0cg3hyKq",
+        #     "session": "",
+        #     "proxy": "",
+        #     "account_status": "Active"
+        # }
         ]
         return order_details
 
