@@ -42,7 +42,7 @@ class PortalLoginScreen(tk.Frame):
 
     def __init__(self, client_data):
         self.client_data = client_data
-        self.driver = None  #Store Selenium WebDriver instance
+        #self.driver = None  #Store Selenium WebDriver instance
         logging.basicConfig(level=logging.INFO)
     @staticmethod
     def portals(username, password, portal_url, portal_name,proxy,session):  # Added client_data parameter
@@ -64,9 +64,8 @@ class PortalLoginScreen(tk.Frame):
             portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy,session)  # Perform Proteck login
             return session, portal_name_instance.driver  # Return orders, session, and driver after login
         elif portal_name == 'RedBell':
-            portal_name_instance = RedBell(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
+            portal_name_instance = RedBell(username, password, portal_url, portal_name,proxy,session) 
             portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy,session)
-            session = portal_name_instance.login_to_portal(username, password, portal_url, portal_name, proxy,session)
             # if type(session)==str:
             #     if "Login error" in session or 'Login issue' in session:  # Perform Proteck login
             #         print("Login error")

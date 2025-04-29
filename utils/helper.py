@@ -161,3 +161,59 @@ def format_address(address):
     
     except Exception as e:
         logging.error(f"error in the format address function in utility : {e}")   
+
+
+
+
+def get_cookie_from_api(username, portal="rrr", proxy=None):
+    try:
+        session = requests.Session()
+        if proxy:
+            session.proxies.update({
+                'http': f'http://{proxy}',
+                'https': f'http://{proxy}'
+            })
+            logging.info(f"Using proxy: {proxy}")
+
+        headers = {'Content-Type': os.getenv("API_HEADERS_CONTENT_TYPE")}
+        payload = json.dumps({
+            "username": username,
+            "portal": portal
+        })
+
+        api_url = os.getenv("AUTHENTICATOR_API_URL")
+            
+        response = session.post(api_url, headers=headers, data=payload, timeout=60)
+        response.raise_for_status()
+        return response.json()
+
+    except requests.exceptions.RequestException as e:
+        logging.error(f"API request failed: {e}")
+        return None
+    
+def setup_driver(self):
+    try:
+        self.login_status = "Starting login process"
+
+        chrome_options = Options()
+        chrome_options.add_argument("--start-maximized")
+        chrome_options.add_argument("--disable-extensions")
+
+        if hasattr(self, 'proxy') and self.proxy:
+            logging.info(f"Using proxy: {self.proxy}")
+            chrome_options.add_argument(f'--proxy-server={self.proxy}')
+        else:
+            logging.info("No proxy provided. Continuing without proxy.")
+
+        self.driver = webdriver.Chrome(options=chrome_options)
+        logging.info("Chrome driver initialized successfully.")
+
+
+        self.driver = webdriver.Chrome(options=chrome_options)
+        logging.info("Chrome driver initialized successfully.")
+
+    except Exception as e:
+        logging.error(f"Failed to initialize Chrome driver: {e}")
+        self.login_status = "Driver initialization failed"
+        raise e    
+

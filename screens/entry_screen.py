@@ -82,8 +82,8 @@ class EntryScreen(tk.Frame):
                 )
                 logging.error(f"SmartEntry process failed: {e}")
 
-        # Run in background thread to avoid freezing GUI
-        threading.Thread(target=process, daemon=True).start()
+    #     # Run in background thread to avoid freezing GUI
+    #     threading.Thread(target=process, daemon=True).start()
 
 
     def handle_argument(self, arg1, arg2):

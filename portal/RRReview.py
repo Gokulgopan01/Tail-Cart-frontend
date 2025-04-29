@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import threading
 import logging
+from dotenv import load_dotenv
 import requests
 import json
 import os
@@ -20,88 +21,76 @@ import json
 import os
 from selenium.webdriver.chrome.options import Options
 
-from utils.helper import handle_login_status
+from utils.helper import get_cookie_from_api, handle_login_status, setup_driver
 
-class RedBell:
-    def __init__(self, username, password, portal_url, portal_name, proxy):
-        # self.client_data = client_data
-        self.driver = None  # Store Selenium WebDriver instance
+import logging
+import json
+import time
+import requests
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+import logging
+import json
+import time
+import requests
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+# Load environment variables from the .env file
+load_dotenv()
+class RRReview:
+    def __init__(self, username, password, portal_url, portal_name, proxy=None):
+        self.username = username
+        self.password = password
+        self.portal_url = portal_url
+        self.portal_name = portal_name
+        self.proxy = proxy
+        self.driver = None
+        self.login_status = "Not started"
         logging.basicConfig(level=logging.INFO)
 
-    def login_to_portal(self, username, password, portal_url, portal_name, proxy,session):
+
+    def login_to_portal(self):
         try:
-            options = Options()
-            options.add_argument("--start-maximized")
-            options.add_argument("--disable-extensions")
-            if proxy:
-                logging.info(f"Using proxy: {proxy}")
-                options.add_argument(f'--proxy-server={proxy}')
+    
+            # Step 1: Setup WebDriver
+            setup_driver(self)
 
-            self.driver = webdriver.Chrome(options=options)
+            api_response = get_cookie_from_api(self.username, portal="rrr", proxy=self.proxy)
+            if not api_response:
+                self.login_status = "API response error"
+                handle_login_status("API_FAILED", self.username, ["VendorPortal/Index"], self.portal_name)
+                return "Login error", self.driver
+            # Step 3: Inject session storage
+            self.driver.get('https://www.rrreview.com/runtime.aa40cd539422f2485b46.js')
+            time.sleep(1)
 
-            # API call to get cookie
-            api_url = "https://us-central1-crack-mariner-131508.cloudfunctions.net/Ecesis-Authpp"
-            headers = {'Content-Type': 'application/json'}
-            payload = json.dumps({"username": username})
-
-            response = requests.post(api_url, headers=headers, data=payload)
-            response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
-
-            api_response = response.json()
-            #portal_url="https://valuationops.homegenius.com/VendorPortal"
-            if api_response.get("status") == "success":
-                redbell_cookie = api_response["cookies"].get(".ASPXAUTH")
-                if redbell_cookie:
-                    self.driver.get(portal_url) # Navigate to the site before adding cookie.
-                    self.driver.add_cookie({'name': '.ASPXAUTH', 'value': redbell_cookie})
-                    self.driver.get(f"{portal_url}/Index") # Navigate to index after cookie.
-                    
-                    # Wait for the page to load.
-                    # Wait for login success by checking page title
-                    #WebDriverWait(self.driver, 120).until(EC.presence_of_element_located((By.ID, "Partner portal")))
-
-
-                    title = self.driver.current_url
-                    login_check_keyword=["VendorPortal/Index","DailyUpdates"]
-
-                    handle_login_status(title, username, login_check_keyword,portal_name)
-                     
-                    return self.driver  # Return the driver instance
+            for key, value in api_response.items():
+                if isinstance(value, dict):
+                    for sub_key, sub_value in value.items():
+                        self.driver.execute_script(f"sessionStorage.setItem('{sub_key}', '{sub_value}');")
                 else:
-                    logging.error("Cookie '.ASPXAUTH' not found in API response.")
-                    title="MFA FAILED"
-                    login_check_keyword=["False"]
-                    handle_login_status(title, username, login_check_keyword,portal_name)
-                    #return False
-                   
-            else:
-                logging.error(f"API call failed: {api_response.get('status')}")
-                title="MFA FAILED"
-                login_check_keyword=["False"]
-                handle_login_status(title, username, login_check_keyword,portal_name)
-                #return False
+                    self.driver.execute_script(f"sessionStorage.setItem('{key}', '{value}');")
 
-        except requests.exceptions.RequestException as e:
-            logging.error(f"API request failed: {e}")
-            title="MFA FAILED"
-            login_check_keyword=["False"]
-            handle_login_status(title, username, login_check_keyword,portal_name)
-            #return False
-        except json.JSONDecodeError as e:
-            logging.error(f"Failed to decode JSON response: {e}")
-            title="MFA FAILED"
-            login_check_keyword=["False"]
-            handle_login_status(title, username, login_check_keyword,portal_name)
-            #return False
+            # Step 4: Navigate to Active Orders
+            self.driver.get('https://www.rrreview.com/#/baseauth/activeorders')
+            time.sleep(5)
+
+            # Step 5: Check if Login Successful
+            current_url = self.driver.current_url
+            if 'https://www.rrreview.com/#/baseauth/activeorders' in current_url:
+                logging.info("Login successful")
+                return "Login success", self.driver
+            else:
+                logging.error(f"Login failed. URL landed: {current_url}")
+                return "Login error", self.driver
+
+                handle_login_status(current_url, self.username, success_keywords, self.portal_name)
+                return self.login_status, self.driver
+
         except Exception as e:
-            logging.exception(f"An error occurred: {e}")
-            title="MFA FAILED"
-            login_check_keyword=["False"]
-            handle_login_status(title, username, login_check_keyword,portal_name)
-            #return False
-        # finally:
-        #     if self.driver:
-        #         self.driver.quit()
-    # def close_browser(self):
-    #     if self.driver:
-    #         self.driver.quit()
+            self.login_status = f"Exception occurred: {e}"
+            logging.exception("Exception during login")
+            handle_login_status("EXCEPTION", self.username, ["activeorders"], self.portal_name)
+            return "Login error", self.driver

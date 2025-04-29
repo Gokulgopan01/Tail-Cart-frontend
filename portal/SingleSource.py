@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import threading
 import logging
+from dotenv import load_dotenv
 import requests
 import json
 import os
@@ -20,14 +21,19 @@ import json
 import os
 from selenium.webdriver.chrome.options import Options
 
-from utils.helper import handle_login_status
-
-class RedBell:
-    def __init__(self, username, password, portal_url, portal_name, proxy):
-        # self.client_data = client_data
-        self.driver = None  # Store Selenium WebDriver instance
+from utils.helper import get_cookie_from_api, handle_login_status
+# Load environment variables from the .env file
+load_dotenv()
+class SS:
+    def __init__(self,username, password, portal_url, portal_name, proxy,session):
+        self.username = username
+        self.password = password
+        self.portal_url = portal_url
+        self.portal_name = portal_name
+        self.proxy = proxy
+        self.session = session
+        self.driver = None  # Initialize driver to None
         logging.basicConfig(level=logging.INFO)
-
     def login_to_portal(self, username, password, portal_url, portal_name, proxy,session):
         try:
             options = Options()
@@ -40,14 +46,13 @@ class RedBell:
             self.driver = webdriver.Chrome(options=options)
 
             # API call to get cookie
-            api_url = "https://us-central1-crack-mariner-131508.cloudfunctions.net/Ecesis-Authpp"
-            headers = {'Content-Type': 'application/json'}
-            payload = json.dumps({"username": username})
-
-            response = requests.post(api_url, headers=headers, data=payload)
-            response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
-
-            api_response = response.json()
+            api_url = os.getenv("AUTHENTICATOR_API_URL")
+            headers = {'Content-Type': os.getenv("API_HEADERS_CONTENT_TYPE")}
+            api_response = get_cookie_from_api(self.username, portal="rrr", proxy=self.proxy)
+            if not api_response:
+                self.login_status = "API response error"
+                handle_login_status("API_FAILED", self.username, ["VendorPortal/Index"], self.portal_name)
+                return "Login error", self.driver
             #portal_url="https://valuationops.homegenius.com/VendorPortal"
             if api_response.get("status") == "success":
                 redbell_cookie = api_response["cookies"].get(".ASPXAUTH")

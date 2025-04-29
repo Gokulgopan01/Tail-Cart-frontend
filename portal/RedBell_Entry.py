@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
 
-from utils.helper import get_order_address_from_assigned_order
+from utils.helper import get_order_address_from_assigned_order, setup_driver
 
 
 # Load variables from .env file
@@ -28,12 +28,7 @@ def RedBellEntry(self, username, password, portal_url, portal_name, proxy, sessi
         logging.basicConfig(level=logging.INFO)
 
         # Set up Chrome options
-        options = Options()
-        options.add_argument("--start-maximized")
-        options.add_argument("--disable-extensions")
-        if proxy:
-            logging.info(f"Using proxy: {proxy}")
-            options.add_argument(f'--proxy-server={proxy}')
+        setup_driver(self)
 
         # # Initialize Chrome WebDriver
         # driver = webdriver.Chrome(options=options)
@@ -100,11 +95,11 @@ def session_check(self, session, session_cookie):
 def login_to_portal(self, username, session):
     """Attempts to log in to the portal using the provided username."""
     try:
-        url = "https://us-central1-crack-mariner-131508.cloudfunctions.net/Ecesis-Authpp"
+        api_url = os.getenv("AUTHENTICATOR_API_URL")
         payload = json.dumps({"username": username})
         headers = {'Content-Type': 'application/json'}
 
-        response = requests.post(url, headers=headers, data=payload)
+        response = requests.post(api_url, headers=headers, data=payload)
         if response.status_code == 200:
             resp_data = response.json()
             if resp_data.get('status') == 'success' and resp_data.get('cookies'):

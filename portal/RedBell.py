@@ -20,28 +20,26 @@ import json
 import os
 from selenium.webdriver.chrome.options import Options
 
-from utils.helper import handle_login_status
+from utils.helper import handle_login_status, setup_driver
 
 class RedBell:
-    def __init__(self, username, password, portal_url, portal_name, proxy):
-        # self.client_data = client_data
-        self.driver = None  # Store Selenium WebDriver instance
+    def __init__(self,username, password, portal_url, portal_name, proxy,session):
+        self.username = username
+        self.password = password
+        self.portal_url = portal_url
+        self.portal_name = portal_name
+        self.proxy = proxy
+        self.session = session
+        self.driver = None  # Initialize driver to None
+
         logging.basicConfig(level=logging.INFO)
 
     def login_to_portal(self, username, password, portal_url, portal_name, proxy,session):
         try:
-            options = Options()
-            options.add_argument("--start-maximized")
-            options.add_argument("--disable-extensions")
-            if proxy:
-                logging.info(f"Using proxy: {proxy}")
-                options.add_argument(f'--proxy-server={proxy}')
-
-            self.driver = webdriver.Chrome(options=options)
-
+            setup_driver(self)
             # API call to get cookie
-            api_url = "https://us-central1-crack-mariner-131508.cloudfunctions.net/Ecesis-Authpp"
-            headers = {'Content-Type': 'application/json'}
+            api_url = os.getenv("AUTHENTICATOR_API_URL")
+            headers = {'Content-Type': os.getenv("API_HEADERS_CONTENT_TYPE")}
             payload = json.dumps({"username": username})
 
             response = requests.post(api_url, headers=headers, data=payload)
