@@ -45,7 +45,7 @@ class AVM:
 
     
 
-    def login_to_portal(self):
+    def login_to_portal(self,username, password, portal_url, portal_name,proxy,session):
         try:
             setup_driver(self)
             self.driver.get(self.login_url)
@@ -61,30 +61,45 @@ class AVM:
             logging.info("Navigated to Pending Assignments page")
 
             self.check_alert()
+            self.click_if_dashboard_button_exists()
 
             if self.is_logged_in():
                 logging.info("Login successful")
-                self.login_status = "Login success"
-                self.handle_login_status(self.login_status, self.username, ["VendorPortal/Index", "DailyUpdates"], "AVM Portal")
+                title = self.driver.current_url
+                login_check_keyword=["PendingAssignments.aspx"]
+
+                handle_login_status(title, username, login_check_keyword,portal_name)
+                
                 return "Login success", self.driver
             else:
                 logging.warning("Login failed")
                 self.login_status = "Login error"
-                self.handle_login_status(self.login_status, self.username, ["False"], "AVM Portal")
+                handle_login_status(self.login_status, self.username, ["False"], portal_name)
                 return "Login error", self.driver
 
         except Exception as e:
             self.login_status = "Login error"
             logging.error("An error occurred during login: %s", str(e))
             logging.error("Error on line %s: %s", sys.exc_info()[-1].tb_lineno, type(e).__name__)
-            self.handle_login_status(self.login_status, self.username, ["False"], "AVM Portal")
+            handle_login_status(self.login_status, self.username, ["False"], portal_name)
             return "Login error", self.driver
 
+    # def is_logged_in(self):
+    #     try:
+    #         return self.driver.find_element(By.LINK_TEXT, "Log Out").is_displayed()
+    #     except NoSuchElementException:
+    #         logging.warning("Log Out link not found. User not logged in.")
+    #         return False
     def is_logged_in(self):
         try:
-            return self.driver.find_element(By.LINK_TEXT, "Log Out").is_displayed()
+            # Attempt to find the "Log Off" link by its text
+            logoff_link = self.driver.find_element(By.LINK_TEXT, "Log Out")
+            if logoff_link.is_displayed():
+                logging.info("Log Off link is present. User is logged in.")
+                return True
         except NoSuchElementException:
-            logging.warning("Log Out link not found. User not logged in.")
+            # If the "Log Off" link is not found, return or handle it
+            logging.warning("Log Off link not found. User is not logged in.")
             return False
 
     def handle_alert(self):
@@ -107,12 +122,26 @@ class AVM:
 
     def check_alert(self):
         try:
-            WebDriverWait(self.driver, 5).until(
-                EC.visibility_of_element_located((By.ID, "ctl00_Body_dvImdn"))
+            alert = WebDriverWait(self.driver, 5).until(
+                EC.presence_of_element_located((By.ID, "ctl00_Body_dvImdn")) 
             )
             self.handle_alert()
         except TimeoutException:
-            pass
+            logging.info("No alert found — continuing.")
+
+
+    
+    def click_if_dashboard_button_exists(driver):
+        """Clicks the dashboard button if it exists."""
+        try:
+            buttons = driver.find_elements(By.XPATH, '//*[@id="btnDashboard"]')
+            if buttons:
+                buttons[0].click()
+                logging.info("Dashboard button clicked.")
+            else:
+                logging.info("Dashboard button not found — continuing the flow.")
+        except Exception as e:
+            logging.error(f"Error while checking for dashboard button: {e}")        
             #return False
         # finally:
         #     if self.driver:

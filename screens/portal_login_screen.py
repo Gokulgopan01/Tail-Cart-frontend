@@ -4,6 +4,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 
 from exact_address_check.proteck_check_exact_address import find_matching_order
+from portal.AVM import AVM
 from portal.Proteck import Proteck
 from portal.RedBell import RedBell
 from selenium import webdriver
@@ -51,6 +52,8 @@ class PortalLoginScreen(tk.Frame):
             return Proteck(username, password, portal_url, portal_name,proxy,session)
         elif portal_name == 'RedBell':
             return RedBell(username, password, portal_url, portal_name,proxy,session)
+        elif portal_name == 'AVM':
+            return AVM(username, password, portal_url, portal_name,proxy,session)
         else:
             print("New portal")
             # return PortalLogin(username, password, portal_url, portal_name,proxy) #or create a default portal.
