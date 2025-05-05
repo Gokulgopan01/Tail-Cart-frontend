@@ -17,6 +17,7 @@ from PIL import Image, ImageDraw, ImageTk
 
 from screens.portal_login_screen import PortalLoginScreen
 import app
+from utils.helper import setup_driver
 from utils.user_data import save_login_data, load_login_data
 
 # Load variables from .env file
@@ -491,7 +492,7 @@ class EcesisLoginScreen(tk.Frame):
         if self.main_client_var.get() and self.sub_client_var.get() and self.portal_var.get() and self.account_var.get():
             selected_account = next((acc for acc in self.accounts if acc["account_id"] == int(self.account_var.get())), None)
             if selected_account:
-                self.login_to_portal(selected_account)
+                self.login_to_client_portal(selected_account)
             else:
                 messagebox.showerror("Error", "Selected account not found.")
         else:
@@ -510,11 +511,42 @@ class EcesisLoginScreen(tk.Frame):
     #     else:
     #         messagebox.showerror("Error", "Portal login function not found.")
 
-    def login_to_portal(self, selected_account):
+    # def login_to_client_portal(self, selected_account):
+    #     """Login to the portal with the selected account details."""
+    #     portal = self.portal_var.get()
+    #     if portal:
+    #         # Create a new instance of the portal class for each login attempt
+    #         portal_instance = PortalLoginScreen.portals(
+    #             selected_account["username"],
+    #             selected_account["password"],
+    #             self.selected_portal_url,
+    #             portal,
+    #             selected_account["proxy"],
+    #             selected_account["session"]
+    #         )
+    #         if portal_instance:
+    #             self.active_portal_instances.append(portal_instance) # Store the instance
+    #             threading.Thread(
+    #                 target=portal_instance.login_to_portal,
+    #                 args=(
+    #                     selected_account["username"],
+    #                     selected_account["password"],
+    #                     self.selected_portal_url,
+    #                     portal,
+    #                     selected_account["proxy"],
+    #                     selected_account["session"]
+    #                 ),
+    #                 daemon=True,
+    #             ).start()
+    #     else:
+    #         messagebox.showerror("Error", "Portal login function not found.")
+
+
+    def login_to_client_portal(self, selected_account):
         """Login to the portal with the selected account details."""
         portal = self.portal_var.get()
         if portal:
-            # Create a new instance of the portal class for each login attempt
+            # Instantiate the portal handler class
             portal_instance = PortalLoginScreen.portals(
                 selected_account["username"],
                 selected_account["password"],
@@ -524,21 +556,14 @@ class EcesisLoginScreen(tk.Frame):
                 selected_account["session"]
             )
             if portal_instance:
-                self.active_portal_instances.append(portal_instance) # Store the instance
+                self.active_portal_instances.append(portal_instance)
                 threading.Thread(
                     target=portal_instance.login_to_portal,
-                    args=(
-                        selected_account["username"],
-                        selected_account["password"],
-                        self.selected_portal_url,
-                        portal,
-                        selected_account["proxy"],
-                        selected_account["session"]
-                    ),
-                    daemon=True,
+                    daemon=True
                 ).start()
         else:
             messagebox.showerror("Error", "Portal login function not found.")
+
 
     def fetch_data(self, endpoint, params=None):
         """Fetch data from API and return JSON response."""

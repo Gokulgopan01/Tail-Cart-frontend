@@ -1,3 +1,6 @@
+import json
+import re
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -10,9 +13,8 @@ import time
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 # from utility.helper import log_login_status,initialize_driver
 from selenium.webdriver.chrome.service import Service
+from utils.helper import clean_address, handle_login_status, setup_driver
 
-from exact_address_check.proteck_check_exact_address import find_matching_order
-from utils.helper import handle_login_status, setup_driver
 # Load environment variables from the .env file
 load_dotenv()
 class Proteck:
@@ -85,3 +87,75 @@ class Proteck:
         #     pass
         #     # if self.driver:
         #     #     self.driver.quit()
+    def proteck_formopen_fill(self, orders, driver, session, merged_json, order_details, order_id):
+        logging.info("Starting form open process for ProTeck")
+        target_address = clean_address(order_details)
+        form_types = [
+            'IBPO with MIT', 'Homesteps', 'Homesteps BPO Interior', 'New Chase Exterior BPO on Apollo',
+            'Exterior valuation with 3 sales comps and 3 listing comps', 'Exterior BPO', 'Fannie BPO', 'Evaluation'
+        ]
+
+        matched, order, status = self.find_matching_order(orders, target_address, form_types, order_id, driver)
+
+        if matched:
+            if status == "matched":
+                order_url = f"https://www.protk.com/ProTeck.Fulfillment.Order.Web/LegacyCase/{order['caseNumber']}/ViewForm/Vendor"
+                logging.info(f"Form matched for order {order['caseNumber']}. Opening form in browser.")
+                driver.get(order_url)
+                return
+            else:
+                logging.info(f"Form type mismatch for order {order['caseNumber']}: {order['productType']}")
+                return
+        else:
+            address_list = [order['address'] for order in orders]
+            logging.info(f"No exact address match found. Address list: {address_list}")
+            logging.info("No AI address match implemented, manual intervention needed.")
+
+    def find_matching_order(self, orders, target_address, form_types, order_id, driver):
+        '''Function to match the address and form type for ProTeck orders'''
+        try:
+            html_content = driver.page_source
+            soup = BeautifulSoup(html_content, 'html.parser')
+
+            script_tag = soup.find('script', {'type': 'application/json'})
+            if script_tag:
+                open_data_json = json.loads(script_tag.string)
+            else:
+                logging.error("JSON data not found in page.")
+                return False, None, None
+
+            orders_list = []
+            address_list = []
+
+            for open_subject in open_data_json:
+                status_type = open_subject.get('statusType', '')
+                if 'Pending' in status_type or 'NeedsRevision' in status_type:
+                    order_data = {
+                        'caseNumber': open_subject.get('caseNumber'),
+                        'statusType': status_type,
+                        'orderId': open_subject.get('orderId'),
+                    }
+                    orders_list.append(order_data)
+
+                    address = open_subject.get('address', {})
+                    address1 = address.get('address1', '').replace(" ", "").upper()
+                    address2 = address.get('address2', '')
+                    address3 = address.get('suite', '')
+                    city = address.get('city', '')
+                    state = address.get('state', '')
+                    zipcode = address.get('zip', '')
+
+                    full_address = f"{address1} {address2} {address3} {city} {state} {zipcode}"
+                    cleaned_address = re.sub(r'[\"\'\-,:/]', '', full_address)
+                    cleaned_address = re.sub(r'\s+', '', cleaned_address).upper()
+                    address_list.append(cleaned_address)
+
+            for order, cleaned_address in zip(orders_list, address_list):
+                if target_address == cleaned_address:
+                    return True, order, "matched"
+
+            return False, None, None
+
+        except Exception as err:
+            logging.error(f"Exception occurred while retrieving orders and addresses: {err}")
+            return False, None, None

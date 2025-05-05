@@ -209,9 +209,6 @@ def setup_driver(self):
         logging.info("Chrome driver initialized successfully.")
 
 
-        self.driver = webdriver.Chrome(options=chrome_options)
-        logging.info("Chrome driver initialized successfully.")
-
     except Exception as e:
         logging.error(f"Failed to initialize Chrome driver: {e}")
         self.login_status = "Driver initialization failed"

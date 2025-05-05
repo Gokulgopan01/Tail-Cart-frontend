@@ -2,11 +2,10 @@ import logging
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-
-from exact_address_check.proteck_check_exact_address import find_matching_order
+from portal.RedBell import RedBell
 from portal.AVM import AVM
 from portal.Proteck import Proteck
-from portal.RedBell import RedBell
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
