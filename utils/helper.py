@@ -61,7 +61,7 @@ def handle_exception(self, e):
 
 
 def params_check():
-    
+    print("123",sys.argv)
     if len(sys.argv) >= 2:
             url = sys.argv[1]  # Example: 'myapp://?arg1=mlsdownloader&arg2=order123'
             parsed_url = urlparse(url)

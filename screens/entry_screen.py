@@ -1,3 +1,4 @@
+import importlib
 import logging
 import tkinter as tk
 from tkinter import ttk
@@ -12,6 +13,8 @@ import sys
 import threading
 from integrations import hybrid_bpo_api
 from screens import portal_login_screen
+# Importing a specific function from RedBell.py
+
 
 
 class EntryScreen(tk.Frame):
@@ -47,7 +50,7 @@ class EntryScreen(tk.Frame):
         # self.after(6000, lambda: self.loaded_screen.update_status(title="Completed", status="Hybrid Entry Processing Finished."))
 
     def run_smart_entry_process(self, arg2):
-        def process():
+        #def process():
             try:
                 # Step 1: Update UI - Start Parsing
                 self.loaded_screen.update_status(
@@ -115,25 +118,87 @@ class EntryScreen(tk.Frame):
                         session=order.get("session",None)
                         order_id=order.get("order_id","")
                         order_details=get_order_address_from_assigned_order(order_id)
-                        if portal_name:
-                            # if portal_name=="RedBell":
-                            #     print(f"Logging into portal: {portal_name}")
-                            #    # Create an instance of RedBellEntry
-                            #     orders, session,driver = RedBellEntry(self,username, password, portal_url, portal_name, proxy, session)
+                        # if portal_name:
+                        #     # if portal_name=="RedBell":
+                        #     #     print(f"Logging into portal: {portal_name}")
+                        #     #    # Create an instance of RedBellEntry
+                        #     #     orders, session,driver = RedBellEntry(self,username, password, portal_url, portal_name, proxy, session)
                                
-                            #     redbell_formopen_fill(orders, driver,session, merged_json=None, order_details=order_details,order_id=order_id)
-                            # else:     
-                                print(f"Logging into portal: {portal_name}")
-                                orders,session,driver=portal_login_screen.PortalLoginScreen.login_to_portal(self,username, password, portal_url, portal_name, proxy,session)  
-                                # # Dynamically call the corresponding form open function
-                                form_open_func_name = f"{portal_name.lower()}_formopen_fill"
-                                print(form_open_func_name)
-                                form_open_func = globals().get(form_open_func_name)
+                        #     #     redbell_formopen_fill(orders, driver,session, merged_json=None, order_details=order_details,order_id=order_id)
+                        #     # else:     
+                        #         print(f"Logging into portal: {portal_name}")
+                        #         portal_login_screen.PortalLoginScreen.login_to_portal(self,username, password, portal_url, portal_name, proxy,session)  
+                        #         # # Dynamically call the corresponding form open function
+                        #         form_open_func_name = f"{portal_name.lower()}_formopen_fill"
+                        #         print(form_open_func_name)
+                        #         form_open_func = globals().get(form_open_func_name)
 
-                                if callable(form_open_func):
-                                    form_open_func(orders, driver,session, merged_json=None, order_details=order_details,order_id=order_id)
-                                else:
-                                    logging.error(f"No function defined for portal: {form_open_func_name}")
+                        #         if callable(form_open_func):
+                        #             form_open_func(orders, session, merged_json=None, order_details=order_details,order_id=order_id)
+                        #         else:
+                        #             logging.error(f"No function defined for portal: {form_open_func_name}")
+                        # else:
+                        #     print("Portal name missing in order data.")
+
+                        if portal_name:
+                            # Log portal name for debugging
+                            print(f"Logging into portal: {portal_name}")
+
+                            # Log into the portal using the selected portal
+                            portal_login_screen.PortalLoginScreen.login_to_portal(self, username, password, portal_url, portal_name, proxy, session)
+
+                            # Dynamically call the corresponding form open function
+                            # form_open_func_name = f"{portal_name.lower()}_formopen_fill"
+                            # print(f"Looking for function: {form_open_func_name}")
+
+                            # form_open_func = globals().get(form_open_func_name)
+
+                            # if callable(form_open_func):
+                            #     form_open_func(orders,session, merged_json=None, order_details=order_details,order_id=order_id)
+                            # else:
+                            #     logging.error(f"No function defined for portal: {form_open_func_name}")
+
+                            # try:
+                            #     # Dynamically import the portal's module
+                            #    # Step 1: Dynamically import the module: e.g., portal.RedBell
+                            #     portal_module = importlib.import_module(f"portal.{portal_name}")
+
+                            #     # Step 2: Get the class from the module: e.g., RedBell
+                            #     portal_class = getattr(portal_module, portal_name)
+
+                            #     # Step 3: Instantiate the class
+                            #     portal_obj = portal_class(username, password, portal_url, portal_name, proxy, session)
+
+                            #     # Step 4: Dynamically get and call the method from the instance
+                            #     method_name = f"{portal_name.lower()}_formopen_fill"  # e.g., redbell_formopen_fill
+                            #     form_open_func = getattr(portal_obj, method_name, None)
+
+                            #     if callable(form_open_func):
+                            #         form_open_func(orders, session, merged_json=None, order_details=order_details, order_id=order_id)
+                            #     else:
+                            #         logging.error(f"Method '{method_name}' not found in class {portal_name}")
+
+                            #     # # Dynamically import the module: e.g., portal.redbell
+                            #     # portal_module = importlib.import_module(f"portal.{portal_name}")
+
+                            #     # # Get the class from the module
+                            #     # portal_class = getattr(portal_module, portal_name)
+
+                            #     # # Instantiate the portal object
+                            #     # portal_obj = portal_class(username, password, portal_url, portal_name, proxy, session)
+
+                            #     # # Now dynamically call the form handler method
+                            #     # method_name = f"{portal_name.lower()}_formopen_fill"
+                            #     # form_open_func = getattr(portal_obj, method_name, None)
+
+                            #     # if callable(form_open_func):
+                            #     #     form_open_func(orders, session, merged_json=None,order_details=order_details, order_id=order_id)
+                            #     # else:
+                            #     #     logging.error(f"Method '{method_name}' not found in class {portal_name}")
+                            # except ModuleNotFoundError:
+                            #     logging.error(f"Module for portal '{portal_name}' not found.")
+                            # except Exception as e:
+                            #     logging.error(f"An error occurred: {e}")
                         else:
                             print("Portal name missing in order data.")
                                 

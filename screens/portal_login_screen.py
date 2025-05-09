@@ -67,7 +67,8 @@ class PortalLoginScreen(tk.Frame):
             return session, portal_name_instance.driver  # Return orders, session, and driver after login
         elif portal_name == 'RedBell':
             portal_name_instance = RedBell(username, password, portal_url, portal_name,proxy,session) 
-            portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy,session)
+            portal_name_instance.login_to_portal()
+    
             # if type(session)==str:
             #     if "Login error" in session or 'Login issue' in session:  # Perform Proteck login
             #         print("Login error")

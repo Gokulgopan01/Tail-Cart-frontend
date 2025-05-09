@@ -70,7 +70,7 @@ class Application(tk.Tk):
         self.container.grid_columnconfigure(0, weight=1)
 
             # Assuming you have a container to hold frames
-        for F in (EcesisLoginScreen, SettingsScreen, MlsScreen,EntryScreen,ProfileScreen):
+        for F in (EcesisLoginScreen, SettingsScreen,EntryScreen,ProfileScreen):
             print(f"value in loop : {F}")
             page_name = F.__name__  # Getting the class name as the page name
             frame = F(parent=self.container, controller=self)  # Creating the frame
@@ -79,14 +79,11 @@ class Application(tk.Tk):
 
         # Login screen logic
         arg1, arg2 = params_check()  # Assuming params_check() parses the arguments
-        #arg1 = "SmartEntry"  # You set arg1 manually here for testing
+        arg1 = "SmartEntry"  # You set arg1 manually here for testing
 
         # Check if arg1 contains specific parameters and show the appropriate screen
         if arg1:
-            if 'mlsdownloader' in arg1:
-                print("MLS screen called")
-                self.show_frame("MlsScreen")  # Show the MLS screen
-            elif 'SmartEntry' in arg1:
+            if 'SmartEntry' in arg1:
                 print("Entry Screen called")
                 self.show_frame("EntryScreen")  # Show the Entry screen
         else:
