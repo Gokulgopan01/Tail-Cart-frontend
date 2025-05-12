@@ -17,6 +17,7 @@ from urllib.parse import urlparse, parse_qs
 from dotenv import load_dotenv
 
 
+
 # Load variables from .env file
 load_dotenv()
 
@@ -85,8 +86,11 @@ def get_saved_token():
 def get_order_address_from_assigned_order(order_id):
     token = get_saved_token()
     if not token:
+        
         return "Authentication token not found. Please log in again."
-
+        
+    #else:
+         
     url = f"{ASSIGNEDORDERS_URL}{order_id}"
     headers = {"Authorization": f"Bearer {token}"}  # Include token in headers
 

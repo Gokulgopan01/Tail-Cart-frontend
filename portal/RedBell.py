@@ -1,3 +1,4 @@
+
 import os
 import time
 import logging
@@ -11,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
 
+from form_filler.redbell_form_filler import RedBellFormFiller
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.helper import clean_address, get_order_address_from_assigned_order, handle_login_status, params_check, setup_driver
 
@@ -73,6 +75,9 @@ class RedBell:
                             order_details=self.order_details,
                             order_id=self.order_id
                         )
+                        redbell_formopen_fill(self, orders, session,  merged_json=None,
+                            order_details=self.order_details,
+                            order_id=self.order_id)
                     return self.driver, self.session
                 else:
                     logging.error("Cookie '.ASPXAUTH' not found in API response.")
@@ -176,6 +181,7 @@ class RedBell:
             logging.info("Form matched. Opening in browser.")
             
             self.redbell_launch_browser_and_open_form(order_url, session)
+            redbell_formopen_fill(self, order, session, merged_json, order_details, order_id)
         elif not matched:
             logging.info("No exact address match found.")
 
@@ -224,29 +230,19 @@ class RedBell:
         self.driver.get(order_url)
 
         time.sleep(10)
-    # def redbell_formopen_fill(self, orders, session, merged_json, order_details, order_id);
-    #     ProductDesc=orders['ProductDesc'].strip()
-    #     if 'Rental' in ProductDesc:
-    #         Comparable_url={"Comparable":f"https://valuationops.homegenius.com/VendorBpoForm?ItemId={orders['ItemId']}&OrderId={order['OrderId']}&ActivePage=ComparablesAdj"}
-    #         Comparable = json.dumps(Comparable_url)
-    #         Comparable_data=json.loads(Comparable)
-    #         driver.get(Comparable_data['Comparable'])
-    #         time.sleep(5)
-    #         element_xpath = "//*[@id='Address_ListedComp2']"
-    #         element = driver.find_element(By.ID,"Address_ListedComp2")
-    #         # Get the text content of the element
-    #         listing_address = element.get_attribute('value')
-    #         print(listing_address)
-    #         if listing_address and order_desc =='X-Completed':
-    #             logging.info("Entry already filled Redo order")
-    #             Comparable_url={"subject":f"https://valuationops.homegenius.com/VendorBpoForm?ItemId={order['ItemId']}&OrderId={order['OrderId']}&ActivePage=SubjectHistoryAdj"}
-    #             Comparable = json.dumps(Comparable_url)
-    #             Comparable_data=json.loads(Comparable)
-    #             self.driver.get(Comparable_data['subject'])
-    #             self.driver.implicitly_wait(wait_time_in_seconds)
-    #             f = open('Redbell_Rental_QC.json')
-    #             data = json.load(f)
-    #             f.close()
-    #             from redbell_EXT_RNT_form_filling import Form_ext_rnt 
-    #             init=Form_ext_rnt()
-    #             init.ext_rnt_form(merged_json,driver,order_details,order_details['order_id'],data,order['ItemId'],order['OrderId'],session)
+    from form_filler.redbell_form_filler import RedBellFormFiller
+
+def redbell_formopen_fill(self, order, session, merged_json, order_details, order_id):
+    #for order in orders:
+        ProductDesc = order['ProductDesc'].strip()
+        if 'Rental' in ProductDesc:
+            form_url = f"https://valuationops.homegenius.com/VendorBpoForm?ItemId={order['ItemId']}&OrderId={order['OrderId']}&ActivePage=SubjectHistoryAdj"
+            self.driver.get(form_url)
+            self.driver.implicitly_wait(10)
+
+            with open('json/redbelljson/Redbell_Enhanced.json') as f:
+                form_config = json.load(f)
+            with open('json/redbelljson/redbell_rnt data.json') as f:
+                merged_json = json.load(f)
+            filler = RedBellFormFiller(self.driver)
+            filler.fill_form(merged_json, order_details, form_config)
