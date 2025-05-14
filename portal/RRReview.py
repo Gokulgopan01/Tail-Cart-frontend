@@ -39,8 +39,8 @@ from selenium.webdriver.chrome.options import Options
 
 # Load environment variables from the .env file
 load_dotenv()
-class RRReview:
-    def __init__(self, username, password, portal_url, portal_name, proxy=None):
+class rrreview:
+    def __init__(self, username, password, portal_url, portal_name, proxy, session):
         self.username = username
         self.password = password
         self.portal_url = portal_url
@@ -86,8 +86,8 @@ class RRReview:
                 logging.error(f"Login failed. URL landed: {current_url}")
                 return "Login error", self.driver
 
-                handle_login_status(current_url, self.username, success_keywords, self.portal_name)
-                return self.login_status, self.driver
+                # handle_login_status(current_url, self.username, success_keywords, self.portal_name)
+                # return self.login_status, self.driver
 
         except Exception as e:
             self.login_status = f"Exception occurred: {e}"

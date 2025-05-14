@@ -1,138 +1,44 @@
 {
-    "page":[
-       {
-          "Subject_info":[
-             {
-                "filedtype":"date_fill_javascript",
-                "values":[
-                   ["Inspection_Date","//*[@id='InspectionDate_Value']","xpath"]
-                ]
-             },
-             {
-                "filedtype":"select_default",
-                "values":[
-                   ["Tax Data","//*[@id='InfoSource_Value']","xpath"]
-                ]
-             },
-             {
-                "filedtype":"select_data",
-                "values":[
-                   ["Subject_property_type","//*[@id='PropertyType_Value']","xpath"]
-                ]
-             },
-             {
-               "filedtype":"Textbox",
-               "values":[
-                   ["APN","//*[@id='AssessorParcel_Value']","xpath"]
-               ] 
-             },
-             {
-               "filedtype":"Textbox",
-               "values":[
-                  ["SubMLS","//*[@id='MLS_Value']","xpath"]
-               ]
-             },
-             {
-               "filedtype":"select_data",
-               "values":[
-                    ["SubList_active","//*[@id='ListedLast12Mo_Value']","xpath"],
-                    ["SubList_active","//*[@id='CurrentlyListed_Value']","xpath"]
-                   ]
-             },
-             {
-               "filedtype":"date_fill_javascript",
-               "values":[
-                   
-                   ["SubListDate_active","//*[@id='CurrentListDate_Value']","xpath"],
-                   ["SubListDate_active","//*[@id='OriginalListDate_Value']","xpath"]
-                   ]
-             },
-             {
-               "filedtype":"Textbox",
-               "values":[
-                   ["SubListPrice_active","//*[@id='CurrentListPrice_Value']","xpath"],
-                   ["SubListPrice_active","//*[@id='OriginalListPrice_Value']","xpath"],
-                   ["OwnerName_active","//*[@id='ListingBroker_Value']","xpath"],
-                   ["Listingcompany_active","//*[@id='ListingCompany_Value']","xpath"]
-                   ]
-             },
-             {
-               "filedtype":"select_data",
-               "values":[
-                    ["SubList_sold","//*[@id='SoldLast12Mo_Value']","xpath"]
-                   ]
-             },
-             {
-               "filedtype":"date_fill_javascript", 
-               "values":[
-                   
-                   ["SubListDate_sold","//*[@id='SoldListDate_Value']","xpath"]
-                   ]
-             },
-             {
-               "filedtype":"Textbox", 
-               "values":[
-                   ["SubListPrice_sold","//*[@id='SoldFinalListPrice_Value']","xpath"] 
-                   ]
-             },
-             {
-               "filedtype":"date_fill_javascript", 
-               "values":[
-                   ["SubListDate_sold","//*[@id='SoldOriginalListDate_Value']","xpath"]
+   "page":[
+      {
+         "Subject_info":[
+            {
+              "filedtype":"select_default",
+              "values":[
+                  ["No","//*[@id='PropertyVacant_Value']","xpath"],
+                  ["Yes","//*[@id='Secured_Value']","xpath"]  
+                  ]
+            },
+          
+            {
+              "filedtype":"select_default",
+              "values":[
+                  ["No","//*[@id='SubjectGuestHouse_Value']","xpath"],
+                  ["Yes","//*[@id='FinanceAvail_Value']","xpath"]
+                  ]
+            },
+            
+            {
+              "filedtype":"Textbox_default",
+              "values":[
                   
-                   ]
-             },
-             {
-               "filedtype":"Textbox", 
-               "values":[
-                   ["SubListPrice_sold","//*[@id='SoldOriginalListPrice_Value']","xpath"],
-                   ["OwnerName_sold","//*[@id='ListingBroker_Value']","xpath"],
-                   ["Listingcompany_sold","//*[@id='SoldListingCompany_Value']","xpath"]
-                   ]
-             },
-             {
-               "filedtype":"select_default",
-               "values":[
-                   ["No","//*[@id='PropertyVacant_Value']","xpath"],
-                   ["Yes","//*[@id='Secured_Value']","xpath"]  
-                   ]
-             },
-             {
-               "filedtype":"select_data",
-               "values":[
-                   ["SubView","//*[@id='PropertyView_Value']","xpath"],
-                   ["SubHoa","//*[@id='HoaOrOther_Value']","xpath"]
-                   ]
-             },
-             {
-               "filedtype":"select_default",
-               "values":[
-                   ["No","//*[@id='SubjectGuestHouse_Value']","xpath"],
-                   ["Yes","//*[@id='FinanceAvail_Value']","xpath"]
-                   ]
-             },
-             
-             {
-               "filedtype":"Textbox_default",
-               "values":[
-                   
-                   ["0","//*[@id='GuestHouseSF_Value']","xpath"],
-                   ["0","//*[@id='GuestHouseBasementSF_Value']","xpath"]
-                   ]
-             } ,
-             
+                  ["0","//*[@id='GuestHouseSF_Value']","xpath"],
+                  ["0","//*[@id='GuestHouseBasementSF_Value']","xpath"]
+                  ]
+            } ,
             
-             {
-               "filedtype":"save_data",
-               "values":[
-                  {
-                     "nextpage":"Neighborhood"
-                  }
-                         
-                       ]
-                } 
-            
-                  ]  
-                }
+           
+            {
+              "filedtype":"save_data",
+              "values":[
+                 {
+                    "nextpage":"Neighborhood"
+                 }
+                        
+                      ]
+               } 
+           
+                 ]  
+           }
     ]
 }

@@ -2,6 +2,8 @@ import logging
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
+from portal.xome import xome
+from portal.rrreview import rrreview
 from portal.RedBell import RedBell
 from portal.AVM import AVM
 from portal.Proteck import Proteck
@@ -53,9 +55,13 @@ class PortalLoginScreen(tk.Frame):
             return RedBell(username, password, portal_url, portal_name,proxy,session)
         elif portal_name == 'AVM':
             return AVM(username, password, portal_url, portal_name,proxy,session)
-        else:
-            print("New portal")
             # return PortalLogin(username, password, portal_url, portal_name,proxy) #or create a default portal.
+        elif portal_name == 'rrreview':
+            return rrreview(username, password, portal_url, portal_name,proxy,session)  
+        elif portal_name == 'xome':
+            return xome(username, password, portal_url, portal_name,proxy,session)  
+        else:
+            print("New portal")  
 
     def login_to_portal(self, username, password, portal_url, portal_name,proxy=None ,session=None):
         """Login to the portal with the selected account details."""
@@ -68,7 +74,18 @@ class PortalLoginScreen(tk.Frame):
         elif portal_name == 'RedBell':
             portal_name_instance = RedBell(username, password, portal_url, portal_name,proxy,session) 
             portal_name_instance.login_to_portal()
-    
+        elif portal_name == 'AVM':
+            portal_name_instance = AVM(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
+            portal_name_instance.login_to_portal()  # Perform Proteck login
+            return session, portal_name_instance.driver  # Return orders, session, and driver after login
+        elif portal_name == 'rrreview':
+            portal_name_instance = rrreview(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
+            portal_name_instance.login_to_portal()  # Perform Proteck login
+            return session, portal_name_instance.driver  # Return orders, session, and driver after login
+        elif portal_name == 'xome':
+            portal_name_instance = xome(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
+            portal_name_instance.login_to_portal()  # Perform Proteck login
+            return session, portal_name_instance.driver  # Return orders, session, and driver after login
             # if type(session)==str:
             #     if "Login error" in session or 'Login issue' in session:  # Perform Proteck login
             #         print("Login error")

@@ -57,7 +57,7 @@ class RedBell:
 
                     title = self.driver.current_url
                     login_check_keyword = ["VendorPortal/Index", "DailyUpdates"]
-                    handle_login_status(title, self.username, login_check_keyword, self.portal_name)
+                    #handle_login_status(title, self.username, login_check_keyword, self.portal_name)
 
                     # Setup session using cookie
                     session = requests.Session()
@@ -65,7 +65,7 @@ class RedBell:
                     self.session = session
 
                     arg1, arg2 = params_check()
-                    arg1 = "SmartEntry"  # Manually set for testing
+                    #arg1 = "SmartEntry"  # Manually set for testing
                     if arg1 == "SmartEntry":
                         orders, session = self.fetch_data(self.session)
                         self.redbell_formopen(
@@ -75,10 +75,14 @@ class RedBell:
                             order_details=self.order_details,
                             order_id=self.order_id
                         )
-                        redbell_formopen_fill(self, orders, session,  merged_json=None,
-                            order_details=self.order_details,
-                            order_id=self.order_id)
+                        print("Completed")
+                        # redbell_formopen_fill(self, orders, session,  merged_json=None,
+                        #     order_details=self.order_details,
+                        #     order_id=self.order_id)
+                    else:    
+                        handle_login_status(title, self.username, login_check_keyword, self.portal_name)    
                     return self.driver, self.session
+
                 else:
                     logging.error("Cookie '.ASPXAUTH' not found in API response.")
             else:
@@ -246,3 +250,4 @@ def redbell_formopen_fill(self, order, session, merged_json, order_details, orde
                 merged_json = json.load(f)
             filler = RedBellFormFiller(self.driver)
             filler.fill_form(merged_json, order_details, form_config)
+            
