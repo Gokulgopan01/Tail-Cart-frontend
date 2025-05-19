@@ -2,11 +2,14 @@ import logging
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
+from portal.Ascribe import Ascribe
+from portal.ca import ca
 from portal.xome import xome
 from portal.rrreview import rrreview
 from portal.RedBell import RedBell
 from portal.AVM import AVM
 from portal.Proteck import Proteck
+from portal.LSI import LSI
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -59,7 +62,13 @@ class PortalLoginScreen(tk.Frame):
         elif portal_name == 'rrreview':
             return rrreview(username, password, portal_url, portal_name,proxy,session)  
         elif portal_name == 'xome':
-            return xome(username, password, portal_url, portal_name,proxy,session)  
+            return xome(username, password, portal_url, portal_name,proxy,session) 
+        elif portal_name == 'ca':
+            return ca(username, password, portal_url, portal_name,proxy,session) 
+        elif portal_name == 'Ascribe':
+            return Ascribe(username, password, portal_url, portal_name,proxy,session) 
+        elif portal_name == 'LSI':
+            return LSI(username, password, portal_url, portal_name,proxy,session) 
         else:
             print("New portal")  
 
@@ -86,6 +95,18 @@ class PortalLoginScreen(tk.Frame):
             portal_name_instance = xome(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
             portal_name_instance.login_to_portal()  # Perform Proteck login
             return session, portal_name_instance.driver  # Return orders, session, and driver after login
+        elif portal_name == 'ca':
+            portal_name_instance = ca(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
+            portal_name_instance.login_to_portal()  # Perform Proteck login
+            return session, portal_name_instance.driver  # Return orders, session, and driver after login
+        elif portal_name == 'Ascribe':
+            portal_name_instance = Ascribe(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
+            portal_name_instance.login_to_portal()  
+            return session, portal_name_instance.driver 
+        elif portal_name == 'LSI':
+            portal_name_instance = LSI(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
+            portal_name_instance.login_to_portal()  
+            return session, portal_name_instance.driver 
             # if type(session)==str:
             #     if "Login error" in session or 'Login issue' in session:  # Perform Proteck login
             #         print("Login error")

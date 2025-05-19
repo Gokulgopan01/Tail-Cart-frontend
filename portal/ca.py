@@ -41,54 +41,46 @@ class ca:
         try:
             # Step 1: Setup WebDriver
             setup_driver(self)
+            self.driver.get("https://vendors.ca-usa.com/Account/Login?ReturnUrl=%2FOrders%2FDashboard")
 
-            # Step 2: Call authentication API
-            api_response = get_cookie_from_api(self.username, portal="xome", proxy=self.proxy)
+            # Step 2: Get API cookie
+            api_response = get_cookie_from_api(self.username, portal="ca", proxy=self.proxy)
             if not api_response:
                 self.login_status = "API response error"
-                handle_login_status("API_FAILED", self.username, ["vendor.voxturappraisal.com"], self.portal_name)
+                handle_login_status("API_FAILED", self.username, ["Orders/Dashboard"], self.portal_name)
                 return "Login error", self.driver
 
-            # Step 3: Navigate to login page to prepare for cookie injection
-            #self.driver.get("https://vendor.voxturappraisal.com/Account/Login")
-            self.driver.get(self.portal_url)
-            time.sleep(1)
+            # Step 3: Inject cookies
+            for name, value in api_response.get("cookies", {}).items():
+                self.driver.add_cookie({"name": name, "value": value})
+            self.driver.get("https://vendors.ca-usa.com/Orders/Dashboard")
 
-            # Step 4: Inject cookie into browser
-            cookie_name = f"v_pc_{self.username}"
-            cookie_value = api_response.get("cookies", {}).get(cookie_name)
-
-            if not cookie_value:
-                logging.error(f"Cookie '{cookie_name}' not found in API response.")
-                self.login_status = "Missing cookie"
-                handle_login_status("COOKIE_FAILED", self.username, ["vendor.voxturappraisal.com"], self.portal_name)
-                return "Login error", self.driver
-
-            self.driver.add_cookie({"name": cookie_name, "value": cookie_value})
-            self.driver.get("https://vendor.voxturappraisal.com/Account/Login")  # Refresh after cookie injection
-            time.sleep(1)
-
-            # Step 5: Fill in credentials manually (required by portal)
-            self.driver.find_element(By.ID, "Login_Username").send_keys(self.username)
-            self.driver.find_element(By.ID, "Login_Password").send_keys(self.password)
-            self.driver.find_element(By.ID, "BtnLogin").click()
-            time.sleep(2)
-
-            # Step 6: Check if Login was successful
+            # Step 4: Confirm login
+            time.sleep(3)
             current_url = self.driver.current_url
-            if "vendor.voxturappraisal.com" in current_url:
-                logging.info("Login successful for user: %s", self.username)
-                self.login_status = "Login success"
-                handle_login_status(current_url, self.username, ["vendor.voxturappraisal.com"], self.portal_name)
-                return "Login success", self.driver
+            if "Orders/Dashboard" in current_url:
+                logging.info("Login successful")
+                # Create session with same cookies
+                session = requests.Session()
+                for cookie in self.driver.get_cookies():
+                    session.cookies.set(cookie['name'], cookie['value'])
+                self.session = session
+                handle_login_status(current_url, self.username, ["Orders/Dashboard"], self.portal_name)
+            
+                return session, self.driver
             else:
-                logging.error(f"Login failed. Landed on: {current_url}")
-                self.login_status = "Login failed"
-                handle_login_status(current_url, self.username, ["Login failed"], self.portal_name)
+                try:
+                    login_status = self.driver.find_element(By.XPATH, "//div[@id='validationSummary']/ul/li").text
+                    if "Invalid login attempt." in login_status:
+                        logging.warning("Login failed: Invalid credentials")
+                        handle_login_status("INVALID_LOGIN", self.username, ["Orders/Dashboard"], self.portal_name)
+                except Exception:
+                    logging.error("Login failed and could not find login error message")
+
                 return "Login error", self.driver
 
         except Exception as e:
-            self.login_status = f"Exception occurred: {e}"
-            logging.exception("Exception during login")
-            handle_login_status("EXCEPTION", self.username, ["Exception during login"], self.portal_name)
+            logging.exception("Exception during CA-USA login")
+            handle_login_status("EXCEPTION", self.username, ["Orders/Dashboard"], self.portal_name)
             return "Login error", self.driver
+    
