@@ -24,7 +24,7 @@ load_dotenv()
 ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")  
                    
 
-class EstreetNew:
+class SWBC:
     def __init__(self, username, password, portal_url, portal_name, proxy, session):
         self.username = username
         self.password = password
@@ -53,6 +53,9 @@ class EstreetNew:
             wait.until(EC.presence_of_element_located((By.ID, "Username"))).send_keys(self.username)
             wait.until(EC.presence_of_element_located((By.ID, "Password"))).send_keys(self.password)
 
+            wait.until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="checkAcceptLoginTnC"]'))).click()
+            # Click Login
             # Step 4: Submit Login
             WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.ID, "submitLogin"))

@@ -60,12 +60,10 @@ class SolidifyAppraiser:
             # Step 5: Click Submit Button
             wait.until(EC.element_to_be_clickable((By.NAME, "submit"))).click()
 
-            # Step 6: Validate Login
-            wait.until(EC.title_is_not("Login"))  # Wait until title changes
             current_title = self.driver.title
             logging.info(f"Page title after login: {current_title}")
 
-            login_check_keywords = ["Login"]
+            login_check_keywords = ["Available Orders"]
             handle_login_status(current_title, self.username, login_check_keywords, self.portal_name)
 
             return self.driver

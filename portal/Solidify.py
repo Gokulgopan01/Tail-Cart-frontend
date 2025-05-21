@@ -60,11 +60,11 @@ class Solidify:
 
             # Step 6: Get Current URL after login
             WebDriverWait(self.driver, 10).until(lambda d: "LogOn" not in d.current_url)
-            current_url = self.driver.current_url
-            logging.info(f"Current URL after login: {current_url}")
+            current_pagesource = self.driver.page_source
+            logging.info(f"Current URL after login: {current_pagesource}")
 
-            login_check_keywords = ["LogOn"]
-            handle_login_status(current_url, self.username, login_check_keywords, self.portal_name)
+            login_check_keywords = ["Log Off"]
+            handle_login_status(current_pagesource, self.username, login_check_keywords, self.portal_name)
 
             return self.driver
 
