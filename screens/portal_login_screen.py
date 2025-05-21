@@ -10,6 +10,19 @@ from portal.RedBell import RedBell
 from portal.AVM import AVM
 from portal.Proteck import Proteck
 from portal.LSI import LSI
+from portal.RealtyPilot import RealtyPilot
+from portal.AMO import AMO
+from portal.ClearCapital import ClearCapital
+from portal.AppliedValuation import AppliedValuation
+from portal.EstreetNew import EstreetNew
+from portal.BidOnHomes import BidOnHomes
+from portal.GroundWorks import GroundWorks
+from portal.InspectionPort import InspectionPort
+from portal.ValuationConnect import ValuationConnect
+from portal.SWBC import SWBC
+from portal.Solidify import Solidify
+from portal.SolidifyAppraiser import SolidifyAppraiser
+
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service

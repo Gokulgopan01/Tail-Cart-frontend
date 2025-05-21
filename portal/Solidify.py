@@ -11,7 +11,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 from form_filler.redbell_form_filler import RedBellFormFiller
 from integrations.hybrid_bpo_api import HybridBPOApi
@@ -25,7 +24,7 @@ load_dotenv()
 ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")  
                    
 
-class ClearCapital:
+class Solidify:
     def __init__(self, username, password, portal_url, portal_name, proxy, session):
         self.username = username
         self.password = password
@@ -38,59 +37,39 @@ class ClearCapital:
         self.order_id = None
         logging.basicConfig(level=logging.INFO)
 
+
     def login_to_portal(self):
         try:
             # Step 1: Setup WebDriver
             setup_driver(self)
-       
 
-            # Step 2: Navigate to Login Page
+            # Step 2: Open Portal URL
             self.driver.get(self.portal_url)
-            self.driver.set_window_position(0, 0)
-            self.driver.maximize_window()
             logging.info(f"Navigated to {self.portal_url} for {self.username}")
 
+            wait = WebDriverWait(self.driver, 20)
+
             # Step 3: Enter Username
-            WebDriverWait(self.driver, 20).until(
-                EC.presence_of_element_located((By.NAME, "username_login"))
-            ).send_keys(self.username)
-            time.sleep(2)
+            wait.until(EC.presence_of_element_located((By.ID, "UserName"))).send_keys(self.username)
+            
+            # Step 4: Enter Password
+            wait.until(EC.presence_of_element_located((By.ID, "Password"))).send_keys(self.password)
 
-            # Step 4: Click Submit after Username
-            self.driver.find_element(By.ID, "submitButton").click()
-            time.sleep(2)
+            # Step 5: Click "Log On"
+            wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@value='Log On']"))).click()
 
-            # Step 5: Enter Password
-            WebDriverWait(self.driver, 20).until(
-                EC.presence_of_element_located((By.NAME, "password_login"))
-            ).send_keys(self.password)
-            time.sleep(2)
-
-            # Step 6: Click Submit after Password
-            self.driver.find_element(By.ID, "submitButton").click()
-            time.sleep(4)
-
-            try:
-                agree_button = WebDriverWait(self.driver, 5).until(
-                    EC.element_to_be_clickable((By.XPATH, '//*[@id="agree-link"]'))
-                )
-                agree_button.click()
-                print("Clicked agree-link.")
-            except (TimeoutException, NoSuchElementException):
-                print("agree-link not found or not clickable. Continuing...")
-
-            # Step 7: Check for Login Success
+            # Step 6: Get Current URL after login
+            WebDriverWait(self.driver, 10).until(lambda d: "LogOn" not in d.current_url)
             current_url = self.driver.current_url
-            logging.info(f"Current URL after login attempt: {current_url}")
+            logging.info(f"Current URL after login: {current_url}")
 
-            login_check_keywords = ["inprogress"]  # Add keywords as appropriate
+            login_check_keywords = ["LogOn"]
             handle_login_status(current_url, self.username, login_check_keywords, self.portal_name)
 
             return self.driver
-                    
 
         except Exception as e:
-            self.login_status = f"Exception occurred: {e}"
+            self.login_status = f"Login failed: {e}"
             logging.exception("Exception during login")
-            handle_login_status("EXCEPTION", self.username, ["Exception during login"], self.portal_name)
+            handle_login_status("EXCEPTION", self.username, ["Login exception"], self.portal_name)
             return "Login error", self.driver

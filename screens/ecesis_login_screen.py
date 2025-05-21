@@ -498,49 +498,6 @@ class EcesisLoginScreen(tk.Frame):
         else:
             messagebox.showwarning("Incomplete", "Please select all details to proceed.")
 
-    # def login_to_portal(self, selected_account):
-    #     """Login to the portal with the selected account details."""
-    #     portal = self.portal_var.get()
-    #     if portal:
-    #         portal_login = PortalLoginScreen.portals(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"])  # Create PortalLogin instance using portals
-    #         threading.Thread(
-    #             target=portal_login.login_to_portal,  # Correct thread target
-    #             args=(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"]),
-    #             daemon=True
-    #         ).start()
-    #     else:
-    #         messagebox.showerror("Error", "Portal login function not found.")
-
-    # def login_to_client_portal(self, selected_account):
-    #     """Login to the portal with the selected account details."""
-    #     portal = self.portal_var.get()
-    #     if portal:
-    #         # Create a new instance of the portal class for each login attempt
-    #         portal_instance = PortalLoginScreen.portals(
-    #             selected_account["username"],
-    #             selected_account["password"],
-    #             self.selected_portal_url,
-    #             portal,
-    #             selected_account["proxy"],
-    #             selected_account["session"]
-    #         )
-    #         if portal_instance:
-    #             self.active_portal_instances.append(portal_instance) # Store the instance
-    #             threading.Thread(
-    #                 target=portal_instance.login_to_portal,
-    #                 args=(
-    #                     selected_account["username"],
-    #                     selected_account["password"],
-    #                     self.selected_portal_url,
-    #                     portal,
-    #                     selected_account["proxy"],
-    #                     selected_account["session"]
-    #                 ),
-    #                 daemon=True,
-    #             ).start()
-    #     else:
-    #         messagebox.showerror("Error", "Portal login function not found.")
-
 
     def login_to_client_portal(self, selected_account):
         """Login to the portal with the selected account details."""
