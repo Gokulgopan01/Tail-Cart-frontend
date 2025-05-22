@@ -33,8 +33,8 @@ def register_url_protocol(protocol_name, exe_path):
         print(f"Failed to register protocol: {e}")
 
 if __name__ == "__main__":
-    protocol_name = "myapp"
-    exe_path = r"D:\Hybrid_autologin\dist\main.exe"
+    protocol_name = "hybridbpoautologinv1"
+    exe_path = r"S:\HybridBPO\autologin\dist\main.exe"
 
     if not is_protocol_registered(protocol_name):
         register_url_protocol(protocol_name, exe_path)

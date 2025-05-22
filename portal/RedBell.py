@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 from form_filler.redbell_form_filler import RedBellFormFiller
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.helper import clean_address, get_order_address_from_assigned_order, handle_login_status, params_check, setup_driver
-
+from config import env
 
 # Load variables from .env file
 load_dotenv()
@@ -40,8 +40,8 @@ class RedBell:
     def login_to_portal(self):
         try:
             setup_driver(self)
-            api_url = os.getenv("AUTHENTICATOR_API_URL")
-            headers = {'Content-Type': os.getenv("API_HEADERS_CONTENT_TYPE")}
+            api_url = env.AUTHENTICATOR_API_URL
+            headers = {'Content-Type': env.API_HEADERS_CONTENT_TYPE}
             payload = json.dumps({"username": self.username})
 
             response = requests.post(api_url, headers=headers, data=payload)
@@ -65,7 +65,7 @@ class RedBell:
                     self.session = session
 
                     arg1, arg2 = params_check()
-                    #arg1 = "SmartEntry"  # Manually set for testing
+                    arg1 = "SmartEntry"  # Manually set for testing
                     if arg1 == "SmartEntry":
                         orders, session = self.fetch_data(self.session)
                         self.redbell_formopen(

@@ -26,6 +26,8 @@ from portal.SolidifyAppraiser import SolidifyAppraiser
 from portal.ClassValuation import ClassValuation
 from portal.Omnia import Omnia
 from portal.Valligent import Valligent
+from portal.ClassValuationNew import ClassValuationNew
+
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -41,13 +43,13 @@ import requests
 from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageTk
 import json
-
+from config import env
 # Load variables from .env file
 load_dotenv()
 
 # Retrieve API URLs from environment variables
-BASE_URL = os.getenv("BASE_URL")
-LOGIN_API = os.getenv("LOGIN_API")
+BASE_URL = env.BASE_URL
+LOGIN_API = env.LOGIN_API
 
 # Construct API endpoints dynamically
 MAIN_CLIENTS_API = f"{BASE_URL}/getMainClients"
@@ -171,11 +173,19 @@ class PortalLoginScreen(tk.Frame):
     def login_to_portal(self, username, password, portal_url, portal_name, proxy=None, session=None):
         """Generic login dispatcher that calls appropriate portal logic."""
 
-        portal_instance = self.portals(username, password, portal_url, portal_name, proxy, session)
+        from screens.portal_login_screen import PortalLoginScreen  # Import inside if circular import
+
+        portal_instance = PortalLoginScreen.portals(
+            username=username,
+            password=password,
+            portal_url=portal_url,
+            portal_name=portal_name,
+            proxy=proxy,
+            session=session
+        )
 
         if portal_instance:
             portal_instance.login_to_portal()
             return portal_instance.session, portal_instance.driver
         else:
             return None, None
-    

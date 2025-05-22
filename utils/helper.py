@@ -15,14 +15,14 @@ from tkinter import messagebox
 import sys
 from urllib.parse import urlparse, parse_qs
 from dotenv import load_dotenv
-
+from config import env
 
 
 # Load variables from .env file
 load_dotenv()
 
 # Retrieve API URLs from environment variables
-ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")    
+ASSIGNEDORDERS_URL = env.ASSIGNEDORDERS_URL   
 
 def initialize_driver(self):
         """Initialize Selenium WebDriver."""
@@ -179,13 +179,13 @@ def get_cookie_from_api(username, portal="rrr", proxy=None):
             })
             logging.info(f"Using proxy: {proxy}")
 
-        headers = {'Content-Type': os.getenv("API_HEADERS_CONTENT_TYPE")}
+        headers = {'Content-Type': env.API_HEADERS_CONTENT_TYPE}
         payload = json.dumps({
             "username": username,
             "portal": portal
         })
 
-        api_url = os.getenv("AUTHENTICATOR_API_URL")
+        api_url = env.AUTHENTICATOR_API_URL
             
         response = session.post(api_url, headers=headers, data=payload, timeout=60)
         response.raise_for_status()
