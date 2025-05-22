@@ -19,13 +19,13 @@ from screens.portal_login_screen import PortalLoginScreen
 import app
 from utils.helper import setup_driver
 from utils.user_data import save_login_data, load_login_data
-
+from config import env
 # Load variables from .env file
 load_dotenv()
 
 # Retrieve API URLs from environment variables
-BASE_URL = os.getenv("BASE_URL")
-LOGIN_API = os.getenv("LOGIN_API")
+BASE_URL = env.BASE_URL
+LOGIN_API = env.LOGIN_API
 
 # Construct API endpoints dynamically
 MAIN_CLIENTS_API = f"{BASE_URL}/getMainClients"

@@ -79,12 +79,13 @@ class rrreview:
 
             # Step 5: Check if Login Successful
             current_url = self.driver.current_url
-            if 'https://www.rrreview.com/#/baseauth/activeorders' in current_url:
-                logging.info("Login successful")
-                return "Login success", self.driver
-            else:
-                logging.error(f"Login failed. URL landed: {current_url}")
-                return "Login error", self.driver
+            # if 'https://www.rrreview.com/#/baseauth/activeorders' in current_url:
+            #     logging.info("Login successful")
+            #     return "Login success", self.driver
+            # else:
+            #     logging.error(f"Login failed. URL landed: {current_url}")
+            #     return "Login error", self.driver
+            handle_login_status(current_url, self.username, ["Orders/Dashboard"], self.portal_name)
 
                 # handle_login_status(current_url, self.username, success_keywords, self.portal_name)
                 # return self.login_status, self.driver

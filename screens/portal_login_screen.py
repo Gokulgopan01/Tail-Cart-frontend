@@ -1,4 +1,5 @@
 import logging
+import sys
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
@@ -22,6 +23,10 @@ from portal.ValuationConnect import ValuationConnect
 from portal.SWBC import SWBC
 from portal.Solidify import Solidify
 from portal.SolidifyAppraiser import SolidifyAppraiser
+from portal.ClassValuation import ClassValuation
+from portal.Omnia import Omnia
+from portal.Valligent import Valligent
+from portal.ClassValuationNew import ClassValuationNew
 
 
 from selenium import webdriver
@@ -38,13 +43,13 @@ import requests
 from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageTk
 import json
-
+from config import env
 # Load variables from .env file
 load_dotenv()
 
 # Retrieve API URLs from environment variables
-BASE_URL = os.getenv("BASE_URL")
-LOGIN_API = os.getenv("LOGIN_API")
+BASE_URL = env.BASE_URL
+LOGIN_API = env.LOGIN_API
 
 # Construct API endpoints dynamically
 MAIN_CLIENTS_API = f"{BASE_URL}/getMainClients"
@@ -92,8 +97,18 @@ class PortalLoginScreen(tk.Frame):
     def portals(username, password, portal_url, portal_name, proxy, session):
         portal_name = portal_name.strip()
 
-        # Load portal class map from JSON
-        with open('json/portal_map.json', 'r') as f:
+        # # Load portal class map from JSON
+        # with open('json/portal_map.json', 'r') as f:
+        #     portal_class_map = json.load(f)
+        # Handle PyInstaller temporary folder
+        if getattr(sys, 'frozen', False):
+            base_dir = sys._MEIPASS
+        else:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        json_path = os.path.join(base_dir, 'json', 'portal_map.json')
+
+        with open(json_path, 'r') as f:
             portal_class_map = json.load(f)
 
         class_name = portal_class_map.get(portal_name)
@@ -158,11 +173,19 @@ class PortalLoginScreen(tk.Frame):
     def login_to_portal(self, username, password, portal_url, portal_name, proxy=None, session=None):
         """Generic login dispatcher that calls appropriate portal logic."""
 
-        portal_instance = self.portals(username, password, portal_url, portal_name, proxy, session)
+        from screens.portal_login_screen import PortalLoginScreen  # Import inside if circular import
+
+        portal_instance = PortalLoginScreen.portals(
+            username=username,
+            password=password,
+            portal_url=portal_url,
+            portal_name=portal_name,
+            proxy=proxy,
+            session=session
+        )
 
         if portal_instance:
             portal_instance.login_to_portal()
             return portal_instance.session, portal_instance.driver
         else:
             return None, None
-    

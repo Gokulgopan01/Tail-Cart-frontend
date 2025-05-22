@@ -20,7 +20,7 @@ import requests
 import json
 import os
 from selenium.webdriver.chrome.options import Options
-
+from config import env
 from utils.helper import get_cookie_from_api, handle_login_status
 # Load environment variables from the .env file
 load_dotenv()
@@ -46,8 +46,8 @@ class SS:
             self.driver = webdriver.Chrome(options=options)
 
             # API call to get cookie
-            api_url = os.getenv("AUTHENTICATOR_API_URL")
-            headers = {'Content-Type': os.getenv("API_HEADERS_CONTENT_TYPE")}
+            api_url = env.AUTHENTICATOR_API_URL
+            headers = {'Content-Type':env.API_HEADERS_CONTENT_TYPE}
             api_response = get_cookie_from_api(self.username, portal="rrr", proxy=self.proxy)
             if not api_response:
                 self.login_status = "API response error"

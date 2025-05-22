@@ -23,7 +23,7 @@ load_dotenv()
 ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")  
                    
 
-class AMO:
+class ClassValuationNew:
     def __init__(self, username, password, portal_url, portal_name, proxy, session):
         self.username = username
         self.password = password
@@ -40,38 +40,33 @@ class AMO:
         try:
             # Step 1: Setup WebDriver
             setup_driver(self)
-       
 
             # Step 2: Navigate to Login Page
             self.driver.get(self.portal_url)
-           
             logging.info(f"Navigated to {self.portal_url} for {self.username}")
 
-              # Wait for and enter Username
-            WebDriverWait(self.driver, 20).until(
-                EC.visibility_of_element_located((By.ID, "Username"))
-            ).clear()
-            self.driver.find_element(By.ID, "Username").send_keys(self.username)
+            wait = WebDriverWait(self.driver, 20)
 
-            # Wait for and enter Password
-            WebDriverWait(self.driver, 10).until(
-                EC.visibility_of_element_located((By.ID, "Password"))
-            ).send_keys(self.password)
-            WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="checkAcceptLoginTnC"]'))).click()
-            # Click Login
-            WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.ID, "submitLogin"))
-            ).click()
+            # Step 3: Enter Username
+            wait.until(EC.presence_of_element_located((By.ID, "Username"))).send_keys(self.username)
 
+            # Step 4: Enter Password
+            wait.until(EC.presence_of_element_located((By.ID, "Password"))).send_keys(self.password)
+
+            # Step 5: Click Terms Checkbox
+            wait.until(EC.element_to_be_clickable((By.ID, "checkAcceptLoginTnC"))).click()
+
+            # Step 6: Click Login Button
+            wait.until(EC.element_to_be_clickable((By.ID, "submitLogin"))).click()
 
             current_title = self.driver.title
             logging.info(f"Page title after login: {current_title}")
+
+            # Step 8: Verify Login
             login_check_keywords = ["Orders"]
             handle_login_status(current_title, self.username, login_check_keywords, self.portal_name)
 
             return self.driver
-                    
 
         except Exception as e:
             self.login_status = f"Exception occurred: {e}"

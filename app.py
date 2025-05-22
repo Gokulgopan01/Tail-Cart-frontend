@@ -79,7 +79,7 @@ class Application(tk.Tk):
 
         # Login screen logic
         arg1, arg2 = params_check()  # Assuming params_check() parses the arguments
-        #arg1 = "SmartEntry"  # You set arg1 manually here for testing
+        arg1 = "SmartEntry"  # You set arg1 manually here for testing
 
         # Check if arg1 contains specific parameters and show the appropriate screen
         if arg1:
