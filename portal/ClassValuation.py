@@ -39,6 +39,7 @@ class ClassValuation:
 
     def login_to_portal(self):
         try:
+<<<<<<< HEAD
             setup_driver(self)
 
             # Step 2: Navigate to Login Page
@@ -58,6 +59,34 @@ class ClassValuation:
 
             # Step 6: Click Login Button
             wait.until(EC.element_to_be_clickable((By.ID, "submitLogin"))).click()
+=======
+            # Step 1: Setup WebDriver
+            setup_driver(self)
+       
+
+            # Step 2: Navigate to Login Page
+            self.driver.get(self.portal_url)
+           
+            logging.info(f"Navigated to {self.portal_url} for {self.username}")
+
+              # Wait for and enter Username
+            WebDriverWait(self.driver, 20).until(
+                EC.visibility_of_element_located((By.ID, "Username"))
+            ).clear()
+            self.driver.find_element(By.ID, "Username").send_keys(self.username)
+
+            # Wait for and enter Password
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.ID, "Password"))
+            ).send_keys(self.password)
+            WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="checkAcceptLoginTnC"]'))).click()
+            # Click Login
+            WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "submitLogin"))
+            ).click()
+
+>>>>>>> 65823027fe6d5a072993a4e95e569e4735465a0f
 
             current_title = self.driver.title
             logging.info(f"Page title after login: {current_title}")
