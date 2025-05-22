@@ -1,4 +1,5 @@
 import logging
+import sys
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
@@ -22,7 +23,9 @@ from portal.ValuationConnect import ValuationConnect
 from portal.SWBC import SWBC
 from portal.Solidify import Solidify
 from portal.SolidifyAppraiser import SolidifyAppraiser
-
+from portal.ClassValuation import ClassValuation
+from portal.Omnia import Omnia
+from portal.Valligent import Valligent
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -92,8 +95,18 @@ class PortalLoginScreen(tk.Frame):
     def portals(username, password, portal_url, portal_name, proxy, session):
         portal_name = portal_name.strip()
 
-        # Load portal class map from JSON
-        with open('json/portal_map.json', 'r') as f:
+        # # Load portal class map from JSON
+        # with open('json/portal_map.json', 'r') as f:
+        #     portal_class_map = json.load(f)
+        # Handle PyInstaller temporary folder
+        if getattr(sys, 'frozen', False):
+            base_dir = sys._MEIPASS
+        else:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        json_path = os.path.join(base_dir, 'json', 'portal_map.json')
+
+        with open(json_path, 'r') as f:
             portal_class_map = json.load(f)
 
         class_name = portal_class_map.get(portal_name)
