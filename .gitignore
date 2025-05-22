@@ -6,3 +6,5 @@ __pycache__
 logs/
 build/
 dist/
+__pycache__/
+*.pyc
