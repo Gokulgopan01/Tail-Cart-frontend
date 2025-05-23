@@ -21,6 +21,7 @@ from utils.helper import setup_driver
 from utils.user_data import save_login_data, load_login_data
 from config import env
 # Load variables from .env file
+
 load_dotenv()
 
 # Retrieve API URLs from environment variables

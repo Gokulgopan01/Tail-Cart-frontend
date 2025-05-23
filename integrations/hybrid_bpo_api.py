@@ -1,11 +1,13 @@
 import os
 from dotenv import load_dotenv
+import requests
 from config import env
 # Load environment variables from a .env file
 load_dotenv()
 
 # Retrieve the API key from the environment variables
 API_KEY = os.getenv('API_KEY')
+USER_CREDENTIALS_URL = env.CREDENTIALS_URL 
 
 class HybridBPOApi:
 
@@ -30,20 +32,55 @@ class HybridBPOApi:
 
     #etc..etc..
 
-    def get_order (self, orderId):
-        
-        try:
-            print("order fetching")
-            # api call to get the order details using the order_id
-            # order={"orderId":"1010","mls_id":{"a1_mls_id":"20555125824","a2_mls_id":"10380960","a3_mls_id":"8498435","a4_mls_id":"8498436","a5_mls_id":"8498437","a6_mls_id":"8498438"},"Address":"2808 MIRA VISTA LN Rockwall TX 75032","MLS":"GAMLS","Username" :"dawsonlabres","Password":"love", "Path":"S:\\Anisha\\Comparable PIC-PDF Download\\2808 MIRA VISTA LN Rockwall TX 75032"}
-            order={"orderId":"1010","mls_id":{"a1_mls_id":"7498101","a2_mls_id":"7498178","a3_mls_id":"7498179","a4_mls_id":"7498180","a5_mls_id":"7498181","a6_mls_id":"7498182"},"Address":"911 Providence Way, Lawrenceville, GA 30046","MLS":"FMLS","Username" :"msreed","Password":"Ledarion#08", "Path":"S:\\Anisha\\Comparable PIC-PDF Download\\911 Providence Way, Lawrenceville, GA 30046"}
-            print("Order found")
-            return order      
-        except Exception as e:
-            print(f"Error in the program: {e}")
+
 
     def get_entry_order():
         """Returns the order details as a dictionary."""
+        try:
+            order_id=50
+            response = requests.get(f"{USER_CREDENTIALS_URL}{order_id}")
+            response.raise_for_status()  # Raises exception for HTTP error codes
+            json_data = response.json()
+
+            if (
+                isinstance(json_data, dict)
+                and json_data.get("status_code") == 200
+                and isinstance(json_data.get("content"), dict)
+                and isinstance(json_data["content"].get("data"), (dict, list))
+            ):
+                data = json_data["content"]["data"]
+                print("Successfully retrieved data:")
+
+                # Wrap in list if it's a single dict
+                if isinstance(data, dict):
+                    orders = [data]
+                else:
+                    orders = data
+
+                for order in orders:
+                    print(order)
+
+                return orders
+
+            else:
+                print("Invalid structure or missing fields in response.")
+                # Debug info
+                print(f"status_code: {json_data.get('status_code') if isinstance(json_data, dict) else 'N/A'}")
+                print(f"content present: {'content' in json_data if isinstance(json_data, dict) else 'N/A'}")
+                if isinstance(json_data, dict) and "content" in json_data:
+                    print(f"data type: {type(json_data['content'].get('data'))}")
+                return None
+
+                
+        except requests.RequestException as e:
+            print(f" Request error: {e}")
+            return None
+        except ValueError:
+            print(" Response was not valid JSON.")
+            return None
+
+
+        
         order_details = [
      
         # {
@@ -60,6 +97,7 @@ class HybridBPOApi:
         #     "proxy": "",
         #     "account_status": "Active"
         # }
+
 
              
         {

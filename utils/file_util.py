@@ -10,3 +10,10 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     
     return os.path.join(base_path, "assets", relative_path)
+
+def resource_path_for_env(relative_path):
+    """Get absolute path to resource (works for dev and PyInstaller)"""
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.abspath(relative_path)
+

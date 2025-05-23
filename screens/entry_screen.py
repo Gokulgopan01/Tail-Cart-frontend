@@ -226,6 +226,8 @@ class EntryScreen(tk.Frame):
                     status="No orders found to process."
                 )
                 return
+            
+
 
             # Process each order
             for order in orders:

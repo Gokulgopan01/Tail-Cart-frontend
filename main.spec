@@ -5,11 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-<<<<<<< HEAD
     datas=[('assets\\\\*', 'assets'), ('screens/json/portal_map.json', 'json'), ('.env', '.')],
-=======
-    datas=[('assets\\\\*', 'assets'), ('json/portal_map.json', 'json'), ('.env', '.')],
->>>>>>> 65823027fe6d5a072993a4e95e569e4735465a0f
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
