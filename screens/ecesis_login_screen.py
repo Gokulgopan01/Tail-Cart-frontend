@@ -337,9 +337,29 @@ class EcesisLoginScreen(tk.Frame):
 
         # Bind click
         canvas.bind("<Button-1>", lambda event: self.confirm_selection())
-
+        # # Reset Button
+        # reset_btn = tk.Button(self.inner_frame, text="Reset Selection", command=self.reset_client_selection,
+        #                     font=("Arial", 10), bg="#DDDDDD", relief="flat")
+        # reset_btn.pack(pady=(5, 10))
 
         threading.Thread(target=self.load_main_clients, daemon=True).start()
+
+    # def reset_client_selection(self):
+    #     """Clears all dropdown selections and resets the UI."""
+    #     self.main_client_var.set("Select Mainclient")
+    #     self.sub_client_var.set("Select Subclient")
+    #     self.portal_var.set("Select Portal")
+    #     self.account_var.set("Select Account")
+
+    #     self.sub_client_dropdown["values"] = []
+    #     self.portal_dropdown["values"] = []
+    #     self.account_dropdown["values"] = []
+
+    #     self.username_label.config(text="Username: ")
+    #     self.password_label.config(text="Password: ")
+    #     self.session_label.config(text="Session: ")
+    #     self.portal_url_label.config(text="Portal URL: ")
+    #     self.proxy_label.config(text="Proxy: ")
 
     def create_combobox(self, parent, var, placeholder, callback):
         """Create a searchable dropdown with a placeholder."""
@@ -348,35 +368,6 @@ class EcesisLoginScreen(tk.Frame):
         cb.bind("<<ComboboxSelected>>", callback)
         return cb
 
-    # def logout(self):
-    #     """Logs out the user, resets UI, and clears login fields."""
-    #     confirm = messagebox.askyesno("Logout", "Are you sure you want to log out?")
-    #     if confirm:
-    #         # Hide the client frame
-    #         if hasattr(self, "client_frame"):
-    #             self.client_frame.pack_forget()
-
-    #         # Unhide the login frame
-    #         if hasattr(self, "login_frame"):
-    #             self.login_frame.pack(fill="both", expand=True)
-
-    #             # **Restore placeholders for email and password fields**
-    #         if hasattr(self, "email_entry"):
-    #             self.email_entry.delete(0, tk.END)  # Clear the field
-    #             self.email_entry.insert(0, "Enter your email")  # Restore placeholder
-    #         if hasattr(self, "password_entry"):
-    #             self.password_entry.delete(0, tk.END)  # Clear the field
-    #             self.password_entry.insert(0, "Enter your password")  # Restore placeholder
-    #             #self.password_entry.config(show="")  # Ensure it appears as placeholder text
-
-    #         # **Hide the logout button on the login screen**
-    #         if hasattr(self, "logout_button_top"):
-    #             self.logout_button_top.pack_forget()  # Hide the logout button
-
-    #         # Set focus to login button after logout
-    #         self.after(100, self.login_button.focus_set)
-    #         # Switch to the login screen
-    #         self.controller.show_frame("EcesisLoginScreen")
 
     def logout(self):
         """Logs out the user, resets UI, and clears login fields."""
@@ -423,9 +414,37 @@ class EcesisLoginScreen(tk.Frame):
             self.client_data["main_clients"] = response
             self.main_client_dropdown["values"] = [c["client_name"] for c in self.client_data["main_clients"]]
 
+    # def on_main_client_select(self, event):
+    #     """Handle main client selection and fetch sub-clients."""
+    #     selected_client = next((c for c in self.client_data["main_clients"] if c["client_name"] == self.main_client_var.get()), None)
+    #     if selected_client:
+    #         client_id = selected_client["id"]
+    #         threading.Thread(target=self.load_sub_clients, args=(client_id,), daemon=True).start()
+
     def on_main_client_select(self, event):
         """Handle main client selection and fetch sub-clients."""
-        selected_client = next((c for c in self.client_data["main_clients"] if c["client_name"] == self.main_client_var.get()), None)
+        # Reset dependent dropdowns immediately
+        self.sub_client_var.set("Select Subclient")
+        self.sub_client_dropdown["values"] = []
+        
+        self.portal_var.set("Select Portal")
+        self.portal_dropdown["values"] = []
+        
+        self.account_var.set("Select Account")
+        self.account_dropdown["values"] = []
+        
+        # Optionally clear labels showing account details if needed
+        self.username_label.config(text="Username: ")
+        self.password_label.config(text="Password: ")
+        self.session_label.config(text="Session: ")
+        self.portal_url_label.config(text="Portal URL: ")
+        self.proxy_label.config(text="Proxy: ")
+
+        # Proceed to load sub-clients for the selected main client
+        selected_client = next(
+            (c for c in self.client_data["main_clients"] if c["client_name"] == self.main_client_var.get()), 
+            None
+        )
         if selected_client:
             client_id = selected_client["id"]
             threading.Thread(target=self.load_sub_clients, args=(client_id,), daemon=True).start()

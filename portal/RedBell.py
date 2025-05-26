@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 
 from form_filler.redbell_form_filler import RedBellFormFiller
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import clean_address, get_order_address_from_assigned_order, handle_login_status, params_check, setup_driver
+from utils.helper import clean_address, clearing, data_filling_text, data_filling_text_QC, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_datefilling, params_check, radio_btn_click, select_field, setup_driver
 from config import env
 
 # Load variables from .env file
@@ -65,7 +65,7 @@ class RedBell:
                     self.session = session
 
                     arg1, arg2 = params_check()
-                    arg1 = "SmartEntry"  # Manually set for testing
+                    #arg1 = "SmartEntry"  # Manually set for testing
                     if arg1 == "SmartEntry":
                         orders, session = self.fetch_data(self.session)
                         self.redbell_formopen(
@@ -246,8 +246,94 @@ def redbell_formopen_fill(self, order, session, merged_json, order_details, orde
 
             with open('json/redbelljson/Redbell_Enhanced.json') as f:
                 form_config = json.load(f)
-            with open('json/redbelljson/redbell_rnt data.json') as f:
-                merged_json = json.load(f)
-            filler = RedBellFormFiller(self.driver)
-            filler.fill_form(merged_json, order_details, form_config)
+            # with open('json/redbelljson/redbell_rnt data.json') as f:
+            #     merged_json = json.load(f)
+            # filler = RedBellFormFiller(self.driver)
+            # filler.fill_form(merged_json, order_details, form_config)
+              # Fetch fresh merged_json if needed, or use the passed one
+        url = f"http://192.168.2.70:8001/api/v1/entry-data/?order_id={order_id}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            merged_json = response.json()
+            fill_form_multi(self.driver, merged_json, order_details, form_config)
+        else:
+            logging.error(f"Failed to fetch merged_json, status code: {response.status_code}")
+
+def fill_form_multi(self, merged_json, order_details, form_config):
+    data_sources = {
+        "Subject_info": merged_json.get("subject_data", {}),
+        "Comp_info": merged_json.get("comp_data", {}),
+        "Adj_info": merged_json.get("adj_data", {}),
+        "Rental_info": merged_json.get("rental_data", {}),
+        "Sub_info": merged_json.get("sub_data", {})
+    }
+
+    field_actions = {
+        "Textbox": data_filling_text,
+        "Textbox_default": lambda d, k, x, m: data_filling_text(d, k, x, m),
+        "select_data": select_field,
+        "select_default": lambda d, k, x, m: select_field(d, k, x, m),
+        "radiobutton_data": radio_btn_click,
+        "radiobutton_default": lambda d, k, x, m: radio_btn_click(d, k, x, m),
+        "date_fill_javascript": javascript_excecuter_datefilling,
+        "clearing": lambda d, _, x, m: clearing(d, x, m),
+        "Textbox_QC": data_filling_text_QC,
+        "Textbox_default_QC": lambda d, k, x, m: data_filling_text_QC(d, k, x, m),
+    }
+
+    for page in form_config.get("page", []):
+        for section_key, section_data in page.items():
+            if section_key not in data_sources:
+                logging.info(f"Skipping unknown section key: {section_key}")
+                continue
+
+            data_source = data_sources[section_key]
+            for section in section_data:
+                field_type = section.get("filedtype")
+                # Skip 'save_data' or other special types
+                if field_type == "save_data":
+                    continue
+
+                for item in section.get("values", []):
+                    if isinstance(item, dict):
+                        # Sometimes item is a dict for special actions (nextpage/save_data)
+                        continue
+
+                    if len(item) != 3:
+                        logging.warning(f"Invalid field item format: {item}")
+                        continue
+
+                    key, xpath, mode = item
+
+                    # If data_source is a dict of dicts (like comp_data with multiple comps)
+                    if isinstance(data_source, dict) and (
+                        section_key in ["Comp_info", "Rental_info"]
+                    ):
+                        for subkey, comp_entry in data_source.items():
+                            value = comp_entry.get(key, "")
+                            if value in [None, ""] and "default" not in field_type:
+                                logging.info(f"Skipping empty value for {field_type} - {subkey}:{key}")
+                                continue
+                            try:
+                                action_func = field_actions.get(field_type)
+                                if action_func:
+                                    action_func(self.driver, value, xpath, mode)
+                                else:
+                                    logging.warning(f"Unknown field type: {field_type}")
+                            except Exception as e:
+                                logging.error(f"Error in {subkey} - {key}: {e}")
+                    else:
+                        # For single dict data_source (subject_data, adj_data, etc)
+                        value = data_source.get(key, "")
+                        if value in [None, ""] and "default" not in field_type:
+                            logging.info(f"Skipping empty value for {field_type} - Key: {key}")
+                            continue
+                        try:
+                            action_func = field_actions.get(field_type)
+                            if action_func:
+                                action_func(self.driver, value, xpath, mode)
+                            else:
+                                logging.warning(f"Unknown field type: {field_type}")
+                        except Exception as e:
+                            logging.error(f"Error processing {field_type} - Key: {key}, XPath: {xpath}, Error: {e}")
             

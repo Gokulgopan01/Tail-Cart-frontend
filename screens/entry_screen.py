@@ -166,8 +166,8 @@ class EntryScreen(tk.Frame):
 
         # Determine which process to run based on parameters
         arg1, arg2 = params_check()
-        arg1="SmartEntry"
-        #arg1="login"
+        #arg1="SmartEntry"
+        arg1="login"
         self.handle_argument(arg1, arg2)
 
     def handle_argument(self, arg1, arg2):
