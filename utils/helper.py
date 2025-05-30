@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import time
 import traceback
 import requests
 from selenium import webdriver
@@ -299,3 +300,51 @@ def selector_mapping(selector_type):
     else:
         raise ValueError("Invalid selector type")
     return selector
+
+
+def save_form(driver):
+    
+    try:
+        time.sleep(5)
+        element=driver.find_element(By.XPATH,"//*[@id='msg']")
+        time.sleep(5)
+        value1 = element.text  
+        logging.info("Extracted Value in the ok button click:{}".format((value1)))
+        time.sleep(3)
+        if value1:
+            driver.find_element(By.XPATH,"//*[@id='msg']/button").click()
+            time.sleep(15)
+            driver.find_element(By.XPATH,"//*[@id='btnSave']").click()
+        else:
+            driver.find_element(By.XPATH,"//*[@id='btnSave']").click()
+            logging.info("There is no OK button to click")
+    except Exception as e:
+    # value = element.text
+        driver.find_element(By.XPATH,"//*[@id='btnSave']").click()
+        #element=driver.find_element(By.XPATH,'//*[@id="SAVE_BPO"]/a')
+        #element.click()
+        
+        
+   # logging.info("order saved :{}".format(order_id))
+
+def fetch_upload_data(self, order_id: int):
+    COMP_UPLOAD_URL = f'{env.PIC_PDF_UPLOAD_URL}{order_id}'
+
+    try:
+        response = requests.get(COMP_UPLOAD_URL)
+        response.raise_for_status()
+        json_data = response.json()
+    except Exception as e:
+        print(f" Failed to fetch data from API: {e}")
+        return None
+
+    content = json_data.get("content", {}).get("data", {})
+    documents = content.get("documents", [])
+    comparables_folder = content.get("comparables", "")
+    item_id = content.get("itemId")  # Make sure your API returns this
+
+    return {
+        "documents": documents,
+        "comparables_folder": comparables_folder,
+        "item_id": item_id
+    }

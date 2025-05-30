@@ -68,28 +68,7 @@ class PortalLoginScreen(tk.Frame):
         self.client_data = client_data
         #self.driver = None  #Store Selenium WebDriver instance
         logging.basicConfig(level=logging.INFO)
-    # @staticmethod
-    # def portals(username, password, portal_url, portal_name,proxy,session):  # Added client_data parameter
-    #     portal_name = portal_name.strip()
-    #     if portal_name == 'Proteck':
-    #         return Proteck(username, password, portal_url, portal_name,proxy,session)
-    #     elif portal_name == 'RedBell':
-    #         return RedBell(username, password, portal_url, portal_name,proxy,session)
-    #     elif portal_name == 'AVM':
-    #         return AVM(username, password, portal_url, portal_name,proxy,session)
-    #         # return PortalLogin(username, password, portal_url, portal_name,proxy) #or create a default portal.
-    #     elif portal_name == 'rrreview':
-    #         return rrreview(username, password, portal_url, portal_name,proxy,session)  
-    #     elif portal_name == 'xome':
-    #         return xome(username, password, portal_url, portal_name,proxy,session) 
-    #     elif portal_name == 'ca':
-    #         return ca(username, password, portal_url, portal_name,proxy,session) 
-    #     elif portal_name == 'Ascribe':
-    #         return Ascribe(username, password, portal_url, portal_name,proxy,session) 
-    #     elif portal_name == 'LSI':
-    #         return LSI(username, password, portal_url, portal_name,proxy,session) 
-    #     else:
-    #         print("New portal")  
+   
 
     @staticmethod
     
@@ -127,48 +106,7 @@ class PortalLoginScreen(tk.Frame):
             return None
 
 
-    # def login_to_portal(self, username, password, portal_url, portal_name,proxy=None ,session=None):
-    #     """Login to the portal with the selected account details."""
-     
-    #     portal_name = portal_name.strip()
-    #     if portal_name == 'Proteck':
-    #         portal_name_instance = Proteck(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
-    #         portal_name_instance.login_to_portal(username, password, portal_url, portal_name,proxy,session)  # Perform Proteck login
-    #         return session, portal_name_instance.driver  # Return orders, session, and driver after login
-    #     elif portal_name == 'RedBell':
-    #         portal_name_instance = RedBell(username, password, portal_url, portal_name,proxy,session) 
-    #         portal_name_instance.login_to_portal()
-    #     elif portal_name == 'AVM':
-    #         portal_name_instance = AVM(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
-    #         portal_name_instance.login_to_portal()  # Perform Proteck login
-    #         return session, portal_name_instance.driver  # Return orders, session, and driver after login
-    #     elif portal_name == 'rrreview':
-    #         portal_name_instance = rrreview(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
-    #         portal_name_instance.login_to_portal()  # Perform Proteck login
-    #         return session, portal_name_instance.driver  # Return orders, session, and driver after login
-    #     elif portal_name == 'xome':
-    #         portal_name_instance = xome(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
-    #         portal_name_instance.login_to_portal()  # Perform Proteck login
-    #         return session, portal_name_instance.driver  # Return orders, session, and driver after login
-    #     elif portal_name == 'ca':
-    #         portal_name_instance = ca(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
-    #         portal_name_instance.login_to_portal()  # Perform Proteck login
-    #         return session, portal_name_instance.driver  # Return orders, session, and driver after login
-    #     elif portal_name == 'Ascribe':
-    #         portal_name_instance = Ascribe(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
-    #         portal_name_instance.login_to_portal()  
-    #         return session, portal_name_instance.driver 
-    #     elif portal_name == 'LSI':
-    #         portal_name_instance = LSI(username, password, portal_url, portal_name,proxy,session)  # Create Proteck instance
-    #         portal_name_instance.login_to_portal()  
-    #         return session, portal_name_instance.driver 
-    #         # if type(session)==str:
-    #         #     if "Login error" in session or 'Login issue' in session:  # Perform Proteck login
-    #         #         print("Login error")
-    #     else:
-    #         # Add default login logic here
-    #         print(f"Default login called: {username}, {portal_name}")
-    #     #self.after(0, self.perform_login)       
+          
     # 
     def login_to_portal(self, username, password, portal_url, portal_name, proxy=None, session=None):
         """Generic login dispatcher that calls appropriate portal logic."""
