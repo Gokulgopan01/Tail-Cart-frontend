@@ -2,7 +2,19 @@
 {
      "page": [
     {
-      "Subject_info": [
+      "SubjectHistoryAdj": [
+        {
+          "filedtype":"date_fill_javascript",
+          "values":[
+            ["condition_data['InspectionDate']","//*[@id='InspectionDate_Value']","xpath"]
+          ]
+        },
+        {
+          "filedtype":"select_default",
+          "values":[
+              ["sub_data['Source']","//*[@id='InfoSource_Value']","xpath"]
+          ]
+        },
         {
           "filedtype": "select_data",
           "values": [
@@ -15,6 +27,59 @@
             ["sub_data['ApnNumber']", "//*[@id='AssessorParcel_Value']", "xpath"]
           ]
         },
+         {
+          "filedtype": "Textbox",
+          "values": [
+            ["sub_data['MLS']", "//*[@id='MLS_Value']", "xpath"]
+          ]
+        },
+        {
+               "filedtype":"select_data",
+               "values":[
+                    ["sub_data['LastListed']","//*[@id='ListedLast12Mo_Value']","xpath"],
+                    ["sub_data['CurrentlyListed']","//*[@id='CurrentlyListed_Value']","xpath"]
+                   ]
+             },
+
+        {
+               "filedtype":"date_fill_javascript",
+               "values":[
+                   
+                   ["condition_data['CurrentListDate']","//*[@id='CurrentListDate_Value']","xpath"],
+                   ["condition_data['OriginalListDate']","//*[@id='OriginalListDate_Value']","xpath"]
+                   ]
+             },
+        {
+               "filedtype":"select_default",
+               "values":[
+                   ["sub_data['SubjectVacant']","//*[@id='PropertyVacant_Value']","xpath"],
+                   ["sub_data['Issecured']","//*[@id='Secured_Value']","xpath"] 
+                   ]
+             },
+             {
+               "filedtype":"select_data",
+               "values":[
+                   ["sub_data['View']","//*[@id='PropertyView_Value']","xpath"],
+                   ["sub_data['HoaOrOther']","//*[@id='HoaOrOther_Value']","xpath"]
+                   ]
+             },
+             {
+               "filedtype":"select_default",
+               "values":[
+                   ["No","//*[@id='SubjectGuestHouse_Value']","xpath"],
+                   ["Yes","//*[@id='FinanceAvail_Value']","xpath"]
+                   ]
+             },
+             
+             {
+               "filedtype":"Textbox_default",
+               "values":[
+                   
+                   ["0","//*[@id='GuestHouseSF_Value']","xpath"],
+                   ["0","//*[@id='GuestHouseBasementSF_Value']","xpath"]
+                   ]
+             } ,
+                       
         {
           "filedtype": "save_data",
           "values": [
@@ -22,8 +87,397 @@
               "nextpage": "Neighborhood"
             }
           ]
+          
         }
       ]
-    }
-  ]
-}
+    },
+     {
+               "NeighborhoodInfoAdj":[
+                           {
+                     "filedtype":"select_data", 
+                     "values":[
+                        ["sub_data['NeighborhoodTrend']","//*[@id='NeighborhoodTrend_Value']","xpath"],
+                        ["sub_data['PropertyHomesValues']","//*[@id='HomesValue_Value']","xpath"]
+                     ]
+                           },
+                           
+                      {
+                   "filedtype":"Textbox",
+                   "values":[   
+                    ["sub_data['MonthlyRate']","//*[@id='RateOfHomeValue_Value']","xpath"],
+                    ["sub_data['InPastMonths']","//*[@id='MarketChangeMonths_Value']","xpath"]
+                      ]
+                    },
+                      {
+                     "filedtype":"select_data", 
+                     "values":[
+                    
+                        ["sub_data['EnvironmentalIssues']","//*[@id='EnviromentalIssues_Value']","xpath"]
+                        ]},
+                     
+                  {
+                   "filedtype":"Textbox",
+                   "values":[     
+                             
+                    ["sub_data['EnvironmentalReferralReason']","//*[@id='EnvironmentalReferralReason_Value']","xpath"],
+                    ["sub_data['OwnerOccupied']","//*[@id='OwnerOccupiedPercent_Value']","xpath"] 
+                    ]},
+                     
+              
+                 {
+                     "filedtype":"select_data", 
+                     "values":[
+                      
+                        ["sub_data['Supply']","//*[@id='Supply_Value']","xpath"],
+                        ["sub_data['Demand']","//*[@id='Demand_Value']","xpath"],
+                        ["sub_data['PredominantBuyer']","//*[@id='PredominantBuyer_Value']","xpath"],
+                        ["Stable","//*[@id='MarketingTrend_Value']","xpath"],
+                        ["Yes","//*[@id='ImprovementNeighborhood_Value']","xpath"]
+                     ]
+                  },
+                 
+                      {
+                    "filedtype":"Textbox", 
+                     "values":[
+                    ["sub_data['CompetingListings']","//*[@id='CompetingListings_Value']","xpath"]
+                     ]
+                
+                },
+                {
+                  "filedtype":"date_fill_javascript",
+                  "values":[  
+                   ["sub_data['ListNeighborhoodValueLow']","//*[@id='ValueRangeMin_Value']","xpath"],
+                   ["sub_data['ListNeighborhoodValueHigh']","//*[@id='ValueRangeMax_Value']","xpath"]
+                ]
+                  },
+              
+                      {
+                    "filedtype":"Textbox", 
+                     "values":[
+
+                    ["sub_data['CompetingSales']","//*[@id='CompetingSales_Value']","xpath"],
+                    ["0","//*[@id='BoardedHomes_Value']","xpath"]
+                    ]
+                },      
+                   
+                   
+               {
+                "filedtype":"date_fill_javascript",
+               "values":[
+                  ["sub_data['SaleNeighborhoodValueLow']","//*[@id='SaleValueRangeMin_Value']","xpath"],
+                   ["sub_data['SaleNeighborhoodValueHigh']","//*[@id='SaleValueRangeMax_Value']","xpath"]
+                   ]
+                  
+                   
+               },
+                {
+                "filedtype":"date_fill_javascript",
+               "values":[
+                ["sub_data['CompetingSales']","//*[@id='CompsForSale_Value']","xpath"]]},
+
+                  {
+                    "filedtype":"Textbox", 
+                     "values":[
+
+                    ["sub_data['BoardedOrBlockedHomes']","//*[@id='BoardedHomes_Value']","xpath"]
+                    ]
+                },      
+                    
+
+                {
+                   "filedtype":"select_data",
+                   "values":[
+  
+                      ["sub_data['EmploymentConditions']","//*[@id='EmpConditions_Value']","xpath"]
+                     
+                   ]
+                },
+                {
+                   "filedtype":"Textbox",
+                   "values":[ 
+                    ["sub_data['Rentalvalue']","//*[@id='MarketRentMonthly_Value']","xpath"]
+                    ]
+                } ,
+                
+               
+                {
+                  "filedtype":"save_data",
+                  "values":[
+                     {
+                        "nextpage":"Neighborhood"
+                     }
+                            
+                          ]
+                   } 
+                        
+                       ]
+                
+                      },
+                      {
+                  "ComparablesAdj":[
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sub_data['Source']","//*[@id='MITDataSource_Subject']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sub_data['LotAcrs']","//*[@id='LotSize_Subject']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sub_data['Style']","//*[@id='PropertyStyle_Subject']","xpath"],
+                          ["sub_data['ConstructionType']","//*[@id='Construction_Subject']","xpath"],
+                           ["sub_data['OverallQuality']","//*[@id='Qualtiy_Subject']","xpath"],
+                           ["sub_data['Condition']","//*[@id='Condition_Subject']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[
+                           ["sub_data['Units']","//*[@id='NumUnits_Subject']","xpath"],
+                           ["sub_data['YearBuilt']","//*[@id='YearBuilt_Subject']","xpath"],                        
+                           ["sub_data['Gla']","//*[@id='TotalSQ_Subject']","xpath"],
+                           ["sub_data['TotalRooms']","//*[@id='TotalRooms_Subject']","xpath"],
+                           ["sub_data['Bed']","//*[@id='Bedrooms_Subject']","xpath"],
+                           ["sub_data['FullBath']","//*[@id='FullBaths_Subject']","xpath"],
+                           ["sub_data['HalfBath']","//*[@id='HalfBaths_Subject']","xpath"]
+                            ]
+                     },
+                           
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold1['Address']","//*[@id='Address_SoldComp1']","xpath"],
+                         ["sold1['City']","//*[@id='City_SoldComp1']","xpath"],   
+                         ["sold1['Zipcode']","//*[@id='Zip_SoldComp1']","xpath"],
+                         ["sold1['MLS']","//*[@id='MLS_SoldComp1']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold2['Source']","//*[@id='MITDataSource_SoldComp2']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold2['Address']","//*[@id='Address_SoldComp2']","xpath"],
+                         ["sold2['City']","//*[@id='City_SoldComp2']","xpath"],   
+                         ["sold2['Zipcode']","//*[@id='Zip_SoldComp2']","xpath"],
+                         ["sold2['MLS']","//*[@id='MLS_SoldComp2']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold2['Source']","//*[@id='MITDataSource_SoldComp2']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold3['Address']","//*[@id='Address_SoldComp3']","xpath"],
+                         ["sold3['City']","//*[@id='City_SoldComp3']","xpath"],   
+                         ["sold3['Zipcode']","//*[@id='Zip_SoldComp3']","xpath"],
+                         ["sold3['MLS']","//*[@id='MLS_SoldComp3']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold3['Source']","//*[@id='MITDataSource_SoldComp3']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list1['Address']","//*[@id='Address_ListedComp1']","xpath"],
+                         ["list1['City']","//*[@id='City_ListedComp1']","xpath"],   
+                         ["list1['Zipcode']","//*[@id='Zip_ListedComp1']","xpath"],
+                         ["list1['MLS']","//*[@id='MLS_ListedComp1']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_default",
+                        "values":[
+                           ["list1['Source']","//*[@id='MITDataSource_ListedComp1']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["list1['current_list1date']","//*[@id='CurListDate_ListedComp1']","xpath"]
+                     ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list1['CurrentListingPrice']","//*[@id='CurListPrice_ListedComp1']","xpath"]
+                        ]
+                      },
+                       {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["list1['orginal_list1_date']","//*[@id='ListDate_ListedComp1']","xpath"]
+                         
+                         ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                      
+                         ["list1['OriginalListPriceListing']","//*[@id='ListPrice_ListedComp1']","xpath"]
+       
+                         ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list2['Address']","//*[@id='Address_ListedComp2']","xpath"],
+                         ["list2['City']","//*[@id='City_ListedComp2']","xpath"],   
+                         ["list2['Zipcode']","//*[@id='Zip_ListedComp2']","xpath"],
+                         ["list2['MLS']","//*[@id='MLS_ListedComp2']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_default",
+                        "values":[
+                           ["list2['Source']","//*[@id='MITDataSource_ListedComp2']","xpath"]
+                        ]
+                     },
+              
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["list2['current_list2date']","//*[@id='CurListDate_ListedComp2']","xpath"]
+                     ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list2['CurrentListingPrice']","//*[@id='CurListPrice_ListedComp2']","xpath"]
+                        ]
+                      },
+                       {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["list2['orginal_list2_date']","//*[@id='ListDate_ListedComp2']","xpath"]
+                         
+                         ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                      
+                         ["list2['OriginalListPriceListing']","//*[@id='ListPrice_ListedComp2']","xpath"]
+       
+                         ]
+                     },
+                     
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list3['Address']","//*[@id='Address_ListedComp3']","xpath"],
+                         ["list3['City']","//*[@id='City_ListedComp3']","xpath"],   
+                         ["list3['Zipcode']","//*[@id='Zip_ListedComp3']","xpath"],
+                         ["list3['MLS']","//*[@id='MLS_ListedComp3']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_default",
+                        "values":[
+                           ["list3['Source']","//*[@id='MITDataSource_ListedComp3']","xpath"]
+                        ]
+                     },
+                     
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["list3['current_list3date']","//*[@id='CurListDate_ListedComp3']","xpath"]
+                     ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list3['CurrentListingPrice']","//*[@id='CurListPrice_ListedComp3']","xpath"]
+                        ]
+                      },
+                       {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["list3['orginal_list3_date']","//*[@id='ListDate_ListedComp3']","xpath"]
+                         
+                         ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                      
+                         ["list3['OriginalListPriceListing']","//*[@id='ListPrice_ListedComp3']","xpath"]
+       
+                         ]
+                     },
+                     
+                              {
+                                 "filedtype":"save_data",
+                                 "values":[
+                                    {
+                                       "nextpage":"Neighborhood"
+                                    }
+                                           
+                                         ]
+                                  } 
+                             ]
+                           },
+                        {
+                           "Price Opinion":[
+                              {
+                                 "filedtype":"Textbox",
+                                 "values":[
+                                    ["sub_data['YearsOfExperience']","//*[@id='LandValue_Value']","xpath"],
+                                    ["sub_data['Land Value']","//*[@id='LandValue_Value']","xpath"]
+                                     ]
+                              },
+                              {
+                                 "filedtype":"select_data",
+                                 "values":[
+                                    ["sub_data['CurrentMarketStrategy']","//*[@id='CurrentMarketStrategy_Value']","xpath"],
+                                    ["61-120","//*[@id='TypicalMarketTime_Value']","xpath"]
+                                 ]
+                              },
+                              
+                              {
+                                 "filedtype":"Textbox",
+                                 "values":[
+                                    ["sub_data['QuickSalePrice']","//*[@id='QuickSale_Value']","xpath"],
+                                    ["sub_data['As-IsSalePrice']","//*[@id='AsIsValue_Value']","xpath"],
+                                    ["sub_data['As-IsSalePrice']","//*[@id='AsIsList_Value']","xpath"],
+                                    ["Comments","//*[@id='PricingStrategy_Value']","xpath"]
+                                     ]
+                              },
+                          
+                              {
+                                 "filedtype":"Textbox",
+                                 "values":[
+                                    ["Repair_value","//*[@id='RepairValue_Value']","xpath"]
+                                     ]
+                              },
+                              {
+                                 "filedtype":"save_data",
+                                 "values":[
+                                    {
+                                       "nextpage":"Neighborhood"
+                                    }
+                                           
+                                         ]
+                                  } 
+                             ]
+                           }
+                    ]
+              }

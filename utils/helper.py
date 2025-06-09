@@ -348,3 +348,25 @@ def fetch_upload_data(self, order_id: int):
         "comparables_folder": comparables_folder,
         "item_id": item_id
     }
+def extract_data_sections(merged_json):
+    """
+    Extract key data sections from merged_json.
+    """
+    entry_data = merged_json.get("entry_data", [])
+    if not entry_data:
+        return None, None, None, None
+
+    first_entry = entry_data[0]  # usually only one or focus on first
+
+    sub_data = first_entry.get("sub_data")
+    comp_data = first_entry.get("comp_data")
+    adj_data = first_entry.get("adj_data")
+    rental_data = first_entry.get("rental_data")
+    sold1 = comp_data.get("Sold 1")
+    sold2 = comp_data.get("Sold 2")
+    sold3 = comp_data.get("Sold 3")
+    list1 = comp_data.get("List 1")
+    list2 = comp_data.get("List 2")
+    list3 = comp_data.get("List 3")
+
+    return sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3
