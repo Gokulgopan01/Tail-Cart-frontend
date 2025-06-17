@@ -300,7 +300,56 @@ def selector_mapping(selector_type):
     else:
         raise ValueError("Invalid selector type")
     return selector
+def select_checkboxes_from_list(driver, values_list, id_prefix):
+    """
+    Select checkboxes based on a list of values using an ID prefix.
+    Each checkbox should have an ID like: <id_prefix>_<sanitized_value>
 
+    Args:
+        driver: Selenium WebDriver
+        values_list: list of checkbox values to select (e.g. ['Insurance', 'Water'])
+        id_prefix: prefix of the checkbox ID (e.g. "HOAInsurance")
+    """
+    from selenium.common.exceptions import NoSuchElementException
+    import re
+
+    def sanitize(value):
+        # Remove special characters and whitespace
+        return re.sub(r'[^a-zA-Z0-9]', '', str(value))
+
+    for value in values_list:
+        try:
+            sanitized = sanitize(value)
+            checkbox_id = f"{id_prefix}_{sanitized}"
+            checkbox = driver.find_element(By.ID, checkbox_id)
+            if not checkbox.is_selected():
+                checkbox.click()
+                logging.info(f" Checked: {checkbox_id}")
+            else:
+                logging.info(f" Already checked: {checkbox_id}")
+        except NoSuchElementException:
+            logging.warning(f" Checkbox not found: {checkbox_id}")
+        except Exception as e:
+            logging.error(f"Error clicking checkbox {checkbox_id}: {e}")
+
+def fill_repair_details(driver, repair_list):
+    for idx, repair in enumerate(repair_list):
+        try:
+            comment_xpath = f"//input[@id='ExteriorRepairList_{idx}__RepairComment']"
+            cost_xpath = f"//input[@id='ExteriorRepairList_{idx}__Amount']"
+
+            # Fill comments
+            comment_elem = driver.find_element(By.XPATH, comment_xpath)
+            comment_elem.clear()
+            comment_elem.send_keys(repair.get("comments", ""))
+
+            # Fill estimated cost
+            cost_elem = driver.find_element(By.XPATH, cost_xpath)
+            cost_elem.clear()
+            cost_elem.send_keys(str(repair.get("estimated_cost", "")))
+
+        except Exception as e:
+            logging.error(f"Error filling repair at index {idx} ({repair.get('repair_type')}): {e}")
 
 def save_form(driver):
     
@@ -326,6 +375,44 @@ def save_form(driver):
         
         
    # logging.info("order saved :{}".format(order_id))
+def update_order_status(assigned_order_id, status, stage, order_event_status):
+   
+    status_update_url=env.STATUS_UPDATE_URL
+    
+    params = {
+        "assigned_order_id": assigned_order_id,
+        "status": status,
+        "stage": stage,
+        "order_event_status": order_event_status
+    }
+    
+    try:
+        response = requests.get(status_update_url, params=params)
+        print(f"{order_event_status} status response: {response.status_code} - {response.text}")
+        return response
+    except Exception as e:
+        print(f"Error while updating status: {e}")
+        return None
+
+def update_client_account_status(client_account_id, action_required_reason):
+    
+    url = f'{env.ACCOUNT_INACTIVE}{client_account_id}'
+    
+    payload = {
+        "action_required_reason": action_required_reason
+    }
+    
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.put(url, json=payload, headers=headers)
+        print(f"PUT status response: {response.status_code} - {response.text}")
+        return response
+    except Exception as e:
+        print(f"Error while updating client account status: {e}")
+        return None
 
 def fetch_upload_data(self, order_id: int):
     COMP_UPLOAD_URL = f'{env.PIC_PDF_UPLOAD_URL}{order_id}'

@@ -34,8 +34,8 @@ def register_url_protocol(protocol_name, exe_path):
 
 if __name__ == "__main__":
     protocol_name = "hybridbpoautologinv1"
-    exe_path = r"S:\HybridBPO\autologin\dist\main.exe"
-
+    #exe_path = r"S:\HybridBPO\autologin\dist\main.exe"
+    exe_path = r"C:\HybridBPO\autologin\dist\main.exe"
     if not is_protocol_registered(protocol_name):
         register_url_protocol(protocol_name, exe_path)
     else:

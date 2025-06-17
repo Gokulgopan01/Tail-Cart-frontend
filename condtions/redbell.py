@@ -11,18 +11,25 @@ def generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sol
     # 1. Conditions from sub_data
     if sub_data:
         inspection_date = sub_data.get("InspectionDate")
-        current_listdate=sub_data.get("CurrentListDate")
-        original_list_date=sub_data.get("OriginalListDate")
+        current_list_date=sub_data.get("CurrentListingDate")
+        original_list_date=sub_data.get("OriginalListDateListing")
+        last_list_date=sub_data.get("LastListDate")
+        original_sold_date=sub_data.get("OriginalListDateSold")
+        Hoa_fees_include_checkbox_values = sub_data.get("HOAFeesInclude", [])  
         # property_type = sub_data.get("PropertyType")
         # pool = sub_data.get("Pool")
         # year_built = sub_data.get("YearBuilt")
 
         if inspection_date:
             condition_data["InspectionDate"] = yesterday_date_conversion()
-        if current_listdate:
-            condition_data["CurrentListDate"]=date_conversion(current_listdate)  
+        if current_list_date:
+            condition_data["CurrentListingDate"]=date_conversion(current_list_date)  
         if original_list_date:
-            condition_data["OriginalListDate"]=date_conversion(original_list_date)       
+            condition_data["OriginalListDateListing"]=date_conversion(original_list_date)
+        if  last_list_date:
+             condition_data["LastListDate"]=date_conversion(last_list_date) 
+        if original_sold_date:
+             condition_data["OriginalListDateSold"]=date_conversion(original_sold_date)              
     if list1:
         current_list1date=list1.get("CurrentListingDate")
         orginal_list1_date=list1.get("OriginalListDateListing") 
@@ -49,9 +56,9 @@ def generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sol
         orginal_sold1_date= sold1.get("OriginalListDateListing") 
         sale_sold1_date=sold1.get("SaleDate")
         if current_sold1date:
-            condition_data["current_ sold1date"]=date_conversion(current_sold1date)
+            condition_data["current_sold1date"]=date_conversion(current_sold1date)
         if orginal_sold1_date:
-            condition_data["orginal_ sold1_date"]=date_conversion(orginal_sold1_date) 
+            condition_data["orginal_sold1_date"]=date_conversion(orginal_sold1_date) 
         if sale_sold1_date:
             condition_data['sale_sold1_date']=date_conversion(sale_sold1_date)       
     if  sold2:
@@ -59,9 +66,9 @@ def generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sol
         orginal_sold2_date= sold2.get("OriginalListDateListing") 
         sale_sold2_date=sold2.get("SaleDate")
         if current_sold2date:
-            condition_data["current_ sold2date"]=date_conversion(current_sold2date)
+            condition_data["current_sold2date"]=date_conversion(current_sold2date)
         if orginal_sold2_date:
-            condition_data["orginal_ sold2_date"]=date_conversion(orginal_sold2_date) 
+            condition_data["orginal_sold2_date"]=date_conversion(orginal_sold2_date) 
         if sale_sold2_date:
             condition_data['sale_sold2_date']=date_conversion(sale_sold2_date)        
     if  sold3:        
@@ -69,9 +76,9 @@ def generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sol
         orginal_sold3_date= sold3.get("OriginalListDateListing")   
         sale_sold3_date=sold3.get("SaleDate") 
         if current_sold3date:
-            condition_data["current_ sold3date"]=date_conversion(current_sold3date)        
+            condition_data["current_sold3date"]=date_conversion(current_sold3date)        
         if orginal_sold3_date:
-            condition_data["orginal_ sold3_date"]=date_conversion(orginal_sold3_date) 
+            condition_data["orginal_sold3_date"]=date_conversion(orginal_sold3_date) 
         if sale_sold3_date:
             condition_data['sale_sold3_date']=date_conversion(sale_sold3_date)      
         # if property_type:

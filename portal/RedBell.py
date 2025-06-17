@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from condtions.redbell import generate_condition_data
 from form_filler.redbell_form_filler import RedBellFormFiller
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import clean_address, clearing, data_filling_text, data_filling_text_QC, extract_data_sections, fetch_upload_data, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_datefilling, params_check, radio_btn_click, save_form, select_field, setup_driver
+from utils.helper import clean_address, clearing, data_filling_text, data_filling_text_QC, extract_data_sections, fetch_upload_data, fill_repair_details, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_datefilling, params_check, radio_btn_click, save_form, select_checkboxes_from_list, select_field, setup_driver, update_order_status
 from config import env
 
 # Load variables from .env file
@@ -25,7 +25,7 @@ load_dotenv()
 # Retrieve API URLs from environment variables
 ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")  
                    
-
+arg1, arg2 = params_check()
 class RedBell:
     def __init__(self, username, password, portal_url, portal_name, proxy, session):
         self.username = username
@@ -66,7 +66,7 @@ class RedBell:
                     session.cookies.set('.ASPXAUTH', redbell_cookie, domain="valuationops.homegenius.com")
                     self.session = session
 
-                    arg1, arg2 = params_check()
+                    #arg1, arg2 = params_check()
                     arg1 = "SmartEntry"  # Manually set for testing
                     if arg1 == "SmartEntry":
                         orders, session = self.fetch_data(self.session)
@@ -158,7 +158,8 @@ class RedBell:
         return headers
 
     def redbell_formopen(self, orders, session, merged_json, order_details, order_id):
-        orders_from_api = HybridBPOApi.get_entry_order() 
+
+        orders_from_api = HybridBPOApi.get_entry_order(arg2) 
         if not orders_from_api:  # Check if the order list is empty
             print("No orders found.")
             return
@@ -219,16 +220,17 @@ class RedBell:
                 else:
                     print("Form not matched---New Type")
                     logging.info(f"Form not Found --New Type {order.get('ProductDesc')}")
-                    
+                    update_order_status(4, "In Progress", "Entry", "Failed")
                     return False, None, "form_not_matched"
+                    
 
             else:
                 print(f"Address Not Found {order.get('PropAddress')}")
                 logging.info(f"Address Not Found {order.get('PropAddress')}")
                 address_list.append(order_address)
-
+        update_order_status(4, "In Progress", "Entry", "Failed")
         return False, None, "address_not_found"
-
+        
 
 
     def redbell_launch_browser_and_open_form(self, order_url, session):
@@ -255,176 +257,6 @@ def get_nested(data, path_list, default=""):
 
 
 
-# def fill_form_multi(self, driver, merged_json, order_id, form_config, session, subject_url):
-
-#     field_actions = {
-#         "Textbox": data_filling_text,
-#         "Textbox_default": data_filling_text,
-#         "Textbox_QC": data_filling_text_QC,
-#         "Textbox_default_QC": data_filling_text_QC,
-#         "select_data": select_field,
-#         "select_default": select_field,
-#         "radiobutton_data": radio_btn_click,
-#         "radiobutton_default": radio_btn_click,
-#         "date_fill_javascript": javascript_excecuter_datefilling,
-#         "clearing": clearing
-#     }
-
-#     try:
-#         # Validate and extract merged_json structure
-#         entry_data = merged_json.get('entry_data')
-#         if not isinstance(entry_data, list) or len(entry_data) == 0:
-#             logging.error("merged_json['entry_data'] is missing or not a list.")
-#             return
-
-#         entry = entry_data[0]
-#         if not isinstance(entry, dict):
-#             logging.error("entry_data[0] is not a dictionary.")
-#             return
-
-#         sub_data = entry.get('sub_data')
-#         comp_data = entry.get('comp_data', {}).get('List 1')
-
-#         if not isinstance(sub_data, dict):
-#             logging.warning("sub_data is missing or not a dictionary. Defaulting to empty.")
-#             sub_data = {}
-
-#         if not isinstance(comp_data, dict):
-#             logging.warning("comp_data['List 1'] is missing or not a dictionary. Defaulting to empty.")
-#             comp_data = {}
-
-#         # Proceed with form filling
-#         for page in form_config.get("page", []):
-#             for section_key, controls in page.items():
-#                 for control in controls:
-#                     field_type = control.get("filedtype")
-
-#                     # Save data action
-#                     if field_type == "save_data":
-#                         for cookie in driver.get_cookies():
-#                             c = {cookie['name']: cookie['value']}
-#                             session.cookies.update(c)
-#                         save_form(driver)
-#                         time.sleep(10)
-
-#                     for field in control.get("values", []):
-#                         if isinstance(field, dict):
-#                             continue
-
-#                         if len(field) != 3:
-#                             logging.warning(f"Invalid field format: {field}")
-#                             continue
-
-#                         key_expr, xpath, mode = field
-
-#                         try:
-#                             if key_expr.startswith("sub_data"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(sub_data, keys, "")
-#                             elif key_expr.startswith("comp_data"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(comp_data, keys, "")
-#                             elif key_expr.startswith("entry_data[0]"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr[len("entry_data[0]"):])
-#                                 value = get_nested(entry, keys, "")
-#                             else:
-#                                 value = key_expr  # Possibly a literal default
-
-#                             if value in [None, ""]:
-#                                 logging.info(f"Skipping empty value for {field_type} - Expression: {key_expr}")
-#                                 continue
-
-#                             action_func = field_actions.get(field_type)
-#                             if action_func:
-#                                 action_func(driver, value, xpath, mode)
-#                                 logging.info(f"{field_type}: {key_expr} = {value} at {xpath}")
-#                             else:
-#                                 logging.warning(f"Unknown field type: {field_type}")
-
-#                         except Exception as e:
-#                             logging.error(f"Error processing field {key_expr}: {e}")
-#     except Exception as e:
-#         logging.error(f"Fatal error in fill_form_multi: {e}")
-
-# def fill_form_multi(self, driver, merged_json, order_id, form_config, session, page_urls):
-#     field_actions = {
-#         "Textbox": data_filling_text,
-#         "Textbox_default": data_filling_text,
-#         "Textbox_QC": data_filling_text_QC,
-#         "Textbox_default_QC": data_filling_text_QC,
-#         "select_data": select_field,
-#         "select_default": select_field,
-#         "radiobutton_data": radio_btn_click,
-#         "radiobutton_default": radio_btn_click,
-#         "date_fill_javascript": javascript_excecuter_datefilling,
-#         "clearing": clearing
-#     }
-
-#     try:
-#         entry_data = merged_json.get('entry_data')
-#         if not isinstance(entry_data, list) or len(entry_data) == 0:
-#             logging.error("merged_json['entry_data'] is missing or not a list.")
-#             return
-
-#         entry = entry_data[0]
-#         sub_data = entry.get('sub_data', {})
-#         comp_data = entry.get('comp_data', {}).get('List 1', {})
-
-#         for page in form_config.get("page", []):
-#             for section_key, controls in page.items():
-#                 # Go to the page URL (based on section name key)
-#                 page_url = page_urls.get(section_key)
-#                 if page_url:
-#                     driver.get(page_url)
-#                     time.sleep(3)
-
-#                 for control in controls:
-#                     field_type = control.get("filedtype")
-
-#                     if field_type == "save_data":
-#                         for cookie in driver.get_cookies():
-#                             c = {cookie['name']: cookie['value']}
-#                             session.cookies.update(c)
-#                         save_form(driver)
-#                         time.sleep(10)
-#                         continue
-
-#                     for field in control.get("values", []):
-#                         if isinstance(field, dict) or len(field) != 3:
-#                             logging.warning(f"Invalid field format: {field}")
-#                             continue
-
-#                         key_expr, xpath, mode = field
-
-#                         try:
-#                             if key_expr.startswith("sub_data"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(sub_data, keys, "")
-#                             elif key_expr.startswith("comp_data"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(comp_data, keys, "")
-#                             elif key_expr.startswith("entry_data[0]"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr[len("entry_data[0]"):])
-#                                 value = get_nested(entry, keys, "")
-#                             else:
-#                                 value = key_expr
-
-#                             if value in [None, ""]:
-#                                 logging.info(f"Skipping empty value for {field_type} - Expression: {key_expr}")
-#                                 continue
-
-#                             action_func = field_actions.get(field_type)
-#                             if action_func:
-#                                 action_func(driver, value, xpath, mode)
-#                                 logging.info(f"{field_type}: {key_expr} = {value} at {xpath}")
-#                             else:
-#                                 logging.warning(f"Unknown field type: {field_type}")
-
-#                         except Exception as e:
-#                             logging.error(f"Error processing field {key_expr}: {e}")
-#     except Exception as e:
-#         logging.error(f"Fatal error in fill_form_multi: {e}")
-
 # def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls):
 #     field_actions = {
 #         "Textbox": data_filling_text,
@@ -437,26 +269,26 @@ def get_nested(data, path_list, default=""):
 #         "radiobutton_default": radio_btn_click,
 #         "date_fill_javascript": javascript_excecuter_datefilling,
 #         "clearing": clearing,
+#         "checkbox":select_checkboxes_from_list
 #     }
 
 #     try:
-#         entry_data_list = merged_json.get('entry_data')
-#         if not isinstance(entry_data_list, list) or not entry_data_list:
-#             logging.error("❌ 'entry_data' is missing or not a list.")
+#         sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3 = extract_data_sections(merged_json)
+#         if sub_data is None:
+#             logging.error("'entry_data' missing or empty in merged_json")
 #             return
 
-#         entry = entry_data_list[0]
-#         sub_data = entry.get('sub_data', {})
-#         comp_data = entry.get('comp_data', {}).get('List 1', {})
+#         # Add generated condition_data for possible use in the form filling logic
+#         condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3)
 
 #         for page in form_config.get("page", []):
 #             for section_name, controls in page.items():
 #                 page_url = page_urls.get(section_name)
 #                 if not page_url:
-#                     logging.warning(f"⚠️ URL not found for section: {section_name}")
+#                     logging.warning(f"URL not found for section: {section_name}")
 #                     continue
 
-#                 logging.info(f"🌐 Navigating to section: {section_name} => {page_url}")
+#                 logging.info(f"Navigating to section: {section_name} => {page_url}")
 #                 self.driver.get(page_url)
 #                 time.sleep(3)
 
@@ -466,7 +298,7 @@ def get_nested(data, path_list, default=""):
 
 #                     if field_type == "save_data":
 #                         save_form(self.driver)
-#                         logging.info("📅 Form saved.")
+#                         logging.info(" Form saved.")
 #                         for cookie in self.driver.get_cookies():
 #                             session.cookies.set(cookie['name'], cookie['value'])
 #                         time.sleep(10)
@@ -474,7 +306,7 @@ def get_nested(data, path_list, default=""):
 
 #                     for field in values:
 #                         if not (isinstance(field, list) and len(field) == 3):
-#                             logging.warning(f"⚠️ Invalid field format: {field}")
+#                             logging.warning(f" Invalid field format: {field}")
 #                             continue
 
 #                         key_expr, xpath, mode = field
@@ -484,31 +316,72 @@ def get_nested(data, path_list, default=""):
 #                             if key_expr.startswith("sub_data"):
 #                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
 #                                 value = get_nested(sub_data, keys, "")
+
 #                             elif key_expr.startswith("comp_data"):
 #                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(comp_data, keys, "")
+#                                 value = get_nested(comp_data, keys, "") if comp_data else ""
+
+#                             elif key_expr.startswith("adj_data"):
+#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
+#                                 value = get_nested(adj_data, keys, "") if adj_data else ""
+
+#                             elif key_expr.startswith("rental_data"):
+#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
+#                                 value = get_nested(rental_data, keys, "") if rental_data else ""
+
+#                             elif key_expr.startswith("condition_data"):
+#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
+#                                 value = get_nested(condition_data, keys, "")
+
 #                             elif key_expr.startswith("entry_data[0]"):
 #                                 keys = re.findall(r"\['(.*?)'\]", key_expr[len("entry_data[0]"):])
-#                                 value = get_nested(entry, keys, "")
+#                                 first_entry = merged_json.get("entry_data", [{}])[0]
+#                                 value = get_nested(first_entry, keys, "")
+
+#                             elif key_expr.startswith("sold1"):
+#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
+#                                 value = get_nested(sold1, keys, "")
+
+#                             elif key_expr.startswith("sold2"):
+#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
+#                                 value = get_nested(sold2, keys, "")
+
+#                             elif key_expr.startswith("sold3"):
+#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
+#                                 value = get_nested(sold3, keys, "")
+
+#                             elif key_expr.startswith("list1"):
+#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
+#                                 value = get_nested(list1, keys, "")
+
+#                             elif key_expr.startswith("list2"):
+#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
+#                                 value = get_nested(list2, keys, "")
+
+#                             elif key_expr.startswith("list3"):
+#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
+#                                 value = get_nested(list3, keys, "")
+
 #                             else:
 #                                 value = key_expr
 
+                    
 #                             if not value:
-#                                 logging.info(f"ℹ️ Skipping empty value for {key_expr}")
+#                                 logging.info(f"ℹ Skipping empty value for {key_expr}")
 #                                 continue
 
 #                             action_func = field_actions.get(field_type)
 #                             if action_func:
-#                                 logging.debug(f"➡️ Executing [{field_type}] at {xpath} with value: {value}")
+#                                 logging.debug(f" Executing [{field_type}] at {xpath} with value: {value}")
 #                                 action_func(self.driver, value, xpath, mode)
-#                                 logging.info(f"✅ Filled [{field_type}] {key_expr} = {value}")
+#                                 logging.info(f" Filled [{field_type}] {key_expr} = {value}")
 #                             else:
-#                                 logging.warning(f"⚠️ Unknown field type: {field_type}")
+#                                 logging.warning(f" Unknown field type: {field_type}")
 
 #                         except Exception as e:
-#                             logging.error(f"❌ Exception filling field {key_expr}: {e}")
+#                             logging.error(f" Exception filling field {key_expr}: {e}")
 #     except Exception as e:
-#         logging.error(f"💥 Critical error in fill_form_multi: {e}")
+#         logging.error(f" Critical error in fill_form_multi: {e}")
 
 def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls):
     field_actions = {
@@ -522,25 +395,26 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
         "radiobutton_default": radio_btn_click,
         "date_fill_javascript": javascript_excecuter_datefilling,
         "clearing": clearing,
+        "checkbox": select_checkboxes_from_list,
+
     }
 
     try:
-        sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3 = extract_data_sections(merged_json)
+        sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3 = extract_data_sections(merged_json)
         if sub_data is None:
-            logging.error("❌ 'entry_data' missing or empty in merged_json")
+            logging.error("'entry_data' missing or empty in merged_json")
             return
 
-        # Add generated condition_data for possible use in the form filling logic
-        condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3)
+        condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3)
 
         for page in form_config.get("page", []):
             for section_name, controls in page.items():
                 page_url = page_urls.get(section_name)
                 if not page_url:
-                    logging.warning(f"⚠️ URL not found for section: {section_name}")
+                    logging.warning(f"URL not found for section: {section_name}")
                     continue
 
-                logging.info(f"🌐 Navigating to section: {section_name} => {page_url}")
+                logging.info(f"Navigating to section: {section_name} => {page_url}")
                 self.driver.get(page_url)
                 time.sleep(3)
 
@@ -550,90 +424,110 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
 
                     if field_type == "save_data":
                         save_form(self.driver)
-                        logging.info("📅 Form saved.")
+                        logging.info("Form saved.")
                         for cookie in self.driver.get_cookies():
                             session.cookies.set(cookie['name'], cookie['value'])
                         time.sleep(10)
                         continue
 
+                    if field_type == "checkbox_list":
+                        # Checkbox list uses a value list of format: [key, id_prefix, mode]
+                        for field in values:
+                            if not (isinstance(field, list) and len(field) == 3):
+                                logging.warning(f"Invalid checkbox_list field: {field}")
+                                continue
+                            key_expr, id_prefix, mode = field
+                            try:
+                                keys = re.findall(r"\['(.*?)'\]", key_expr)
+                                value = get_nested(sub_data, keys, [])
+                                if value:
+                                    select_checkboxes_from_list(self.driver, value, id_prefix)
+                                    logging.info(f" Checkboxes selected for {key_expr} with prefix {id_prefix}")
+                                else:
+                                    logging.info(f"ℹ Skipping empty checkbox list for {key_expr}")
+                            except Exception as e:
+                                logging.error(f" Error selecting checkboxes for {key_expr}: {e}")
+                        continue  # skip normal field handling for checkbox_list
+                    if field_type == "repair_details_fill":
+                        for field in values:
+                            key_expr, _, _ = field
+                            try:
+                                keys = re.findall(r"\['(.*?)'\]", key_expr)
+                                repair_list = get_nested(sub_data, keys, [])
+                                if isinstance(repair_list, list):
+                                    fill_repair_details(self.driver, repair_list)
+                                else:
+                                    logging.warning(f"Expected list of repair details for {key_expr}, got {type(repair_list)}")
+                            except Exception as e:
+                                logging.error(f"Error processing repair_details_fill: {e}")
+                        continue
                     for field in values:
                         if not (isinstance(field, list) and len(field) == 3):
-                            logging.warning(f"⚠️ Invalid field format: {field}")
+                            logging.warning(f"Invalid field format: {field}")
                             continue
 
                         key_expr, xpath, mode = field
                         value = ""
 
                         try:
+                            # ----------- VALUE EXTRACTION -----------
                             if key_expr.startswith("sub_data"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
                                 value = get_nested(sub_data, keys, "")
-
                             elif key_expr.startswith("comp_data"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(comp_data, keys, "") if comp_data else ""
-
+                                value = get_nested(comp_data, keys, "")
                             elif key_expr.startswith("adj_data"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(adj_data, keys, "") if adj_data else ""
-
+                                value = get_nested(adj_data, keys, "")
                             elif key_expr.startswith("rental_data"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(rental_data, keys, "") if rental_data else ""
-
+                                value = get_nested(rental_data, keys, "")
                             elif key_expr.startswith("condition_data"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
                                 value = get_nested(condition_data, keys, "")
-
                             elif key_expr.startswith("entry_data[0]"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr[len("entry_data[0]"):])
-                                first_entry = merged_json.get("entry_data", [{}])[0]
-                                value = get_nested(first_entry, keys, "")
-
+                                value = get_nested(merged_json.get("entry_data", [{}])[0], keys, "")
                             elif key_expr.startswith("sold1"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
                                 value = get_nested(sold1, keys, "")
-
                             elif key_expr.startswith("sold2"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
                                 value = get_nested(sold2, keys, "")
-
                             elif key_expr.startswith("sold3"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
                                 value = get_nested(sold3, keys, "")
-
                             elif key_expr.startswith("list1"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
                                 value = get_nested(list1, keys, "")
-
                             elif key_expr.startswith("list2"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
                                 value = get_nested(list2, keys, "")
-
                             elif key_expr.startswith("list3"):
                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
                                 value = get_nested(list3, keys, "")
-
                             else:
-                                value = key_expr
+                                value = key_expr  # literal fallback
 
-                    
+                            # ----------- FILL FIELD -----------
                             if not value:
                                 logging.info(f"ℹ Skipping empty value for {key_expr}")
                                 continue
 
                             action_func = field_actions.get(field_type)
                             if action_func:
-                                logging.debug(f" Executing [{field_type}] at {xpath} with value: {value}")
+                                logging.debug(f"Executing [{field_type}] at {xpath} with value: {value}")
                                 action_func(self.driver, value, xpath, mode)
-                                logging.info(f" Filled [{field_type}] {key_expr} = {value}")
+                                logging.info(f"Filled [{field_type}] {key_expr} = {value}")
                             else:
-                                logging.warning(f" Unknown field type: {field_type}")
+                                logging.warning(f"Unknown field type: {field_type}")
 
                         except Exception as e:
-                            logging.error(f" Exception filling field {key_expr}: {e}")
+                            logging.error(f"Exception filling field {key_expr}: {e}")
     except Exception as e:
-        logging.error(f" Critical error in fill_form_multi: {e}")
+        logging.error(f"Critical error in fill_form_multi: {e}")
+
 
 def upload_files_for_order(self, order_id: int, upload_page_url: str):
     data = fetch_upload_data(self,order_id)
@@ -854,10 +748,131 @@ def upload_photos_to_order(self, comparables_folder, photos_url):
         "upload_valid": upload_valid,
     }
 
+def load_form_config_and_data(order_id, config_path, researchpad_data_retrival_url,
+                              session=None, merged_json=None):
+
+
+    try:
+        with open(config_path, 'r') as f:
+            form_config = json.load(f)
+    except Exception as e:
+        logging.error(f"Failed to load form config JSON: {e}")
+        return None, None
+
+    if session is None:
+        session = requests.Session()
+
+    if not merged_json:
+        url = f"{researchpad_data_retrival_url}?order_id={order_id}"
+        logging.info(f"Fetching merged_json from API: {url}")
+        try:
+            response = session.get(url)
+            if response.status_code == 200:
+                merged_json = response.json()
+            else:
+                logging.error(f"Failed to fetch merged_json, status code: {response.status_code}")
+                return None, None
+        except Exception as e:
+            logging.error(f"Exception during API call: {e}")
+            return None, None
+
+    return form_config, merged_json
+
 
 
 def build_url(base_url, item_id, order_id, page):
     return f"{base_url}?ItemId={item_id}&OrderId={order_id}&ActivePage={page}"
+
+# def redbell_formopen_fill(self, order, session=None, merged_json=None, order_details=None, order_id=None):
+#     ProductDesc = order.get('ProductDesc', '').strip()
+#     item_id = order.get('ItemId')
+#     order_id_url = order.get('OrderId')
+
+#     base_url = env.BASE_URL_ENTRY
+#     page_urls = {
+#         "SubjectHistoryAdj": build_url(base_url, item_id, order_id_url, "SubjectHistoryAdj"),
+#         "NeighborhoodInfoAdj": build_url(base_url, item_id, order_id_url, "NeighborhoodInfoAdj"),
+#         "ComparablesAdj": build_url(base_url, item_id, order_id_url, "ComparablesAdj"),
+#         "Photos": build_url(base_url, item_id, order_id_url, "Photos"),
+#         "Repairs": build_url(base_url, item_id, order_id_url, "Repairs"),
+#         "Rental Comparables": build_url(base_url, item_id, order_id_url, "Rental%20Comparables"),
+#         "Comments": build_url(base_url, item_id, order_id_url, "Comments"),
+#         "Price Opinion": build_url(base_url, item_id, order_id_url, "Price%20Opinion"),
+#     }
+
+    
+#     researchpad_data_retrival_url=env.RESEARCHPAD_DATA_URL
+#     if ProductDesc=="Exterior BPO" or ProductDesc=="5 Day Exterior BPO"  or  ProductDesc=="5 Day Interior BPO" or ProductDesc=="5 Day Exterior Appraiser Reconciled BPO" or ProductDesc=="3 Day Exterior BPO"  or  ProductDesc=="3 Day Interior BPO":
+#         config_path = 'json/redbelljson/Redbell_Exterior.json'
+#     elif 'Rental' in ProductDesc:
+#         config_path = 'json/redbelljson/Redbell_Rental.json'
+
+#     else:
+#         logging.warning(f"No matching config path for ProductDesc: {ProductDesc}")
+#         return
+#     form_config, merged_json = load_form_config_and_data(
+#         order_id=order_id,
+#         config_path=config_path,
+#         researchpad_data_retrival_url=researchpad_data_retrival_url,
+#         session=session,
+#         merged_json=merged_json
+#     )
+#     # Optional: Check if loading was successful
+#     if not form_config or not merged_json:
+#         return
+#     # Extract and generate condition_data, attach it inside merged_json for usage if needed
+#     sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3 = extract_data_sections(merged_json)
+#     condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3)
+#     if "entry_data" in merged_json and merged_json["entry_data"]:
+#         merged_json["entry_data"][0]["condition_data"] = condition_data
+
+#     print(merged_json)    
+#     # Fill all pages except ComparablesAdj first
+#     try:
+#         for page_key, url in page_urls.items():
+#             if page_key == "ComparablesAdj":
+#                 continue
+#             logging.info(f"Loading page: {page_key} -> {url}")
+#             self.driver.get(url)
+#             self.driver.implicitly_wait(10)
+#             fill_form_multi(self, merged_json, order_id_url, form_config, session, {page_key: url})
+#             time.sleep(2)
+#     except Exception as e:
+#         logging.exception(f"Error while navigating and filling forms (non-ComparablesAdj): {e}")
+#         return
+
+#     # Fill ComparablesAdj page separately
+#     try:
+#         comparables_url = page_urls["ComparablesAdj"]
+#         logging.info(f"Loading ComparablesAdj page: {comparables_url}")
+#         self.driver.get(comparables_url)
+#         self.driver.implicitly_wait(10)
+#         fill_form_multi(self, merged_json, order_id_url, form_config, session, {"ComparablesAdj": comparables_url})
+#         time.sleep(2)
+#     except Exception as e:
+#         logging.exception(f"Error filling ComparablesAdj page: {e}")
+#         return
+
+#     # Upload files for ComparablesAdj page
+#     try:
+#         upload_files_for_order(self, order_id, comparables_url)
+#         data = fetch_upload_data(self, order_id)
+#         if not data:
+#             logging.warning(f"No upload data found for order {order_id}")
+#             return
+
+#         comparables_folder = data.get("comparables_folder")
+#         if isinstance(comparables_folder, str) and comparables_folder.strip():
+#             photos_url = page_urls["Photos"]
+#             upload_photos_to_order(self, comparables_folder.strip(), photos_url)
+#         else:
+#             logging.warning(f"Comparables folder is missing or invalid for order {order_id_url}: {comparables_folder!r}")
+
+#     except Exception as e:
+#         logging.exception(f"Error during photo upload steps: {e}")
+#         return
+
+
 
 def redbell_formopen_fill(self, order, session=None, merged_json=None, order_details=None, order_id=None):
     ProductDesc = order.get('ProductDesc', '').strip()
@@ -865,90 +880,101 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
     order_id_url = order.get('OrderId')
 
     base_url = env.BASE_URL_ENTRY
-    page_urls = {
-        "SubjectHistoryAdj": build_url(base_url, item_id, order_id_url, "SubjectHistoryAdj"),
-        "NeighborhoodInfoAdj": build_url(base_url, item_id, order_id_url, "NeighborhoodInfoAdj"),
-        "ComparablesAdj": build_url(base_url, item_id, order_id_url, "ComparablesAdj"),
-        "Photos": build_url(base_url, item_id, order_id_url, "Photos"),
-        "Repairs": build_url(base_url, item_id, order_id_url, "Repairs"),
-        "Rental Comparables": build_url(base_url, item_id, order_id_url, "Rental%20Comparables"),
-        "Comments": build_url(base_url, item_id, order_id_url, "Comments"),
-        "Price Opinion": build_url(base_url, item_id, order_id_url, "Price%20Opinion"),
-    }
+    
+    researchpad_data_retrival_url=env.RESEARCHPAD_DATA_URL
+    if ProductDesc=="Exterior BPO" or ProductDesc=="5 Day Exterior BPO"  or  ProductDesc=="5 Day Interior BPO" or ProductDesc=="5 Day Exterior Appraiser Reconciled BPO" or ProductDesc=="3 Day Exterior BPO"  or  ProductDesc=="3 Day Interior BPO":
+         # Exterior URLs
+        page_urls = {
+            "SubjectHistoryAdj": build_url(base_url, item_id, order_id_url, "Subject%20History"),
+            "NeighborhoodInfoAdj": build_url(base_url, item_id, order_id_url, "Neighborhood%20Info"),
+            "ComparablesAdj": build_url(base_url, item_id, order_id_url, "Comparables"),
+            "Photos": build_url(base_url, item_id, order_id_url, "Photos"),
+            "Repairs": build_url(base_url, item_id, order_id_url, "Repairs"),
+            "Comments": build_url(base_url, item_id, order_id_url, "Comments"),
+            "Price Opinion": build_url(base_url, item_id, order_id_url, "Price%20Opinion"),
+        }
 
-    if 'Rental' in ProductDesc:
-        try:
-            with open('json/redbelljson/Redbell_Enhanced.json', 'r') as f:
-                form_config = json.load(f)
-        except Exception as e:
-            logging.error(f"Failed to load form config JSON: {e}")
-            return
+        config_path = 'json/redbelljson/Redbell_Exterior.json'
 
-        if session is None:
-            session = requests.Session()
+    elif "Rental" in ProductDesc:
+        # Rental URLs
+        page_urls = {
+            "SubjectHistoryAdj": build_url(base_url, item_id, order_id_url, "SubjectHistoryAdj"),
+            "NeighborhoodInfoAdj": build_url(base_url, item_id, order_id_url, "NeighborhoodInfoAdj"),
+            "ComparablesAdj": build_url(base_url, item_id, order_id_url, "ComparablesAdj"),
+            "Photos": build_url(base_url, item_id, order_id_url, "Photos"),
+            "Repairs": build_url(base_url, item_id, order_id_url, "Repairs"),
+            "Rental Comparables": build_url(base_url, item_id, order_id_url, "Rental%20Comparables"),
+            "Comments": build_url(base_url, item_id, order_id_url, "Comments"),
+            "Price Opinion": build_url(base_url, item_id, order_id_url, "Price%20Opinion"),
+        }
 
-        if not merged_json:
-            url = f"http://192.168.3.48:8001/api/v1/entry-data/?order_id={order_id}"
-            logging.info(f"Fetching merged_json from API: {url}")
-            try:
-                response = requests.get(url)
-                if response.status_code == 200:
-                    merged_json = response.json()
-                else:
-                    logging.error(f"Failed to fetch merged_json, status code: {response.status_code}")
-                    return
-            except Exception as e:
-                logging.error(f"Exception during API call: {e}")
-                return
+        config_path = 'json/redbelljson/Redbell_Rental.json'
 
-        # Extract and generate condition_data, attach it inside merged_json for usage if needed
-        sub_data, comp_data, adj_data, rental_data = extract_data_sections(merged_json)
-        condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data)
-        if "entry_data" in merged_json and merged_json["entry_data"]:
-            merged_json["entry_data"][0]["condition_data"] = condition_data
+    else:
+        logging.warning(f"No matching config path for ProductDesc: {ProductDesc}")
+        return
+    form_config, merged_json = load_form_config_and_data(
+        order_id=order_id,
+        config_path=config_path,
+        researchpad_data_retrival_url=researchpad_data_retrival_url,
+        session=session,
+        merged_json=merged_json
+    )
+    # Optional: Check if loading was successful
+    if not form_config or not merged_json:
+        return
+    # Extract and generate condition_data, attach it inside merged_json for usage if needed
+    sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3 = extract_data_sections(merged_json)
+    condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3)
+    if "entry_data" in merged_json and merged_json["entry_data"]:
+        merged_json["entry_data"][0]["condition_data"] = condition_data
 
-        print(merged_json)    
-        # Fill all pages except ComparablesAdj first
-        try:
-            for page_key, url in page_urls.items():
-                if page_key == "ComparablesAdj":
-                    continue
-                logging.info(f"Loading page: {page_key} -> {url}")
-                self.driver.get(url)
-                self.driver.implicitly_wait(10)
-                fill_form_multi(self, merged_json, order_id_url, form_config, session, {page_key: url})
-                time.sleep(2)
-        except Exception as e:
-            logging.exception(f"Error while navigating and filling forms (non-ComparablesAdj): {e}")
-            return
-
-        # Fill ComparablesAdj page separately
-        try:
-            comparables_url = page_urls["ComparablesAdj"]
-            logging.info(f"Loading ComparablesAdj page: {comparables_url}")
-            self.driver.get(comparables_url)
+    print(merged_json)    
+    # Fill all pages except ComparablesAdj first
+    try:
+        for page_key, url in page_urls.items():
+            # if page_key == "ComparablesAdj":
+            #     continue
+            logging.info(f"Loading page: {page_key} -> {url}")
+            self.driver.get(url)
             self.driver.implicitly_wait(10)
-            fill_form_multi(self, merged_json, order_id_url, form_config, session, {"ComparablesAdj": comparables_url})
+            fill_form_multi(self, merged_json, order_id_url, form_config, session, {page_key: url})
             time.sleep(2)
-        except Exception as e:
-            logging.exception(f"Error filling ComparablesAdj page: {e}")
+    except Exception as e:
+        logging.exception(f"Error while navigating and filling forms (non-ComparablesAdj): {e}")
+        return
+
+    # # Fill ComparablesAdj page separately
+    # try:
+    #     comparables_url = page_urls["ComparablesAdj"]
+    #     logging.info(f"Loading ComparablesAdj page: {comparables_url}")
+    #     self.driver.get(comparables_url)
+    #     self.driver.implicitly_wait(10)
+    #     fill_form_multi(self, merged_json, order_id_url, form_config, session, {"ComparablesAdj": comparables_url})
+    #     time.sleep(2)
+    # except Exception as e:
+    #     logging.exception(f"Error filling ComparablesAdj page: {e}")
+    #     return
+
+    # Upload files for ComparablesAdj page
+    try:
+        comparables_url = page_urls["ComparablesAdj"]
+        upload_files_for_order(self, order_id, comparables_url)
+        data = fetch_upload_data(self, order_id)
+        if not data:
+            logging.warning(f"No upload data found for order {order_id}")
             return
 
-        # Upload files for ComparablesAdj page
-        try:
-            upload_files_for_order(self, order_id, comparables_url)
-            data = fetch_upload_data(self, order_id)
-            if not data:
-                logging.warning(f"No upload data found for order {order_id}")
-                return
+        comparables_folder = data.get("comparables_folder")
+        if isinstance(comparables_folder, str) and comparables_folder.strip():
+            photos_url = page_urls["Photos"]
+            upload_photos_to_order(self, comparables_folder.strip(), photos_url)
+        else:
+            logging.warning(f"Comparables folder is missing or invalid for order {order_id_url}: {comparables_folder!r}")
 
-            comparables_folder = data.get("comparables_folder")
-            if isinstance(comparables_folder, str) and comparables_folder.strip():
-                photos_url = page_urls["Photos"]
-                upload_photos_to_order(self, comparables_folder.strip(), photos_url)
-            else:
-                logging.warning(f"Comparables folder is missing or invalid for order {order_id_url}: {comparables_folder!r}")
+    except Exception as e:
+        logging.exception(f"Error during photo upload steps: {e}")
+        return
 
-        except Exception as e:
-            logging.exception(f"Error during photo upload steps: {e}")
-            return
+
