@@ -21,7 +21,7 @@ import json
 import os
 from selenium.webdriver.chrome.options import Options
 
-from utils.helper import get_cookie_from_api, handle_login_status, setup_driver
+from utils.helper import get_cookie_from_api, handle_login_status, setup_driver, update_client_account_status
 
 import logging
 import json
@@ -94,4 +94,5 @@ class rrreview:
             self.login_status = f"Exception occurred: {e}"
             logging.exception("Exception during login")
             handle_login_status("EXCEPTION", self.username, ["activeorders"], self.portal_name)
+            #update_client_account_status(self.order_id)
             return "Login error", self.driver

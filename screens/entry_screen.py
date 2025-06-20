@@ -29,12 +29,15 @@ class EntryScreen(tk.Frame):
         self.loaded_screen.pack(fill="both", expand=True)
 
         # Determine which process to run based on parameters
-        arg1, arg2 = params_check()
-        arg1="SmartEntry"
+        #arg1, arg2 = params_check()
+        #arg1="SmartEntry"
+        #arg1="PortalLogin"
         #arg1="login"
         self.handle_argument(arg1, arg2)
 
     def handle_argument(self, arg1, arg2):
+        arg1 = arg1 or ""
+        arg2 = arg2 or ""
         if 'SmartEntry' in arg1:
             # Run the process in a thread to keep GUI responsive
             threading.Thread(target=self.run_smart_entry_process, args=(arg2,), daemon=True).start()

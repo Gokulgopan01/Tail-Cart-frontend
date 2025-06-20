@@ -3,6 +3,7 @@ import os
 import re
 import time
 import logging
+from tkinter import messagebox
 import requests
 import json
 import sys
@@ -16,7 +17,7 @@ from dotenv import load_dotenv
 from condtions.redbell import generate_condition_data
 from form_filler.redbell_form_filler import RedBellFormFiller
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import clean_address, clearing, data_filling_text, data_filling_text_QC, extract_data_sections, fetch_upload_data, fill_repair_details, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_datefilling, params_check, radio_btn_click, save_form, select_checkboxes_from_list, select_field, setup_driver, update_order_status
+from utils.helper import clean_address, clearing, data_filling_text, data_filling_text_QC, extract_data_sections, fetch_upload_data, fill_repair_details, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_datefilling, params_check, radio_btn_click, save_form, select_checkboxes_from_list, select_field, setup_driver, update_client_account_status, update_order_status
 from config import env
 
 # Load variables from .env file
@@ -66,8 +67,10 @@ class RedBell:
                     session.cookies.set('.ASPXAUTH', redbell_cookie, domain="valuationops.homegenius.com")
                     self.session = session
 
-                    #arg1, arg2 = params_check()
-                    arg1 = "SmartEntry"  # Manually set for testing
+                    arg1, arg2 = params_check()
+                    #arg1 = "SmartEntry"  # Manually set for testing
+                    #arg1="PortalLogin"
+                    #arg1="PortalLogin"
                     if arg1 == "SmartEntry":
                         orders, session = self.fetch_data(self.session)
                         self.redbell_formopen(
@@ -99,6 +102,8 @@ class RedBell:
 
         title = "MFA FAILED"
         login_check_keyword = ["False"]
+        update_order_status(self.order_id, "In Progress", "Entry", "Failed")
+        #update_client_account_status(self.order_id)
         handle_login_status(title, self.username, login_check_keyword, self.portal_name)
         return None, None
 
@@ -158,7 +163,7 @@ class RedBell:
         return headers
 
     def redbell_formopen(self, orders, session, merged_json, order_details, order_id):
-
+        #arg2=111
         orders_from_api = HybridBPOApi.get_entry_order(arg2) 
         if not orders_from_api:  # Check if the order list is empty
             print("No orders found.")
@@ -174,14 +179,19 @@ class RedBell:
             session=order_from_api.get("session",None)
             order_id=order_from_api.get("order_id","")
             order_details_from_api=get_order_address_from_assigned_order(order_id)
+            # if not order_details_from_api:
+            #     messagebox.showerror("Authentication Required", "Please log in again.")
+            #     self.controller.show_frame("EcesisLoginScreen")
+            #     return
         logging.info("Starting form open process")
-        target_address = clean_address(order_details_from_api)
+        target_genorderid =order_details_from_api
         form_types = ["Interior Enhanced BPO",'Interior BPO - W Rentals','Exterior Enhanced BPO','Interior BPO','Exterior BPO','Exterior BPO - W Rentals','5 Day MIT ARBPO','5 Day Interior Appraiser Reconciled BPO','5 Day Exterior Appraiser Reconciled BPO','5 Day Exterior BPO - W Rentals','5 Day Exterior BPO','5 Day Interior BPO','5 Day Interior BPO - W Rentals',"3 Day Exterior BPO - W Rentals"]
         if not orders:
             logging.info("No orders in portal")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
             return
 
-        matched, order, status = self.find_matching_order(orders, target_address, form_types, order_id)
+        matched, order, status = self.find_matching_order(orders, target_genorderid, form_types, order_id)
 
         if matched and status == "matched":
             order_url = f"https://valuationops.homegenius.com/VendorPortal/EditReport?ItemId={order['ItemId']}&EntityType=Vendor"
@@ -192,20 +202,23 @@ class RedBell:
            
         elif not matched:
             logging.info("No exact address match found.")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
 
-    def find_matching_order(self, orders, target_address, form_types, order_id, order_details=None):
+    def find_matching_order(self, orders, target_genorderid, form_types, order_id, order_details=None):
         address_found = False
         address_list = []
 
         for order in orders:
-            order_address = clean_address(order.get('PropAddress', ''))
-            cleaned_target = clean_address(target_address)
+            # order_address = clean_address(order.get('OrderGenId', ''))
+            # cleaned_target = clean_address(target_genorderid)
+            order_genid = order.get('OrderGenId', '')
+            #cleaned_target = clean_address(target_genorderid)
 
             # Address matched
-            if cleaned_target == order_address:
+            if target_genorderid == order_genid:
                 address_found = True
-                print(f"Address Found {order['PropAddress']}")
-                logging.info(f"Address Found {order['PropAddress']}")
+                print(f"Address Found {order['PropAddress']}for geniid{order['OrderGenId']}")
+                logging.info(f"Address Found {order['PropAddress']} for geniid{order['OrderGenId']}")
 
                 # Form matched
                 if order.get('ProductDesc') in form_types:
@@ -220,15 +233,15 @@ class RedBell:
                 else:
                     print("Form not matched---New Type")
                     logging.info(f"Form not Found --New Type {order.get('ProductDesc')}")
-                    update_order_status(4, "In Progress", "Entry", "Failed")
+                    update_order_status(order_id, "In Progress", "Entry", "Failed")
                     return False, None, "form_not_matched"
                     
 
             else:
                 print(f"Address Not Found {order.get('PropAddress')}")
                 logging.info(f"Address Not Found {order.get('PropAddress')}")
-                address_list.append(order_address)
-        update_order_status(4, "In Progress", "Entry", "Failed")
+                address_list.append(order_genid)
+        update_order_status(order_id, "In Progress", "Entry", "Failed")
         return False, None, "address_not_found"
         
 
@@ -239,7 +252,7 @@ class RedBell:
         self.driver.get(order_url)
 
         time.sleep(10)
-    from form_filler.redbell_form_filler import RedBellFormFiller
+    
 
 
 
@@ -255,9 +268,46 @@ def get_nested(data, path_list, default=""):
 
 
 
+# def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls): 
+#     # Cache for key extraction and values
+#     key_expr_cache = {}
+#     value_cache = {}
 
+#     def get_keys_cached(key_expr):
+#         if key_expr not in key_expr_cache:
+#             key_expr_cache[key_expr] = re.findall(r"\['(.*?)'\]", key_expr)
+#         return key_expr_cache[key_expr]
 
-# def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls):
+#     def extract_value_from_expr(expr):
+#         if expr in value_cache:
+#             return value_cache[expr]
+
+#         data_sources = {
+#             "sub_data": sub_data,
+#             "comp_data": comp_data,
+#             "adj_data": adj_data,
+#             "rental_data": rental_data,
+#             "condition_data": condition_data,
+#             "entry_data[0]": merged_json.get("entry_data", [{}])[0],
+#             "sold1": sold1,
+#             "sold2": sold2,
+#             "sold3": sold3,
+#             "list1": list1,
+#             "list2": list2,
+#             "list3": list3,
+#         }
+
+#         for prefix, data_source in data_sources.items():
+#             if expr.startswith(prefix):
+#                 suffix = expr[len(prefix):]
+#                 keys = get_keys_cached(suffix) if prefix == "entry_data[0]" else get_keys_cached(expr)
+#                 value = get_nested(data_source, keys, "")
+#                 value_cache[expr] = value
+#                 return value
+
+#         value_cache[expr] = expr  # fallback to literal
+#         return expr
+
 #     field_actions = {
 #         "Textbox": data_filling_text,
 #         "Textbox_default": data_filling_text,
@@ -269,17 +319,17 @@ def get_nested(data, path_list, default=""):
 #         "radiobutton_default": radio_btn_click,
 #         "date_fill_javascript": javascript_excecuter_datefilling,
 #         "clearing": clearing,
-#         "checkbox":select_checkboxes_from_list
+#         "checkbox": select_checkboxes_from_list,
 #     }
 
 #     try:
-#         sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3 = extract_data_sections(merged_json)
+#         sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3 = extract_data_sections(merged_json)
 #         if sub_data is None:
 #             logging.error("'entry_data' missing or empty in merged_json")
 #             return
 
-#         # Add generated condition_data for possible use in the form filling logic
-#         condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3)
+#         condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3)
+#         saved_form = False
 
 #         for page in form_config.get("page", []):
 #             for section_name, controls in page.items():
@@ -290,100 +340,127 @@ def get_nested(data, path_list, default=""):
 
 #                 logging.info(f"Navigating to section: {section_name} => {page_url}")
 #                 self.driver.get(page_url)
-#                 time.sleep(3)
+
+#                 try:
+#                     WebDriverWait(self.driver, 15).until(
+#                         EC.presence_of_element_located((By.TAG_NAME, "body"))
+#                     )
+#                 except Exception:
+#                     logging.warning(f"Timeout waiting for page to load: {section_name}")
 
 #                 for control in controls:
 #                     field_type = control.get("filedtype")
 #                     values = control.get("values", [])
 
 #                     if field_type == "save_data":
-#                         save_form(self.driver)
-#                         logging.info(" Form saved.")
-#                         for cookie in self.driver.get_cookies():
-#                             session.cookies.set(cookie['name'], cookie['value'])
-#                         time.sleep(10)
+#                         if not saved_form:
+#                             save_form(self.driver)
+#                             logging.info("Form saved.")
+#                             for cookie in self.driver.get_cookies():
+#                                 session.cookies.set(cookie['name'], cookie['value'])
+#                             time.sleep(5)
+#                             saved_form = True
 #                         continue
 
+#                     if field_type == "checkbox_list":
+#                         for field in values:
+#                             if not (isinstance(field, list) and len(field) == 3):
+#                                 logging.warning(f"Invalid checkbox_list field: {field}")
+#                                 continue
+#                             key_expr, id_prefix, mode = field
+#                             try:
+#                                 value = extract_value_from_expr(key_expr)
+#                                 if value:
+#                                     select_checkboxes_from_list(self.driver, value, id_prefix)
+#                                     logging.info(f"Checkboxes selected for {key_expr} with prefix {id_prefix}")
+#                                 else:
+#                                     logging.info(f"Skipping empty checkbox list for {key_expr}")
+#                             except Exception as e:
+#                                 logging.error(f"Error selecting checkboxes for {key_expr}: {e}")
+#                         continue
+
+#                     if field_type == "repair_details_fill":
+#                         for field in values:
+#                             if not (isinstance(field, list) and len(field) == 3):
+#                                 logging.warning(f"Invalid repair_details_fill field: {field}")
+#                                 continue
+#                             key_expr, _, _ = field
+#                             try:
+#                                 value = extract_value_from_expr(key_expr)
+#                                 if isinstance(value, list):
+#                                     fill_repair_details(self.driver, value)
+#                                 else:
+#                                     logging.warning(f"Expected list of repair details for {key_expr}")
+#                             except Exception as e:
+#                                 logging.error(f"Error processing repair_details_fill: {e}")
+#                         continue
+
+#                     # Normal field handling
 #                     for field in values:
 #                         if not (isinstance(field, list) and len(field) == 3):
-#                             logging.warning(f" Invalid field format: {field}")
+#                             logging.warning(f"Invalid field format: {field}")
 #                             continue
 
 #                         key_expr, xpath, mode = field
-#                         value = ""
-
 #                         try:
-#                             if key_expr.startswith("sub_data"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(sub_data, keys, "")
+#                             value = extract_value_from_expr(key_expr)
 
-#                             elif key_expr.startswith("comp_data"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(comp_data, keys, "") if comp_data else ""
-
-#                             elif key_expr.startswith("adj_data"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(adj_data, keys, "") if adj_data else ""
-
-#                             elif key_expr.startswith("rental_data"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(rental_data, keys, "") if rental_data else ""
-
-#                             elif key_expr.startswith("condition_data"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(condition_data, keys, "")
-
-#                             elif key_expr.startswith("entry_data[0]"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr[len("entry_data[0]"):])
-#                                 first_entry = merged_json.get("entry_data", [{}])[0]
-#                                 value = get_nested(first_entry, keys, "")
-
-#                             elif key_expr.startswith("sold1"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(sold1, keys, "")
-
-#                             elif key_expr.startswith("sold2"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(sold2, keys, "")
-
-#                             elif key_expr.startswith("sold3"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(sold3, keys, "")
-
-#                             elif key_expr.startswith("list1"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(list1, keys, "")
-
-#                             elif key_expr.startswith("list2"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(list2, keys, "")
-
-#                             elif key_expr.startswith("list3"):
-#                                 keys = re.findall(r"\['(.*?)'\]", key_expr)
-#                                 value = get_nested(list3, keys, "")
-
-#                             else:
-#                                 value = key_expr
-
-                    
-#                             if not value:
-#                                 logging.info(f"ℹ Skipping empty value for {key_expr}")
+#                             if value in [None, ""]:
+#                                 logging.info(f"Skipping empty value for {key_expr}")
 #                                 continue
 
 #                             action_func = field_actions.get(field_type)
 #                             if action_func:
-#                                 logging.debug(f" Executing [{field_type}] at {xpath} with value: {value}")
+#                                 logging.debug(f"Executing [{field_type}] at {xpath} with value: {value}")
 #                                 action_func(self.driver, value, xpath, mode)
-#                                 logging.info(f" Filled [{field_type}] {key_expr} = {value}")
+#                                 logging.info(f"Filled [{field_type}] {key_expr} = {value}")
 #                             else:
-#                                 logging.warning(f" Unknown field type: {field_type}")
-
+#                                 logging.warning(f"Unknown field type: {field_type}")
 #                         except Exception as e:
-#                             logging.error(f" Exception filling field {key_expr}: {e}")
-#     except Exception as e:
-#         logging.error(f" Critical error in fill_form_multi: {e}")
+#                             logging.error(f"Exception filling field {key_expr}: {e}")
 
-def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls):
+#     except Exception as e:
+#         logging.error(f"Critical error in fill_form_multi: {e}")
+
+def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls): 
+    key_expr_cache = {}
+    value_cache = {}
+
+    def get_keys_cached(key_expr):
+        if key_expr not in key_expr_cache:
+            key_expr_cache[key_expr] = re.findall(r"\['(.*?)'\]", key_expr)
+        return key_expr_cache[key_expr]
+
+    def extract_value_from_expr(expr):
+        if expr in value_cache:
+            return value_cache[expr]
+
+        data_sources = {
+            "sub_data": sub_data,
+            "comp_data": comp_data,
+            "adj_data": adj_data,
+            "rental_data": rental_data,
+            "condition_data": condition_data,
+            "entry_data[0]": merged_json.get("entry_data", [{}])[0],
+            "sold1": sold1,
+            "sold2": sold2,
+            "sold3": sold3,
+            "list1": list1,
+            "list2": list2,
+            "list3": list3,
+        }
+
+        for prefix, data_source in data_sources.items():
+            if expr.startswith(prefix):
+                suffix = expr[len(prefix):]
+                keys = get_keys_cached(suffix) if prefix == "entry_data[0]" else get_keys_cached(expr)
+                value = get_nested(data_source, keys, "")
+                value_cache[expr] = value
+                return value
+
+        value_cache[expr] = expr
+        return expr
+
     field_actions = {
         "Textbox": data_filling_text,
         "Textbox_default": data_filling_text,
@@ -396,16 +473,17 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
         "date_fill_javascript": javascript_excecuter_datefilling,
         "clearing": clearing,
         "checkbox": select_checkboxes_from_list,
-
     }
 
     try:
         sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3 = extract_data_sections(merged_json)
         if sub_data is None:
             logging.error("'entry_data' missing or empty in merged_json")
-            return
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            return False
 
         condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3)
+        saved_form = False
 
         for page in form_config.get("page", []):
             for section_name, controls in page.items():
@@ -416,126 +494,151 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
 
                 logging.info(f"Navigating to section: {section_name} => {page_url}")
                 self.driver.get(page_url)
-                time.sleep(3)
+
+                try:
+                    WebDriverWait(self.driver, 15).until(
+                        EC.presence_of_element_located((By.TAG_NAME, "body"))
+                    )
+                except Exception:
+                    logging.warning(f"Timeout waiting for page to load: {section_name}")
 
                 for control in controls:
                     field_type = control.get("filedtype")
                     values = control.get("values", [])
 
                     if field_type == "save_data":
-                        save_form(self.driver)
-                        logging.info("Form saved.")
-                        for cookie in self.driver.get_cookies():
-                            session.cookies.set(cookie['name'], cookie['value'])
-                        time.sleep(10)
+                        if not saved_form:
+                            save_form(self.driver)
+                            logging.info("Form saved.")
+                            # for cookie in self.driver.get_cookies():
+                            #     session.cookies.set(cookie['name'], cookie['value'])
+                            # time.sleep(5)
+                            saved_form = True
                         continue
 
                     if field_type == "checkbox_list":
-                        # Checkbox list uses a value list of format: [key, id_prefix, mode]
                         for field in values:
                             if not (isinstance(field, list) and len(field) == 3):
                                 logging.warning(f"Invalid checkbox_list field: {field}")
                                 continue
                             key_expr, id_prefix, mode = field
                             try:
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(sub_data, keys, [])
+                                value = extract_value_from_expr(key_expr)
                                 if value:
                                     select_checkboxes_from_list(self.driver, value, id_prefix)
-                                    logging.info(f" Checkboxes selected for {key_expr} with prefix {id_prefix}")
-                                else:
-                                    logging.info(f"ℹ Skipping empty checkbox list for {key_expr}")
+                                    logging.info(f"Checkboxes selected for {key_expr} with prefix {id_prefix}")
                             except Exception as e:
-                                logging.error(f" Error selecting checkboxes for {key_expr}: {e}")
-                        continue  # skip normal field handling for checkbox_list
+                                logging.error(f"Error selecting checkboxes for {key_expr}: {e}")
+                        continue
+
                     if field_type == "repair_details_fill":
                         for field in values:
+                            if not (isinstance(field, list) and len(field) == 3):
+                                logging.warning(f"Invalid repair_details_fill field: {field}")
+                                continue
                             key_expr, _, _ = field
                             try:
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                repair_list = get_nested(sub_data, keys, [])
-                                if isinstance(repair_list, list):
-                                    fill_repair_details(self.driver, repair_list)
-                                else:
-                                    logging.warning(f"Expected list of repair details for {key_expr}, got {type(repair_list)}")
+                                value = extract_value_from_expr(key_expr)
+                                if isinstance(value, list):
+                                    fill_repair_details(self.driver, value)
                             except Exception as e:
                                 logging.error(f"Error processing repair_details_fill: {e}")
                         continue
+
                     for field in values:
                         if not (isinstance(field, list) and len(field) == 3):
                             logging.warning(f"Invalid field format: {field}")
                             continue
 
                         key_expr, xpath, mode = field
-                        value = ""
-
                         try:
-                            # ----------- VALUE EXTRACTION -----------
-                            if key_expr.startswith("sub_data"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(sub_data, keys, "")
-                            elif key_expr.startswith("comp_data"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(comp_data, keys, "")
-                            elif key_expr.startswith("adj_data"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(adj_data, keys, "")
-                            elif key_expr.startswith("rental_data"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(rental_data, keys, "")
-                            elif key_expr.startswith("condition_data"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(condition_data, keys, "")
-                            elif key_expr.startswith("entry_data[0]"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr[len("entry_data[0]"):])
-                                value = get_nested(merged_json.get("entry_data", [{}])[0], keys, "")
-                            elif key_expr.startswith("sold1"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(sold1, keys, "")
-                            elif key_expr.startswith("sold2"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(sold2, keys, "")
-                            elif key_expr.startswith("sold3"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(sold3, keys, "")
-                            elif key_expr.startswith("list1"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(list1, keys, "")
-                            elif key_expr.startswith("list2"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(list2, keys, "")
-                            elif key_expr.startswith("list3"):
-                                keys = re.findall(r"\['(.*?)'\]", key_expr)
-                                value = get_nested(list3, keys, "")
-                            else:
-                                value = key_expr  # literal fallback
+                            value = extract_value_from_expr(key_expr)
 
-                            # ----------- FILL FIELD -----------
-                            if not value:
-                                logging.info(f"ℹ Skipping empty value for {key_expr}")
+                            if value in [None, ""]:
                                 continue
 
                             action_func = field_actions.get(field_type)
                             if action_func:
-                                logging.debug(f"Executing [{field_type}] at {xpath} with value: {value}")
                                 action_func(self.driver, value, xpath, mode)
-                                logging.info(f"Filled [{field_type}] {key_expr} = {value}")
                             else:
                                 logging.warning(f"Unknown field type: {field_type}")
-
                         except Exception as e:
                             logging.error(f"Exception filling field {key_expr}: {e}")
+
+        if saved_form:
+            #update_order_status(order_id, "In Progress", "Entry", "Completed")
+            return True
+        else:
+            #update_order_status(order_id, "In Progress", "Entry", "Failed")
+            return False
+
     except Exception as e:
         logging.error(f"Critical error in fill_form_multi: {e}")
+        #update_order_status(order_id, "In Progress", "Entry", "Failed")
+        return False
 
 
-def upload_files_for_order(self, order_id: int, upload_page_url: str):
-    data = fetch_upload_data(self,order_id)
+# def upload_files_for_order(self, order_id: int, upload_page_url: str):
+#     data = fetch_upload_data(self,order_id)
+#     if not data:
+#         return
+
+#     documents = data["documents"]
+#     comparables_folder = data["comparables_folder"]
+
+#     file_paths = {}
+
+#     # Subject PDFs
+#     for doc in documents:
+#         doc_type = doc.get("type")
+#         doc_path = doc.get("path")
+#         if doc_type == "MLS":
+#             file_paths["MLSPdfIdSubject"] = doc_path
+#         elif doc_type == "Tax":
+#             file_paths["TaxPdfIdSubject"] = doc_path
+
+#     # Comp PDFs (s1–s3, a1–a3)
+#     if os.path.exists(comparables_folder):
+#         for fname in os.listdir(comparables_folder):
+#             full_path = os.path.join(comparables_folder, fname)
+#             fname_lower = fname.lower()
+
+#             if not fname_lower.endswith(".pdf"):
+#                 continue
+
+#             if match := re.match(r"s([1-3])\.pdf", fname_lower):
+#                 file_paths[f"MLSPdfIdSoldComp{match.group(1)}"] = full_path
+#             elif match := re.match(r"a([1-3])\.pdf", fname_lower):
+#                 file_paths[f"MLSPdfIdListedComp{match.group(1)}"] = full_path
+#     else:
+#         update_order_status(self.order_id, "In Progress", "Entry", "Failed")
+#         print(" Comparables folder not found!")
+
+#     #  Navigate to upload page
+#     self.driver.get(upload_page_url)
+#     time.sleep(3)
+
+#     # Upload PDFs
+#     for input_id, file_path in file_paths.items():
+#         if not os.path.exists(file_path):
+#             print(f" File not found: {file_path}")
+#             continue
+#         try:
+#             file_input = self.driver.find_element(By.ID, input_id)
+#             file_input.send_keys(file_path)
+#             print(f"Uploaded {file_path} to {input_id}")
+#             time.sleep(0.5)
+#         except Exception as e:
+#             update_order_status(self.order_id, "In Progress", "Entry", "Failed")
+#             print(f"Failed to upload {file_path} to {input_id}: {e}")
+def upload_files_for_order(self, order_id: int, upload_page_url: str) -> bool:
+    data = fetch_upload_data(self, order_id)
     if not data:
-        return
+        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        return False
 
-    documents = data["documents"]
-    comparables_folder = data["comparables_folder"]
+    documents = data.get("documents", [])
+    comparables_folder = data.get("comparables_folder", "")
 
     file_paths = {}
 
@@ -562,17 +665,20 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str):
             elif match := re.match(r"a([1-3])\.pdf", fname_lower):
                 file_paths[f"MLSPdfIdListedComp{match.group(1)}"] = full_path
     else:
-        print(" Comparables folder not found!")
+        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        print("Comparables folder not found!")
+        return False
 
-    #  Navigate to upload page
+    # Navigate to upload page
     self.driver.get(upload_page_url)
     time.sleep(3)
 
     # Upload PDFs
     for input_id, file_path in file_paths.items():
         if not os.path.exists(file_path):
-            print(f" File not found: {file_path}")
-            continue
+            print(f"File not found: {file_path}")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            return False
         try:
             file_input = self.driver.find_element(By.ID, input_id)
             file_input.send_keys(file_path)
@@ -580,6 +686,11 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str):
             time.sleep(0.5)
         except Exception as e:
             print(f"Failed to upload {file_path} to {input_id}: {e}")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            return False
+
+    # If all uploads succeed
+    return True
 
 
 def count_non_subject_photos(self):
@@ -593,42 +704,157 @@ def count_non_subject_photos(self):
         count += 1
     return count
 
-def upload_photos_to_order(self, comparables_folder, photos_url):
-    self.driver.get(photos_url)
-    time.sleep(3)  # wait for page to load
 
-    if not os.path.exists(comparables_folder):
-        print("Comparables folder not found!")
-        return {}
 
-    photos_before = count_non_subject_photos(self)
-    print(f"📸 Non-subject photos before upload: {photos_before}")
+# def upload_photos_to_order(self, comparables_folder, photos_url, rental_folder=None) -> bool:
+#     try:
+#         self.driver.get(photos_url)
+#         time.sleep(3)
 
-    # Label mapping from filename pattern
-    label_to_file_map = {}
-    for fname in os.listdir(comparables_folder):
-        if not fname.lower().endswith((".jpg", ".jpeg", ".png")):
-            continue
-        match = re.match(r'([asl])([1-3])\.(jpg|jpeg|png)', fname.lower())
-        if match:
-            prefix, idx, _ = match.groups()
-            label = {
-                'a': f"Listing Comp {idx}",
-                's': f"Sold Comp {idx}",
-                'r': f"Leased Comp {idx}",
-                'l':f"Active Comp {idx}"
-            }.get(prefix)
-            if label:
-                label_to_file_map[label.lower()] = os.path.join(comparables_folder, fname)
+#         if not os.path.exists(comparables_folder):
+#             return False
+#         if rental_folder and not os.path.exists(rental_folder):
+#             rental_folder = None
 
-    print(f" Photos to upload: {len(label_to_file_map)}")
+#         photos_before = count_non_subject_photos(self)
 
-    upload_results = {}
-    labels_sorted = sorted(label_to_file_map.keys())
+#         label_to_file_map = {}
 
-    for label in labels_sorted:
-        file_path = label_to_file_map[label]
-        try:
+#         def add_photos_from_folder(folder, is_rental=False):
+#             for fname in os.listdir(folder):
+#                 if not fname.lower().endswith((".jpg", ".jpeg", ".png")):
+#                     continue
+#                 match = re.match(r'([aslrb])([1-3])\.(jpg|jpeg|png)', fname.lower())
+#                 if match:
+#                     prefix, idx, _ = match.groups()
+#                     label = {
+#                         'a': f"Listing Comp {idx}",
+#                         's': f"Sold Comp {idx}",
+#                         'r': f"Leased Comp {idx}",
+#                         'l': f"Active Comp {idx}"
+#                     }.get(prefix)
+#                     if label:
+#                         key = label.lower()
+#                         if is_rental:
+#                             key = f"{key}|rental"
+#                         label_to_file_map[key] = os.path.join(folder, fname)
+
+#         add_photos_from_folder(comparables_folder)
+#         if rental_folder:
+#             add_photos_from_folder(rental_folder, is_rental=True)
+
+#         labels_sorted = sorted(label_to_file_map.keys())
+
+#         for label_key in labels_sorted:
+#             file_path = label_to_file_map[label_key]
+#             label = label_key.replace("|rental", "")
+#             current_select_count = len(self.driver.find_elements(By.NAME, "fileType"))
+
+#             file_input_xpath = "(//input[@type='file' and @name='qqfile'])[1]"
+#             file_input = WebDriverWait(self.driver, 10).until(
+#                 EC.presence_of_element_located((By.XPATH, file_input_xpath))
+#             )
+#             file_input.send_keys(file_path)
+
+#             WebDriverWait(self.driver, 10).until(
+#                 lambda d: len(d.find_elements(By.NAME, "fileType")) > current_select_count
+#             )
+#             all_selects = self.driver.find_elements(By.NAME, "fileType")
+#             select_element = all_selects[-1]
+
+#             if select_element.get_attribute("disabled"):
+#                 self.driver.execute_script("arguments[0].removeAttribute('disabled');", select_element)
+
+#             photo_names_select = Select(select_element)
+#             options_text = [opt.text.strip() for opt in photo_names_select.options]
+
+#             base_name = label.title()
+#             asterisk_name = f"* {base_name}"
+
+#             if asterisk_name in options_text:
+#                 photo_names_select.select_by_visible_text(asterisk_name)
+#             elif base_name in options_text:
+#                 photo_names_select.select_by_visible_text(base_name)
+#             else:
+#                 return False
+
+#             time.sleep(1)
+
+#         upload_button = WebDriverWait(self.driver, 10).until(
+#             EC.element_to_be_clickable((By.ID, 'trigger-upload'))
+#         )
+#         upload_button.click()
+
+#         WebDriverWait(self.driver, 30).until(
+#             EC.presence_of_element_located((By.XPATH, "//img[contains(@src,'blob:') or contains(@src,'http')]"))
+#         )
+
+#         photos_after = count_non_subject_photos(self)
+#         expected = len(labels_sorted)
+#         actual = photos_after - photos_before
+#         return actual == expected
+
+#     except Exception:
+#         return False
+
+def upload_photos_to_order(self, comparables_folder, photos_url, rental_folder=None) -> bool:
+    try:
+        self.driver.get(photos_url)
+        time.sleep(3)
+
+        if not os.path.exists(comparables_folder):
+            return False
+        if rental_folder and not os.path.exists(rental_folder):
+            rental_folder = None
+
+        label_to_file_map = {}
+
+        def add_photos_from_folder(folder, is_rental=False):
+            for fname in os.listdir(folder):
+                if not fname.lower().endswith((".jpg", ".jpeg", ".png")):
+                    continue
+                match = re.match(r'([aslrb])([1-3])\.(jpg|jpeg|png)', fname.lower())
+                if match:
+                    prefix, idx, _ = match.groups()
+                    label = {
+                        'a': f"Listing Comp {idx}",
+                        's': f"Sold Comp {idx}",
+                        'r': f"Leased Comp {idx}",
+                        'l': f"Active Comp {idx}"
+                    }.get(prefix)
+                    if label:
+                        key = label.lower()
+                        if is_rental:
+                            key = f"{key}|rental"
+                        label_to_file_map[key] = os.path.join(folder, fname)
+
+        add_photos_from_folder(comparables_folder)
+        if rental_folder:
+            add_photos_from_folder(rental_folder, is_rental=True)
+
+        labels_sorted = sorted(label_to_file_map.keys())
+        expected_labels = [k.replace("|rental", "").title() for k in labels_sorted]
+
+        # Step 1: Check if all expected labels already exist in page photos
+        photo_elements = self.driver.find_elements(By.XPATH, "//div[contains(@class,'photo-thumbnail')]//img")
+        present_labels = set()
+        for img in photo_elements:
+            alt = (img.get_attribute("alt") or "").strip().lower()
+            aria = (img.get_attribute("aria-label") or "").strip().lower()
+            for lbl in expected_labels:
+                if lbl.lower() in alt or lbl.lower() in aria:
+                    present_labels.add(lbl.lower())
+
+        if all(lbl.lower() in present_labels for lbl in expected_labels):
+            print(" All non-subject photos already uploaded. Skipping upload.")
+            return False
+
+        #  Step 2: Upload missing photos
+        photos_before = count_non_subject_photos(self)
+
+        for label_key in labels_sorted:
+            file_path = label_to_file_map[label_key]
+            label = label_key.replace("|rental", "")
             current_select_count = len(self.driver.find_elements(By.NAME, "fileType"))
 
             file_input_xpath = "(//input[@type='file' and @name='qqfile'])[1]"
@@ -636,8 +862,6 @@ def upload_photos_to_order(self, comparables_folder, photos_url):
                 EC.presence_of_element_located((By.XPATH, file_input_xpath))
             )
             file_input.send_keys(file_path)
-            print(f" Uploaded {file_path} for label {label}")
-            upload_results[label] = {"success": None, "file": file_path}
 
             WebDriverWait(self.driver, 10).until(
                 lambda d: len(d.find_elements(By.NAME, "fileType")) > current_select_count
@@ -652,101 +876,33 @@ def upload_photos_to_order(self, comparables_folder, photos_url):
             options_text = [opt.text.strip() for opt in photo_names_select.options]
 
             base_name = label.title()
-            corresponding_name_with_asterisk = f"* {base_name}"
+            asterisk_name = f"* {base_name}"
 
-            if corresponding_name_with_asterisk in options_text:
-                photo_names_select.select_by_visible_text(corresponding_name_with_asterisk)
-                logging.info(f" Selected verified label: {corresponding_name_with_asterisk}")
+            if asterisk_name in options_text:
+                photo_names_select.select_by_visible_text(asterisk_name)
             elif base_name in options_text:
                 photo_names_select.select_by_visible_text(base_name)
-                logging.info(f" Selected base label: {base_name}")
             else:
-                print(f" Label '{label}' not found in dropdown.")
-                upload_results[label]["success"] = False
-                continue
+                return False
 
             time.sleep(1)
 
-        except Exception as e:
-            print(f" Error handling '{label}': {e}")
-            upload_results[label] = {"success": False, "file": file_path}
-
-    # Trigger upload
-    try:
         upload_button = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.ID, 'trigger-upload'))
         )
         upload_button.click()
-        print(" Triggered upload for all photos.")
-    except Exception as e:
-        print(f" Error clicking upload button: {e}")
-        for label in upload_results:
-            if upload_results[label]["success"] is None:
-                upload_results[label]["success"] = False
 
-    # Wait for upload confirmation
-    try:
         WebDriverWait(self.driver, 30).until(
             EC.presence_of_element_located((By.XPATH, "//img[contains(@src,'blob:') or contains(@src,'http')]"))
         )
-        for label in upload_results:
-            if upload_results[label]["success"] is None:
-                upload_results[label]["success"] = True
-        print(" Upload confirmation detected.")
-    except Exception as e:
-        print(f" Upload wait timeout: {e}")
-        for label in upload_results:
-            if upload_results[label]["success"] is None:
-                upload_results[label]["success"] = False
 
-    photos_after = count_non_subject_photos(self)
-    print(f"📸 Non-subject photos after upload: {photos_after}")
+        photos_after = count_non_subject_photos(self)
+        actual_uploaded = photos_after - photos_before
+        return actual_uploaded == len(expected_labels)
 
-    expected_new_photos = sum(1 for r in upload_results.values() if r["success"])
-    actual_new_photos = photos_after - photos_before
-    upload_valid = actual_new_photos == expected_new_photos
+    except Exception:
+        return False
 
-    print(f" Expected: {expected_new_photos}, Actual: {actual_new_photos}")
-    print(f" Upload Valid: {'PASS' if upload_valid else 'FAIL'}")
-
-    # Extract required non-subject photo labels from UI
-    try:
-        required_labels = set()
-        required_tables = self.driver.find_elements(By.ID, "requiredphototable")
-        for table in required_tables:
-            td_elements = table.find_elements(By.TAG_NAME, "td")
-            for td in td_elements:
-                label_text = td.text.strip()
-                if not label_text.lower().startswith("subject"):
-                    required_labels.add(label_text.lower())
-
-        uploaded_labels = {
-            label.lower()
-            for label, result in upload_results.items()
-            if result["success"]
-        }
-
-        missing_labels = required_labels - uploaded_labels
-        extra_labels = uploaded_labels - required_labels
-
-        print(f" Required labels from UI: {sorted(required_labels)}")
-        print(f" Uploaded labels: {sorted(uploaded_labels)}")
-
-        if missing_labels:
-            print(f" Missing uploads for labels: {sorted(missing_labels)}")
-        else:
-            print(" All required non-subject photos were uploaded successfully.")
-
-    except Exception as e:
-        print(f" Error validating required photo labels: {e}")
-
-    return {
-        "photos_before": photos_before,
-        "photos_after": photos_after,
-        "photos_uploaded_count": actual_new_photos,
-        "upload_results": upload_results,
-        "upload_valid": upload_valid,
-    }
 
 def load_form_config_and_data(order_id, config_path, researchpad_data_retrival_url,
                               session=None, merged_json=None):
@@ -757,6 +913,7 @@ def load_form_config_and_data(order_id, config_path, researchpad_data_retrival_u
             form_config = json.load(f)
     except Exception as e:
         logging.error(f"Failed to load form config JSON: {e}")
+        update_order_status(order_id, "In Progress", "Entry", "Failed")
         return None, None
 
     if session is None:
@@ -771,11 +928,13 @@ def load_form_config_and_data(order_id, config_path, researchpad_data_retrival_u
                 merged_json = response.json()
             else:
                 logging.error(f"Failed to fetch merged_json, status code: {response.status_code}")
+                update_order_status(order_id, "In Progress", "Entry", "Failed")
                 return None, None
         except Exception as e:
             logging.error(f"Exception during API call: {e}")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
             return None, None
-
+    
     return form_config, merged_json
 
 
@@ -783,94 +942,7 @@ def load_form_config_and_data(order_id, config_path, researchpad_data_retrival_u
 def build_url(base_url, item_id, order_id, page):
     return f"{base_url}?ItemId={item_id}&OrderId={order_id}&ActivePage={page}"
 
-# def redbell_formopen_fill(self, order, session=None, merged_json=None, order_details=None, order_id=None):
-#     ProductDesc = order.get('ProductDesc', '').strip()
-#     item_id = order.get('ItemId')
-#     order_id_url = order.get('OrderId')
 
-#     base_url = env.BASE_URL_ENTRY
-#     page_urls = {
-#         "SubjectHistoryAdj": build_url(base_url, item_id, order_id_url, "SubjectHistoryAdj"),
-#         "NeighborhoodInfoAdj": build_url(base_url, item_id, order_id_url, "NeighborhoodInfoAdj"),
-#         "ComparablesAdj": build_url(base_url, item_id, order_id_url, "ComparablesAdj"),
-#         "Photos": build_url(base_url, item_id, order_id_url, "Photos"),
-#         "Repairs": build_url(base_url, item_id, order_id_url, "Repairs"),
-#         "Rental Comparables": build_url(base_url, item_id, order_id_url, "Rental%20Comparables"),
-#         "Comments": build_url(base_url, item_id, order_id_url, "Comments"),
-#         "Price Opinion": build_url(base_url, item_id, order_id_url, "Price%20Opinion"),
-#     }
-
-    
-#     researchpad_data_retrival_url=env.RESEARCHPAD_DATA_URL
-#     if ProductDesc=="Exterior BPO" or ProductDesc=="5 Day Exterior BPO"  or  ProductDesc=="5 Day Interior BPO" or ProductDesc=="5 Day Exterior Appraiser Reconciled BPO" or ProductDesc=="3 Day Exterior BPO"  or  ProductDesc=="3 Day Interior BPO":
-#         config_path = 'json/redbelljson/Redbell_Exterior.json'
-#     elif 'Rental' in ProductDesc:
-#         config_path = 'json/redbelljson/Redbell_Rental.json'
-
-#     else:
-#         logging.warning(f"No matching config path for ProductDesc: {ProductDesc}")
-#         return
-#     form_config, merged_json = load_form_config_and_data(
-#         order_id=order_id,
-#         config_path=config_path,
-#         researchpad_data_retrival_url=researchpad_data_retrival_url,
-#         session=session,
-#         merged_json=merged_json
-#     )
-#     # Optional: Check if loading was successful
-#     if not form_config or not merged_json:
-#         return
-#     # Extract and generate condition_data, attach it inside merged_json for usage if needed
-#     sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3 = extract_data_sections(merged_json)
-#     condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3)
-#     if "entry_data" in merged_json and merged_json["entry_data"]:
-#         merged_json["entry_data"][0]["condition_data"] = condition_data
-
-#     print(merged_json)    
-#     # Fill all pages except ComparablesAdj first
-#     try:
-#         for page_key, url in page_urls.items():
-#             if page_key == "ComparablesAdj":
-#                 continue
-#             logging.info(f"Loading page: {page_key} -> {url}")
-#             self.driver.get(url)
-#             self.driver.implicitly_wait(10)
-#             fill_form_multi(self, merged_json, order_id_url, form_config, session, {page_key: url})
-#             time.sleep(2)
-#     except Exception as e:
-#         logging.exception(f"Error while navigating and filling forms (non-ComparablesAdj): {e}")
-#         return
-
-#     # Fill ComparablesAdj page separately
-#     try:
-#         comparables_url = page_urls["ComparablesAdj"]
-#         logging.info(f"Loading ComparablesAdj page: {comparables_url}")
-#         self.driver.get(comparables_url)
-#         self.driver.implicitly_wait(10)
-#         fill_form_multi(self, merged_json, order_id_url, form_config, session, {"ComparablesAdj": comparables_url})
-#         time.sleep(2)
-#     except Exception as e:
-#         logging.exception(f"Error filling ComparablesAdj page: {e}")
-#         return
-
-#     # Upload files for ComparablesAdj page
-#     try:
-#         upload_files_for_order(self, order_id, comparables_url)
-#         data = fetch_upload_data(self, order_id)
-#         if not data:
-#             logging.warning(f"No upload data found for order {order_id}")
-#             return
-
-#         comparables_folder = data.get("comparables_folder")
-#         if isinstance(comparables_folder, str) and comparables_folder.strip():
-#             photos_url = page_urls["Photos"]
-#             upload_photos_to_order(self, comparables_folder.strip(), photos_url)
-#         else:
-#             logging.warning(f"Comparables folder is missing or invalid for order {order_id_url}: {comparables_folder!r}")
-
-#     except Exception as e:
-#         logging.exception(f"Error during photo upload steps: {e}")
-#         return
 
 
 
@@ -913,6 +985,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
 
     else:
         logging.warning(f"No matching config path for ProductDesc: {ProductDesc}")
+        update_order_status(order_id, "In Progress", "Entry", "Failed")
         return
     form_config, merged_json = load_form_config_and_data(
         order_id=order_id,
@@ -932,49 +1005,75 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
 
     print(merged_json)    
     # Fill all pages except ComparablesAdj first
+    # try:
+    #     for page_key, url in page_urls.items():
+    #         # if page_key == "ComparablesAdj":
+    #         #     continue
+    #         logging.info(f"Loading page: {page_key} -> {url}")
+    #         self.driver.get(url)
+    #         self.driver.implicitly_wait(10)
+    #         fill_form_multi(self, merged_json, order_id_url, form_config, session, {page_key: url})
+    #         time.sleep(2)
+    # except Exception as e:
+    #     logging.exception(f"Error while navigating and filling forms (non-ComparablesAdj): {e}")
+    #     return
     try:
         for page_key, url in page_urls.items():
+            # Optional: Skip unwanted sections
             # if page_key == "ComparablesAdj":
             #     continue
+
             logging.info(f"Loading page: {page_key} -> {url}")
             self.driver.get(url)
-            self.driver.implicitly_wait(10)
-            fill_form_multi(self, merged_json, order_id_url, form_config, session, {page_key: url})
+
+            # Explicit wait: waits until the body or a unique element is loaded
+            try:
+                WebDriverWait(self.driver, 15).until(
+                    EC.presence_of_element_located((By.TAG_NAME, "body"))  # Replace with unique tag if needed
+                )
+                logging.info(f"Page {page_key} loaded successfully.")
+            except Exception as e:
+                logging.warning(f"Timeout waiting for page {page_key} to load: {e}")
+                #update_order_status(order_id, "In Progress", "Entry", "Failed")
+                continue  # optionally skip to next page
+
+            # Call fill_form_multi for just this page
+            form_fill=fill_form_multi(self, merged_json, order_id_url, form_config, session, {page_key: url})
             time.sleep(2)
+
     except Exception as e:
-        logging.exception(f"Error while navigating and filling forms (non-ComparablesAdj): {e}")
+        logging.exception(f"Error while navigating and filling forms: {e}")
+        #update_order_status(order_id, "In Progress", "Entry", "Failed")
         return
 
-    # # Fill ComparablesAdj page separately
-    # try:
-    #     comparables_url = page_urls["ComparablesAdj"]
-    #     logging.info(f"Loading ComparablesAdj page: {comparables_url}")
-    #     self.driver.get(comparables_url)
-    #     self.driver.implicitly_wait(10)
-    #     fill_form_multi(self, merged_json, order_id_url, form_config, session, {"ComparablesAdj": comparables_url})
-    #     time.sleep(2)
-    # except Exception as e:
-    #     logging.exception(f"Error filling ComparablesAdj page: {e}")
-    #     return
-
-    # Upload files for ComparablesAdj page
     try:
         comparables_url = page_urls["ComparablesAdj"]
-        upload_files_for_order(self, order_id, comparables_url)
+        uploda_files=upload_files_for_order(self, order_id, comparables_url)
+
         data = fetch_upload_data(self, order_id)
         if not data:
             logging.warning(f"No upload data found for order {order_id}")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
             return
 
         comparables_folder = data.get("comparables_folder")
-        if isinstance(comparables_folder, str) and comparables_folder.strip():
-            photos_url = page_urls["Photos"]
-            upload_photos_to_order(self, comparables_folder.strip(), photos_url)
-        else:
-            logging.warning(f"Comparables folder is missing or invalid for order {order_id_url}: {comparables_folder!r}")
+        rental_folder = data.get("rental_folder")
+        photos_url = page_urls["Photos"]
 
+        if isinstance(comparables_folder, str) and comparables_folder.strip():
+            upload_photos=upload_photos_to_order(self, comparables_folder, photos_url, rental_folder)
+        else:
+            logging.warning(f"Comparables folder is missing or invalid for order {order_id}: {comparables_folder!r}")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
+        # Check if all 3 are True
+        if form_fill and uploda_files and upload_photos:
+            logging.info("All form filling and upload functions completed successfully.")
+            update_order_status(order_id, "In Progress", "Entry", "Completed")
+        else:
+            logging.warning(f"One or more functions failed: form_fill={form_fill}, uploda_files={uploda_files}, upload_photos={upload_photos}")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
     except Exception as e:
         logging.exception(f"Error during photo upload steps: {e}")
+        update_order_status(order_id, "In Progress", "Entry", "Failed")
         return
-
 

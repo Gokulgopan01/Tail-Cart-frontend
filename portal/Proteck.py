@@ -13,7 +13,7 @@ import time
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 # from utility.helper import log_login_status,initialize_driver
 from selenium.webdriver.chrome.service import Service
-from utils.helper import clean_address, handle_login_status, setup_driver
+from utils.helper import clean_address, handle_login_status, setup_driver, update_client_account_status
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -82,6 +82,7 @@ class Proteck:
                 #self.log_login_status(username, portal_name, "Login Failed", None, str(e))
                 logging.error(f"Error during login to {portal_name}: {e}")
                 messagebox.showerror("Error", f"Login failed: {e}")
+                #update_client_account_status(order_id)
 
         # finally:
         #     pass

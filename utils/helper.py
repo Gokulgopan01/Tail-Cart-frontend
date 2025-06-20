@@ -19,25 +19,26 @@ from dotenv import load_dotenv
 from config import env
 
 
+
 # Load variables from .env file
 load_dotenv()
 
 # Retrieve API URLs from environment variables
 ASSIGNEDORDERS_URL = env.ASSIGNEDORDERS_URL   
 
-def initialize_driver(self):
-        """Initialize Selenium WebDriver."""
-        try:
-                chrome_options = Options()
-                chrome_options.add_argument("--start-maximized") 
-                chrome_options.add_argument("--disable-notifications")
+# def initialize_driver(self):
+#         """Initialize Selenium WebDriver."""
+#         try:
+#                 chrome_options = Options()
+#                 chrome_options.add_argument("--start-maximized") 
+#                 chrome_options.add_argument("--disable-notifications")
 
-                service = Service("chromedriver.exe") 
-                self.driver = webdriver.Chrome(service=service, options=chrome_options)
-                return self.driver
-        except Exception as e:
-                logging.error(f"Error initializing WebDriver: {e}")
-                return None
+#                 service = Service("chromedriver.exe") 
+#                 self.driver = webdriver.Chrome(service=service, options=chrome_options)
+#                 return self.driver
+#         except Exception as e:
+#                 logging.error(f"Error initializing WebDriver: {e}")
+#                 return None
 
 
 
@@ -73,26 +74,92 @@ def params_check():
             print(f"Args : {arg1}")   
             return arg1,arg2
     else:
-          return None,None        
+          #return None,None    
+          return "auto",None   
 # Function to fetch stored token (assuming it was saved as JSON)
+# def get_saved_token():
+#     try:
+#         with open("login_data.json", "r") as file:
+#             data = json.load(file)
+#             return data.get("token", None)
+#     except FileNotFoundError:
+#         return None
+
+# def get_saved_token():
+#     try:
+#         if not os.path.exists("login_data.json"):
+#             return None
+
+#         with open("login_data.json", "r") as file:
+#             content = file.read().strip()
+#             if not content:
+#                 return None  # File is empty
+
+#             data = json.loads(content)  # Manually parse after checking
+#             return data.get("token", None)
+
+#     except (json.JSONDecodeError, ValueError):
+#         return None  # Invalid JSON content
+
+
 def get_saved_token():
+    app_data_dir = os.path.join(os.getenv("APPDATA") or os.path.expanduser("~"), "HybridBPO")
+    print(app_data_dir)
+    os.makedirs(app_data_dir, exist_ok=True)  # Make sure the directory exists
+
+    # Final path: C:\Users\<User>\AppData\Roaming\HybridBPO\login_data.json
+    login_data_file = os.path.join(app_data_dir, "login_data.json")
     try:
-        with open("login_data.json", "r") as file:
-            data = json.load(file)
-            return data.get("token", None)
-    except FileNotFoundError:
+        if not os.path.exists(login_data_file):
+            print("🔑 Token file does not exist.")
+            return None
+
+        with open(login_data_file, "r") as file:
+            content = file.read().strip()
+            if not content:
+                print("⚠️ Token file is empty.")
+                return None
+
+            data = json.loads(content)
+            token = data.get("token", None)
+            if token:
+                print(" Token loaded successfully.")
+            else:
+                print(" Token missing in file.")
+            return token
+
+    except (json.JSONDecodeError, ValueError):
+        print(" Corrupted token file.")
         return None
+
 
 # Fetch order address using stored token
 def get_order_address_from_assigned_order(order_id):
     token = get_saved_token()
-    if not token:
 
-        return "Authentication token not found. Please log in again."
-        
-    #else:
-         
+    if not token:
+        import tkinter as tk
+        from tkinter import Toplevel
+        from screens.ecesis_login_screen import EcesisLoginScreen
+
+        root = tk._default_root
+        if root is None:
+            root = tk.Tk()
+            root.withdraw()
+
+        login_window = Toplevel(root)
+        login_window.title("Login")
+        login_screen = EcesisLoginScreen(login_window, None)
+        login_screen.pack()
+
+        login_window.grab_set()
+        root.wait_window(login_window)
+
+        token = get_saved_token()
+        if not token:
+            return "Login failed — token not generated"
     url = f"{ASSIGNEDORDERS_URL}{order_id}"
+    #token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjgsImVtYWlsIjoiYWpheUBlY2VzaXN0ZWNoLmNvbSIsInJvbGUiOjEsImlhdCI6MTc1MDM5ODQyNCwiZXhwIjoxNzUxMjYyNDI0fQ.Vu5OiRiO18zP1auE-zt8dKqm9ZiVMwp78te1ELm9AKo"
     headers = {"Authorization": f"Bearer {token}"}  # Include token in headers
 
     try:
@@ -100,7 +167,7 @@ def get_order_address_from_assigned_order(order_id):
         if response.status_code == 200:
             data = response.json()
             if "content" in data and "data" in data["content"]:
-                return data["content"]["data"].get("sub_address", "Address Not Found")
+                return data["content"]["data"].get("portal_order_id", "Address Not Found")
             else:
                 return "Invalid Response Format"
         else:
@@ -377,27 +444,31 @@ def save_form(driver):
    # logging.info("order saved :{}".format(order_id))
 def update_order_status(assigned_order_id, status, stage, order_event_status):
    
-    status_update_url=env.STATUS_UPDATE_URL
-    
+    status_update_url = env.STATUS_UPDATE_URL
+
     params = {
         "assigned_order_id": assigned_order_id,
         "status": status,
         "stage": stage,
         "order_event_status": order_event_status
     }
-    
+
+    headers = {
+        "Content-Type": "application/json"
+    }
+
     try:
-        response = requests.get(status_update_url, params=params)
-        print(f"{order_event_status} status response: {response.status_code} - {response.text}")
+        response = requests.put(status_update_url, params=params, headers=headers)
+        print(f"{order_event_status} status PUT response: {response.status_code} - {response.text}")
         return response
     except Exception as e:
-        print(f"Error while updating status: {e}")
+        print(f"Error while updating status via PUT: {e}")
         return None
 
 def update_client_account_status(client_account_id, action_required_reason):
     
     url = f'{env.ACCOUNT_INACTIVE}{client_account_id}'
-    
+    action_required_reason="login error"
     payload = {
         "action_required_reason": action_required_reason
     }
@@ -414,6 +485,7 @@ def update_client_account_status(client_account_id, action_required_reason):
         print(f"Error while updating client account status: {e}")
         return None
 
+
 def fetch_upload_data(self, order_id: int):
     COMP_UPLOAD_URL = f'{env.PIC_PDF_UPLOAD_URL}{order_id}'
 
@@ -428,11 +500,13 @@ def fetch_upload_data(self, order_id: int):
     content = json_data.get("content", {}).get("data", {})
     documents = content.get("documents", [])
     comparables_folder = content.get("comparables", "")
-    item_id = content.get("itemId")  # Make sure your API returns this
+    rental_folder = content.get("rental", "")
+    item_id = content.get("itemId")
 
     return {
         "documents": documents,
         "comparables_folder": comparables_folder,
+        "rental_folder": rental_folder,
         "item_id": item_id
     }
 def extract_data_sections(merged_json):

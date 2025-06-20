@@ -17,7 +17,7 @@ from PIL import Image, ImageDraw, ImageTk
 
 from screens.portal_login_screen import PortalLoginScreen
 import app
-from utils.helper import setup_driver
+from utils.helper import params_check, setup_driver
 from utils.user_data import save_login_data, load_login_data
 from config import env
 # Load variables from .env file
@@ -57,8 +57,8 @@ class EcesisLoginScreen(tk.Frame):
         self.top_frame.pack(fill="x", side="top")
         style = ttk.Style()
         style.configure("Custom.TButton", background="white", relief="flat")
-        btn = ttk.Button(self.top_frame, image=self.logo, command=lambda: controller.show_frame("SettingsScreen"),style="Custom.TButton",cursor="hand2")
-        btn.pack(side="right", padx=5, pady=5)
+        # btn = ttk.Button(self.top_frame, image=self.logo, command=lambda: controller.show_frame("SettingsScreen"),style="Custom.TButton",cursor="hand2")
+        # btn.pack(side="right", padx=5, pady=5)
 
         """Create a login UI with a dark blue, yellow, and white color scheme."""
         self.login_frame = tk.Frame(self, bg="#FFFFFF")  # White
@@ -209,19 +209,60 @@ class EcesisLoginScreen(tk.Frame):
         password = self.password_entry.get()
         payload = {"email": email, "password": password}
 
+        # def login_request():
+        #     try:
+        #         response = requests.post(LOGIN_API, json=payload, timeout=5)
+        #         if response.status_code == 200:
+        #             data = response.json()
+        #             if data.get("status_code") == 200 and data.get("content", {}).get("data", {}).get("success"):
+        #                 username = data["content"]["data"]["username"]
+        #                 self.after(0, lambda: self.show_client_login(username))
+        #                 token = data["content"]["data"]["token"]
+        #                 user_details = data["content"]["data"]
+        #                 logged_in = True
+        #                 # store the data:
+        #                 save_login_data(logged_in,token,user_details)
+
+        #             else:
+        #                 self.after(0, lambda: messagebox.showerror("Error", "Invalid credentials"))
+        #         else:
+        #             self.after(0, lambda: messagebox.showerror("Error", "Invalid email or password"))
+        #     except requests.exceptions.RequestException as e:
+        #         self.after(0, lambda: messagebox.showerror("Error", f"Request failed: {e}"))
+
+        # threading.Thread(target=login_request, daemon=True).start()
+        arg1, arg2 = params_check()  # Extract parameters at the top
+        #arg1="SmartEntry"
+        #arg1="PortalLogin"
+        # Inside your login function
         def login_request():
             try:
                 response = requests.post(LOGIN_API, json=payload, timeout=5)
                 if response.status_code == 200:
                     data = response.json()
-                    if data.get("status_code") == 200 and data.get("content", {}).get("data", {}).get("success"):
+                    if data.get("status_code") == 200 and data["content"]["data"].get("success"):
                         username = data["content"]["data"]["username"]
-                        self.after(0, lambda: self.show_client_login(username))
                         token = data["content"]["data"]["token"]
                         user_details = data["content"]["data"]
                         logged_in = True
-                        # store the data:
-                        save_login_data(logged_in,token,user_details)
+
+                        # #  Save token and details
+                        # save_login_data(logged_in, token, user_details)
+
+                        # # Update UI in main thread
+                        # self.after(0, lambda: self.show_welcome_message(username))
+                        #self.after(0, self.close_login_screen)  
+                        # Conditionally show client selection screen
+                        if arg1 not in ["PortalLogin", "SmartEntry"]:
+                            self.after(0, lambda: self.show_client_login(username))
+                            save_login_data(logged_in, token, user_details)
+                        else:
+                                #  Save token and details
+                            save_login_data(logged_in, token, user_details)
+
+                            # Update UI in main thread
+                            self.after(0, lambda: self.show_welcome_message(username))
+                            self.after(0, self.close_login_screen)  # close popup if used in modal
 
                     else:
                         self.after(0, lambda: messagebox.showerror("Error", "Invalid credentials"))
@@ -230,9 +271,12 @@ class EcesisLoginScreen(tk.Frame):
             except requests.exceptions.RequestException as e:
                 self.after(0, lambda: messagebox.showerror("Error", f"Request failed: {e}"))
 
+        # Start the login request in a background thread
         threading.Thread(target=login_request, daemon=True).start()
 
-
+    def close_login_screen(self):
+        """Destroy the login popup frame (only used when run as modal popup)"""
+        self.winfo_toplevel().destroy()
     def forgot_password(self):
         messagebox.showinfo("Forgot Password", "Redirecting to password recovery page.")
 
@@ -337,29 +381,11 @@ class EcesisLoginScreen(tk.Frame):
 
         # Bind click
         canvas.bind("<Button-1>", lambda event: self.confirm_selection())
-        # # Reset Button
-        # reset_btn = tk.Button(self.inner_frame, text="Reset Selection", command=self.reset_client_selection,
-        #                     font=("Arial", 10), bg="#DDDDDD", relief="flat")
-        # reset_btn.pack(pady=(5, 10))
+      
 
         threading.Thread(target=self.load_main_clients, daemon=True).start()
 
-    # def reset_client_selection(self):
-    #     """Clears all dropdown selections and resets the UI."""
-    #     self.main_client_var.set("Select Mainclient")
-    #     self.sub_client_var.set("Select Subclient")
-    #     self.portal_var.set("Select Portal")
-    #     self.account_var.set("Select Account")
-
-    #     self.sub_client_dropdown["values"] = []
-    #     self.portal_dropdown["values"] = []
-    #     self.account_dropdown["values"] = []
-
-    #     self.username_label.config(text="Username: ")
-    #     self.password_label.config(text="Password: ")
-    #     self.session_label.config(text="Session: ")
-    #     self.portal_url_label.config(text="Portal URL: ")
-    #     self.proxy_label.config(text="Proxy: ")
+   
 
     def create_combobox(self, parent, var, placeholder, callback):
         """Create a searchable dropdown with a placeholder."""

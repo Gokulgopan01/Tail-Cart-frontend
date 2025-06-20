@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 
 from form_filler.redbell_form_filler import RedBellFormFiller
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import clean_address, get_cookie_from_api, get_order_address_from_assigned_order, handle_login_status, params_check, setup_driver
+from utils.helper import clean_address, get_cookie_from_api, get_order_address_from_assigned_order, handle_login_status, params_check, setup_driver, update_client_account_status
 
 
 # Load variables from .env file
@@ -82,5 +82,6 @@ class ca:
         except Exception as e:
             logging.exception("Exception during CA-USA login")
             handle_login_status("EXCEPTION", self.username, ["Orders/Dashboard"], self.portal_name)
+            #update_client_account_status(self.order_id)
             return "Login error", self.driver
     

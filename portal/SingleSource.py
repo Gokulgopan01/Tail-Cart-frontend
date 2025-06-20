@@ -21,7 +21,7 @@ import json
 import os
 from selenium.webdriver.chrome.options import Options
 from config import env
-from utils.helper import get_cookie_from_api, handle_login_status
+from utils.helper import get_cookie_from_api, handle_login_status, setup_driver, update_client_account_status, update_order_status
 # Load environment variables from the .env file
 load_dotenv()
 class SS:
@@ -34,79 +34,74 @@ class SS:
         self.session = session
         self.driver = None  # Initialize driver to None
         logging.basicConfig(level=logging.INFO)
-    def login_to_portal(self, username, password, portal_url, portal_name, proxy,session):
+    def login_to_portal(self):
         try:
-            options = Options()
-            options.add_argument("--start-maximized")
-            options.add_argument("--disable-extensions")
-            if proxy:
-                logging.info(f"Using proxy: {proxy}")
-                options.add_argument(f'--proxy-server={proxy}')
+            # Step 1: Setup Selenium WebDriver
+            setup_driver(self)
 
-            self.driver = webdriver.Chrome(options=options)
-
-            # API call to get cookie
+            # Step 2: Prepare Authenticator API Request
             api_url = env.AUTHENTICATOR_API_URL
-            headers = {'Content-Type':env.API_HEADERS_CONTENT_TYPE}
-            api_response = get_cookie_from_api(self.username, portal="rrr", proxy=self.proxy)
-            if not api_response:
-                self.login_status = "API response error"
-                handle_login_status("API_FAILED", self.username, ["VendorPortal/Index"], self.portal_name)
-                return "Login error", self.driver
-            #portal_url="https://valuationops.homegenius.com/VendorPortal"
-            if api_response.get("status") == "success":
-                redbell_cookie = api_response["cookies"].get(".ASPXAUTH")
-                if redbell_cookie:
-                    self.driver.get(portal_url) # Navigate to the site before adding cookie.
-                    self.driver.add_cookie({'name': '.ASPXAUTH', 'value': redbell_cookie})
-                    self.driver.get(f"{portal_url}/Index") # Navigate to index after cookie.
-                    
-                    # Wait for the page to load.
-                    # Wait for login success by checking page title
-                    #WebDriverWait(self.driver, 120).until(EC.presence_of_element_located((By.ID, "Partner portal")))
+            headers = {'Content-Type': env.API_HEADERS_CONTENT_TYPE}
+            payload = json.dumps({"username": self.username})
 
+            response = requests.post(api_url, headers=headers, data=payload)
+            response.raise_for_status()
+            api_response = response.json()
 
-                    title = self.driver.current_url
-                    login_check_keyword=["VendorPortal/Index","DailyUpdates"]
+            # Step 3: Validate API Response and Extract Cookie
+            if api_response.get("status") != "success":
+                logging.error(f"API response status not successful: {api_response.get('status')}")
+                raise Exception("Authentication API returned failure")
 
-                    handle_login_status(title, username, login_check_keyword,portal_name)
-                     
-                    return self.driver  # Return the driver instance
-                else:
-                    logging.error("Cookie '.ASPXAUTH' not found in API response.")
-                    title="MFA FAILED"
-                    login_check_keyword=["False"]
-                    handle_login_status(title, username, login_check_keyword,portal_name)
-                    #return False
-                   
-            else:
-                logging.error(f"API call failed: {api_response.get('status')}")
-                title="MFA FAILED"
-                login_check_keyword=["False"]
-                handle_login_status(title, username, login_check_keyword,portal_name)
-                #return False
+            auth_cookie = api_response.get("cookies", {}).get(".ASPXAUTH")
+            if not auth_cookie:
+                logging.error("Missing '.ASPXAUTH' cookie in API response.")
+                raise Exception("Missing cookie from API response")
 
-        except requests.exceptions.RequestException as e:
-            logging.error(f"API request failed: {e}")
-            title="MFA FAILED"
-            login_check_keyword=["False"]
-            handle_login_status(title, username, login_check_keyword,portal_name)
-            #return False
-        except json.JSONDecodeError as e:
-            logging.error(f"Failed to decode JSON response: {e}")
-            title="MFA FAILED"
-            login_check_keyword=["False"]
-            handle_login_status(title, username, login_check_keyword,portal_name)
-            #return False
+            # Step 4: Inject Cookie into Browser and Navigate
+            self.driver.get(self.portal_url)
+            self.driver.add_cookie({'name': '.ASPXAUTH', 'value': auth_cookie})
+            self.driver.get(f"{self.portal_url}/Index")
+
+            # Step 5: Check Login Status from URL
+            current_url = self.driver.current_url
+            login_check_keywords = ["VendorPortal/Index", "DailyUpdates"]
+
+           
+
+            # Step 7: Check Entry Type (SmartEntry or Regular)
+            # entry_type, _ = params_check()
+            # if entry_type == "SmartEntry":
+            #     orders, session = self.fetch_data(self.session)
+            #     self.redbell_formopen(
+            #         orders=orders,
+            #         session=session,
+            #         merged_json=None,
+            #         order_details=self.order_details,
+            #         order_id=self.order_id
+            #     )
+            #     logging.info("RedBell form open completed.")
+            # else:
+            handle_login_status(current_url, self.username, login_check_keywords, self.portal_name)
+
+            return self.driver, self.session
+
+        except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
+            logging.error(f"API communication error: {e}")
         except Exception as e:
-            logging.exception(f"An error occurred: {e}")
-            title="MFA FAILED"
-            login_check_keyword=["False"]
-            handle_login_status(title, username, login_check_keyword,portal_name)
-            #return False
-        # finally:
+            logging.exception("Login to portal failed.")
+
+        # Final Fallback: Update status and report failure
+        title = "MFA FAILED"
+        login_check_keywords = ["False"]
+        update_order_status(self.order_id, "In Progress", "Entry", "Failed")
+        #update_client_account_status(self.order_id)
+        handle_login_status(title, self.username, login_check_keywords, self.portal_name)
+        return None, None
+                #return False
+            # finally:
+            #     if self.driver:
+            #         self.driver.quit()
+        # def close_browser(self):
         #     if self.driver:
         #         self.driver.quit()
-    # def close_browser(self):
-    #     if self.driver:
-    #         self.driver.quit()

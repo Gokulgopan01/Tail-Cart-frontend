@@ -26,7 +26,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 import logging
 
-from utils.helper import handle_login_status, setup_driver
+from utils.helper import handle_login_status, setup_driver, update_client_account_status
 # Load environment variables from the .env file
 load_dotenv()
 class RealtyPilot:
@@ -77,6 +77,7 @@ class RealtyPilot:
             self.login_status = f"Exception occurred: {e}"
             logging.exception("Exception during login")
             handle_login_status("EXCEPTION", self.username, ["Exception during login"], self.portal_name)
+            #update_client_account_status(self.order_id)
             return "Login error", self.driver
 
  

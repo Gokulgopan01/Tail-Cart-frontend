@@ -1,13 +1,12 @@
 import sys
 import tkinter as tk
 from tkinter import Image, ttk
+from screens.Portal_Instruction_Screen import PortalInstructionScreen
 from screens.ecesis_login_screen import EcesisLoginScreen
 from screens.entry_screen import EntryScreen
-from screens.mls_screen import MlsScreen
-from screens.portal_login_screen import PortalLoginScreen
 from screens.settings_screen import SettingsScreen
 from urllib.parse import urlparse, parse_qs
-from utils.helper import center_window, params_check
+from utils.helper import center_window, get_saved_token, params_check
 from utils.file_util import resource_path
 from PIL import Image, ImageDraw, ImageTk
 from utils import user_data
@@ -70,7 +69,7 @@ class Application(tk.Tk):
         self.container.grid_columnconfigure(0, weight=1)
 
             # Assuming you have a container to hold frames
-        for F in (EcesisLoginScreen, SettingsScreen,EntryScreen,ProfileScreen):
+        for F in (EcesisLoginScreen, SettingsScreen,EntryScreen,ProfileScreen,PortalInstructionScreen):
             print(f"value in loop : {F}")
             page_name = F.__name__  # Getting the class name as the page name
             frame = F(parent=self.container, controller=self)  # Creating the frame
@@ -79,13 +78,26 @@ class Application(tk.Tk):
 
         # Login screen logic
         arg1, arg2 = params_check()  # Assuming params_check() parses the arguments
-        arg1 = "SmartEntry"  # You set arg1 manually here for testing
-
+        #arg1 = "SmartEntry"  # You set arg1 manually here for testing
+        #arg1="PortalLogin"
+        #arg1="PortalLogin"
         # Check if arg1 contains specific parameters and show the appropriate screen
         if arg1:
             if 'SmartEntry' in arg1:
                 print("Entry Screen called")
                 self.show_frame("EntryScreen")  # Show the Entry screen
+            elif 'PortalLogin' in arg1:
+                print("PortalInstructionScreen called")
+                self.show_frame("PortalInstructionScreen")
+            else:
+                 # check if logged In :
+                test = user_data.load_login_data()
+                print("login data",test['logged_in'])
+                if test['logged_in']:
+                    self.show_frame("ProfileScreen")
+                else:
+                    self.show_frame("EcesisLoginScreen")    
+
         else:
              # check if logged In :
             test = user_data.load_login_data()
@@ -112,3 +124,11 @@ class Application(tk.Tk):
         """Bring the requested screen to the front."""
         frame = self.frames[page_name]
         frame.tkraise()
+
+    # def check_token_and_redirect(self):
+    #     token = get_saved_token()
+    #     if not token:
+    #         print("Authentication token not found. Please log in again.")
+    #         self.show_frame("LoginScreen")  # or return to main login screen
+    #     else:
+    #         self.show_frame("EcesisLoginScreen")    
