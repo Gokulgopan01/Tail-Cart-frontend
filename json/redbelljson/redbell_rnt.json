@@ -1,0 +1,45 @@
+{
+   "page":[
+      {
+         "Subject_info":[
+            {
+              "filedtype":"select_default",
+              "values":[
+                  ["No","//*[@id='PropertyVacant_Value']","xpath"],
+                  ["Yes","//*[@id='Secured_Value']","xpath"]  
+                  ]
+            },
+          
+            {
+              "filedtype":"select_default",
+              "values":[
+                  ["No","//*[@id='SubjectGuestHouse_Value']","xpath"],
+                  ["Yes","//*[@id='FinanceAvail_Value']","xpath"]
+                  ]
+            },
+            
+            {
+              "filedtype":"Textbox_default",
+              "values":[
+                  
+                  ["0","//*[@id='GuestHouseSF_Value']","xpath"],
+                  ["0","//*[@id='GuestHouseBasementSF_Value']","xpath"]
+                  
+                  ]
+            } ,
+            
+           
+            {
+              "filedtype":"save_data",
+              "values":[
+                 {
+                    "nextpage":"Neighborhood"
+                 }
+                        
+                      ]
+               } 
+           
+                 ]  
+           }
+    ]
+}
