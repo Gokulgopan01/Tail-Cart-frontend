@@ -264,13 +264,7 @@
                     ["sub_data['CompetingListings']","//*[@id='CompetingListings_Value']","xpath"]
                      ]
                 
-                },
-                {
-                  "filedtype":"Textbox",
-                  "values":[  
-                   ["sub_data['ListNeighborhoodValueLow']","//*[@id='ValueRangeMin_Value']","xpath"],
-                   ["sub_data['ListNeighborhoodValueHigh']","//*[@id='ValueRangeMax_Value']","xpath"]
-                ]
+                
                   },
               
                       {
@@ -1124,6 +1118,156 @@
                             ["condition_data['BestActivecomp']","//input[@name='MostComparableListed.Value']","xpath"]
                         ]
                     }, 
+                     {
+                        "filedtype":"Textbox",
+                        "values":[
+                           ["sub_data['Unit1TotalRooms']", "//*[@id='Unit1TotalRooms_Subject']", "xpath"],
+                           ["sub_data['Unit1Bedrooms']", "//*[@id='Unit1Bedrooms_Subject']", "xpath"],
+                           ["sub_data['Unit1FullBaths']", "//*[@id='Unit1FullBaths_Subject']", "xpath"],
+                           ["sub_data['Unit1HalfBaths']", "//*[@id='Unit1HalfBaths_Subject']", "xpath"],
+
+                           ["sub_data['Unit2TotalRooms']", "//*[@id='Unit2TotalRooms_Subject']", "xpath"],
+                           ["sub_data['Unit2Bedrooms']", "//*[@id='Unit2Bedrooms_Subject']", "xpath"],
+                           ["sub_data['Unit2FullBaths']", "//*[@id='Unit2FullBaths_Subject']", "xpath"],
+                           ["sub_data['Unit2HalfBaths']", "//*[@id='Unit2HalfBaths_Subject']", "xpath"],
+
+                         
+                           ["sub_data['Unit3TotalRooms']", "//*[@id='Unit3TotalRooms_Subject']", "xpath"],
+                           ["sub_data['Unit3Bedrooms']", "//*[@id='Unit3Bedrooms_Subject']", "xpath"],
+                           ["sub_data['Unit3FullBaths']", "//*[@id='Unit3FullBaths_Subject']", "xpath"],
+                           ["sub_data['Unit3HalfBaths']", "//*[@id='Unit3HalfBaths_Subject']", "xpath"],
+
+                           ["sub_data['Unit4TotalRooms']", "//*[@id='Unit4TotalRooms_Subject']", "xpath"],
+                           ["sub_data['Unit4Bedrooms']", "//*[@id='Unit4Bedrooms_Subject']", "xpath"],
+                           ["sub_data['Unit4FullBaths']", "//*[@id='Unit4FullBaths_Subject']", "xpath"],
+                           ["sub_data['Unit4HalfBaths']", "//*[@id='Unit4HalfBaths_Subject']", "xpath"],
+
+                           [ "sold1['Unit1TotalRooms']", "//*[@id='Unit1TotalRooms_SoldComp1']", "xpath"],
+                           [ "sold1['Unit1Bedrooms']", "//*[@id='Unit1Bedrooms_SoldComp1']", "xpath"],
+                           [ "sold1['Unit1FullBaths']", "//*[@id='Unit1FullBaths_SoldComp1']", "xpath"],
+                           [ "sold1['Unit1HalfBaths']", "//*[@id='Unit1HalfBaths_SoldComp1']", "xpath"],
+
+                           [ "sold1['Unit2TotalRooms']", "//*[@id='Unit2TotalRooms_SoldComp1']", "xpath"],
+                           [ "sold1['Unit2Bedrooms']", "//*[@id='Unit2Bedrooms_SoldComp1']", "xpath"],
+                           [ "sold1['Unit2FullBaths']", "//*[@id='Unit2FullBaths_SoldComp1']", "xpath"],
+                           [ "sold1['Unit2HalfBaths']", "//*[@id='Unit2HalfBaths_SoldComp1']", "xpath"],
+
+                           [ "sold1['Unit3TotalRooms']", "//*[@id='Unit3TotalRooms_SoldComp1']", "xpath"],
+                           [ "sold1['Unit3Bedrooms']", "//*[@id='Unit3Bedrooms_SoldComp1']", "xpath"],
+                           [ "sold1['Unit3FullBaths']", "//*[@id='Unit3FullBaths_SoldComp1']", "xpath"],
+                           [ "sold1['Unit3HalfBaths']", "//*[@id='Unit3HalfBaths_SoldComp1']", "xpath"],
+
+                           [ "sold1['Unit4TotalRooms']", "//*[@id='Unit4TotalRooms_SoldComp1']", "xpath"],
+                           [ "sold1['Unit4Bedrooms']", "//*[@id='Unit4Bedrooms_SoldComp1']", "xpath"],
+                           [ "sold1['Unit4FullBaths']", "//*[@id='Unit4FullBaths_SoldComp1']", "xpath"],
+                           [ "sold1['Unit4HalfBaths']", "//*[@id='Unit4HalfBaths_SoldComp1']", "xpath"],
+
+                           ["sold2['Unit1TotalRooms']", "//*[@id='Unit1TotalRooms_SoldComp2']", "xpath"],
+                           ["sold2['Unit1Bedrooms']", "//*[@id='Unit1Bedrooms_SoldComp2']", "xpath"],
+                           ["sold2['Unit1FullBaths']", "//*[@id='Unit1FullBaths_SoldComp2']", "xpath"],
+                           ["sold2['Unit1HalfBaths']", "//*[@id='Unit1HalfBaths_SoldComp2']", "xpath"],
+
+                           ["sold2['Unit2TotalRooms']", "//*[@id='Unit2TotalRooms_SoldComp2']", "xpath"],
+                           ["sold2['Unit2Bedrooms']", "//*[@id='Unit2Bedrooms_SoldComp2']", "xpath"],
+                           ["sold2['Unit2FullBaths']", "//*[@id='Unit2FullBaths_SoldComp2']", "xpath"],
+                           ["sold2['Unit2HalfBaths']", "//*[@id='Unit2HalfBaths_SoldComp2']", "xpath"],
+
+                           ["sold2['Unit3TotalRooms']", "//*[@id='Unit3TotalRooms_SoldComp2']", "xpath"],
+                           ["sold2['Unit3Bedrooms']", "//*[@id='Unit3Bedrooms_SoldComp2']", "xpath"],
+                           ["sold2['Unit3FullBaths']", "//*[@id='Unit3FullBaths_SoldComp2']", "xpath"],
+                           ["sold2['Unit3HalfBaths']", "//*[@id='Unit3HalfBaths_SoldComp2']", "xpath"],
+
+                           ["sold2['Unit4TotalRooms']", "//*[@id='Unit4TotalRooms_SoldComp2']", "xpath"],
+                           ["sold2['Unit4Bedrooms']", "//*[@id='Unit4Bedrooms_SoldComp2']", "xpath"],
+                           ["sold2['Unit4FullBaths']", "//*[@id='Unit4FullBaths_SoldComp2']", "xpath"],
+                           ["sold2['Unit4HalfBaths']", "//*[@id='Unit4HalfBaths_SoldComp2']", "xpath"],
+
+
+                           ["sold3['Unit1TotalRooms']", "//*[@id='Unit1TotalRooms_SoldComp3']", "xpath"],
+                           ["sold3['Unit1Bedrooms']", "//*[@id='Unit1Bedrooms_SoldComp3']", "xpath"],
+                           ["sold3['Unit1FullBaths']", "//*[@id='Unit1FullBaths_SoldComp3']", "xpath"],
+                           ["sold3['Unit1HalfBaths']", "//*[@id='Unit1HalfBaths_SoldComp3']", "xpath"],
+
+                           ["sold3['Unit2TotalRooms']", "//*[@id='Unit2TotalRooms_SoldComp3']", "xpath"],
+                           ["sold3['Unit2Bedrooms']", "//*[@id='Unit2Bedrooms_SoldComp3']", "xpath"],
+                           ["sold3['Unit2FullBaths']", "//*[@id='Unit2FullBaths_SoldComp3']", "xpath"],
+                           ["sold3['Unit2HalfBaths']", "//*[@id='Unit2HalfBaths_SoldComp3']", "xpath"],
+
+                           ["sold3['Unit3TotalRooms']", "//*[@id='Unit3TotalRooms_SoldComp3']", "xpath"],
+                           ["sold3['Unit3Bedrooms']", "//*[@id='Unit3Bedrooms_SoldComp3']", "xpath"],
+                           ["sold3['Unit3FullBaths']", "//*[@id='Unit3FullBaths_SoldComp3']", "xpath"],
+                           ["sold3['Unit3HalfBaths']", "//*[@id='Unit3HalfBaths_SoldComp3']", "xpath"],
+
+                           ["sold3['Unit4TotalRooms']", "//*[@id='Unit4TotalRooms_SoldComp3']", "xpath"],
+                           ["sold3['Unit4Bedrooms']", "//*[@id='Unit4Bedrooms_SoldComp3']", "xpath"],
+                           ["sold3['Unit4FullBaths']", "//*[@id='Unit4FullBaths_SoldComp3']", "xpath"],
+                           ["sold3['Unit4HalfBaths']", "//*[@id='Unit4HalfBaths_SoldComp3']", "xpath"],
+
+
+                           ["list1['Unit1TotalRooms']", "//*[@id='Unit1TotalRooms_ListedComp1']", "xpath"],
+                           ["list1['Unit1Bedrooms']", "//*[@id='Unit1Bedrooms_ListedComp1']", "xpath"],
+                           ["list1['Unit1FullBaths']", "//*[@id='Unit1FullBaths_ListedComp1']", "xpath"],
+                           ["list1['Unit1HalfBaths']", "//*[@id='Unit1HalfBaths_ListedComp1']", "xpath"],
+
+                           ["list1['Unit2TotalRooms']", "//*[@id='Unit2TotalRooms_ListedComp1']", "xpath"],
+                           ["list1['Unit2Bedrooms']", "//*[@id='Unit2Bedrooms_ListedComp1']", "xpath"],
+                           ["list1['Unit2FullBaths']", "//*[@id='Unit2FullBaths_ListedComp1']", "xpath"],
+                           ["list1['Unit2HalfBaths']", "//*[@id='Unit2HalfBaths_ListedComp1']", "xpath"],
+
+                           ["list1['Unit3TotalRooms']", "//*[@id='Unit3TotalRooms_ListedComp1']", "xpath"],
+                           ["list1['Unit3Bedrooms']", "//*[@id='Unit3Bedrooms_ListedComp1']", "xpath"],
+                           ["list1['Unit3FullBaths']", "//*[@id='Unit3FullBaths_ListedComp1']", "xpath"],
+                           ["list1['Unit3HalfBaths']", "//*[@id='Unit3HalfBaths_ListedComp1']", "xpath"],
+
+                           ["list1['Unit4TotalRooms']", "//*[@id='Unit4TotalRooms_ListedComp1']", "xpath"],
+                           ["list1['Unit4Bedrooms']", "//*[@id='Unit4Bedrooms_ListedComp1']", "xpath"],
+                           ["list1['Unit4FullBaths']", "//*[@id='Unit4FullBaths_ListedComp1']", "xpath"],
+                           ["list1['Unit4HalfBaths']", "//*[@id='Unit4HalfBaths_ListedComp1']", "xpath"],
+
+
+                           ["list2['Unit1TotalRooms']", "//*[@id='Unit1TotalRooms_ListedComp2']", "xpath"],
+                           ["list2['Unit1Bedrooms']", "//*[@id='Unit1Bedrooms_ListedComp2']", "xpath"],
+                           ["list2['Unit1FullBaths']", "//*[@id='Unit1FullBaths_ListedComp2']", "xpath"],
+                           ["list2['Unit1HalfBaths']", "//*[@id='Unit1HalfBaths_ListedComp2']", "xpath"],
+
+                           ["list2['Unit2TotalRooms']", "//*[@id='Unit2TotalRooms_ListedComp2']", "xpath"],
+                           ["list2['Unit2Bedrooms']", "//*[@id='Unit2Bedrooms_ListedComp2']", "xpath"],
+                           ["list2['Unit2FullBaths']", "//*[@id='Unit2FullBaths_ListedComp2']", "xpath"],
+                           ["list2['Unit2HalfBaths']", "//*[@id='Unit2HalfBaths_ListedComp2']", "xpath"],
+
+                           ["list2['Unit3TotalRooms']", "//*[@id='Unit3TotalRooms_ListedComp2']", "xpath"],
+                           ["list2['Unit3Bedrooms']", "//*[@id='Unit3Bedrooms_ListedComp2']", "xpath"],
+                           ["list2['Unit3FullBaths']", "//*[@id='Unit3FullBaths_ListedComp2']", "xpath"],
+                           ["list2['Unit3HalfBaths']", "//*[@id='Unit3HalfBaths_ListedComp2']", "xpath"],
+
+                           ["list2['Unit4TotalRooms']", "//*[@id='Unit4TotalRooms_ListedComp2']", "xpath"],
+                           ["list2['Unit4Bedrooms']", "//*[@id='Unit4Bedrooms_ListedComp2']", "xpath"],
+                           ["list2['Unit4FullBaths']", "//*[@id='Unit4FullBaths_ListedComp2']", "xpath"],
+                           ["list2['Unit4HalfBaths']", "//*[@id='Unit4HalfBaths_ListedComp2']", "xpath"],
+
+
+                           ["list3['Unit1TotalRooms']", "//*[@id='Unit1TotalRooms_ListedComp3']", "xpath"],
+                           ["list3['Unit1Bedrooms']", "//*[@id='Unit1Bedrooms_ListedComp3']", "xpath"],
+                           ["list3['Unit1FullBaths']", "//*[@id='Unit1FullBaths_ListedComp3']", "xpath"],
+                           ["list3['Unit1HalfBaths']", "//*[@id='Unit1HalfBaths_ListedComp3']", "xpath"],
+
+                           ["list3['Unit2TotalRooms']", "//*[@id='Unit2TotalRooms_ListedComp3']", "xpath"],
+                           ["list3['Unit2Bedrooms']", "//*[@id='Unit2Bedrooms_ListedComp3']", "xpath"],
+                           ["list3['Unit2FullBaths']", "//*[@id='Unit2FullBaths_ListedComp3']", "xpath"],
+                           ["list3['Unit2HalfBaths']", "//*[@id='Unit2HalfBaths_ListedComp3']", "xpath"],
+
+                           ["list3['Unit3TotalRooms']", "//*[@id='Unit3TotalRooms_ListedComp3']", "xpath"],
+                           ["list3['Unit3Bedrooms']", "//*[@id='Unit3Bedrooms_ListedComp3']", "xpath"],
+                           ["list3['Unit3FullBaths']", "//*[@id='Unit3FullBaths_ListedComp3']", "xpath"],
+                           ["list3['Unit3HalfBaths']", "//*[@id='Unit3HalfBaths_ListedComp3']", "xpath"],
+
+                           ["list3['Unit4TotalRooms']", "//*[@id='Unit4TotalRooms_ListedComp3']", "xpath"],
+                           ["list3['Unit4Bedrooms']", "//*[@id='Unit4Bedrooms_ListedComp3']", "xpath"],
+                           ["list3['Unit4FullBaths']", "//*[@id='Unit4FullBaths_ListedComp3']", "xpath"],
+                           ["list3['Unit4HalfBaths']", "//*[@id='Unit4HalfBaths_ListedComp3']", "xpath"]
+                        ]		
+               
+             },
                       {
                         "filedtype":"save_data",
                         "values":[
@@ -1157,6 +1301,14 @@
 
                            ]
                         },
+                        {
+                        "filedtype":"Textbox",
+                              "values":[
+                                 ["sub_data['RepairStartDay']","//*[@id='EstRepairDaysFrom_Value']","xpath"],
+                                 ["sub_data['RepairEndDay']","//*[@id='EstRepairDaysTo_Value']","xpath"]
+
+                                  ]
+                           },
                         {
                         "filedtype": "repair_details_fill",
                         "values": [
@@ -1210,9 +1362,13 @@
                                  "filedtype":"Textbox",
                                  "values":[
                                     ["sub_data['YearsOfExperience']","//*[@id='BPOExp_Value']","xpath"],
-                                    ["sub_data['Land Value']","//*[@id='LandValue_Value']","xpath"]
+                                    ["sub_data['LandValue']","//*[@id='LandValue_Value']","xpath"],
+                                    ["sub_data['ListingNeighborhoodValueLow']","//*[@id='ValueRangeMin_Value']","xpath"],
+                                    ["sub_data['ListingNeighborhoodValueHigh']","//*[@id='ValueRangeMax_Value']","xpath"]
                                      ]
                               },
+                              
+               
                               {
                                  "filedtype":"select_data",
                                  "values":[

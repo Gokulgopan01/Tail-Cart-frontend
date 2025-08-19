@@ -1,5 +1,11 @@
 
-
+import sentry_sdk
+sentry_sdk.init(
+    dsn="https://f2e54459e6cc029fa6c1d4499a616e67@o4509790213898240.ingest.us.sentry.io/4509790220058625",
+    traces_sample_rate=1.0,
+    environment="production",
+    send_default_pii=True
+)
 
 import os
 import subprocess
@@ -48,11 +54,14 @@ def launch_app():
 
     if not is_protocol_registered(protocol_name):
         register_url_protocol(protocol_name, exe_path)
-    # Step 3: Start application
+    # # Step 3: Start application
     app = Application()
     app.mainloop()
 
+    
+
 if __name__ == "__main__":
     # Step 1: Run version check first, then launch_app
-    version_update(lambda: Application().mainloop())
-    launch_app()
+    # version_update(lambda: Application().mainloop())
+    # launch_app()
+    version_update(launch_app) 

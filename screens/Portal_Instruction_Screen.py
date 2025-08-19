@@ -212,21 +212,24 @@ class PortalInstructionScreen(tk.Frame):
         self.hybridIntegration = HybridBPOApi()
         self.container = tk.Frame(self)
         self.container.pack(expand=True, fill="both")
+        arg1="SmartEntry"
+        #arg1="PortalLogin"
+        #arg1="AutoLogin"
+        if "PortalLogin" in arg1:
+            # Initialize LoadedScreen immediately
+            title_text = "Portal Login In Progress..."
+            status_text = "Preparing login instructions."
+            self.loaded_screen = LoadedScreen(
+                self.container,
+                self,
+                title_text,
+                status_text,
+                on_exit_callback=self.exit_portalinstruction_screen
+            )
+            self.loaded_screen.pack(expand=True, fill="both")
 
-        # Initialize LoadedScreen immediately
-        title_text = "Portal Login In Progress..."
-        status_text = "Preparing login instructions."
-        self.loaded_screen = LoadedScreen(
-            self.container,
-            self,
-            title_text,
-            status_text,
-            on_exit_callback=self.exit_portalinstruction_screen
-        )
-        self.loaded_screen.pack(expand=True, fill="both")
-
-        # Start background processing
-        self.after(100, self.start_background_thread)
+            # Start background processing
+            self.after(100, self.start_background_thread)
 
     def exit_portalinstruction_screen(self):
         """Cleanly exit the entry screen and application."""
@@ -272,7 +275,7 @@ class PortalInstructionScreen(tk.Frame):
                 return
 
             self.update_loaded_screen("Logging In", f"Logging into {portal_name}...")
-            PortalLoginScreen.login_to_portal(
+            PortalLoginScreen.login_to_portals(
                 self,
                 username,
                 password,

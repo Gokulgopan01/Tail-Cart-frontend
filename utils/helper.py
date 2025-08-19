@@ -77,7 +77,7 @@ def params_check():
     else:
           #return None,None  
           # Returns auto for manualy opening Autologin  
-          return "auto",None,None   
+          return "AutoLogin",None,None   
 # Function to fetch stored token (assuming it was saved as JSON)
 # def get_saved_token():
 #     try:
@@ -391,12 +391,29 @@ def data_filling_text_QC(driver,data,elementlocator,selector):
     element.clear() 
     element.send_keys(data)         
 
-def select_field(driver,data,elementlocator,selector):
+# def select_field(driver,data,elementlocator,selector):
+#     try:
+#         Select(find_elem(driver,selector,elementlocator)).select_by_visible_text(data)
+#     except Exception as e:   
+#             data='' 
+#             print("no data",e)
+
+def select_field(driver, data, elementlocator, selector):
     try:
-        Select(find_elem(driver,selector,elementlocator)).select_by_visible_text(data)
-    except Exception as e:   
-            data='' 
-            print("no data",e)
+        data = data.strip().lower()
+        dropdown = Select(find_elem(driver, selector, elementlocator))
+        
+        # Loop through options and match by lowercase text
+        for option in dropdown.options:
+            if option.text.strip().lower() == data:
+                dropdown.select_by_visible_text(option.text)
+                return
+        print(f"[select_field] No matching option found for: '{data}'")
+    except Exception as e:
+        data='' 
+        print(f"[select_field] Error selecting option: {e}")
+
+
 def find_elem(driver,selector,elementlocator):
     
     element=driver.find_element(selector,elementlocator)
@@ -558,7 +575,7 @@ def update_order_status(assigned_order_id, status, stage, order_event_status):
         print(f"Error while updating status via PUT: {e}")
         return None
 
-def update_client_account_status(client_account_id, action_required_reason):
+def update_client_account_status(client_account_id):
     
     url = f'{env.ACCOUNT_INACTIVE}{client_account_id}'
     action_required_reason="login error"
@@ -640,3 +657,107 @@ def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller bundle."""
     base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
     return os.path.join(base_path, relative_path)
+
+def single_source_save_form(driver):
+    
+    try:
+        element=driver.find_element(By.XPATH,"/html/body/form/div[4]/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[2]")
+        value1 = element.text
+        logging.info("Extracted Value in the ok button click:{}".format((value1)))
+        time.sleep(3)
+        if value1:
+            driver.find_element(By.XPATH,"/html/body/form/div[4]/table/tbody/tr[2]/td/table/tbody/tr/td/a").click()
+            time.sleep(15)
+            driver.switch_to.parent_frame()
+            time.sleep(1) 
+            driver.switch_to.frame("_TOP_MENU")
+            time.sleep(1) 
+            element=driver.find_element(By.XPATH,'//*[@id="SAVE_BPO"]/a')
+            element.click()
+            time.sleep(15)
+            driver.switch_to.parent_frame()
+            time.sleep(1) 
+            driver.switch_to.frame("_MAIN")
+            time.sleep(1)
+            try:
+                element=driver.find_element(By.XPATH,"//*[@id='form_viewer']/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[4]")
+                value2 = element.text
+                
+                if value2:
+                    logging.info("order saved successfully")
+                    pass
+                else:
+                    time.sleep(10)
+            except:
+                pass
+        else:
+            logging.info("There is no OK button to click")
+    except Exception as e:
+    # value = element.text
+        logging.info("No need to click ok button :{}".format(e))
+        time.sleep(4)
+        driver.switch_to.parent_frame()
+        time.sleep(1) 
+        driver.switch_to.frame("_TOP_MENU")
+        time.sleep(1) 
+        element=driver.find_element(By.XPATH,'//*[@id="SAVE_BPO"]/a')
+        element.click()
+        time.sleep(15) 
+        driver.switch_to.parent_frame()
+        time.sleep(1) 
+        driver.switch_to.frame("_MAIN")
+        time.sleep(1)
+        try:
+            element=driver.find_element(By.XPATH,"//*[@id='form_viewer']/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[4]")
+            value2 = element.text
+            if value2:
+                    logging.info("order saved successfully")
+                    pass
+            else:
+                    time.sleep(10)
+        except:
+            pass
+        
+    logging.info("order saved")
+
+def load_form_config_and_data(order_id, config_path, researchpad_data_retrival_url,
+                            session=None, merged_json=None):
+
+
+    try:
+        with open(resource_path(config_path), 'r') as f:
+            form_config = json.load(f)
+    except Exception as e:
+        logging.error(f"Failed to load form config JSON: {e}")
+        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        return None, None
+
+    if session is None:
+        session = requests.Session()
+
+    if not merged_json:
+        url = f"{researchpad_data_retrival_url}?order_id={order_id}"
+        logging.info(f"Fetching merged_json from API: {url}")
+        try:
+            response = session.get(url)
+            if response.status_code == 200:
+                merged_json = response.json()
+            else:
+                logging.error(f"Failed to fetch merged_json, status code: {response.status_code}")
+                update_order_status(order_id, "In Progress", "Entry", "Failed")
+                return None, None
+        except Exception as e:
+            logging.error(f"Exception during API call: {e}")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            return None, None
+    
+    return form_config, merged_json
+    
+def get_nested(data, path_list, default=""):
+    """Safely get nested dictionary data with a list of keys."""
+    for key in path_list:
+        if isinstance(data, dict):
+            data = data.get(key, default)
+        else:
+            return default
+    return data

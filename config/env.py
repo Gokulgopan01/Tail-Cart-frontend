@@ -14,3 +14,4 @@ ACCOUNT_INACTIVE="http://192.168.2.51:8000/hybrid/api/v1/client/client-account-s
 VERSION_FILE = "1.1"
 MAIN_EXE = r"C:\HybridBPO\autologin\dist\main.exe"
 REMOTE_VERSION_URL = "http://192.168.2.51:8000/hybrid/api/v1/autologin/autologin-version"
+VIEW_FILE_BASE_URL = "http://192.168.2.51:8005/view_file?file_path="

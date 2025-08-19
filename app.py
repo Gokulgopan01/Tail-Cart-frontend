@@ -170,9 +170,9 @@ class Application(tk.Tk):
     def route_startup(self):
         """Decide which screen to show based on input parameters or login status."""
         arg1, arg2, arg3 = params_check()
-        #arg1="SmartEntry"
+        arg1="SmartEntry"
         #arg1="PortalLogin"
-        #arg1="auto"
+        #arg1="AutoLogin"
         print(f"Params: arg1={arg1}, arg2={arg2}, arg3={arg3}")
         login_data = user_data.load_login_data()
         print("Login data:", login_data)
@@ -181,7 +181,9 @@ class Application(tk.Tk):
             self.show_frame("EntryScreen")
         elif arg1 == "PortalLogin":
             self.show_frame("PortalInstructionScreen")
-        elif login_data.get("logged_in"):
+        # elif login_data.get("logged_in"):
+        #     self.show_frame("EcesisLoginScreen")
+        elif arg1 == "AutoLogin":
             self.show_frame("EcesisLoginScreen")
         else:
             self.show_frame("EcesisLoginScreen")

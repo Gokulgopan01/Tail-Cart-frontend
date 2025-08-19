@@ -27,6 +27,7 @@ from portal.ClassValuation import ClassValuation
 from portal.Omnia import Omnia
 from portal.Valligent import Valligent
 from portal.ClassValuationNew import ClassValuationNew
+from portal.SingleSource import SingleSource
 
 
 from selenium import webdriver
@@ -75,6 +76,7 @@ class PortalLoginScreen(tk.Frame):
 
     def portals(username, password, portal_url, portal_name, proxy, session):
         portal_name = portal_name.strip()
+        
 
         # # Load portal class map from JSON
         # with open('json/portal_map.json', 'r') as f:
@@ -107,12 +109,12 @@ class PortalLoginScreen(tk.Frame):
 
 
           
-    # 
-    def login_to_portal(self, username, password, portal_url, portal_name, proxy=None, session=None):
+
+    def login_to_portals(self, username, password, portal_url, portal_name, proxy=None, session=None):
         """Generic login dispatcher that calls appropriate portal logic."""
 
         from screens.portal_login_screen import PortalLoginScreen  # Import inside if circular import
-
+        print("portalinstruction")
         portal_instance = PortalLoginScreen.portals(
             username=username,
             password=password,
@@ -127,3 +129,7 @@ class PortalLoginScreen(tk.Frame):
             return portal_instance.session, portal_instance.driver
         else:
             return None, None
+        
+
+
+        

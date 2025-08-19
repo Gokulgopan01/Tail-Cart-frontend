@@ -39,9 +39,9 @@ class EntryScreen(tk.Frame):
 
         # Determine which process to run based on parameters
         #arg1, arg2 = params_check()
-        #arg1="SmartEntry"
+        arg1="SmartEntry"
         #arg1="PortalLogin"
-        #arg1="auto"
+        #arg1="AutoLogin"
         self.handle_argument(arg1, arg2,arg3)
 
 
@@ -123,7 +123,8 @@ class EntryScreen(tk.Frame):
                     continue
 
                 logging.info(f"Logging into portal: {portal_name}")
-                portal_login_screen.PortalLoginScreen.login_to_portal(
+                print("Entry")
+                portal_login_screen.PortalLoginScreen.login_to_portals(
                     self, username, password, portal_url,
                     portal_name, proxy, session
                 )

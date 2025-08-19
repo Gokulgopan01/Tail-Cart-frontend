@@ -114,24 +114,6 @@ class EcesisLoginScreen(tk.Frame):
         self.show_password_btn.pack(side="right", padx=(0, 3))
 
 
-    #     forgot_password_frame = tk.Frame(self.input_frame, bg="#FFFFFF")
-    #     forgot_password_frame.pack(pady=1, anchor="e")
-    #     forgot_password_label = tk.Label(
-    #         forgot_password_frame, 
-    #         text="Forgot Password?", 
-    #         font=("sans-serif", 11, "underline"),  # Underlined text
-    #         fg="black",  # Hyperlink-like color
-    #         bg="#FFFFFF",
-    #         cursor="hand2"  # Hand cursor like a link
-    # )
-              
-    #     forgot_password_label.pack(anchor="e",pady=5,padx=1)
-    #     # Bind click event to act like a button
-    #     forgot_password_label.bind("<Button-1>", lambda e: self.forgot_password())
-    #     # Bind Enter key to password entry (triggers login when pressed)
-    #     self.password_entry.bind("<Return>", self.login)
-    #     # Login Button
-
 
         canvas = tk.Canvas(self.input_frame, width=200, height=50, bg="#FFFFFF", highlightthickness=0,cursor="hand2")
         canvas.pack(pady=30)
@@ -150,6 +132,9 @@ class EcesisLoginScreen(tk.Frame):
 
         # Bind click
         canvas.bind("<Button-1>", lambda event: self.login())
+
+            # Enter key triggers login from anywhere in the login frame
+        #self.login_frame.bind_all("<Return>", self.login())
 
         # Center the elements
         self.login_frame.pack_propagate(False)
@@ -233,9 +218,9 @@ class EcesisLoginScreen(tk.Frame):
 
         # threading.Thread(target=login_request, daemon=True).start()
         
-        #arg1="SmartEntry"
+        arg1="SmartEntry"
         #arg1="PortalLogin"
-        #arg1="auto"
+        #arg1="AutoLogin"
         # Inside your login function
         def login_request():
             try:
@@ -442,13 +427,7 @@ class EcesisLoginScreen(tk.Frame):
             self.client_data["main_clients"] = response
             self.main_client_dropdown["values"] = [c["client_name"] for c in self.client_data["main_clients"]]
 
-    # def on_main_client_select(self, event):
-    #     """Handle main client selection and fetch sub-clients."""
-    #     selected_client = next((c for c in self.client_data["main_clients"] if c["client_name"] == self.main_client_var.get()), None)
-    #     if selected_client:
-    #         client_id = selected_client["id"]
-    #         threading.Thread(target=self.load_sub_clients, args=(client_id,), daemon=True).start()
-
+   
     def on_main_client_select(self, event):
         """Handle main client selection and fetch sub-clients."""
         # Reset dependent dropdowns immediately
