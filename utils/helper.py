@@ -619,6 +619,24 @@ def fetch_upload_data(self, order_id: int):
         "rental_folder": rental_folder,
         "item_id": item_id
     }
+
+def list_files_from_server(folder: str):
+    """
+    Fetches the list of files from the file server API for the given folder.
+    Returns a list of filenames.
+    """
+    url = f"{env.FILE_SERVER_URL}{folder}"
+    try:
+        resp = requests.get(url)
+        resp.raise_for_status()
+        data = resp.json()   # server should return JSON
+        # Assuming response: {"files": ["a1.jpg", "a2.jpg", "s1.jpg"]}
+        return data.get("files", [])
+    except Exception as e:
+        print(f"Error fetching files from server: {e}")
+        return []
+
+label_to_file_map = {}
 def extract_data_sections(merged_json):
     """
     Extract key data sections from merged_json.
@@ -658,67 +676,109 @@ def resource_path(relative_path):
     base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
     return os.path.join(base_path, relative_path)
 
-def single_source_save_form(driver):
+# def single_source_save_form(driver):
     
-    try:
-        element=driver.find_element(By.XPATH,"/html/body/form/div[4]/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[2]")
-        value1 = element.text
-        logging.info("Extracted Value in the ok button click:{}".format((value1)))
-        time.sleep(3)
-        if value1:
-            driver.find_element(By.XPATH,"/html/body/form/div[4]/table/tbody/tr[2]/td/table/tbody/tr/td/a").click()
-            time.sleep(15)
-            driver.switch_to.parent_frame()
-            time.sleep(1) 
-            driver.switch_to.frame("_TOP_MENU")
-            time.sleep(1) 
-            element=driver.find_element(By.XPATH,'//*[@id="SAVE_BPO"]/a')
-            element.click()
-            time.sleep(15)
-            driver.switch_to.parent_frame()
-            time.sleep(1) 
-            driver.switch_to.frame("_MAIN")
-            time.sleep(1)
-            try:
-                element=driver.find_element(By.XPATH,"//*[@id='form_viewer']/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[4]")
-                value2 = element.text
+#     try:
+#         element=driver.find_element(By.XPATH,"/html/body/form/div[4]/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[2]")
+#         value1 = element.text
+#         logging.info("Extracted Value in the ok button click:{}".format((value1)))
+#         time.sleep(3)
+#         if value1:
+#             driver.find_element(By.XPATH,"/html/body/form/div[4]/table/tbody/tr[2]/td/table/tbody/tr/td/a").click()
+#             time.sleep(15)
+#             driver.switch_to.parent_frame()
+#             time.sleep(1) 
+#             driver.switch_to.frame("_TOP_MENU")
+#             time.sleep(1) 
+#             element=driver.find_element(By.XPATH,'//*[@id="SAVE_BPO"]/a')
+#             element.click()
+#             time.sleep(15)
+#             driver.switch_to.parent_frame()
+#             time.sleep(1) 
+#             driver.switch_to.frame("_MAIN")
+#             time.sleep(1)
+#             try:
+#                 element=driver.find_element(By.XPATH,"//*[@id='form_viewer']/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[4]")
+#                 value2 = element.text
                 
-                if value2:
-                    logging.info("order saved successfully")
-                    pass
-                else:
-                    time.sleep(10)
-            except:
-                pass
-        else:
-            logging.info("There is no OK button to click")
-    except Exception as e:
-    # value = element.text
-        logging.info("No need to click ok button :{}".format(e))
-        time.sleep(4)
-        driver.switch_to.parent_frame()
-        time.sleep(1) 
-        driver.switch_to.frame("_TOP_MENU")
-        time.sleep(1) 
-        element=driver.find_element(By.XPATH,'//*[@id="SAVE_BPO"]/a')
-        element.click()
-        time.sleep(15) 
-        driver.switch_to.parent_frame()
-        time.sleep(1) 
-        driver.switch_to.frame("_MAIN")
-        time.sleep(1)
-        try:
-            element=driver.find_element(By.XPATH,"//*[@id='form_viewer']/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[4]")
-            value2 = element.text
-            if value2:
-                    logging.info("order saved successfully")
-                    pass
-            else:
-                    time.sleep(10)
-        except:
-            pass
+#                 if value2:
+#                     logging.info("order saved successfully")
+#                     pass
+#                 else:
+#                     time.sleep(10)
+#             except:
+#                 pass
+#         else:
+#             logging.info("There is no OK button to click")
+#     except Exception as e:
+#     # value = element.text
+#         logging.info("No need to click ok button :{}".format(e))
+#         time.sleep(4)
+#         driver.switch_to.parent_frame()
+#         time.sleep(1) 
+#         driver.switch_to.frame("_TOP_MENU")
+#         time.sleep(1) 
+#         element=driver.find_element(By.XPATH,'//*[@id="SAVE_BPO"]/a')
+#         element.click()
+#         time.sleep(15) 
+#         driver.switch_to.parent_frame()
+#         time.sleep(1) 
+#         driver.switch_to.frame("_MAIN")
+#         time.sleep(1)
+#         try:
+#             element=driver.find_element(By.XPATH,"//*[@id='form_viewer']/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[4]")
+#             value2 = element.text
+#             if value2:
+#                     logging.info("order saved successfully")
+#                     pass
+#             else:
+#                     time.sleep(10)
+#         except:
+#             pass
         
-    logging.info("order saved")
+#     logging.info("order saved")
+
+
+def single_source_save_form(driver, timeout=15):
+    wait = WebDriverWait(driver, timeout)
+
+    def switch_to_frame(frame_name):
+        driver.switch_to.default_content()
+        driver.switch_to.frame(frame_name)
+
+    try:
+        # Step 1: Check for OK button/value in _MAIN frame
+        switch_to_frame("_MAIN")
+        try:
+            ok_elem = wait.until(
+                EC.presence_of_element_located((By.XPATH, "/html/body/form/div[4]/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[2]"))
+            )
+            if ok_elem.text.strip():
+                logging.info(f"OK button detected with value: {ok_elem.text}")
+                ok_button = driver.find_element(By.XPATH, "/html/body/form/div[4]/table/tbody/tr[2]/td/table/tbody/tr/td/a")
+                ok_button.click()
+        except:
+            logging.info("No OK button found; continuing to SAVE")
+
+        # Step 2: Click SAVE via JavaScript in _TOP_MENU frame
+        switch_to_frame("_TOP_MENU")
+        wait.until(lambda d: d.execute_script("return typeof toolBarClick !== 'undefined';"))
+        driver.execute_script("toolBarClick(462, 'SAVE_BPO');")
+        logging.info("SAVE button clicked via JavaScript")
+
+        # Step 3: Verify order saved in _MAIN frame
+        switch_to_frame("_MAIN")
+        saved_elem = wait.until(
+            EC.presence_of_element_located((By.XPATH, "//*[@id='form_viewer']/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[4]"))
+        )
+        if saved_elem.text.strip():
+            logging.info("Order saved successfully")
+        else:
+            logging.warning("Order might not be saved: value missing")
+
+    except Exception as e:
+        logging.error(f"Error while saving order: {e}")
+
 
 def load_form_config_and_data(order_id, config_path, researchpad_data_retrival_url,
                             session=None, merged_json=None):
@@ -761,3 +821,24 @@ def get_nested(data, path_list, default=""):
         else:
             return default
     return data
+
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+def close_validation_popup(driver, timeout=5):
+    """
+    Detect and close the SingleSource validation popup if it appears.
+    
+    :param driver: Selenium WebDriver instance
+    :param timeout: Max seconds to wait for popup
+    :return: True if popup was found and closed, False otherwise
+    """
+    try:
+        ok_button = WebDriverWait(driver, timeout).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "#OK a.button"))
+        )
+        ok_button.click()
+        print("✅ Validation popup closed.")
+        return True
+    except (TimeoutException, NoSuchElementException):
+        # Popup not present
+        print("ℹ️ No validation popup detected.")
+        return False

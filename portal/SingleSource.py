@@ -24,7 +24,7 @@ from selenium.webdriver.chrome.options import Options
 from condtions.redbell import generate_condition_data
 from config import env
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import clearing, data_filling_text, data_filling_text_QC, extract_data_sections, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_source_save_form, update_client_account_status, update_order_status
+from utils.helper import adj_click, clearing, close_validation_popup, data_filling_text, data_filling_text_QC, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_source_save_form, update_client_account_status, update_order_status
 # Load environment variables from the .env file
 load_dotenv()
 arg1, arg2,arg3 = params_check()
@@ -265,6 +265,8 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
         
             config_path = 'json/singlesourcejson/SingleSource_Resolute_As_Repaired_bpo.json'
 
+    elif formtype_value=="SS New BPO Exterior-SHP":
+            config_path = 'json/singlesourcejson/SingleSource_ SS_New_BPO_Exterior_SHP.json'
     else:
         logging.warning(f"No matching config path for form type: {formtype_value}")
         update_order_status(order_id, "In Progress", "Entry", "Failed")
@@ -296,6 +298,38 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
         logging.exception(f"Error while navigating and filling forms: {e}")
         #update_order_status(order_id, "In Progress", "Entry", "Failed")
         return
+    
+    try:
+
+        data = fetch_upload_data(self, order_id)
+        if not data:
+            logging.warning(f"No upload data found for order {order_id}")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            return
+        mls_result = upload_mls_for_order(self,order_id)
+        tax_result = upload_tax_for_order(self,order_id)
+        comparables_folder = data.get("comparables_folder")
+        # rental_folder = data.get("rental_folder")
+        # photos_url = page_urls["Photos"]
+
+        if isinstance(comparables_folder, str) and comparables_folder.strip():
+            upload_photos=upload_photos_to_order(self, comparables_folder)
+        else:
+            logging.warning(f"Comparables folder is missing or invalid for order {order_id}: {comparables_folder!r}")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
+        # Check if all 3 are True
+        if form_fill and mls_result and tax_result and upload_photos:
+            logging.info("All form filling and upload functions completed successfully.")
+            update_order_status(order_id, "In Progress", "Entry", "Completed")
+        else:
+            logging.warning(f"One or more functions failed: form_fill={form_fill}, upload_photos={upload_photos}")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
+    except Exception as e:
+        logging.exception(f"Error during photo upload steps: {e}")
+        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        return
+
+        
 
 def fill_form_multi(self, merged_json, order_id, form_config, session): 
         key_expr_cache = {}
@@ -384,6 +418,9 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                     field_type = control.get("filedtype")
                     values = control.get("values", [])
 
+                    if field_type == "validation_popup":
+                        close_validation_popup(self.driver)
+
                     if field_type == "save_data":
                         if not saved_form:
                             single_source_save_form(self.driver)
@@ -399,17 +436,22 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                             continue
 
                         key_expr, xpath, mode = field
+                        value = extract_value_from_expr(key_expr)
+
+                        if value in [None, ""]:
+                            continue
                         try:
-                            value = extract_value_from_expr(key_expr)
+                            if field_type == "adjustment_click":
+                                # Use merged_json value for adjustment_click
+                                adj_click(self.driver, value, xpath, mode)
 
-                            if value in [None, ""]:
-                                continue
+                            else:    
 
-                            action_func = field_actions.get(field_type)
-                            if action_func:
-                                action_func(self.driver, value, xpath, mode)
-                            else:
-                                logging.warning(f"Unknown field type: {field_type}")
+                                action_func = field_actions.get(field_type)
+                                if action_func:
+                                    action_func(self.driver, value, xpath, mode)
+                                else:
+                                    logging.warning(f"Unknown field type: {field_type}")
                         except Exception as e:
                             logging.error(f"Exception filling field {key_expr}: {e}")
 
@@ -426,5 +468,227 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
             return False
 
 
+def upload_mls_for_order(self, order_id: int) -> bool:
+    # Fetch order data
+    data = fetch_upload_data(self, order_id)
+    if not data:
+        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        return False
 
+    # Get MLS document info
+    mls_doc = next((d for d in data.get("documents", []) if d.get("type", "").lower()== "mls"), None)
+    if not mls_doc:
+        print(f"[WARN] No MLS document found for order {order_id}")
+        return True
+        #return False
+
+    file_path = mls_doc.get("path")
+    if not file_path or not os.path.exists(file_path):
+        print(f"[ERROR] MLS file not found: {file_path}")
+        return False
+
+    try:
+        # Upload MLS file
+        input_elem = self.driver.find_element(By.ID, "fname_MLS")
+        self.driver.execute_script("""
+            arguments[0].style.display = 'block';
+            arguments[0].style.visibility = 'visible';
+        """, input_elem)
+        input_elem.send_keys(file_path)
+        print(f"[INFO] MLS uploaded: {file_path}")
+        time.sleep(10)
+        single_source_save_form(self.driver)
+        # Verify that the file is uploaded
+        # Step 2: Wait until the uploaded file appears in the table
+        try:
+            uploaded_file = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//a[contains(@class,'business_text') and contains(text(),'.pdf')]"))
+            )
+            print(f"File uploaded successfully: {uploaded_file.text}")
+            return True
+        except:
+            print("File upload verification failed.")
+            return False
+
+    except Exception as e:
+        print(f"[ERROR] Failed to upload MLS: {e}")
+        return False
+
+
+
+def upload_tax_for_order(self, order_id: int, wait_seconds: int = 10) -> bool:
+    """
+    Uploads the Tax file for a given order and verifies it appears as 'Tax Sheet' in Photos section.
+
+    Args:
+        order_id (int): The order ID.
+        wait_seconds (int): Max seconds to wait for the uploaded file to appear.
+
+    Returns:
+        bool: True if upload and verification succeeded, False otherwise.
+    """
+    # Fetch order data
+    data = fetch_upload_data(self, order_id)
+    if not data:
+        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        print(f"[ERROR] No data found for order {order_id}")
+        return False
+
+    # Get Tax document info
+    tax_doc = next((d for d in data.get("documents", []) if d.get("type", "").lower() == "tax"), None)
+    if not tax_doc:
+        print(f"[WARN] No Tax document found for order {order_id}")
+        return True
+        #return False
+
+    file_path = tax_doc.get("path")
+    if not file_path or not os.path.exists(file_path):
+        print(f"[ERROR] Tax file not found: {file_path}")
+        return False
+
+    try:
+        # Upload Tax file
+        file_input = self.driver.find_element(By.ID, "fname_Photos")
+        self.driver.execute_script("""
+            arguments[0].style.display = 'block';
+            arguments[0].style.visibility = 'visible';
+        """, file_input)
+        file_input.send_keys(file_path)
+
+        # Set Type = "Other"
+        type_select = self.driver.find_element(By.ID, "fname_Photos_Type")
+        for option in type_select.find_elements(By.TAG_NAME, "option"):
+            if option.text.strip() == "Subject":
+                option.click()
+                break
+
+        # Set Description = "Tax Sheet"
+        desc_select = self.driver.find_element(By.ID, "fname_Photos_Description")
+        for option in desc_select.find_elements(By.TAG_NAME, "option"):
+            if option.text.strip() == "Tax Sheet":
+                option.click()
+                break
+        time.sleep(10)    
+        single_source_save_form(self.driver)        
+        print(f"[INFO] Tax file uploaded: {file_path}")
+    
+        # Wait for the uploaded file to appear in the portal
+        # --- Verification ---
+        try:
+            uploaded_file_elem = WebDriverWait(self.driver, wait_seconds).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, f"//input[@value='Subject Tax Sheet']")
+                )
+            )
+            if uploaded_file_elem:
+                print(f"[SUCCESS] Tax file confirmed uploaded for order {order_id}")
+                return True
+        except:
+            print(f"[ERROR] Tax file not visible on portal after upload for order {order_id}")
+            return False
+
+    except Exception as e:
+        print(f"[ERROR] Failed to upload Tax: {e}")
+        return False
+
+
+
+def upload_photos_to_order(self, comparables_folder):
+    """
+    Uploads Listing 1-3 and Sale 1-3 photos dynamically.
+    Stops if any photo is already uploaded.
+    Verifies all expected photos after upload.
+    """
+    if not os.path.exists(comparables_folder):
+        print(" Comparables folder missing.")
+        return False
+
+    # Map filenames to input IDs using convention: a1.jpg -> Listing1, s2.jpg -> Sale2
+    files_to_upload = {}
+    for fname in os.listdir(comparables_folder):
+        if not fname.lower().endswith((".jpg", ".jpeg", ".png")):
+            continue
+        match = re.match(r'([as])([1-3])\.(jpg|jpeg|png)', fname, flags=re.IGNORECASE)
+        if match:
+            prefix, idx, _ = match.groups()
+            input_id = f"fname_Listing{idx}_Front" if prefix.lower() == 'a' else f"fname_Sale{idx}_Front"
+            files_to_upload[fname] = input_id
+
+    if not files_to_upload:
+        print("⚠ No matching Listing or Sale photos found in folder.")
+        return False
+
+    # Check if any photo is already uploaded
+    for fname, input_id in files_to_upload.items():
+        try:
+            checkbox = self.driver.find_element(
+                By.XPATH, f"//input[@id='{input_id}']/ancestor::tr//input[@type='checkbox' and @name='remove_file']"
+            )
+            # Get the description text in the same row
+            description_elem = self.driver.find_element(
+                By.XPATH,
+                f"//input[@id='{input_id}']/ancestor::tr//input[@name=\"PS_FORM/FILES/File[.='Photos']/@Description\"]"
+            )
+            description = description_elem.get_attribute("value").strip()
+
+            # Skip if the description is "Subject Tax Sheet"
+            if checkbox.is_displayed() and description.lower() != "subject tax sheet":
+                print(f"⚠ Photo already uploaded: {fname} ({description}). Stopping process.")
+                return False
+        except:
+            # No checkbox found → not uploaded yet
+            pass
+
+    # Upload missing photos
+    uploaded_photos = {}
+    for fname, input_id in files_to_upload.items():
+        file_path = os.path.join(comparables_folder, fname)
+        try:
+            file_input = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.ID, input_id))
+            )
+            file_input.send_keys(file_path)
+            print(f" Uploaded {fname} → {input_id}")
+            uploaded_photos[fname] = True
+            time.sleep(0.5)
             
+        except Exception as e:
+            print(f" Failed to upload {fname} → {input_id}: {e}")
+            uploaded_photos[fname] = False
+    single_source_save_form(self.driver)
+
+    # Verification: ensure all photos are uploaded with retry
+    all_uploaded = True
+    max_wait = 10  # seconds
+    poll_interval = 1  # seconds
+
+    for fname, input_id in files_to_upload.items():
+        verified = False
+        elapsed = 0
+
+        while elapsed < max_wait:
+            try:
+                checkbox = self.driver.find_element(
+                    By.XPATH, f"//input[@id='{input_id}']/ancestor::tr//input[@type='checkbox' and @name='remove_file']"
+                )
+                if checkbox.is_displayed():
+                    print(f" Verified uploaded: {fname}")
+                    verified = True
+                    break
+            except:
+                pass
+
+            time.sleep(poll_interval)
+            elapsed += poll_interval
+
+        if not verified:
+            print(f" Verification failed: {fname}")
+            all_uploaded = False
+
+    if all_uploaded:
+        print(" All Listing and Sale photos uploaded and verified successfully.")
+    else:
+        print(" Some photos failed to upload or verify.")
+
+    return all_uploaded    
+

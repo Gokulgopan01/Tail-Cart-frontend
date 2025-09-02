@@ -161,7 +161,7 @@
                   ["sub_data['HoaName']","//*[@id='HoaName_Value']","xpath"],
                   ["sub_data['HoaPhone']","//*[@id='HoaPhone_Value']","xpath"],
                   ["sub_data['HoaFees']","//*[@id='HoaFeesAmount_Value']","xpath"],
-                  ["sub_data['ExteriorAmenities']","//*[@id='ExteriorAmenitiesDescription_Value']","xpath"],
+                  ["sub_data['Amenities']","//*[@id='ExteriorAmenitiesDescription_Value']","xpath"],
                   ["sub_data['OverallInspectionComments']","//*[@id='Inspectioncomments_Value']","xpath"],
                   ["sub_data['PorchPatioDeck']","//*[@id='AmenitiesOtherDesc_Value']","xpath"] 
 
@@ -261,7 +261,7 @@
                       {
                     "filedtype":"Textbox", 
                      "values":[
-                    ["sub_data['CompetingListings']","//*[@id='CompetingListings_Value']","xpath"]
+                    ["sub_data['NumberOfListings']","//*[@id='CompetingListings_Value']","xpath"]
                      ]
                 
                 
@@ -271,7 +271,7 @@
                     "filedtype":"Textbox", 
                      "values":[
 
-                    ["sub_data['CompetingSales']","//*[@id='CompetingSales_Value']","xpath"]
+                    ["sub_data['NumberOfSales']","//*[@id='CompetingSales_Value']","xpath"]
                     ]
                 },      
                    
@@ -287,7 +287,7 @@
                 {
                 "filedtype":"Textbox",
                "values":[
-                ["sub_data['CompetingSales']","//*[@id='CompsForSale_Value']","xpath"]]},
+                ["sub_data['NumberOfSales']","//*[@id='CompsForSale_Value']","xpath"]]},
 
                   {
                     "filedtype":"Textbox", 

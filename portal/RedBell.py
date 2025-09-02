@@ -491,11 +491,11 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str) -> bool:
 
     # Subject PDFs
     for doc in documents:
-        doc_type = doc.get("type")
+        doc_type = doc.get("type", "").lower()
         doc_path = doc.get("path")
-        if doc_type == "MLS":
+        if doc_type == "mls":
             file_paths["MLSPdfIdSubject"] = doc_path
-        elif doc_type == "Tax":
+        elif doc_type == "tax":
             file_paths["TaxPdfIdSubject"] = doc_path
 
     # Comp PDFs (s1–s3, a1–a3)
