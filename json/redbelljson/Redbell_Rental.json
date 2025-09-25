@@ -12,7 +12,7 @@
         {
           "filedtype":"select_data",
           "values":[
-              ["sub_data['DataSource']","//*[@id='InfoSource_Value']","xpath"]
+              ["sub_data['InformationSource']","//*[@id='InfoSource_Value']","xpath"]
           ]
         },
         {
@@ -58,7 +58,7 @@
          {
                "filedtype":"Textbox",
                "values":[
-                   ["sub_data['CurrentListingPrice']'","//*[@id='CurrentListPrice_Value']","xpath"],
+                   ["sub_data['CurrentListingPrice']","//*[@id='CurrentListPrice_Value']","xpath"],
                    ["sub_data['OriginalListPriceListing']","//*[@id='OriginalListPrice_Value']","xpath"],
                    ["sub_data['ListingBrokerListing']","//*[@id='ListingBroker_Value']","xpath"],
                    ["sub_data['ListingCompanyListing']","//*[@id='ListingCompany_Value']","xpath"]
@@ -135,8 +135,8 @@
                    ["sub_data['SubjectVacant']","//*[@id='PropertyVacant_Value']","xpath"],
                    ["sub_data['Issecured']","//*[@id='Secured_Value']","xpath"] ,
                    ["sub_data['View']","//*[@id='PropertyView_Value']","xpath"],
-                   ["sub_data['HoaOrOther']","//*[@id='HoaOrOther_Value']","xpath"],
-                   ["sub_data['HOA']","//*[@id='HOAStatus_Value']","xpath"],
+                   ["sub_data['HOA']","//*[@id='HoaOrOther_Value']","xpath"],
+                   ["sub_data['HoaStatus']","//*[@id='HOAStatus_Value']","xpath"],
                    ["sub_data['DoesSubjectHaveAGuestHouse']","//*[@id='SubjectGuestHouse_Value']","xpath"],
                    ["sub_data['FinancingAvailable']","//*[@id='FinanceAvail_Value']","xpath"],
                    ["sub_data['ImprovementCondition']","//*[@id='ImprovementStatus_Value']","xpath"],
@@ -288,7 +288,7 @@
                 {
                 "filedtype":"Textbox",
                "values":[
-                ["sub_data['NumberOfSales']","//*[@id='CompsForSale_Value']","xpath"]]},
+                ["sub_data['CompetingREO']","//*[@id='CompsForSale_Value']","xpath"]]},
 
                   {
                     "filedtype":"Textbox", 
@@ -389,7 +389,7 @@
                       {
                         "filedtype":"Textbox",
                         "values":[ 
-                         ["sub_data['%BasementFinished']","//*[@id='PerFinBase_Subject']","xpath"],
+                         ["sub_data['PercentageBasementFinished']","//*[@id='PerFinBase_Subject']","xpath"],
                          ["sub_data['BasementArea']","//*[@id='BasementSqft_Subject']","xpath"]
                          ]
                      },
@@ -492,7 +492,7 @@
                       {
                         "filedtype":"Textbox",
                         "values":[ 
-                         ["sold1['%BasementFinished']","//*[@id='PerFinBase_SoldComp1']","xpath"],
+                         ["sold1['PercentageBasementFinished']","//*[@id='PerFinBase_SoldComp1']","xpath"],
                          ["sold1['BasementArea']","//*[@id='BasementSqft_SoldComp1']","xpath"]
                          ]
                      },
@@ -617,7 +617,7 @@
                       {
                         "filedtype":"Textbox",
                         "values":[ 
-                         ["sold2['%BasementFinished']","//*[@id='PerFinBase_SoldComp2']","xpath"],
+                         ["sold2['PercentageBasementFinished']","//*[@id='PerFinBase_SoldComp2']","xpath"],
                          ["sold2['BasementArea']","//*[@id='BasementSqft_SoldComp2']","xpath"]
                          ]
                      },
@@ -674,7 +674,7 @@
                        {
                         "filedtype":"date_fill_javascript",
                         "values":[ 
-                         ["condition_data['orginal_sold2_date']","//*[@id='ListDate_SoldComp3']","xpath"]
+                         ["condition_data['orginal_sold3_date']","//*[@id='ListDate_SoldComp3']","xpath"]
                          
                          ]
                      },
@@ -742,7 +742,7 @@
                       {
                         "filedtype":"Textbox",
                         "values":[ 
-                         ["sold3['%BasementFinished']","//*[@id='PerFinBase_SoldComp3']","xpath"],
+                         ["sold3['PercentageBasementFinished']","//*[@id='PerFinBase_SoldComp3']","xpath"],
                          ["sold3['BasementArea']","//*[@id='BasementSqft_SoldComp3']","xpath"]
                          ]
                      },
@@ -850,7 +850,7 @@
                       {
                         "filedtype":"Textbox",
                         "values":[ 
-                         ["list1['%BasementFinished']","//*[@id='PerFinBase_ListedComp1']","xpath"],
+                         ["list1['PercentageBasementFinished']","//*[@id='PerFinBase_ListedComp1']","xpath"],
                          ["list1['BasementArea']","//*[@id='BasementSqft_ListedComp1']","xpath"]
                          ]
                      },
@@ -959,7 +959,7 @@
                       {
                         "filedtype":"Textbox",
                         "values":[ 
-                         ["list2['%BasementFinished']","//*[@id='PerFinBase_ListedComp2']","xpath"],
+                         ["list2['PercentageBasementFinished']","//*[@id='PerFinBase_ListedComp2']","xpath"],
                          ["list2['BasementArea']","//*[@id='BasementSqft_ListedComp2']","xpath"]
                          ]
                      },
@@ -1068,7 +1068,7 @@
                       {
                         "filedtype":"Textbox",
                         "values":[ 
-                         ["list3['%BasementFinished']","//*[@id='PerFinBase_ListedComp3']","xpath"],
+                         ["list3['PercentageBasementFinished']","//*[@id='PerFinBase_ListedComp3']","xpath"],
                          ["list3['BasementArea']","//*[@id='BasementSqft_ListedComp3']","xpath"]
                          ]
                      },
@@ -1422,7 +1422,7 @@
                                  ["rental_leased1['Gla']","//*[@id='GrossLivingArea_Leased1']","xpath"],
                                  ["rental_leased1['TotalRooms']","//*[@id='TotalRooms_Leased1']","xpath"],
                                  ["rental_leased1['Bed']","//*[@id='Bedrooms_Leased1']","xpath"],
-                                 ["rental_leased1['Bath']","//*[@id='FullBaths_Leased1']","xpath"],                                
+                                 ["rental_leased1['FullBath']","//*[@id='FullBaths_Leased1']","xpath"],                                
                                  ["rental_leased1['Amenities']","//*[@id='Amenities_Leased1']","xpath"],
                                  ["rental_leased1['Other']","//*[@id='Other_Leased1']","xpath"],
                                  ["rental_leased1['LeasePeriod']","//*[@id='LeasePeriod_Leased1']","xpath"],                    
@@ -1437,7 +1437,7 @@
                                  ["rental_leased2['Gla']","//*[@id='GrossLivingArea_Leased2']","xpath"],
                                  ["rental_leased2['TotalRooms']","//*[@id='TotalRooms_Leased2']","xpath"],
                                  ["rental_leased2['Bed']","//*[@id='Bedrooms_Leased2']","xpath"],
-                                 ["rental_leased2['Bath']","//*[@id='FullBaths_Leased2']","xpath"],
+                                 ["rental_leased2['FullBath']","//*[@id='FullBaths_Leased2']","xpath"],
                                  ["rental_leased2['Amenities']","//*[@id='Amenities_Leased2']","xpath"],
                                  ["rental_leased2['Other']","//*[@id='Other_Leased2']","xpath"],
                                  ["rental_leased2['LeasePeriod']","//*[@id='LeasePeriod_Leased2']","xpath"] ,                       
@@ -1452,7 +1452,7 @@
                                  ["rental_list1['Gla']","//*[@id='GrossLivingArea_Active1']","xpath"],
                                  ["rental_list1['TotalRooms']","//*[@id='TotalRooms_Active1']","xpath"],
                                  ["rental_list1['Bed']","//*[@id='Bedrooms_Active1']","xpath"],
-                                 ["rental_list1['Bath']","//*[@id='FullBaths_Active1']","xpath"],
+                                 ["rental_list1['FullBath']","//*[@id='FullBaths_Active1']","xpath"],
                                  ["rental_list1['Amenities']","//*[@id='Amenities_Active1']","xpath"],
                                  ["rental_list1['Other']","//*[@id='Other_Active1']","xpath"],
                                  ["rental_list1['LeasePeriod']","//*[@id='LeasePeriod_Active1']","xpath"] ,                       
@@ -1467,7 +1467,7 @@
                                  ["rental_list2['Gla']","//*[@id='GrossLivingArea_Active2']","xpath"],
                                  ["rental_list2['TotalRooms']","//*[@id='TotalRooms_Active2']","xpath"],
                                  ["rental_list2['Bed']","//*[@id='Bedrooms_Active2']","xpath"],
-                                 ["rental_list2['Bath']","//*[@id='FullBaths_Active2']","xpath"],
+                                 ["rental_list2['FullBath']","//*[@id='FullBaths_Active2']","xpath"],
                                  ["rental_list2['Amenities']","//*[@id='Amenities_Active2']","xpath"],
                                  ["rental_list2['Other']","//*[@id='Other_Active2']","xpath"],
                                  ["rental_list2['LeasePeriod']","//*[@id='LeasePeriod_Active2']","xpath"]                     

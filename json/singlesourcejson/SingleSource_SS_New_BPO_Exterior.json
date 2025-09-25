@@ -85,7 +85,6 @@
              {
                "filedtype":"Textbox",
                "values":[
-                  
                   ["sub_data['ListingBrokerListing']","//*[@id='PS_FORM/SUBJECT_PROPERTY/Listing_Agent']", "xpath"],
                   ["sub_data['ListingPhoneListing']","//*[@id='PS_FORM/SUBJECT_PROPERTY/Listing_Agent_Phone']", "xpath"], 
                   ["sub_data['ListingCompanyListing']","//*[@id='PS_FORM/SUBJECT_PROPERTY/Listing_Agency']", "xpath"]
@@ -123,7 +122,7 @@
              {
                 "filedtype":"Textbox",
                 "values":[
-                   [
+                     [
                       "sub_data['HoaFees']",
                       "//*[@id='PS_FORM/GENERAL_CONDITIONS/Fees']",
                       "xpath"
@@ -170,12 +169,18 @@
                    ]
                 ]
              },
-                 {
-                        "filedtype": "repair_details_fill",
-                        "values": [
-                           ["sub_data['repair_details']['repairs']", "", "repairs"]
-                        ]
-                        },   
+                  {
+            "filedtype": "checkbox_list",
+            "values": [
+               ["sub_data['HOAFeesInclude']", "HOAInsurance", "id_prefix"]
+            ]
+            }  
+             ,{
+    "filedtype": "repair_details_fill",
+    "values": [
+       ["sub_data['repair_details']", "", "repairs"] 
+    ]
+}, 
 
              {
                 "filedtype":"radiobutton_data",
@@ -468,7 +473,7 @@
                       "id"
                    ],
                    [
-                      "sub_data['Basement_Finished']",
+                      "sub_data['FinishedBelowGrade']",
                       "PS_FORM/SUBJECT_PROPERTY/Basement_Finished",
                       "id"
                    ]
@@ -1337,7 +1342,7 @@
                       "xpath"
                    ],
                    [
-                      "sold1[OriginalListPriceListing]",
+                      "sold1['OriginalListPriceListing']",
                       "//*[@id='Text2']",
                       "xpath"
                    ]
@@ -1594,7 +1599,7 @@
                       "xpath"
                    ],
                    [
-                      "sold2[OriginalListPriceListing]",
+                      "sold2['OriginalListPriceListing']",
                       "//*[@id='Text3']",
                       "xpath"
                    ]
@@ -1851,7 +1856,7 @@
                       "xpath"
                    ],
                    [
-                      "sold3[OriginalListPriceListing]",
+                      "sold3['OriginalListPriceListing']",
                       "//*[@id='Text4']",
                       "xpath"
                    ]
@@ -2089,7 +2094,7 @@
                   ],
                    [
                       "sub_data['SuggestedListPrice30Day']",
-                      "//*[@id='PS_FORM/MARKETING_STRATEGY/Suggested_Repaired_Value']",
+                      "//*[@id='PS_FORM/MARKETING_STRATEGY/Suggested_Quick_Sale_Value']", 
                       "xpath"
                    ],
                    [

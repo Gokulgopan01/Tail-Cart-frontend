@@ -170,7 +170,7 @@ class Application(tk.Tk):
     def route_startup(self):
         """Decide which screen to show based on input parameters or login status."""
         arg1, arg2, arg3 = params_check()
-        arg1="SmartEntry"
+        #arg1="SmartEntry"
         #arg1="PortalLogin"
         #arg1="AutoLogin"
         print(f"Params: arg1={arg1}, arg2={arg2}, arg3={arg3}")

@@ -21,10 +21,10 @@ import requests
 import json
 import os
 from selenium.webdriver.chrome.options import Options
-from condtions.redbell import generate_condition_data
+from condtions.all_portal_conditions import generate_condition_data
 from config import env
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import adj_click, clearing, close_validation_popup, data_filling_text, data_filling_text_QC, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_source_save_form, update_client_account_status, update_order_status
+from utils.helper import SS_fill_repair_details, adj_click, close_validation_popup, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_source_save_form, update_client_account_status, update_order_status
 # Load environment variables from the .env file
 load_dotenv()
 arg1, arg2,arg3 = params_check()
@@ -79,7 +79,7 @@ class SingleSource:
                     elif "main.aspx" in current_url:
                         logging.info("Login successful")
 
-                        arg1 = "SmartEntry"  # Manually set for testing
+                        #arg1 = "SmartEntry"  # Manually set for testing
                         #arg1="PortalLogin"
                         #arg1="AutoLogin"
                         if arg1 == "SmartEntry":
@@ -266,7 +266,9 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
             config_path = 'json/singlesourcejson/SingleSource_Resolute_As_Repaired_bpo.json'
 
     elif formtype_value=="SS New BPO Exterior-SHP":
-            config_path = 'json/singlesourcejson/SingleSource_ SS_New_BPO_Exterior_SHP.json'
+            config_path = 'json/singlesourcejson/SingleSource_SS_New_BPO_Exterior_SHP.json'
+    elif formtype_value=="SS New BPO Exterior":
+            config_path = 'json/singlesourcejson/SingleSource_SS_New_BPO_Exterior.json'        
     else:
         logging.warning(f"No matching config path for form type: {formtype_value}")
         update_order_status(order_id, "In Progress", "Entry", "Failed")
@@ -383,14 +385,11 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
         field_actions = {
             "Textbox": data_filling_text,
             "Textbox_default": data_filling_text,
-            "Textbox_QC": data_filling_text_QC,
-            "Textbox_default_QC": data_filling_text_QC,
             "select_data": select_field,
             "select_default": select_field,
             "radiobutton_data": radio_btn_click,
             "radiobutton_default": radio_btn_click,
             "date_fill_javascript": javascript_excecuter_filling,
-            "clearing": clearing,
             "checkbox": select_checkboxes_from_list,
         }
 
@@ -430,6 +429,49 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                             # time.sleep(5)
                             saved_form = True
                         continue
+                    # if field_type == "repair_details_fill":
+                    #     for field in values:
+                    #         # Validate field format
+                    #         if not (isinstance(field, list) and len(field) >= 3):
+                    #             logging.warning(f"Invalid repair_details_fill field: {field}")
+                    #             continue
+
+                    #         key_expr, _, _ = field
+                    #         try:
+                    #             # Extract the list of repairs from your JSON
+                    #             repairs_list = extract_value_from_expr(key_expr)
+                    #             if isinstance(repairs_list, list):
+                    #                 # Fill only estimated_costs, ignoring comments
+                    #                 SS_fill_repair_details(self.driver, repairs_list)
+                    #                 logging.info(f"Filled repair details for {key_expr}")
+                    #             else:
+                    #                 logging.warning(f"Expected list for repair details but got: {repairs_list}")
+                    #         except Exception as e:
+                    #             logging.error(f"Error processing repair_details_fill for {key_expr}: {e}")
+                    #     continue
+
+                    if field_type == "repair_details_fill":
+                        for field in values:
+                            # Validate field format
+                            if not (isinstance(field, list) and len(field) >= 3):
+                                logging.warning(f"Invalid repair_details_fill field: {field}")
+                                continue
+
+                            key_expr, _, _ = field
+                            try:
+                                # Extract the full repair_details dict from JSON
+                                repair_details = extract_value_from_expr(key_expr)
+                                
+                                if isinstance(repair_details, dict) and "repairs" in repair_details:
+                                    SS_fill_repair_details(self.driver, repair_details)
+                                    logging.info(f"Filled repair details for {key_expr}")
+                                else:
+                                    logging.warning(f"Expected dict with 'repairs' for repair details but got: {repair_details}")
+                            except Exception as e:
+                                logging.error(f"Error processing repair_details_fill for {key_expr}: {e}")
+                        continue
+
+
                     for field in values:
                         if not (isinstance(field, list) and len(field) == 3):
                             logging.warning(f"Invalid field format: {field}")

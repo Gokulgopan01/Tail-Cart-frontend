@@ -14,10 +14,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
 
-from condtions.redbell import generate_condition_data
+from condtions.all_portal_conditions import generate_condition_data
 from form_filler.redbell_form_filler import RedBellFormFiller
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import clean_address, clearing, data_filling_text, data_filling_text_QC, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, update_client_account_status, update_order_status
+from utils.helper import clean_address, data_filling_text, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, update_client_account_status, update_order_status
 from config import env
 
 # Load variables from .env file
@@ -67,7 +67,7 @@ class RedBell:
                     session.cookies.set('.ASPXAUTH', redbell_cookie, domain="valuationops.homegenius.com")
                     self.session = session
 
-                    arg1 = "SmartEntry"  # Manually set for testing
+                    #arg1 = "SmartEntry"  # Manually set for testing
                     #arg1="PortalLogin"
                     #arg1="AutoLogin"
                     if arg1 == "SmartEntry":
@@ -305,6 +305,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
             if expr.startswith(prefix):
                 suffix = expr[len(prefix):]
                 keys = get_keys_cached(suffix) if prefix == "entry_data[0]" else get_keys_cached(expr)
+                #keys = re.findall(r"\['(.*?)'\]", suffix)
                 value = get_nested(data_source, keys, "")
                 value_cache[expr] = value
                 return value
@@ -315,14 +316,11 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
     field_actions = {
         "Textbox": data_filling_text,
         "Textbox_default": data_filling_text,
-        "Textbox_QC": data_filling_text_QC,
-        "Textbox_default_QC": data_filling_text_QC,
         "select_data": select_field,
         "select_default": select_field,
         "radiobutton_data": radio_btn_click,
         "radiobutton_default": radio_btn_click,
         "date_fill_javascript": javascript_excecuter_filling,
-        "clearing": clearing,
         "checkbox": select_checkboxes_from_list,
     }
 
@@ -415,7 +413,9 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
 
                             if value in [None, ""]:
                                 continue
-
+                            WebDriverWait(self.driver, 3).until(
+                                EC.element_to_be_clickable((By.XPATH, xpath))
+                            )
                             action_func = field_actions.get(field_type)
                             if action_func:
                                 action_func(self.driver, value, xpath, mode)
@@ -435,6 +435,9 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
         logging.error(f"Critical error in fill_form_multi: {e}")
         #update_order_status(order_id, "In Progress", "Entry", "Failed")
         return False
+
+
+
 
 
 

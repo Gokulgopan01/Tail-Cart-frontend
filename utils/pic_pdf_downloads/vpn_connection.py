@@ -5,7 +5,7 @@ import logging
 def vpn_checking():
     try:      
             session=requests.session()
-            ip_test_url1="https://customer.api.drift.com/geo/v2"
+            ip_test_url1="https://ipwhois.app/json/"
             ipapify = session.get(ip_test_url1)
             ipapify.raise_for_status()
             ipadress=json.loads(ipapify.text)['ip']
@@ -14,7 +14,7 @@ def vpn_checking():
             print(country)
 
             # Check if the country is not the US
-            if country == "US":
+            if country == "United States":
                 print("System IP is US-based.")
                 logging.info("System IP is US-based.")
                 return True

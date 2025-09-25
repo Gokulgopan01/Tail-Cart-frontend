@@ -212,7 +212,7 @@ class PortalInstructionScreen(tk.Frame):
         self.hybridIntegration = HybridBPOApi()
         self.container = tk.Frame(self)
         self.container.pack(expand=True, fill="both")
-        arg1="SmartEntry"
+        #arg1="SmartEntry"
         #arg1="PortalLogin"
         #arg1="AutoLogin"
         if "PortalLogin" in arg1:

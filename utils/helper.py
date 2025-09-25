@@ -243,7 +243,7 @@ def format_address(address):
 
 
 
-def get_cookie_from_api(username, portal="rrr", proxy=None):
+def get_cookie_from_api(username, portal, proxy=None):
     try:
         session = requests.Session()
         if proxy:
@@ -324,59 +324,45 @@ def javascript_excecuter_filling(driver, data, elementlocator, selector):
     """
     driver.execute_script(script)
 
-# import re
-
-# def javascript_excecuter_filling(driver, data, elementlocator, selector):
-#     if not data:
-#         return
-
-#     # Single regex to escape all special JS chars inside single-quoted string
-#     data = re.sub(
-#         r"[\\'\n\r\t\b\f\"]",
-#         lambda m: {
-#             '\\': r'\\',
-#             '\'': r'\'',
-#             '\n': r'\n',
-#             '\r': r'\r',
-#             '\t': r'\t',
-#             '\b': r'\b',
-#             '\f': r'\f',
-#             '"': r'\"',
-#         }[m.group()],
-#         str(data)
-#     )
-
-#     script = f"""
-#         var el = document.evaluate("{elementlocator}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-#         if (el) {{
-#             el.value = '';  // Clear existing value
-#             el.dispatchEvent(new Event('input'));  // Trigger input event
-#             el.value = '{data}';  // Refill with new value
-#             el.dispatchEvent(new Event('input'));
-#             el.dispatchEvent(new Event('change'));  // Trigger change event to ensure UI reacts
-#         }}
-#     """
-#     driver.execute_script(script)
-
-def clearing(driver,element_identifier,element_type):
-    selector_map=selector_mapping(element_type)
-    element=driver.find_elements(selector_map,element_identifier)
-    for x in element:
-        x.clear()            
-    
-    
+   
 def adj_click(driver,data,element_identifier,element_type):
     selector_map=selector_mapping(element_type)
     element=driver.find_elements(selector_map,element_identifier)
     for x in element:
         x.click()
 
-def radio_btn_click(driver,btn_value,element_identifier,element_type):#This function is for clicking radio button
-    selector_map=selector_mapping(element_type)
-    element=driver.find_elements(selector_map,element_identifier)
-    for x in element:
-        if x.get_attribute("value")==btn_value:
-            x.click()
+# def radio_btn_click(driver,btn_value,element_identifier,element_type):#This function is for clicking radio button
+#     selector_map=selector_mapping(element_type)
+#     element=driver.find_elements(selector_map,element_identifier)
+#     for x in element:
+#         if x.get_attribute("value")==btn_value:
+#             x.click()
+
+
+def radio_btn_click(driver, btn_value, element_identifier, element_type):
+    """
+    Deselect any selected radio first, then select the one with the matching value.
+    Handles trimming and &nbsp;.
+    """
+    selector_map = selector_mapping(element_type)
+    elements = driver.find_elements(selector_map, element_identifier)
+    # Always convert input to string before normalization
+    btn_value_normalized = re.sub(r"\s+", " ", str(btn_value).strip().lower())
+
+    # Deselect all first
+    for elem in elements:
+        if elem.is_selected():
+            driver.execute_script("arguments[0].checked = false;", elem)
+
+    # Try matching by 'value' attribute
+    for elem in elements:
+        elem_value = re.sub(r"\s+", " ", (elem.get_attribute("value") or "").strip().lower())
+        if elem_value == btn_value_normalized:
+            elem.click()
+            return
+
+    print(f"[radio_btn_click] No matching radio found for value: {btn_value}")
+
 
 def data_filling_text(driver,data,elementlocator,selector):
     selector_map=selector_mapping(selector)
@@ -384,12 +370,7 @@ def data_filling_text(driver,data,elementlocator,selector):
     element.clear() 
     element.send_keys(data)
 
-    
-def data_filling_text_QC(driver,data,elementlocator,selector):
-    selector_map=selector_mapping(selector)
-    element=find_elem(driver,selector_map,elementlocator)
-    element.clear() 
-    element.send_keys(data)         
+           
 
 # def select_field(driver,data,elementlocator,selector):
 #     try:
@@ -402,6 +383,10 @@ def select_field(driver, data, elementlocator, selector):
     try:
         data = data.strip().lower()
         dropdown = Select(find_elem(driver, selector, elementlocator))
+
+        # If multi-select, deselect all before picking
+        if dropdown.is_multiple:
+            dropdown.deselect_all()
         
         # Loop through options and match by lowercase text
         for option in dropdown.options:
@@ -460,21 +445,6 @@ def select_checkboxes_from_list(driver, values_list, id_prefix):
         # Remove special characters and whitespace
         return re.sub(r'[^a-zA-Z0-9]', '', str(value))
 
-    # for value in values_list:
-    #     try:
-    #         sanitized = sanitize(value)
-    #         checkbox_id = f"{id_prefix}_{sanitized}"
-    #         checkbox = driver.find_element(By.ID, checkbox_id)
-    #         if not checkbox.is_selected():
-    #             checkbox.click()
-    #             logging.info(f" Checked: {checkbox_id}")
-    #         else:
-    #             logging.info(f" Already checked: {checkbox_id}")
-    #     except NoSuchElementException:
-    #         logging.warning(f" Checkbox not found: {checkbox_id}")
-    #     except Exception as e:
-    #         logging.error(f"Error clicking checkbox {checkbox_id}: {e}")
-
     for value in values_list:
         try:
             sanitized = sanitize(value)
@@ -510,6 +480,74 @@ def fill_repair_details(driver, repair_list):
 
         except Exception as e:
             logging.error(f"Error filling repair at index {idx} ({repair.get('repair_type')}): {e}")
+
+
+# Map JSON repair types to portal input IDs
+REPAIR_FIELD_MAP = {
+    "Foundation": "PS_FORM/REPAIR_ADDENDUM/Foundation_Cost",
+    "Landscaping": "PS_FORM/REPAIR_ADDENDUM/Landscaping_Cost",
+    "Roof": "PS_FORM/REPAIR_ADDENDUM/Roof_Cost",
+    "FireDamage": "PS_FORM/REPAIR_ADDENDUM/Fire_Damage",
+    "ExteriorDoors": "PS_FORM/REPAIR_ADDENDUM/Exterior_Doors_Cost",
+    "Garage": "PS_FORM/REPAIR_ADDENDUM/Garage_Cost",
+    "Fencing": "PS_FORM/REPAIR_ADDENDUM/Fencing_Cost",
+    "Siding/TrimRepair": "PS_FORM/REPAIR_ADDENDUM/Siding_Repair_Cost",
+    "CleaningTrashRemoval": "PS_FORM/REPAIR_ADDENDUM/Landscaping_Cost",
+    "Pool": "PS_FORM/REPAIR_ADDENDUM/Pool_Cost",
+    "Painting": "PS_FORM/REPAIR_ADDENDUM/Exterior_Paint_Cost",
+    "Windows": "PS_FORM/REPAIR_ADDENDUM/Windows_Cost",
+    "Other":"PS_FORM/REPAIR_ADDENDUM/Exterior_Other1_Cost",
+    "Other2":"PS_FORM/REPAIR_ADDENDUM/Exterior_Other2_Cost",
+    "Other3":"PS_FORM/REPAIR_ADDENDUM/Exterior_Other3_Cost",
+}
+
+def SS_fill_repair_details(driver, repair_details):
+    """
+    Fill repair fields using JSON.
+    Skips 'Other' entries and fills totalRepairCost from JSON.
+    """
+    if not isinstance(repair_details, dict):
+        logging.error(f"Expected dict for repair_details, got {type(repair_details)}")
+        return
+
+    repairs_list = repair_details.get("repairs", [])
+    total_cost_from_json = repair_details.get("totalRepairCost", "")
+
+    for repair in repairs_list:
+        repair_type = repair.get("repair_type")
+        estimated_cost = repair.get("estimated_cost", "").strip()
+
+        # Skip 'Other' repair types
+        if repair_type not in REPAIR_FIELD_MAP:
+            logging.info(f"Skipping repair type: {repair_type}")
+            continue
+
+        field_id = REPAIR_FIELD_MAP[repair_type]
+
+        try:
+            input_elem = WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.ID, field_id))
+            )
+            input_elem.clear()
+            if estimated_cost:
+                input_elem.send_keys(estimated_cost)
+            logging.info(f"Filled {repair_type}: {estimated_cost}")
+        except Exception as e:
+            logging.error(f"Error filling {repair_type} ({field_id}): {e}")
+
+    # Fill totalRepairCost
+    if total_cost_from_json:
+        try:
+            total_elem = WebDriverWait(driver, 5).until(
+                EC.presence_of_element_located((By.ID, "PS_FORM/REPAIR_ADDENDUM/Total_Estimated_Repairs"))
+            )
+            driver.execute_script("arguments[0].removeAttribute('readonly')", total_elem)
+            total_elem.clear()
+            total_elem.send_keys(str(total_cost_from_json))
+            logging.info(f"Updated Total_Estimated_Repairs with: {total_cost_from_json}")
+        except Exception as e:
+            logging.error(f"Error updating Total_Estimated_Repairs: {e}")
+
 
 def save_form(driver):
     
@@ -836,9 +874,9 @@ def close_validation_popup(driver, timeout=5):
             EC.element_to_be_clickable((By.CSS_SELECTOR, "#OK a.button"))
         )
         ok_button.click()
-        print("✅ Validation popup closed.")
+        print(" Validation popup closed.")
         return True
     except (TimeoutException, NoSuchElementException):
         # Popup not present
-        print("ℹ️ No validation popup detected.")
+        print(" No validation popup detected.")
         return False

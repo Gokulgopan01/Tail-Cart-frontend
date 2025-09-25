@@ -218,7 +218,7 @@ class EcesisLoginScreen(tk.Frame):
 
         # threading.Thread(target=login_request, daemon=True).start()
         
-        arg1="SmartEntry"
+        #arg1="SmartEntry"
         #arg1="PortalLogin"
         #arg1="AutoLogin"
         # Inside your login function

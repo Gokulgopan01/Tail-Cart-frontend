@@ -398,7 +398,7 @@ def get_remote_version_info():
                 latest = data["content"]["data"][0]
                 return latest["version"], latest["path"]
     except Exception as e:
-        log(f"❌ Failed to fetch remote version info: {e}")
+        log(f" Failed to fetch remote version info: {e}")
     return None, None
 
 # --- Compare versions ---
@@ -417,7 +417,7 @@ def show_progress_bar(download_func):
                 download_func(*args, **kwargs, progress=progress_var, percent_label=percent_label)
                 progress_window.after(0, progress_window.destroy)
             except Exception as e:
-                log(f"❌ Download error: {e}")
+                log(f" Download error: {e}")
                 progress_window.after(0, lambda: messagebox.showerror("Download Failed", str(e)))
                 progress_window.after(0, progress_window.destroy)
 
@@ -461,15 +461,15 @@ def replace_exe():
     if os.path.exists(MAIN_EXE):
         os.remove(MAIN_EXE)
     shutil.move("main_new.exe", MAIN_EXE)
-    log("✅ Replaced main.exe.")
+    log(" Replaced main.exe.")
 
 # --- Run main app ---
 def run_main_exe():
     if os.path.exists(MAIN_EXE):
-        log("🚀 Launching main.exe...")
+        log(" Launching main.exe...")
         subprocess.Popen([MAIN_EXE], shell=True)
     else:
-        log("❌ main.exe not found. Cannot launch.")
+        log(" main.exe not found. Cannot launch.")
 
 # --- Show popup window for update ---
 def show_update_popup(current, latest):
@@ -491,7 +491,7 @@ def version_update(call_back=None):
     remote_version, remote_path = get_remote_version_info()
 
     if not remote_version or not remote_path:
-        log("⚠️ Could not fetch version info. Running local version.")
+        log(" Could not fetch version info. Running local version.")
         if call_back:
             call_back()
         else:
@@ -499,13 +499,13 @@ def version_update(call_back=None):
         return
 
     if versions_different(LOCAL_VERSION, remote_version):
-        log(f"⬆️ Update required: {LOCAL_VERSION} → {remote_version}")
+        log(f" Update required: {LOCAL_VERSION} → {remote_version}")
         show_update_popup(LOCAL_VERSION, remote_version)
         copy_new_exe(remote_path)
         replace_exe()
         run_main_exe()
     else:
-        log("✅ Already using the latest version.")
+        log(" Already using the latest version.")
         if call_back:
             call_back()
         else:
