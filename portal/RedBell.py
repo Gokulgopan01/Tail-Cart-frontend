@@ -304,7 +304,8 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
         for prefix, data_source in data_sources.items():
             if expr.startswith(prefix):
                 suffix = expr[len(prefix):]
-                keys = get_keys_cached(suffix) if prefix == "entry_data[0]" else get_keys_cached(expr)
+                #keys = get_keys_cached(suffix) if prefix == "entry_data[0]" else get_keys_cached(expr)
+                keys = get_keys_cached(suffix)
                 #keys = re.findall(r"\['(.*?)'\]", suffix)
                 value = get_nested(data_source, keys, "")
                 value_cache[expr] = value
