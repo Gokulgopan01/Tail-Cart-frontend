@@ -331,12 +331,6 @@ def adj_click(driver,data,element_identifier,element_type):
     for x in element:
         x.click()
 
-# def radio_btn_click(driver,btn_value,element_identifier,element_type):#This function is for clicking radio button
-#     selector_map=selector_mapping(element_type)
-#     element=driver.find_elements(selector_map,element_identifier)
-#     for x in element:
-#         if x.get_attribute("value")==btn_value:
-#             x.click()
 
 
 def radio_btn_click(driver, btn_value, element_identifier, element_type):
@@ -364,20 +358,56 @@ def radio_btn_click(driver, btn_value, element_identifier, element_type):
     print(f"[radio_btn_click] No matching radio found for value: {btn_value}")
 
 
-def data_filling_text(driver,data,elementlocator,selector):
-    selector_map=selector_mapping(selector)
-    element=find_elem(driver,selector_map,elementlocator)
-    element.clear() 
-    element.send_keys(data)
+# def data_filling_text(driver,data,elementlocator,selector):
+#     selector_map=selector_mapping(selector)
+#     element=find_elem(driver,selector_map,elementlocator)
+#     element.clear() 
+#     element.send_keys(str(data))
 
+def data_filling_text(driver, data, elementlocator, selector):
+    """
+    Fills text-based input fields safely.
+    Handles masked/currency/react-controlled inputs by triggering proper JS events.
+    """
+
+    if data in [None, ""]:
+        return  # Skip empty data
+
+    data = str(data)
+    selector_map = selector_mapping(selector)
+    element = find_elem(driver, selector_map, elementlocator)
+
+    try:
+        # Step 1: Try standard Selenium input
+        element.clear()
+        element.send_keys(data)
+
+        # Step 2: Trigger input/change events (for JS/React binding)
+        driver.execute_script("""
+            arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+            arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+        """, element)
+
+        # Step 3: Verify value actually applied
+        current_val = driver.execute_script("return arguments[0].value;", element)
+        if current_val.strip() != data.strip():
+            # Step 4: Fallback to JavaScript injection
+            driver.execute_script("""
+                arguments[0].value = '';
+                arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+                arguments[0].value = arguments[1];
+                arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+                arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+            """, element, data)
+
+        # Optional: small delay to let UI stabilize (for portals with heavy JS)
+        time.sleep(0.1)
+
+    except Exception as e:
+        logging.error(f"[data_filling_text] Error filling element {elementlocator}: {e}")
            
 
-# def select_field(driver,data,elementlocator,selector):
-#     try:
-#         Select(find_elem(driver,selector,elementlocator)).select_by_visible_text(data)
-#     except Exception as e:   
-#             data='' 
-#             print("no data",e)
+
 
 def select_field(driver, data, elementlocator, selector):
     try:
@@ -462,24 +492,86 @@ def select_checkboxes_from_list(driver, values_list, id_prefix):
         except Exception as e:
             logging.error(f"Error clicking checkbox {checkbox_id}: {e}")
 
+# def fill_repair_details(driver, repair_list):
+#     for idx, repair in enumerate(repair_list):
+#         try:
+#             comment_xpath = f"//input[@id='ExteriorRepairList_{idx}__RepairComment']"
+#             cost_xpath = f"//input[@id='ExteriorRepairList_{idx}__Amount']"
+
+#             # Fill comments
+#             comment_elem = driver.find_element(By.XPATH, comment_xpath)
+#             comment_elem.clear()
+#             comment_elem.send_keys(repair.get("comments", ""))
+
+#             # Fill estimated cost
+#             cost_elem = driver.find_element(By.XPATH, cost_xpath)
+#             cost_elem.clear()
+#             cost_elem.send_keys(str(repair.get("estimated_cost", "")))
+
+#         except Exception as e:
+#             logging.error(f"Error filling repair at index {idx} ({repair.get('repair_type')}): {e}")
+
+# Mapping to normalize repair type differences between JSON and form text
+repair_type_mapping = {
+    "cleaningtrashremoval": "Cleaning/Trash Removal",
+    "repairbid": "Repair Bid",
+    "foundation": "Foundation",
+    "landscaping": "Landscaping",
+    "painting": "Painting",
+    "roof": "Roof",
+    "windows": "Windows",
+    "pool": "Pool",
+    "other": "Other"
+}
+
+def normalize(text):
+    """Normalize text for matching: lowercase and remove non-alphanumeric chars."""
+    return re.sub(r"[^a-z0-9]", "", (text or "").lower())
+
 def fill_repair_details(driver, repair_list):
-    for idx, repair in enumerate(repair_list):
-        try:
-            comment_xpath = f"//input[@id='ExteriorRepairList_{idx}__RepairComment']"
-            cost_xpath = f"//input[@id='ExteriorRepairList_{idx}__Amount']"
+    """
+    Fill the exterior repair table based on JSON repair_list.
+    repair_list = [
+        {"repair_type": "repairbid", "comments": "some comment", "estimated_cost": 200},
+        ...
+    ]
+    """
+    rows = driver.find_elements(By.XPATH, "//table[@id='exteriorRepairTable']/tbody/tr")
+    
+    for repair in repair_list:
+        # Normalize JSON repair_type and map to table text
+        r_type_key = normalize(repair.get("repair_type"))
+        r_type_form = repair_type_mapping.get(r_type_key)
+        if not r_type_form:
+            print(f"Warning: Repair type '{repair.get('repair_type')}' has no mapping.")
+            continue
 
-            # Fill comments
-            comment_elem = driver.find_element(By.XPATH, comment_xpath)
-            comment_elem.clear()
-            comment_elem.send_keys(repair.get("comments", ""))
+        comments = repair.get("comments", "")
+        cost = str(repair.get("estimated_cost", ""))
 
-            # Fill estimated cost
-            cost_elem = driver.find_element(By.XPATH, cost_xpath)
-            cost_elem.clear()
-            cost_elem.send_keys(str(repair.get("estimated_cost", "")))
+        matched = False
 
-        except Exception as e:
-            logging.error(f"Error filling repair at index {idx} ({repair.get('repair_type')}): {e}")
+        for row in rows:
+            type_elem = row.find_element(By.XPATH, "./td[1]/div")
+            type_text = type_elem.text.strip()
+            if type_text == r_type_form:
+                # Fill comment
+                comment_input = row.find_element(By.XPATH, ".//input[contains(@id,'RepairComment')]")
+                comment_input.clear()
+                if comments:
+                    comment_input.send_keys(comments)
+                
+                # Fill amount
+                amount_input = row.find_element(By.XPATH, ".//input[contains(@id,'Amount')]")
+                amount_input.clear()
+                if cost:
+                    amount_input.send_keys(cost)
+                
+                matched = True
+                break  # stop after filling this repair
+
+        if not matched:
+            print(f"Warning: Repair type '{r_type_form}' not found in table.")
 
 
 # Map JSON repair types to portal input IDs

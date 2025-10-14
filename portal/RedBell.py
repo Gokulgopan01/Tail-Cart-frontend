@@ -272,10 +272,16 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
             key_expr_cache[key_expr] = re.findall(r"\['(.*?)'\]", key_expr)
         return key_expr_cache[key_expr]
 
-    def extract_value_from_expr(expr):
+    def extract_value_from_expr(expr: str):
+        """
+        Safely extract a value from merged_json sections based on the expression string.
+        Returns None if the value is missing, never the literal expression.
+        """
+
         if expr in value_cache:
             return value_cache[expr]
 
+        # Define all possible data sources
         data_sources = {
             "sub_data": sub_data,
             "comp_data": comp_data,
@@ -289,29 +295,38 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
             "list1": list1,
             "list2": list2,
             "list3": list3,
-            "rental_list1":rental_list1,
-            "rental_list2":rental_list2,
-            "rental_leased1":rental_leased1,
-            "rental_leased2":rental_leased2,
-            "adj_sold1":adj_sold1,
-            "adj_sold2":adj_sold2,
-            "adj_sold3":adj_sold3,
-            "adj_list1":adj_list1,
-            "adj_list2":adj_list2,
-            "adj_list3":adj_list3
+            "rental_list1": rental_list1,
+            "rental_list2": rental_list2,
+            "rental_leased1": rental_leased1,
+            "rental_leased2": rental_leased2,
+            "adj_sold1": adj_sold1,
+            "adj_sold2": adj_sold2,
+            "adj_sold3": adj_sold3,
+            "adj_list1": adj_list1,
+            "adj_list2": adj_list2,
+            "adj_list3": adj_list3
         }
 
-        for prefix, data_source in data_sources.items():
+        # Iterate through data sources to find matching prefix
+        for prefix, source in data_sources.items():
             if expr.startswith(prefix):
                 suffix = expr[len(prefix):]
-                #keys = get_keys_cached(suffix) if prefix == "entry_data[0]" else get_keys_cached(expr)
-                keys = get_keys_cached(suffix)
-                #keys = re.findall(r"\['(.*?)'\]", suffix)
-                value = get_nested(data_source, keys, "")
+                keys = re.findall(r"\['(.*?)'\]", suffix)
+
+                # Use get_nested, default to None if not found
+                value = get_nested(source, keys, None)
+
+                # Convert numbers to strings for Selenium text input
+                if isinstance(value, (int, float)):
+                    value = str(value)
+
                 value_cache[expr] = value
+                if value is None:
+                    logging.warning(f"[extract_value_from_expr] Value for '{expr}' not found, defaulting to None")
                 return value
 
-        value_cache[expr] = expr
+        # If prefix not found, return None safely
+        value_cache[expr] = None
         return expr
 
     field_actions = {
@@ -414,9 +429,9 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
 
                             if value in [None, ""]:
                                 continue
-                            WebDriverWait(self.driver, 3).until(
-                                EC.element_to_be_clickable((By.XPATH, xpath))
-                            )
+                            # WebDriverWait(self.driver, 3).until(
+                            #     EC.element_to_be_clickable((By.XPATH, xpath))
+                            # )
                             action_func = field_actions.get(field_type)
                             if action_func:
                                 action_func(self.driver, value, xpath, mode)

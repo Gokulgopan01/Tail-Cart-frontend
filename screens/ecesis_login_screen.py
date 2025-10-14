@@ -564,148 +564,73 @@ class EcesisLoginScreen(tk.Frame):
     #     combobox.bind("<Key>", on_keypress)
 
 #########################
-    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
-    #     """Adds live search to a ttk.Combobox with cumulative filtering, backspace, escape."""
-    #     original_values = list(values_list)
-    #     typed_chars = []
-    #     reset_next_key = False  # True if next key should start fresh
+    
 
-    #     def on_keypress(event):
-    #         nonlocal typed_chars, reset_next_key
+######################################select ##########################
+    def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
+        """
+        Adds live starts-with filtering to a ttk.Combobox.
+        The full list always includes the default_text at the top.
+        Handles backspace, escape, and cumulative typing.
+        """
+        # Make sure default_text is the first item
+        original_values = [default_text] + [v for v in values_list if v != default_text]
+        typed_chars = []
+        reset_next_key = False  # True if next key should start fresh
 
-    #         if len(event.char) == 0:
-    #             return
+        def on_keypress(event):
+            nonlocal typed_chars, reset_next_key
 
-    #         if event.keysym == "BackSpace":
-    #             if typed_chars:
-    #                 typed_chars.pop()
-    #         elif event.keysym == "Escape":
-    #             typed_chars.clear()
-    #             combobox["values"] = original_values
-    #             combobox.set(default_text)
-    #             reset_next_key = False
-    #             return
-    #         elif event.char.isprintable():
-    #             if reset_next_key:
-    #                 typed_chars = [event.char.upper()]
-    #                 reset_next_key = False
-    #             else:
-    #                 typed_chars.append(event.char.upper())
+            if len(event.char) == 0:
+                return
 
-    #         search_str = "".join(typed_chars)
-    #         filtered = sorted([v for v in original_values if v.upper().startswith(search_str)])
+            # Backspace handling
+            if event.keysym == "BackSpace":
+                if typed_chars:
+                    typed_chars.pop()
+            # Escape resets everything
+            elif event.keysym == "Escape":
+                typed_chars.clear()
+                combobox["values"] = original_values
+                combobox.set(default_text)
+                reset_next_key = False
+                return
+            # Printable typing
+            elif event.char.isprintable():
+                if reset_next_key:
+                    typed_chars = [event.char.upper()]
+                    reset_next_key = False
+                else:
+                    typed_chars.append(event.char.upper())
 
-    #         if filtered:
-    #             combobox["values"] = filtered
-    #             combobox.set(filtered[0])
-    #         else:
-    #             # If nothing matches, do not change the original list
-    #             combobox["values"] = original_values
-    #             combobox.set(default_text)
+            search_str = "".join(typed_chars)
+            # Always keep default_text at the top
+            filtered = [default_text] + sorted(
+                [v for v in values_list if v.upper().startswith(search_str)]
+            )
 
-    #         # If next key should start fresh after previous full match
-    #         if search_str and event.keysym.isalpha() and not filtered:
-    #             typed_chars = []
-    #             reset_next_key = True
+            if filtered:
+                combobox["values"] = filtered
+                combobox.set(filtered[1] if len(filtered) > 1 else filtered[0])
+            else:
+                combobox["values"] = original_values
+                combobox.set(default_text)
 
-    #     combobox.bind("<Key>", on_keypress)
+            # Reset next key if no match
+            if search_str and event.keysym.isalpha() and len(filtered) <= 1:
+                typed_chars = []
+                reset_next_key = True
+
+        combobox.bind("<Key>", on_keypress)
+        combobox.set(default_text)
+
+
+
+
+        
 
 ##############################
-    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
-    #     original_values = list(values_list)
-    #     typed_chars = []
-    #     reset_next_key = False
-
-    #     def on_keypress(event):
-    #         nonlocal typed_chars, reset_next_key
-    #         if len(event.char) == 0:
-    #             return
-    #         if event.keysym == "BackSpace":
-    #             if typed_chars:
-    #                 typed_chars.pop()
-    #         elif event.keysym == "Escape":
-    #             typed_chars.clear()
-    #             combobox["values"] = original_values
-    #             combobox.set(default_text)
-    #             reset_next_key = False
-    #             return
-    #         elif event.char.isprintable():
-    #             if reset_next_key:
-    #                 typed_chars = [event.char.upper()]
-    #                 reset_next_key = False
-    #             else:
-    #                 typed_chars.append(event.char.upper())
-
-    #         search_str = "".join(typed_chars)
-    #         filtered = sorted([v for v in original_values if v.upper().startswith(search_str)])
-    #         if filtered:
-    #             combobox["values"] = filtered
-    #             combobox.set(filtered[0])
-    #         else:
-    #             combobox["values"] = original_values
-    #             combobox.set(default_text)
-
-    #         if search_str and event.keysym.isalpha() and not filtered:
-    #             typed_chars = []
-    #             reset_next_key = True
-
-    #     combobox.bind("<Key>", on_keypress)
-##############new###################
-    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
-    #     original_values = list(values_list)
-    #     typed_chars = []
-    #     reset_next_key = False
-
-    #     def on_keypress(event):
-    #         nonlocal typed_chars, reset_next_key
-    #         if len(event.char) == 0:
-    #             return
-
-    #         # Backspace
-    #         if event.keysym == "BackSpace":
-    #             if typed_chars:
-    #                 typed_chars.pop()
-
-    #         # Escape: reset dropdown
-    #         elif event.keysym == "Escape":
-    #             typed_chars.clear()
-    #             combobox["values"] = original_values
-    #             combobox.set(default_text)
-    #             reset_next_key = False
-    #             return
-
-    #         # Printable character: append for search
-    #         elif event.char.isprintable():
-    #             if reset_next_key:
-    #                 typed_chars = [event.char.upper()]
-    #                 reset_next_key = False
-    #             else:
-    #                 typed_chars.append(event.char.upper())
-
-    #         search_str = "".join(typed_chars)
-
-    #         # Filter current list
-    #         filtered = sorted([v for v in original_values if v.upper().startswith(search_str)])
-    #         if filtered:
-    #             combobox["values"] = filtered
-    #             combobox.set(filtered[0])
-    #         else:
-    #             combobox["values"] = original_values
-    #             combobox.set(default_text)
-
-    #         if search_str and event.keysym.isalpha() and not filtered:
-    #             typed_chars = []
-    #             reset_next_key = True
-
-    #     def on_click(event=None):
-    #         """Reset typed_chars and show full list on click"""
-    #         nonlocal typed_chars
-    #         typed_chars.clear()
-    #         combobox["values"] = original_values
-    #         combobox.set(default_text)
-
-    #     combobox.bind("<Key>", on_keypress)
-    #     combobox.bind("<Button-1>", on_click)
+    
 
  #######################   
     # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select Main Client"):
@@ -749,7 +674,7 @@ class EcesisLoginScreen(tk.Frame):
 
     #     combobox.bind("<KeyPress>", on_keypress)
 
-#################################new######################################################
+#################################right######################################################
   
 
     # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select Main Client"):
@@ -815,358 +740,15 @@ class EcesisLoginScreen(tk.Frame):
 #####################################################################################
 
 
-    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select Main Client"):
-    #     original_values = list(values_list)
-    #     typed_chars = []
-    #     last_key_time = 0
-    #     reset_delay = 1.0  # seconds
-
-    #     def update_dropdown():
-    #         search_text = "".join(typed_chars).lower()
-    #         if search_text:
-    #             filtered = [v for v in original_values if v.lower().startswith(search_text)]
-    #         else:
-    #             filtered = original_values.copy()
-
-    #         combobox['values'] = filtered
-    #         # Update entry to show typed letters
-    #         combobox.set("".join(typed_chars))
-    #         if filtered:
-    #             combobox.current(0)
-    #         else:
-    #             combobox.set("".join(typed_chars))
-
-    #     def on_keypress(event):
-    #         nonlocal typed_chars, last_key_time
-
-    #         if len(event.char) == 0:
-    #             return
-
-    #         current_time = time.time()
-    #         # Reset search if last key was long ago
-    #         if current_time - last_key_time > reset_delay:
-    #             typed_chars = []
-
-    #         last_key_time = current_time
-
-    #         if event.keysym == "Escape":
-    #             typed_chars = []
-    #             update_dropdown()
-    #             combobox.set(default_text)
-    #             return
-
-    #         if event.keysym == "BackSpace":
-    #             if typed_chars:
-    #                 typed_chars.pop()
-    #         elif event.keysym not in ("Up", "Down", "Left", "Right"):
-    #             typed_chars.append(event.char.lower())
-
-    #         update_dropdown()
-
-    #     def on_arrow(event):
-    #         current_index = combobox.current()
-    #         values = combobox['values']
-    #         if not values:
-    #             return
-    #         if event.keysym == "Up":
-    #             combobox.current((current_index - 1) % len(values))
-    #         elif event.keysym == "Down":
-    #             combobox.current((current_index + 1) % len(values))
-
-    #     combobox.bind("<KeyPress>", on_keypress)
-    #     combobox.bind("<Up>", on_arrow)
-    #     combobox.bind("<Down>", on_arrow)
-
-###################################
 
 
-    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select Main Client"):
-    #     original_values = list(values_list)
-    #     typed_chars = []
-    #     last_key_time = 0
-    #     reset_delay = 1.0  # seconds
-
-    #     def update_dropdown():
-    #         search_text = "".join(typed_chars).lower()
-    #         if search_text:
-    #             filtered = [v for v in original_values if v.lower().startswith(search_text)]
-    #         else:
-    #             filtered = original_values.copy()
-
-    #         combobox['values'] = filtered
-    #         combobox.set("".join(typed_chars))
-
-    #         if filtered:
-    #             combobox.current(0)
-    #             # Open dropdown automatically
-    #             combobox.event_generate('<Down>')
-    #         else:
-    #             combobox.set("".join(typed_chars))
-
-    #     def on_keypress(event):
-    #         nonlocal typed_chars, last_key_time
-
-    #         if len(event.char) == 0:
-    #             return
-
-    #         current_time = time.time()
-    #         if current_time - last_key_time > reset_delay:
-    #             typed_chars = []
-
-    #         last_key_time = current_time
-
-    #         if event.keysym == "Escape":
-    #             typed_chars = []
-    #             combobox.set(default_text)
-    #             combobox['values'] = original_values
-    #             return
-
-    #         if event.keysym == "BackSpace":
-    #             if typed_chars:
-    #                 typed_chars.pop()
-    #         elif event.keysym not in ("Up", "Down", "Left", "Right"):
-    #             typed_chars.append(event.char.lower())
-
-    #         update_dropdown()
-
-    #     def on_arrow(event):
-    #         current_index = combobox.current()
-    #         values = combobox['values']
-    #         if not values:
-    #             return
-    #         if event.keysym == "Up":
-    #             combobox.current((current_index - 1) % len(values))
-    #         elif event.keysym == "Down":
-    #             combobox.current((current_index + 1) % len(values))
-
-    #     combobox.bind("<KeyPress>", on_keypress)
-    #     combobox.bind("<Up>", on_arrow)
-    #     combobox.bind("<Down>", on_arrow)
-#####################################
-
-
-    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select Main Client"):
-    #     original_values = list(values_list)
-    #     typed_chars = []
-    #     last_key_time = 0
-    #     reset_delay = 1.0  # seconds
-
-    #     # Use StringVar to control entry text
-    #     var = tk.StringVar()
-    #     combobox.config(textvariable=var)
-    #     var.set(default_text)
-
-    #     def update_dropdown():
-    #         search_text = "".join(typed_chars).lower()
-    #         if search_text:
-    #             filtered = [v for v in original_values if v.lower().startswith(search_text)]
-    #         else:
-    #             filtered = original_values.copy()
-
-    #         combobox['values'] = filtered
-
-    #         # Update entry
-    #         var.set("".join(typed_chars))
-    #         combobox.icursor(len(typed_chars))  # move cursor to end
-    #         combobox.selection_range(0, len(typed_chars))  # highlight typed letters
-
-    #         if filtered:
-    #             combobox.current(0)
-    #             combobox.event_generate('<Down>')  # auto-open dropdown
-
-    #     def on_keypress(event):
-    #         nonlocal typed_chars, last_key_time
-
-    #         if len(event.char) == 0:
-    #             return
-
-    #         current_time = time.time()
-    #         if current_time - last_key_time > reset_delay:
-    #             typed_chars = []
-
-    #         last_key_time = current_time
-
-    #         if event.keysym == "Escape":
-    #             typed_chars = []
-    #             var.set(default_text)
-    #             combobox['values'] = original_values
-    #             return
-
-    #         if event.keysym == "BackSpace":
-    #             if typed_chars:
-    #                 typed_chars.pop()
-    #         elif event.keysym not in ("Up", "Down", "Left", "Right"):
-    #             typed_chars.append(event.char.lower())
-
-    #         update_dropdown()
-
-    #     def on_arrow(event):
-    #         current_index = combobox.current()
-    #         values = combobox['values']
-    #         if not values:
-    #             return
-    #         if event.keysym == "Up":
-    #             combobox.current((current_index - 1) % len(values))
-    #         elif event.keysym == "Down":
-    #             combobox.current((current_index + 1) % len(values))
-
-    #     combobox.bind("<KeyPress>", on_keypress)
-    #     combobox.bind("<Up>", on_arrow)
-    #     combobox.bind("<Down>", on_arrow)
-
-#####################################
+    
 
 
 
  
 
-    def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
-        """
-        Binds keyboard and mouse events to a ttk.Combobox to enable predictive
-        filtering, highlighting, and auto-reset functionality.
-        """
-        # Ensure the original list is sorted for consistent filtering/highlighting
-        original_values = sorted([str(v) for v in values_list]) 
-        
-        # List to store the characters typed for the current search/filter string
-        typed_chars = []
-        
-        # Initialize last_key_time if it doesn't exist on the object
-        if not hasattr(self, 'last_key_time'):
-            self.last_key_time = time.time()
-        
-        # Delay (in seconds) after which the search string resets
-        TIMEOUT_SEC = 0.5 
-
-        # --- Reset Functionality ---
-        def full_reset_state():
-            """Clears the search state and resets the Combobox's values to the original list."""
-            nonlocal typed_chars
-            typed_chars.clear()
-            combobox["values"] = original_values
-        
-        # ----------------------------------------------------------------------
-        # 1. KEYPRESS HANDLER (Filtering, Highlighting, and Jump Logic)
-        # ----------------------------------------------------------------------
-        def on_keypress(event):
-            nonlocal typed_chars
-            
-            # Ignore non-character keys (e.g., Shift, Ctrl)
-            if len(event.char) == 0:
-                return
-
-            current_time = time.time()
-            
-            # Check for timeout: if the user paused, clear the search string
-            if current_time - self.last_key_time > TIMEOUT_SEC:
-                typed_chars.clear()
-            self.last_key_time = current_time
-
-            # --- Handle Special Keys ---
-            
-            if event.keysym == "BackSpace":
-                if typed_chars:
-                    typed_chars.pop()
-                if not typed_chars:
-                    combobox["values"] = original_values
-                    combobox.set(default_text)
-                    return
-            
-            elif event.keysym == "Escape":
-                full_reset_state()
-                combobox.set(default_text)
-                return
-            
-            elif event.keysym in ("Return", "KP_Enter"):
-                # Triggers the selection event which handles final reset and closing
-                combobox.event_generate('<<ComboboxSelected>>')
-                return
-            
-            # --- Handle Printable Character ---
-            
-            elif event.char.isprintable():
-                new_char_upper = event.char.upper()
-                
-                # --- JUMP TO NEXT MATCH Logic (Typing same char repeatedly) ---
-                current_value = combobox.get()
-                current_filtered_values = combobox["values"]
-
-                if typed_chars and new_char_upper == typed_chars[-1]:
-                    
-                    jump_char = typed_chars[-1]
-                    values_to_search = list(current_filtered_values)
-                    
-                    try:
-                        current_index = values_to_search.index(current_value)
-                    except ValueError:
-                        current_index = -1 
-                    
-                    # Cycle through the list to find the next match
-                    for i in range(len(values_to_search)):
-                        item_index = (current_index + 1 + i) % len(values_to_search)
-                        item = values_to_search[item_index]
-                        
-                        if item.upper().startswith(jump_char):
-                            combobox.set(item)
-                            # CRITICAL: Open/Keep open the dropdown to show highlight
-                            combobox.event_generate('<Down>') 
-                            return
-                
-                # --- EXTEND FILTER Logic (New character typed) ---
-                else:
-                    typed_chars.append(new_char_upper)
-            
-            else:
-                return
-
-            # --- CORE FILTER AND HIGHLIGHT BLOCK ---
-            search_str = "".join(typed_chars)
-            
-            # Filter the original list (case-insensitive start-with match)
-            filtered = [v for v in original_values if v.upper().startswith(search_str)]
-
-            if filtered:
-                # 1. Update the dropdown list values
-                combobox["values"] = filtered
-                
-                # 2. Set the selection, which **HIGHLIGHTS** the item
-                combobox.set(filtered[0])
-                
-                # 3. Programmatically open the dropdown list to **SHOW** the highlight
-                combobox.event_generate('<Down>') 
-            else:
-                # No match found: revert to full list and clear search chars
-                combobox["values"] = original_values
-                combobox.set(default_text)
-                typed_chars.clear()
-
-        # ----------------------------------------------------------------------
-        # 2. EVENT HANDLERS
-        # ----------------------------------------------------------------------
-        def on_click(event=None):
-            """Reset the search state before opening the full list (on mouse click)."""
-            full_reset_state()
-
-        def on_select(event=None):
-            """Resets the state after a successful item selection."""
-            full_reset_state()
-
-        def on_focus_out(event=None):
-            """Auto-resets the state when the widget loses focus (user clicks/tabs away)."""
-            full_reset_state()
-
-        # ----------------------------------------------------------------------
-        # 3. BINDINGS
-        # ----------------------------------------------------------------------
-        # Binds for filtering, highlighting, and search logic
-        combobox.bind("<Key>", on_keypress, add=True) 
-        # Binds for initial state reset when the user clicks the box
-        combobox.bind("<Button-1>", on_click, add=True)
-        # Binds for final state reset when an item is successfully selected
-        combobox.bind("<<ComboboxSelected>>", on_select, add=True)
-        # Binds to reset everything when the user leaves the widget
-        combobox.bind("<FocusOut>", on_focus_out, add=True)
-
+    
 
 
 

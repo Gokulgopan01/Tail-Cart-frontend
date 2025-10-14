@@ -1236,10 +1236,11 @@
                                  "values":[
                                     ["sub_data['QuickSalePrice']","//*[@id='QuickSale_Value']","xpath"],
                                     ["sub_data['As-IsSalePrice']","//*[@id='AsIsValue_Value']","xpath"],
-                                    ["sub_data['As-IsSalePrice']","//*[@id='AsIsList_Value']","xpath"],
+                                    ["sub_data['As-IsListPrice']","//*[@id='AsIsList_Value']","xpath"],
                                     ["sub_data['QuickSaleRepairedPrice']","//*[@id='QSRepValue_Value']","xpath"],
                                     ["sub_data['RepairedSalePrice']","//*[@id='RepairValue_Value']","xpath"],
                                     ["sub_data['RepairedListPrice']","//*[@id='RepairList_Value']","xpath"],
+                                     ["sub_data['RepairedListPrice']","//*[@id='RepairList_Value']","xpath"],
                                     ["sub_data['Comments']","//*[@id='PricingStrategy_Value']","xpath"]
                                      ]
                               },
