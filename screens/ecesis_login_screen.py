@@ -16,7 +16,6 @@ from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageTk
 
 from screens.portal_login_screen import PortalLoginScreen
-import app
 from utils.helper import params_check, setup_driver
 from utils.user_data import save_login_data, load_login_data
 from config import env
