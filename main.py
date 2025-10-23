@@ -50,8 +50,10 @@ def register_url_protocol(protocol_name, exe_path):
 def launch_app():
     # Step 2: Register protocol (if not already registered)
     protocol_name = "hybridbpoautologinv1"
-    exe_path = r"C:\HybridBPO\autologin\dist\main.exe"
+    #exe_path = r"C:\HybridBPO\autologin\dist\main.exe"
+    desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
 
+    exe_path = desktop_path + r"\main.exe"
     if not is_protocol_registered(protocol_name):
         register_url_protocol(protocol_name, exe_path)
     # # Step 3: Start application

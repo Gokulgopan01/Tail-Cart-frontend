@@ -42,7 +42,7 @@ ASSIGNEDORDERS_URL = env.ASSIGNEDORDERS_URL
 
 
 
-def handle_login_status(login_title_or_url, username,login_check_keywords, portal_name):
+def handle_login_status(login_title_or_url, username,login_check_keywords, portal_name,driver=None):
     """Handle login success or failure by checking the current URL."""
 
     # Check if the current URL contains any of the success indicators
@@ -52,7 +52,23 @@ def handle_login_status(login_title_or_url, username,login_check_keywords, porta
     else:
         logging.error(f"Login failed for {username} on {portal_name}. Possible incorrect credentials or login issue.")
         messagebox.showerror("Login Failed", "Invalid credentials or login error for {portal_name}.")
-        
+
+    # --- Handle unexpected popups (if any) ---
+    try:
+        if driver:
+            main_window = driver.current_window_handle
+            all_windows = driver.window_handles
+
+            # If a popup (new tab/window) is open
+            for window in all_windows:
+                if window != main_window:
+                    driver.switch_to.window(window)
+                    logging.info("Closing popup window...")
+                    driver.close()  # Close only the popup
+
+            driver.switch_to.window(main_window)
+    except Exception as e:
+        logging.warning(f"Popup handling error: {e}")    
         
 
 def handle_exception(self, e):
@@ -173,7 +189,11 @@ def get_order_address_from_assigned_order(order_id, token):
         if response.status_code == 200:
             data = response.json()
             if "content" in data and "data" in data["content"]:
-                return data["content"]["data"].get("portal_order_id", "Address Not Found")
+                #return data["content"]["data"].get("portal_order_id", "Address Not Found")
+                order_data = data["content"]["data"]
+                portal_order_id = order_data.get("portal_order_id", "Address Not Found")
+                tfs_orderid = order_data.get("tfs_orderid", "TFS ID Not Found")
+                return portal_order_id, tfs_orderid
             else:
                 return "Invalid Response Format"
         else:
@@ -972,3 +992,43 @@ def close_validation_popup(driver, timeout=5):
         # Popup not present
         print(" No validation popup detected.")
         return False
+    
+import requests
+import logging
+import time
+
+
+def tfs_statuschange(tfs_order_id,bpo_statusid,tfs_status,tfs_status_reason):
+   
+    try:
+        
+                
+                data={
+                    "strSessionID":"",
+                    "ProcParameters":["type","sTFStatusData","stfsOrderId"],
+                    "ProcInputData":[1,f"{tfs_status}~{tfs_status_reason}~",tfs_order_id]
+                    }
+
+                data1={
+                    "strSessionID":"",
+                    "ProcInputData": [f"{bpo_statusid}~Na~Na~",tfs_order_id],
+                    "ProcParameters": ["sAutoBPOdata", "sOrderId"]
+                    }
+                
+                #response2=requests.post("https://bpotrackers.com/bvupcqp/home/ProcUpdateTFSstatusEntry",data=data)
+                response2=requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateTFSstatusEntry",data=data)                
+                logging.info(f"response2 :{response2.text} , ordID {tfs_order_id}")
+
+                #response1 =requests.post("https://bpotrackers.com/bvupcqp/Home/ProcUpdateAutoEntry",data=data1)
+                response1 =requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateAutoEntry",data=data1)
+          
+                logging.info(f"response1 :{response1.text} , ordID: {tfs_order_id}")
+
+            
+                print("Status changed succesfully")
+                logging.info("Status changed succesfully")
+               
+
+            
+    except Exception as error:logging.info(f"Exception occured on sttaus change {error}")
+        

@@ -403,11 +403,12 @@ def get_remote_version_info():
 
 # --- Compare versions ---
 def versions_different(local, remote):
-    local_version = local.strip()
-    if os.path.exists(local):
-        with open(local, 'r') as f:
-            local_version = f.read().strip()
-    return local_version != remote.strip()
+    # local_version = local.strip()
+    # if os.path.exists(local):
+    #     with open(local, 'r') as f:
+    #         local_version = f.read().strip()
+    # return local_version != remote.strip()
+    return local.strip() != remote.strip()
 
 # --- Show progress bar window ---
 def show_progress_bar(download_func):
@@ -442,10 +443,10 @@ def show_progress_bar(download_func):
 
 # --- File copy with progress ---
 @show_progress_bar
-def copy_new_exe(source_path, progress, percent_label):
+def copy_new_exe(source_path,remote_version, progress, percent_label):
     total_size = os.path.getsize(source_path)
     copied = 0
-    with open(source_path, "rb") as src, open("main_new.exe", "wb") as dst:
+    with open(source_path, "rb") as src, open(f"Hybrid BPO-Autologin-V{remote_version}.exe", "wb") as dst:
         while True:
             chunk = src.read(1024 * 1024)
             if not chunk:
@@ -492,21 +493,31 @@ def version_update(call_back=None):
 
     if not remote_version or not remote_path:
         log(" Could not fetch version info. Running local version.")
-        if call_back:
-            call_back()
-        else:
-            run_main_exe()
-        return
-
+        run_main_exe()
     if versions_different(LOCAL_VERSION, remote_version):
         log(f" Update required: {LOCAL_VERSION} → {remote_version}")
         show_update_popup(LOCAL_VERSION, remote_version)
-        copy_new_exe(remote_path)
-        replace_exe()
-        run_main_exe()
+        copy_new_exe(remote_path,remote_version)
+        show_update_complete_popup(LOCAL_VERSION, remote_version)
+
     else:
         log(" Already using the latest version.")
+        
         if call_back:
             call_back()
         else:
             run_main_exe()
+
+
+def show_update_complete_popup(current, latest):
+    popup = tk.Tk()
+    popup.title("Mandatory Update")
+    popup.resizable(False, False)
+
+    tk.Label(popup, text="The update has been completed", font=("Arial", 13, "bold")).pack(pady=10)
+    tk.Label(popup, text=f"Latest Version: {latest}", font=("Arial", 10)).pack(pady=2)
+    tk.Label(popup, text=f"Please Open the latest application  Hybrid BPO-Autologin-V{latest}.exe ", font=("Arial", 10)).pack(pady=10)
+    tk.Button(popup, text="OK", command=popup.destroy, width=12).pack(pady=10)
+
+    center_window(popup, 400, 200)
+    popup.mainloop()

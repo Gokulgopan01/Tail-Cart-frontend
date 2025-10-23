@@ -3,7 +3,7 @@ import logging
 import tkinter as tk
 from tkinter import ttk
 from urllib.parse import parse_qs, urlparse
-from integrations.hybrid_bpo_api import HybridBPOApi
+
 from screens.loaded_screen import LoadedScreen
 from utils.helper import get_order_address_from_assigned_order, params_check
 from utils.pic_pdf_downloads.vpn_connection import vpn_checking
@@ -16,7 +16,7 @@ class EntryScreen(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
-        self.hybridIntegration = HybridBPOApi()
+        self.hybridIntegration = hybrid_bpo_api.HybridBPOApi()
 
         # Initialize Frame Container
         self.container = tk.Frame(self)
@@ -97,7 +97,7 @@ class EntryScreen(tk.Frame):
                 return
 
             # Retrieve order details
-            orders = HybridBPOApi.get_entry_order(arg2)
+            orders = hybrid_bpo_api.HybridBPOApi.get_entry_order(arg2)
             if not orders:
                 self.loaded_screen.update_status(
                     title="No Orders",
@@ -116,7 +116,7 @@ class EntryScreen(tk.Frame):
                 proxy = order.get("proxy", None)
                 session = order.get("session", None)
                 order_id = order.get("order_id", "")
-                order_details = get_order_address_from_assigned_order(order_id,arg3)
+                #order_details = get_order_address_from_assigned_order(order_id,arg3)
 
                 if not portal_name:
                     logging.warning("Portal name missing in order data.")

@@ -1,4 +1,8 @@
 # API Endpoints
+
+import os
+desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+exe_path = desktop_path + r"\main.exe"
 BASE_URL = "http://192.168.2.51:8000/hybrid/api/v1/autologin"
 LOGIN_API = "http://192.168.2.51:8000/hybrid/api/v1/auth/signin"
 ASSIGNEDORDERS_URL="http://192.168.2.51:8000/hybrid/api/v1/assigned_orders/"
@@ -12,7 +16,11 @@ RESEARCHPAD_DATA_URL='http://192.168.2.51:8001/api/v1/entry-data/'
 STATUS_UPDATE_URL = "http://192.168.2.51:8000/hybrid/api/v1/status_update/products"
 ACCOUNT_INACTIVE="http://192.168.2.51:8000/hybrid/api/v1/client/client-account-status/"
 VERSION_FILE = "1.1"
-MAIN_EXE = r"C:\HybridBPO\autologin\dist\main.exe"
+MAIN_EXE = exe_path
 REMOTE_VERSION_URL = "http://192.168.2.51:8000/hybrid/api/v1/autologin/autologin-version"
 VIEW_FILE_BASE_URL = "http://192.168.2.51:8005/view_file?file_path="
 FILE_SERVER_URL = "http://192.168.2.51:8005/files/view_file?file_path="
+
+
+
+

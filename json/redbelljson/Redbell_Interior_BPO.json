@@ -82,7 +82,7 @@
                "filedtype":"Textbox",
                "values":[
                    
-                   ["sub_data['WhyPropertyNotSell?']","//*[@id='NotSoldReason_Value']","xpath"]
+                   ["sub_data['WhyDidPropertyNotSell']","//*[@id='NotSoldReason_Value']","xpath"]
                ]
              },
              {

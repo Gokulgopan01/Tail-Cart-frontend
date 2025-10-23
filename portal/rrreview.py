@@ -23,20 +23,6 @@ from selenium.webdriver.chrome.options import Options
 
 from utils.helper import get_cookie_from_api, handle_login_status, setup_driver, update_client_account_status
 
-import logging
-import json
-import time
-import requests
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-
-import logging
-import json
-import time
-import requests
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-
 # Load environment variables from the .env file
 load_dotenv()
 class rrreview:

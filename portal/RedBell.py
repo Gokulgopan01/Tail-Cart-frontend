@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 from condtions.all_portal_conditions import generate_condition_data
 from form_filler.redbell_form_filler import RedBellFormFiller
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import clean_address, data_filling_text, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, update_client_account_status, update_order_status
+from utils.helper import clean_address, data_filling_text, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, tfs_statuschange, update_client_account_status, update_order_status
 from config import env
 
 # Load variables from .env file
@@ -86,7 +86,7 @@ class RedBell:
                     # elif arg1 =="PortalLogin":
                     #      handle_login_status(title, self.username, login_check_keyword, self.portal_name)   
                     else:    
-                        handle_login_status(title, self.username, login_check_keyword, self.portal_name)    
+                        handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)    
                         logging.info("After handle_login_status call")
                     return self.driver, self.session
 
@@ -106,7 +106,7 @@ class RedBell:
         login_check_keyword = ["False"]
         update_order_status(self.order_id, "In Progress", "Entry", "Failed")
         update_client_account_status(self.order_id)
-        handle_login_status(title, self.username, login_check_keyword, self.portal_name)
+        handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)
         return None, None
 
     def fetch_data(self, session):
@@ -181,7 +181,7 @@ class RedBell:
             proxy = order_from_api.get("proxy", None)  # Optional proxy
             sessions=order_from_api.get("session",None)
             order_id=order_from_api.get("order_id","")
-            order_details_from_api=get_order_address_from_assigned_order(order_id,arg3)
+            order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(order_id,arg3)
             print("order_details_from_api:", order_details_from_api)
             # if not order_details_from_api:
             #     messagebox.showerror("Authentication Required", "Please log in again.")
@@ -193,22 +193,24 @@ class RedBell:
         if not orders:
             logging.info("No orders in portal")
             update_order_status(order_id, "In Progress", "Entry", "Failed")
+            tfs_statuschange(tfs_orderid, "27", "3", "14")
             return
 
-        matched, order, status = self.find_matching_order(orders, target_genorderid, form_types, order_id)
+        matched, order, status = self.find_matching_order(orders, target_genorderid, form_types, order_id,tfs_orderid)
 
         if matched and status == "matched":
             order_url = f"https://valuationops.homegenius.com/VendorPortal/EditReport?ItemId={order['ItemId']}&EntityType=Vendor"
             logging.info("Form matched. Opening in browser.")
             
             self.redbell_launch_browser_and_open_form(order_url, session)
-            redbell_formopen_fill(self, order, session, merged_json, order_details, order_id)
+            redbell_formopen_fill(self, order, session, merged_json, order_details, order_id,tfs_orderid)
            
         elif not matched:
             logging.info("No exact address match found.")
             update_order_status(order_id, "In Progress", "Entry", "Failed")
+            tfs_statuschange(tfs_orderid, "27", "3", "14")
 
-    def find_matching_order(self, orders, target_genorderid, form_types, order_id, order_details=None):
+    def find_matching_order(self, orders, target_genorderid, form_types, order_id,tfs_orderid):
         address_found = False
         address_list = []
 
@@ -240,6 +242,7 @@ class RedBell:
                     print("Form not matched---New Type")
                     logging.info(f"Form not Found --New Type {order.get('ProductDesc')}")
                     update_order_status(order_id, "In Progress", "Entry", "Failed")
+                    tfs_statuschange(tfs_orderid, "27", "3", "14")
                     return False, None, "form_not_matched"
                     
 
@@ -248,6 +251,7 @@ class RedBell:
                 logging.info(f"Address Not Found {order.get('PropAddress')}")
                 address_list.append(order_genid)
         update_order_status(order_id, "In Progress", "Entry", "Failed")
+        tfs_statuschange(tfs_orderid, "27", "3", "14")
         return False, None, "address_not_found"
         
 
@@ -263,7 +267,7 @@ class RedBell:
 
 
 
-def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls): 
+def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls,tfs_orderid): 
     key_expr_cache = {}
     value_cache = {}
 
@@ -345,6 +349,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
         if sub_data is None:
             logging.error("'entry_data' missing or empty in merged_json")
             update_order_status(order_id, "In Progress", "Entry", "Failed")
+            tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False
 
         condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3)
@@ -497,10 +502,12 @@ def upload_file_js(driver, input_id, file_path):
         return False
 
 
-def upload_files_for_order(self, order_id: int, upload_page_url: str) -> bool:
+def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderid: str) -> bool:
     data = fetch_upload_data(self, order_id)
     if not data:
         update_order_status(order_id, "In Progress", "Entry", "Failed")
+        tfs_statuschange(tfs_orderid, "27", "3", "14")
+        
         return False
 
     documents = data.get("documents", [])
@@ -532,6 +539,7 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str) -> bool:
                 file_paths[f"MLSPdfIdListedComp{match.group(1)}"] = full_path
     else:
         update_order_status(order_id, "In Progress", "Entry", "Failed")
+        tfs_statuschange(tfs_orderid, "27", "3", "14")
         print("Comparables folder not found!")
         return False
 
@@ -544,11 +552,13 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str) -> bool:
         if not os.path.exists(file_path):
             print(f"File not found: {file_path}")
             update_order_status(order_id, "In Progress", "Entry", "Failed")
+            tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False
         
         success = upload_file_js(self.driver, input_id, file_path)
         if not success:
             update_order_status(order_id, "In Progress", "Entry", "Failed")
+            tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False
         
         time.sleep(0.5)
@@ -752,7 +762,7 @@ def build_url(base_url, item_id, order_id, page):
 
 
 
-def redbell_formopen_fill(self, order, session=None, merged_json=None, order_details=None, order_id=None):
+def redbell_formopen_fill(self, order, session=None, merged_json=None, order_details=None, order_id=None,tfs_orderid=None):
     #order_id="132"
     ProductDesc = order.get('ProductDesc', '').strip()
     item_id = order.get('ItemId')
@@ -807,6 +817,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
     else:
         logging.warning(f"No matching config path for ProductDesc: {ProductDesc}")
         update_order_status(order_id, "In Progress", "Entry", "Failed")
+        tfs_statuschange(tfs_orderid, "27", "3", "14")
         return
     form_config, merged_json = load_form_config_and_data(
         order_id=order_id,
@@ -847,7 +858,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 continue  # optionally skip to next page
 
             # Call fill_form_multi for just this page
-            form_fill=fill_form_multi(self, merged_json, order_id_url, form_config, session, {page_key: url})
+            form_fill=fill_form_multi(self, merged_json, order_id_url, form_config, session, {page_key: url},tfs_orderid)
             time.sleep(2)
 
     except Exception as e:
@@ -857,12 +868,13 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
 
     try:
         comparables_url = page_urls["ComparablesAdj"]
-        uploda_files=upload_files_for_order(self, order_id, comparables_url)
+        uploda_files=upload_files_for_order(self, order_id, comparables_url,tfs_orderid)
 
         data = fetch_upload_data(self, order_id)
         if not data:
             logging.warning(f"No upload data found for order {order_id}")
             update_order_status(order_id, "In Progress", "Entry", "Failed")
+            tfs_statuschange(tfs_orderid, "27", "3", "14")
             return
 
         comparables_folder = data.get("comparables_folder")
@@ -874,15 +886,19 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
         else:
             logging.warning(f"Comparables folder is missing or invalid for order {order_id}: {comparables_folder!r}")
             update_order_status(order_id, "In Progress", "Entry", "Failed")
+            tfs_statuschange(tfs_orderid, "27", "3", "14")
         # Check if all 3 are True
         if form_fill and uploda_files and upload_photos:
             logging.info("All form filling and upload functions completed successfully.")
             update_order_status(order_id, "In Progress", "Entry", "Completed")
+            tfs_statuschange(tfs_orderid, "26", "3", "14")
         else:
             logging.warning(f"One or more functions failed: form_fill={form_fill}, uploda_files={uploda_files}, upload_photos={upload_photos}")
             update_order_status(order_id, "In Progress", "Entry", "Failed")
+            tfs_statuschange(tfs_orderid, "27", "3", "14")
     except Exception as e:
         logging.exception(f"Error during photo upload steps: {e}")
         update_order_status(order_id, "In Progress", "Entry", "Failed")
+        tfs_statuschange(tfs_orderid, "27", "3", "14")
         return
 
