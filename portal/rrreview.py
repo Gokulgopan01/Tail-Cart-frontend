@@ -71,7 +71,7 @@ class rrreview:
             # else:
             #     logging.error(f"Login failed. URL landed: {current_url}")
             #     return "Login error", self.driver
-            handle_login_status(current_url, self.username, ["Orders/Dashboard"], self.portal_name)
+            handle_login_status(current_url, self.username, ["/baseauth/activeorders"], self.portal_name)
 
                 # handle_login_status(current_url, self.username, success_keywords, self.portal_name)
                 # return self.login_status, self.driver
@@ -82,3 +82,5 @@ class rrreview:
             handle_login_status("EXCEPTION", self.username, ["activeorders"], self.portal_name)
             #update_client_account_status(self.order_id)
             return "Login error", self.driver
+
+
