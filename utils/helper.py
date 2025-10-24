@@ -296,6 +296,7 @@ def setup_driver(self):
         chrome_options = Options()
         chrome_options.add_argument("--start-maximized")
         chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_experimental_option("detach", True)
 
         if hasattr(self, 'proxy') and self.proxy:
             logging.info(f"Using proxy: {self.proxy}")
