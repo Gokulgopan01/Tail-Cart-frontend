@@ -15,11 +15,10 @@ BASE_URL_ENTRY = "https://valuationops.homegenius.com/VendorBpoForm"
 RESEARCHPAD_DATA_URL='http://192.168.2.51:8001/api/v1/entry-data/'
 STATUS_UPDATE_URL = "http://192.168.2.51:8000/hybrid/api/v1/status_update/products"
 ACCOUNT_INACTIVE="http://192.168.2.51:8000/hybrid/api/v1/client/client-account-status/"
-VERSION_FILE = "1.1"
+VERSION_FILE = "1.2"
 MAIN_EXE = exe_path
 REMOTE_VERSION_URL = "http://192.168.2.51:8000/hybrid/api/v1/autologin/autologin-version"
-VIEW_FILE_BASE_URL = "http://192.168.2.51:8005/view_file?file_path="
-FILE_SERVER_URL = "http://192.168.2.51:8005/files/view_file?file_path="
+
 
 
 

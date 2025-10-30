@@ -51,7 +51,7 @@ def handle_login_status(login_title_or_url, username,login_check_keywords, porta
         messagebox.showinfo("Login Successful", f"Successfully logged in to {portal_name} .")
     else:
         logging.error(f"Login failed for {username} on {portal_name}. Possible incorrect credentials or login issue.")
-        messagebox.showerror("Login Failed", "Invalid credentials or login error for {portal_name}.")
+        messagebox.showerror("Login Failed", f"Invalid credentials or login error for {portal_name}.")
 
     # --- Handle unexpected popups (if any) ---
     try:
