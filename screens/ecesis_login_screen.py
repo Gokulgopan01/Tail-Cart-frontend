@@ -59,7 +59,16 @@ class EcesisLoginScreen(tk.Frame):
         btn = ttk.Button(self.top_frame, image=self.settings_logo, command=lambda: controller.show_frame("SettingsScreen"),style="Custom.TButton",cursor="hand2")
         btn.pack(side="right", padx=5, pady=5)
         #btn.image = self.settings_logo
-
+        # 2. Version Label (Packs left of the button)
+        # ✨ CHANGE: Uses self.app_version (which holds "1.1")
+        self.version_label = tk.Label(
+            self.top_frame,
+            text=f"Version: {env.VERSION_FILE}",
+            bg="white",
+            fg="#333333",
+            font=("Arial", 9)
+        )
+        self.version_label.pack(side="right", padx=5, pady=5)
         """Create a login UI with a dark blue, yellow, and white color scheme."""
         self.login_frame = tk.Frame(self, bg="#FFFFFF")  # White
         self.login_frame.pack(fill="both", expand=True)
@@ -513,115 +522,66 @@ class EcesisLoginScreen(tk.Frame):
     #     self.proxy_label.config(text=f"Proxy: {account['proxy']}")
 
 ###################
+
+
+
+######################################select ##########################
     # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
     #     """
-    #     Keyboard filtering for a ttk.Combobox:
-    #     - Typing letters cumulatively filters from currently visible values.
-    #     - If next typed letter does not match current filter, starts new filter from full list.
-    #     - Backspace removes the last typed character and refilters.
-    #     - Escape resets the dropdown to full list.
+    #     Adds live starts-with filtering to a ttk.Combobox.
+    #     The full list always includes the default_text at the top.
+    #     Handles backspace, escape, and cumulative typing.
     #     """
-    #     original_values = list(values_list)
+    #     # Make sure default_text is the first item
+    #     original_values = [default_text] + [v for v in values_list if v != default_text]
     #     typed_chars = []
+    #     reset_next_key = False  # True if next key should start fresh
 
     #     def on_keypress(event):
-    #         nonlocal typed_chars
+    #         nonlocal typed_chars, reset_next_key
 
     #         if len(event.char) == 0:
     #             return
 
-    #         char = event.char.upper()
-
+    #         # Backspace handling
     #         if event.keysym == "BackSpace":
     #             if typed_chars:
     #                 typed_chars.pop()
+    #         # Escape resets everything
     #         elif event.keysym == "Escape":
     #             typed_chars.clear()
+    #             combobox["values"] = original_values
+    #             combobox.set(default_text)
+    #             reset_next_key = False
+    #             return
+    #         # Printable typing
     #         elif event.char.isprintable():
-    #             # If current cumulative filter + char has any match, continue; else start new
-    #             current_filter = "".join(typed_chars) + char
-    #             filtered_check = [v for v in combobox["values"] if v.upper().startswith(current_filter)]
-    #             if filtered_check:
-    #                 typed_chars.append(char)
+    #             if reset_next_key:
+    #                 typed_chars = [event.char.upper()]
+    #                 reset_next_key = False
     #             else:
-    #                 typed_chars = [char]
+    #                 typed_chars.append(event.char.upper())
 
     #         search_str = "".join(typed_chars)
+    #         # Always keep default_text at the top
+    #         filtered = [default_text] + sorted(
+    #             [v for v in values_list if v.upper().startswith(search_str)]
+    #         )
 
-    #         if search_str:
-    #             filtered = sorted([v for v in original_values if v.upper().startswith(search_str)])
-    #             if filtered:
-    #                 combobox["values"] = filtered
-    #                 combobox.set(filtered[0])
-    #             else:
-    #                 combobox["values"] = original_values
-    #                 combobox.set(default_text)
+    #         if filtered:
+    #             combobox["values"] = filtered
+    #             combobox.set(filtered[1] if len(filtered) > 1 else filtered[0])
     #         else:
     #             combobox["values"] = original_values
     #             combobox.set(default_text)
 
+    #         # Reset next key if no match
+    #         if search_str and event.keysym.isalpha() and len(filtered) <= 1:
+    #             typed_chars = []
+    #             reset_next_key = True
+
     #     combobox.bind("<Key>", on_keypress)
-
-#########################
-    
-
-######################################select ##########################
-    def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
-        """
-        Adds live starts-with filtering to a ttk.Combobox.
-        The full list always includes the default_text at the top.
-        Handles backspace, escape, and cumulative typing.
-        """
-        # Make sure default_text is the first item
-        original_values = [default_text] + [v for v in values_list if v != default_text]
-        typed_chars = []
-        reset_next_key = False  # True if next key should start fresh
-
-        def on_keypress(event):
-            nonlocal typed_chars, reset_next_key
-
-            if len(event.char) == 0:
-                return
-
-            # Backspace handling
-            if event.keysym == "BackSpace":
-                if typed_chars:
-                    typed_chars.pop()
-            # Escape resets everything
-            elif event.keysym == "Escape":
-                typed_chars.clear()
-                combobox["values"] = original_values
-                combobox.set(default_text)
-                reset_next_key = False
-                return
-            # Printable typing
-            elif event.char.isprintable():
-                if reset_next_key:
-                    typed_chars = [event.char.upper()]
-                    reset_next_key = False
-                else:
-                    typed_chars.append(event.char.upper())
-
-            search_str = "".join(typed_chars)
-            # Always keep default_text at the top
-            filtered = [default_text] + sorted(
-                [v for v in values_list if v.upper().startswith(search_str)]
-            )
-
-            if filtered:
-                combobox["values"] = filtered
-                combobox.set(filtered[1] if len(filtered) > 1 else filtered[0])
-            else:
-                combobox["values"] = original_values
-                combobox.set(default_text)
-
-            # Reset next key if no match
-            if search_str and event.keysym.isalpha() and len(filtered) <= 1:
-                typed_chars = []
-                reset_next_key = True
-
-        combobox.bind("<Key>", on_keypress)
-        combobox.set(default_text)
+    #     combobox.set(default_text)
 
 
 
@@ -629,8 +589,271 @@ class EcesisLoginScreen(tk.Frame):
         
 
 ##############################
-    
+    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
+    #     """
+    #     Adds live starts-with filtering to a ttk.Combobox.
+    #     The full list always includes the default_text at the top.
+    #     Handles backspace, escape, and cumulative typing.
+    #     """
+    #     # Make sure default_text is the first item
+    #     original_values = [default_text] + [v for v in values_list if v != default_text]
+    #     typed_chars = []
+    #     reset_next_key = False  # True if next key should start fresh
 
+    #     # Set initial values and text
+    #     combobox["values"] = original_values
+    #     combobox.set(default_text)
+
+    #     def on_keypress(event):
+    #         nonlocal typed_chars, reset_next_key
+
+    #         # Ignore keys that don't produce a character (Shift, Ctrl, F keys, etc.)
+    #         if len(event.char) == 0:
+    #             # Allow default behavior for navigation keys (Up/Down)
+    #             if event.keysym in ("Up", "Down", "Return"):
+    #                 return
+    #             # Break for other non-character keys to avoid confusion
+    #             return "break" 
+
+    #         # --- Keyboard Control ---
+    #         if event.keysym == "BackSpace":
+    #             if typed_chars:
+    #                 typed_chars.pop()
+    #             return "break" 
+            
+    #         elif event.keysym == "Escape":
+    #             typed_chars.clear()
+    #             combobox["values"] = original_values
+    #             combobox.set(default_text)
+    #             reset_next_key = False
+    #             return "break" 
+            
+    #         # --- Printable Typing ---
+    #         elif event.char.isprintable():
+    #             if reset_next_key:
+    #                 typed_chars = [event.char.upper()]
+    #                 reset_next_key = False
+    #             else:
+    #                 typed_chars.append(event.char.upper())
+                
+    #             # --- Filtering Logic ---
+    #             search_str = "".join(typed_chars)
+                
+    #             # Always keep default_text at the top
+    #             filtered = [default_text] + sorted(
+    #                 [v for v in values_list if v.upper().startswith(search_str)]
+    #             )
+                
+    #             # --- Update Combobox ---
+    #             combobox["values"] = filtered
+                
+    #             if len(filtered) > 1:
+    #                 # Set the text field and the selection index to the first match
+    #                 first_match_index = 1 
+    #                 combobox.set(filtered[first_match_index])
+                    
+    #                 # Use .current() to set the visual selection/highlight.
+    #                 # This only works if the dropdown is actually visible.
+    #                 combobox.current(first_match_index)
+    #             else:
+    #                 # No match or only default_text
+    #                 combobox.set(default_text)
+    #                 combobox.current(0) # Select default text
+
+    #             # --- No Match Reset ---
+    #             # If search string exists, but only the default text remains in the list
+    #             if search_str and event.keysym.isalpha() and len(filtered) <= 1:
+    #                 typed_chars = []
+    #                 reset_next_key = True
+                    
+    #             return "break" # Stop default combobox processing for this key
+
+    #     # Bind the custom key handler
+    #     combobox.bind("<Key>", on_keypress)
+        
+    #     # Ensure the dropdown is accessible via the down arrow/mouse click
+    #     combobox.set(default_text) 
+##################################################
+    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
+    #     """
+    #     Adds live starts-with filtering to a ttk.Combobox.
+    #     The full list always includes the default_text at the top, and the 
+    #     original list is restored when the search string is empty (via Backspace).
+    #     """
+    #     # 1. Setup Initial Values and State
+    #     str_values = [str(v) for v in values_list]
+    #     original_values = [default_text] + [v for v in str_values if v != default_text]
+        
+    #     typed_chars = []
+        
+    #     # Initialize the Combobox
+    #     combobox["values"] = original_values
+    #     combobox.set(default_text)
+
+    #     def force_dropdown_open():
+    #         """Simulates clicking the dropdown arrow to open the list."""
+    #         # This is a common Tkinter technique to reliably open the dropdown list.
+    #         combobox.event_generate('<Control-Key-a>')
+
+    #     def on_keypress(event):
+    #         nonlocal typed_chars
+            
+    #         # Ignore keys that don't produce a character (Shift, Ctrl, F keys, etc.)
+    #         if len(event.char) == 0:
+    #             # Allow default behavior for navigation keys (Up/Down, Enter)
+    #             if event.keysym in ("Up", "Down", "Return"):
+    #                 return
+    #             return "break" 
+
+    #         # --- Keyboard Control ---
+    #         if event.keysym == "BackSpace":
+    #             if typed_chars:
+    #                 typed_chars.pop()
+                
+    #             # --- CRITICAL FIX: Restore original list if search string is empty ---
+    #             if not typed_chars:
+    #                 combobox["values"] = original_values
+    #                 combobox.set(default_text)
+    #                 combobox.current(0) # Select the default item
+    #                 return "break" # Exit after successful reset
+                
+    #             # If there are still characters, let the code fall through to re-filter
+    #             pass 
+            
+    #         elif event.keysym == "Escape":
+    #             typed_chars.clear()
+    #             combobox["values"] = original_values
+    #             combobox.set(default_text)
+    #             return "break" 
+            
+    #         # --- Printable Typing ---
+    #         elif event.char.isprintable():
+    #             typed_chars.append(event.char.upper())
+
+    #         # --- Filtering Logic (Common for typing and partial backspacing) ---
+    #         search_str = "".join(typed_chars)
+            
+    #         # Case-insensitive "starts with" filtering
+    #         filtered = [default_text] + sorted(
+    #             [v for v in str_values if v.upper().startswith(search_str)]
+    #         )
+            
+    #         # --- Update Combobox and Highlight ---
+    #         combobox["values"] = filtered
+            
+    #         if len(filtered) > 1:
+    #             first_match_index = 1 
+    #             match_text = filtered[first_match_index]
+                
+    #             # Set text and visually highlight the first match
+    #             combobox.set(match_text)
+    #             combobox.current(first_match_index) 
+    #         else:
+    #             # No match found
+    #             # Keep the current typed text visible for user feedback or default text if empty
+    #             combobox.set(search_str if search_str else default_text) 
+    #             combobox.current(-1) # Clear highlight
+
+    #         # Auto-Open Dropdown when typing
+    #         force_dropdown_open()
+                
+    #         return "break" # Prevents default widget processing
+
+    #     # Bind the custom key handler to all key presses
+    #     combobox.bind("<Key>", on_keypress)
+        
+    #     # Bind the Control sequence (used by force_dropdown_open) to do nothing
+    #     combobox.bind('<Control-Key-a>', lambda e: 'break')
+############################################################
+    def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
+        """
+        Adds live starts-with filtering to a ttk.Combobox.
+        The full list always includes the default_text at the top, and the 
+        original list is restored when the search string is empty (via Backspace).
+        """
+        # 1. Setup Initial Values and State
+        str_values = [str(v) for v in values_list]
+        original_values = [default_text] + [v for v in str_values if v != default_text]
+        
+        typed_chars = []
+        
+        # Initialize the Combobox
+        combobox["values"] = original_values
+        combobox.set(default_text)
+
+        def force_dropdown_open():
+            """Simulates clicking the dropdown arrow to open the list."""
+            combobox.event_generate('<Control-Key-a>')
+
+        def on_keypress(event):
+            nonlocal typed_chars
+            
+            # Ignore keys that don't produce a character (Shift, Ctrl, F keys, etc.)
+            if len(event.char) == 0:
+                if event.keysym in ("Up", "Down", "Return"):
+                    return
+                return "break" 
+
+            # --- Keyboard Control ---
+            if event.keysym == "BackSpace":
+                if typed_chars:
+                    typed_chars.pop()
+                
+                # Restore original list if search string is empty
+                if not typed_chars:
+                    combobox["values"] = original_values
+                    combobox.set(default_text)
+                    combobox.selection_clear() # Safely clear highlight
+                    return "break"
+                
+                # If still characters, falls through to re-filter
+                pass 
+            
+            elif event.keysym == "Escape":
+                typed_chars.clear()
+                combobox["values"] = original_values
+                combobox.set(default_text)
+                combobox.selection_clear() # Safely clear highlight
+                return "break" 
+            
+            # --- Printable Typing ---
+            elif event.char.isprintable():
+                typed_chars.append(event.char.upper())
+
+            # --- Filtering Logic (Common for typing and partial backspacing) ---
+            search_str = "".join(typed_chars)
+            
+            filtered = [default_text] + sorted(
+                [v for v in str_values if v.upper().startswith(search_str)]
+            )
+            
+            # --- Update Combobox and Highlight ---
+            combobox["values"] = filtered
+            
+            if len(filtered) > 1:
+                first_match_index = 1 
+                match_text = filtered[first_match_index]
+                
+                # Set text and visually highlight the first match
+                combobox.set(match_text)
+                combobox.current(first_match_index) 
+            else:
+                # No match found (ERROR FIXED HERE)
+                combobox.set(search_str if search_str else default_text) 
+                combobox.selection_clear() # ✨ FIXED: Safely clear highlight instead of using .current(-1)
+
+            # Auto-Open Dropdown when typing
+            force_dropdown_open()
+                
+            return "break" 
+
+        # Bind the custom key handler to all key presses
+        combobox.bind("<Key>", on_keypress)
+        
+        # Bind the Control sequence (used by force_dropdown_open) to do nothing
+        combobox.bind('<Control-Key-a>', lambda e: 'break')
+
+    
  #######################   
     # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select Main Client"):
     #     original_values = list(values_list)

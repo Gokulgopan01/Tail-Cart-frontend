@@ -51,7 +51,7 @@ def handle_login_status(login_title_or_url, username,login_check_keywords, porta
         messagebox.showinfo("Login Successful", f"Successfully logged in to {portal_name} .")
     else:
         logging.error(f"Login failed for {username} on {portal_name}. Possible incorrect credentials or login issue.")
-        messagebox.showerror("Login Failed", "Invalid credentials or login error for {portal_name}.")
+        messagebox.showerror("Login Failed", f"Invalid credentials or login error for {portal_name}.")
 
     # --- Handle unexpected popups (if any) ---
     try:
@@ -296,6 +296,7 @@ def setup_driver(self):
         chrome_options = Options()
         chrome_options.add_argument("--start-maximized")
         chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_experimental_option("detach", True)
 
         if hasattr(self, 'proxy') and self.proxy:
             logging.info(f"Using proxy: {self.proxy}")

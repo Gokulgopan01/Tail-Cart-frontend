@@ -6,7 +6,7 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[('assets\\\\*', 'assets'), ('screens/json/portal_map.json', 'json'), ('.env', '.'), ('json\\\\*', 'json'), ('assets\\\\logo.jpg', 'assets')],
-    hiddenimports=[],
+    hiddenimports=['pyi_splash'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -15,12 +15,23 @@ a = Analysis(
     optimize=0,
 )
 pyz = PYZ(a.pure)
+splash = Splash(
+    'assets/splash_logo.jpg',
+    binaries=a.binaries,
+    datas=a.datas,
+    text_pos=None,
+    text_size=12,
+    minify_script=True,
+    always_on_top=True,
+)
 
 exe = EXE(
     pyz,
     a.scripts,
     a.binaries,
     a.datas,
+    splash,
+    splash.binaries,
     [],
     name='main',
     debug=False,
