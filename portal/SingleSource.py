@@ -29,7 +29,7 @@ from utils.helper import SS_fill_repair_details, adj_click, close_validation_pop
 load_dotenv()
 arg1, arg2,arg3 = params_check()
 class SingleSource:
-    def __init__(self,username, password, portal_url, portal_name, proxy,session):
+    def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id):
         self.username = username
         self.password = password
         self.portal_url = portal_url
@@ -39,6 +39,7 @@ class SingleSource:
         self.driver = None  # Initialize driver to None
         self.order_details = None
         self.order_id = None
+        self.account_id=account_id
         logging.basicConfig(level=logging.INFO)
     def login_to_portal(self):
         try:
@@ -117,7 +118,7 @@ class SingleSource:
         title = "MFA FAILED"
         login_check_keyword = ["False"]
         update_order_status(self.order_id, "In Progress", "Entry", "Failed")
-        update_client_account_status(self.order_id)
+        update_client_account_status(self.account_id)
         handle_login_status(title, self.username, login_check_keyword, self.portal_name)
         return None, None
 

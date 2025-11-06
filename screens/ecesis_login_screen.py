@@ -1103,7 +1103,8 @@ class EcesisLoginScreen(tk.Frame):
                 self.selected_portal_url,
                 portal,
                 selected_account["proxy"],
-                selected_account["session"]
+                selected_account["session"],
+                selected_account["account_id"]
             )
             if portal_instance:
                 self.active_portal_instances.append(portal_instance)

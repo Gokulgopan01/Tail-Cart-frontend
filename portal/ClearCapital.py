@@ -13,7 +13,6 @@ from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
-from form_filler.redbell_form_filler import RedBellFormFiller
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.helper import clean_address, get_cookie_from_api, get_order_address_from_assigned_order, handle_login_status, params_check, setup_driver, update_client_account_status
 
@@ -26,7 +25,7 @@ ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")
                    
 
 class ClearCapital:
-    def __init__(self, username, password, portal_url, portal_name, proxy, session):
+    def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id):
         self.username = username
         self.password = password
         self.portal_url = portal_url

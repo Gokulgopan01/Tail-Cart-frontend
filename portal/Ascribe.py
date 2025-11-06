@@ -12,7 +12,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
 
-from form_filler.redbell_form_filler import RedBellFormFiller
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.helper import handle_login_status, setup_driver, update_client_account_status
 
@@ -27,7 +26,7 @@ ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")
                    
 
 class Ascribe:
-    def __init__(self, username, password, portal_url, portal_name, proxy, session):
+    def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id):
         self.username = username
         self.password = password
         self.portal_url = portal_url

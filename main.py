@@ -129,7 +129,7 @@ def launch_app():
     exe_path = sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__)
     print("exepath",exe_path)
 
-
+    
     # if not is_protocol_registered(protocol_name):
     #     register_url_protocol(protocol_name, exe_path)
     register_url_protocol(protocol_name, exe_path)

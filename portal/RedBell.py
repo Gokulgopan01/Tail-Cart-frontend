@@ -15,7 +15,7 @@ from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
 
 from condtions.all_portal_conditions import generate_condition_data
-from form_filler.redbell_form_filler import RedBellFormFiller
+
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.helper import clean_address, data_filling_text, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, tfs_statuschange, update_client_account_status, update_order_status
 from config import env
@@ -28,7 +28,7 @@ ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")
                    
 arg1, arg2,arg3 = params_check()
 class RedBell:
-    def __init__(self, username, password, portal_url, portal_name, proxy, session):
+    def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id):
         self.username = username
         self.password = password
         self.portal_url = portal_url
@@ -38,6 +38,7 @@ class RedBell:
         self.driver = None
         self.order_details = None
         self.order_id = None
+        self.account_id=account_id
         logging.basicConfig(level=logging.INFO)
 
     def login_to_portal(self):
@@ -87,7 +88,8 @@ class RedBell:
                     # elif arg1 =="PortalLogin":
                     #      handle_login_status(title, self.username, login_check_keyword, self.portal_name)   
                     else:    
-                        handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)    
+                        handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)
+                        #f"{env.PORTAL_LOGIN_CONFIRMATION}{self.order_id}"
                         logging.info("After handle_login_status call")
                     return self.driver, self.session
 
@@ -106,7 +108,7 @@ class RedBell:
         title = "MFA FAILED"
         login_check_keyword = ["False"]
         update_order_status(self.order_id, "In Progress", "Entry", "Failed")
-        update_client_account_status(self.order_id)
+        update_client_account_status(self.account_id)
         handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)
         return None, None
 
@@ -541,15 +543,7 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderi
     comparables_folder = data.get("comparables_folder", "")
 
     file_paths = {}
-
-    # Subject PDFs
-    for doc in documents:
-        doc_type = doc.get("type", "").lower()
-        doc_path = doc.get("path")
-        if doc_type == "mls":
-            file_paths["MLSPdfIdSubject"] = doc_path
-        elif doc_type == "tax":
-            file_paths["TaxPdfIdSubject"] = doc_path
+  
 
     # Comp PDFs (s1–s3, a1–a3)
     if os.path.exists(comparables_folder):
@@ -569,6 +563,15 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderi
         tfs_statuschange(tfs_orderid, "27", "3", "14")
         print("Comparables folder not found!")
         return False
+    
+    # Subject PDFs
+    for doc in documents:
+        doc_type = doc.get("type", "").lower()
+        doc_path = doc.get("path")
+        if doc_type == "tax":
+            file_paths["TaxPdfIdSubject"] = doc_path
+        elif doc_type == "mls_tax":
+            file_paths["MLSPdfIdSubject"] = doc_path  
 
     # Navigate to upload page
     self.driver.get(upload_page_url)
@@ -635,6 +638,20 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
     try:
         self.driver.get(photos_url)
         time.sleep(3)
+         # --- Step 0: Click "Location Map" button to load map ---
+        try:
+            location_map_btn = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//a[@title='Refresh location map']"))
+            )
+            self.driver.execute_script("arguments[0].click();", location_map_btn)
+            print("Location Map button clicked.")
+            # Optional: wait for the map div to appear
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.ID, "location-map"))
+            )
+            print("Location Map loaded.")
+        except Exception as map_err:
+            print("Location Map button not found or failed to load:", map_err)
 
         # Step 0: Check if any non-subject photo is required
         required_non_subject_labels = get_required_non_subject_labels(self)
