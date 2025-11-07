@@ -1,0 +1,205 @@
+<div class="ai-doctor-container">
+  <!-- Hero Section -->
+  <section class="doctor-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i class="fas fa-stethoscope"></i>
+        AI-Powered Veterinary Assistant
+      </div>
+      <h1>Pet AI Doctor</h1>
+      <p>Get instant guidance for your pet's health concerns. Remember, this is for informational purposes only.</p>
+      <div class="hero-features">
+        <div class="feature">
+          <i class="fas fa-bolt"></i>
+          <span>Instant Responses</span>
+        </div>
+        <div class="feature">
+          <i class="fas fa-shield-alt"></i>
+          <span>Safe & Reliable</span>
+        </div>
+        <div class="feature">
+          <i class="fas fa-clock"></i>
+          <span>24/7 Available</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chat Interface -->
+  <section class="chat-section">
+    <div class="container">
+      <div class="chat-container">
+        <!-- Chat Header -->
+        <div class="chat-header">
+          <div class="doctor-avatar">
+            <i class="fas fa-stethoscope"></i>
+          </div>
+          <div class="doctor-info">
+            <h3>Dr. PetAI</h3>
+            <p>Online • Ready to help</p>
+          </div>
+          <div class="connection-status">
+            <div class="status-dot"></div>
+            <span>Connected</span>
+          </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" #chatMessages>
+          <div class="message welcome-message">
+            <div class="message-avatar">
+              <i class="fas fa-stethoscope"></i>
+            </div>
+            <div class="message-content">
+              <div class="message-bubble">
+                <p>Hello! I'm Dr. PetAI 👋</p>
+                <p>I'm here to help with your pet's health questions. Please describe your pet's symptoms or ask any questions about their well-being.</p>
+                <div class="quick-questions">
+                  <span class="quick-label">Try asking:</span>
+                  <button class="quick-btn" (click)="setQuickQuestion('My dog is vomiting, what should I do?')">
+                    Vomiting issues
+                  </button>
+                  <button class="quick-btn" (click)="setQuickQuestion('What foods are toxic to cats?')">
+                    Toxic foods
+                  </button>
+                  <button class="quick-btn" (click)="setQuickQuestion('My pet is not eating, what could be wrong?')">
+                    Loss of appetite
+                  </button>
+                </div>
+              </div>
+              <span class="message-time">Just now</span>
+            </div>
+          </div>
+
+          <!-- User Message -->
+          <div *ngIf="userInput && !loading" class="message user-message">
+            <div class="message-content">
+              <div class="message-bubble">
+                <p>{{ userInput }}</p>
+              </div>
+              <span class="message-time">Now</span>
+            </div>
+            <div class="message-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+          </div>
+
+          <!-- Loading Message -->
+          <div *ngIf="loading" class="message ai-message">
+            <div class="message-avatar">
+              <i class="fas fa-stethoscope"></i>
+            </div>
+            <div class="message-content">
+              <div class="message-bubble loading-bubble">
+                <div class="typing-indicator">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <p>Dr. PetAI is thinking...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Response -->
+          <div *ngIf="response && !loading" class="message ai-message">
+            <div class="message-avatar">
+              <i class="fas fa-stethoscope"></i>
+            </div>
+            <div class="message-content">
+              <div class="message-bubble">
+                <div class="response-header">
+                  <strong>Dr. PetAI Analysis:</strong>
+                </div>
+                <p>{{ response }}</p>
+                <div class="disclaimer">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <small>Disclaimer: This is AI-generated advice. Always consult a licensed veterinarian for serious concerns.</small>
+                </div>
+              </div>
+              <span class="message-time">Just now</span>
+            </div>
+          </div>
+
+          <!-- Error Message -->
+          <div *ngIf="error" class="message error-message">
+            <div class="message-avatar">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="message-content">
+              <div class="message-bubble">
+                <p><strong>Connection Issue</strong></p>
+                <p>{{ error }}</p>
+                <button class="retry-btn" (click)="askDoctor()">
+                  <i class="fas fa-redo"></i>
+                  Try Again
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-container">
+          <div class="input-wrapper">
+            <textarea 
+              [(ngModel)]="userInput" 
+              placeholder="Describe your pet's symptoms or ask a health question..."
+              rows="3"
+              class="input-area"
+              (keydown.enter)="$event.preventDefault(); askDoctor()"
+              [disabled]="loading"
+            ></textarea>
+            <div class="input-actions">
+              <button class="btn-clear" (click)="clearChat()" [disabled]="loading">
+                <i class="fas fa-trash"></i>
+              </button>
+              <button 
+                class="btn-send" 
+                (click)="askDoctor()" 
+                [disabled]="loading || !userInput.trim()"
+                [class.loading]="loading"
+              >
+                <i class="fas fa-paper-plane" *ngIf="!loading"></i>
+                <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+                {{ loading ? 'Sending...' : 'Ask Doctor' }}
+              </button>
+            </div>
+          </div>
+          <div class="input-footer">
+            <p>
+              <i class="fas fa-info-circle"></i>
+              For emergencies, contact your local veterinarian immediately.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-first-aid"></i>
+          </div>
+          <h4>Symptom Checker</h4>
+          <p>Get instant guidance on common pet symptoms and when to seek veterinary care.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-paw"></i>
+          </div>
+          <h4>Breed Specific</h4>
+          <p>Tailored advice for different pet breeds and their specific health considerations.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-pills"></i>
+          </div>
+          <h4>Medication Info</h4>
+          <p>Learn about common medications, dosages, and potential side effects.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

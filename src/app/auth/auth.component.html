@@ -1,0 +1,154 @@
+<div class="auth-container">
+    <!-- Background Shapes -->
+    <div class="auth-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+    </div>
+
+    <div class="auth-card">
+        <!-- Header with Icon -->
+        <div class="auth-header">
+            <div class="auth-icon">
+                <span class="icon">🐾</span>
+            </div>
+            <h2>{{ isLoginMode() ? 'Welcome Back!' : 'Join Tail Cart' }}</h2>
+            <p class="auth-subtitle">
+                {{ isLoginMode() ? 'Sign in to your account' : 'Create your account to get started' }}
+            </p>
+        </div>
+        
+        <form (ngSubmit)="onSubmit()" #authForm="ngForm" class="auth-form">
+            <!-- Username Field (only shown in register mode) -->
+            <div class="form-group" *ngIf="!isLoginMode()">
+                <div class="input-container">
+                    <span class="input-icon">👤</span>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        [(ngModel)]="registerData.username" 
+                        required
+                        #username="ngModel"
+                        [class.invalid]="username.invalid && username.touched"
+                        placeholder="Enter your username"
+                    >
+                </div>
+                <div class="error" *ngIf="username.invalid && username.touched">
+                    <span class="error-icon">⚠️</span>
+                    Username is required
+                </div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <div class="input-container">
+                    <span class="input-icon">📧</span>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email_address" 
+                        [ngModel]="isLoginMode() ? loginData.email_address : registerData.email_address"
+                        (ngModelChange)="isLoginMode() ? loginData.email_address = $event : registerData.email_address = $event"
+                        required
+                        email
+                        #email="ngModel"
+                        [class.invalid]="email.invalid && email.touched"
+                        placeholder="Enter your email"
+                    >
+                </div>
+                <div class="error" *ngIf="email.invalid && email.touched">
+                    <span class="error-icon">⚠️</span>
+                    Valid email is required
+                </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <div class="input-container">
+                    <span class="input-icon">🔒</span>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        [ngModel]="isLoginMode() ? loginData.password : registerData.password"
+                        (ngModelChange)="isLoginMode() ? loginData.password = $event : registerData.password = $event"
+                        required
+                        minlength="6"
+                        #password="ngModel"
+                        [class.invalid]="password.invalid && password.touched"
+                        placeholder="Enter your password"
+                    >
+                </div>
+                <div class="error" *ngIf="password.invalid && password.touched">
+                    <span class="error-icon">⚠️</span>
+                    Password must be at least 6 characters
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" *ngIf="errorMessage()">
+                <span class="message-icon">❌</span>
+                {{ errorMessage() }}
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message" *ngIf="successMessage()">
+                <span class="message-icon">✅</span>
+                {{ successMessage() }}
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                class="submit-btn" 
+                [disabled]="authForm.invalid || isLoading()"
+                [class.loading]="isLoading()"
+            >
+                <span class="btn-content">
+                    <span class="btn-icon" *ngIf="!isLoading()">
+                        {{ isLoginMode() ? '🔑' : '🚀' }}
+                    </span>
+                    <span class="btn-text">
+                        {{ isLoading() ? 'Processing...' : (isLoginMode() ? 'Sign In' : 'Create Account') }}
+                    </span>
+                    <span class="btn-spinner" *ngIf="isLoading()">
+                        <div class="spinner"></div>
+                    </span>
+                </span>
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider">
+            <span class="divider-text">or</span>
+        </div>
+
+        <!-- Switch Mode -->
+        <div class="switch-mode">
+            <p class="switch-text">
+                {{ isLoginMode() ? "Don't have an account?" : "Already have an account?" }}
+                <button type="button" (click)="onSwitchMode()" class="mode-switch-btn">
+                    {{ isLoginMode() ? 'Create one now' : 'Sign in here' }}
+                </button>
+            </p>
+        </div>
+
+        <!-- Features List for Register Mode -->
+        <div class="features-list" *ngIf="!isLoginMode()">
+            <div class="feature-item">
+                <span class="feature-icon">🐕</span>
+                <span>QR Pet Protection</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">📄</span>
+                <span>Digital Health Records</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🤖</span>
+                <span>AI Vet Assistant</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,421 @@
+<div class="profile-container">
+  <!-- Hero Section -->
+  <section class="profile-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i class="fas fa-user-shield"></i>
+        Pet Owner Profile
+      </div>
+      <h1>{{ hasProfile ? 'Welcome Back!' : 'Create Your Profile' }}</h1>
+      <p>{{ hasProfile ? 'Manage your personal information and pets' : 'Get started by setting up your profile' }}</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="profile-main-section">
+    <div class="container">
+      <div class="profile-layout">
+        <!-- Profile Card -->
+        <div class="profile-card" [class.edit-mode]="isEditMode">
+          <div class="profile-header">
+            <div class="header-content">
+              <div class="avatar-container">
+                <i class="fas fa-user-circle"></i>
+                <div class="avatar-status" [class.online]="hasProfile"></div>
+              </div>
+              <div class="header-text">
+                <h2>{{ hasProfile ? 'Your Profile' : 'Create Your Profile' }}</h2>
+                <p>{{ hasProfile ? 'Complete your information' : 'Start by adding your details' }}</p>
+              </div>
+            </div>
+            
+            <div *ngIf="hasProfile && !isEditMode" class="profile-actions">
+              <button class="btn-edit" (click)="toggleEditMode()">
+                <i class="fas fa-edit"></i>
+                Update Profile
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="isLoading" class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Loading your profile...</p>
+          </div>
+
+          <div *ngIf="!isLoading" class="profile-content">
+            <!-- View Mode -->
+            <div *ngIf="hasProfile && !isEditMode" class="profile-view">
+              <div class="profile-info-grid">
+                <div class="info-item">
+                  <div class="info-icon">
+                    <i class="fas fa-user"></i>
+                  </div>
+                  <div class="info-content">
+                    <label>Full Name</label>
+                    <span>{{ profile.owner_name }}</span>
+                  </div>
+                </div>
+                
+                <div class="info-item">
+                  <div class="info-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                  <div class="info-content">
+                    <label>Address</label>
+                    <span>{{ profile.owner_address }}</span>
+                  </div>
+                </div>
+                
+                <div class="info-item">
+                  <div class="info-icon">
+                    <i class="fas fa-phone"></i>
+                  </div>
+                  <div class="info-content">
+                    <label>Phone Number</label>
+                    <span>{{ profile.owner_phone }}</span>
+                  </div>
+                </div>
+                
+                <div class="info-item">
+                  <div class="info-icon">
+                    <i class="fas fa-city"></i>
+                  </div>
+                  <div class="info-content">
+                    <label>City</label>
+                    <span>{{ profile.owner_city }}</span>
+                  </div>
+                </div>
+                
+                <div class="info-item">
+                  <div class="info-icon">
+                    <i class="fas fa-map"></i>
+                  </div>
+                  <div class="info-content">
+                    <label>State</label>
+                    <span>{{ profile.owner_state }}</span>
+                  </div>
+                </div>
+                
+                <div class="info-item" *ngIf="profile.pets && profile.pets.length > 0">
+                  <div class="info-icon">
+                    <i class="fas fa-paw"></i>
+                  </div>
+                  <div class="info-content">
+                    <label>Registered Pets</label>
+                    <span>{{ profile.pets.length }} pets</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Edit/Create Mode -->
+            <form *ngIf="isEditMode" (ngSubmit)="onSubmit()" #profileForm="ngForm" class="profile-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="owner_name">
+                    <i class="fas fa-user"></i>
+                    Full Name *
+                  </label>
+                  <div class="input-with-icon">
+                    <input
+                      type="text"
+                      id="owner_name"
+                      name="owner_name"
+                      [(ngModel)]="profile.owner_name"
+                      required
+                      #ownerName="ngModel"
+                      [class.invalid]="ownerName.invalid && ownerName.touched"
+                      placeholder="Enter your full name"
+                    >
+                    <i class="fas fa-check valid-icon" *ngIf="ownerName.valid && ownerName.touched"></i>
+                  </div>
+                  <div class="error" *ngIf="ownerName.invalid && ownerName.touched">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Name is required
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="owner_phone">
+                    <i class="fas fa-phone"></i>
+                    Phone Number *
+                  </label>
+                  <div class="input-with-icon">
+                    <input
+                      type="tel"
+                      id="owner_phone"
+                      name="owner_phone"
+                      [(ngModel)]="profile.owner_phone"
+                      required
+                      #ownerPhone="ngModel"
+                      [class.invalid]="ownerPhone.invalid && ownerPhone.touched"
+                      placeholder="Enter your phone number"
+                    >
+                    <i class="fas fa-check valid-icon" *ngIf="ownerPhone.valid && ownerPhone.touched"></i>
+                  </div>
+                  <div class="error" *ngIf="ownerPhone.invalid && ownerPhone.touched">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Phone number is required
+                  </div>
+                </div>
+
+                <div class="form-group full-width">
+                  <label for="owner_address">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Address *
+                  </label>
+                  <div class="input-with-icon">
+                    <textarea
+                      id="owner_address"
+                      name="owner_address"
+                      [(ngModel)]="profile.owner_address"
+                      required
+                      #ownerAddress="ngModel"
+                      [class.invalid]="ownerAddress.invalid && ownerAddress.touched"
+                      rows="3"
+                      placeholder="Enter your full address"
+                    ></textarea>
+                    <i class="fas fa-check valid-icon" *ngIf="ownerAddress.valid && ownerAddress.touched"></i>
+                  </div>
+                  <div class="error" *ngIf="ownerAddress.invalid && ownerAddress.touched">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Address is required
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="owner_city">
+                    <i class="fas fa-city"></i>
+                    City *
+                  </label>
+                  <div class="input-with-icon">
+                    <input
+                      type="text"
+                      id="owner_city"
+                      name="owner_city"
+                      [(ngModel)]="profile.owner_city"
+                      required
+                      #ownerCity="ngModel"
+                      [class.invalid]="ownerCity.invalid && ownerCity.touched"
+                      placeholder="Enter your city"
+                    >
+                    <i class="fas fa-check valid-icon" *ngIf="ownerCity.valid && ownerCity.touched"></i>
+                  </div>
+                  <div class="error" *ngIf="ownerCity.invalid && ownerCity.touched">
+                    <i class="fas fa-exclamation-circle"></i>
+                    City is required
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="owner_state">
+                    <i class="fas fa-map"></i>
+                    State *
+                  </label>
+                  <div class="input-with-icon">
+                    <input
+                      type="text"
+                      id="owner_state"
+                      name="owner_state"
+                      [(ngModel)]="profile.owner_state"
+                      required
+                      #ownerState="ngModel"
+                      [class.invalid]="ownerState.invalid && ownerState.touched"
+                      placeholder="Enter your state"
+                    >
+                    <i class="fas fa-check valid-icon" *ngIf="ownerState.valid && ownerState.touched"></i>
+                  </div>
+                  <div class="error" *ngIf="ownerState.invalid && ownerState.touched">
+                    <i class="fas fa-exclamation-circle"></i>
+                    State is required
+                  </div>
+                </div>
+              </div>
+
+              <!-- Messages -->
+              <div class="message-container">
+                <div class="error-message" *ngIf="errorMessage">
+                  <i class="fas fa-exclamation-circle"></i>
+                  {{ errorMessage }}
+                </div>
+
+                <div class="success-message" *ngIf="successMessage">
+                  <i class="fas fa-check-circle"></i>
+                  {{ successMessage }}
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  [disabled]="profileForm.invalid || isLoading"
+                >
+                  <i class="fas" [class.fa-spinner]="isLoading" [class.fa-save]="!isLoading"></i>
+                  {{ isLoading ? 'Saving...' : (hasProfile ? 'Update Profile' : 'Create Profile') }}
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="cancelEdit()"
+                  [disabled]="isLoading"
+                >
+                  <i class="fas fa-times"></i>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Pets Section -->
+        <div class="pets-section">
+          <div class="section-header">
+            <h2>🐾 Your Pets</h2>
+            <p>Manage your furry family members</p>
+          </div>
+
+          <!-- Loading pets -->
+          <div *ngIf="loadingPets" class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Loading your pets...</p>
+          </div>
+
+          <!-- No pets -->
+          <div *ngIf="!loadingPets && pets.length === 0" class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-paw"></i>
+            </div>
+            <h3>No Pets Added Yet</h3>
+            <p>Start by adding your first furry friend to your profile</p>
+            <button class="btn btn-primary" (click)="startAddPet()">
+              <i class="fas fa-plus"></i>
+              Add Your First Pet
+            </button>
+          </div>
+
+          <!-- Pets list -->
+          <div *ngIf="!loadingPets && pets.length > 0" class="pets-grid">
+            <div *ngFor="let pet of pets" class="pet-card">
+              <div class="pet-header">
+                <div class="pet-avatar">
+                  <i class="fas fa-paw"></i>
+                </div>
+                <div class="pet-info">
+                  <h3>{{ pet.pet_name }}</h3>
+                  <span class="pet-badge">{{ pet.species }}</span>
+                </div>
+              </div>
+              <div class="pet-details">
+                <div class="detail-item">
+                  <i class="fas fa-dna"></i>
+                  <span>{{ pet.breed || 'Unknown breed' }}</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fas fa-id-card"></i>
+                  <span>ID: {{ pet.pet_id || 'N/A' }}</span>
+                </div>
+              </div>
+              <div class="pet-actions">
+                <button class="btn-action btn-edit" (click)="editPet(pet)">
+                  <i class="fas fa-edit"></i>
+                  Edit
+                </button>
+                <button class="btn-action btn-delete" (click)="deletePet(pet)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Add More Card -->
+            <div class="pet-card add-pet-card" (click)="startAddPet()">
+              <div class="add-pet-content">
+                <i class="fas fa-plus-circle"></i>
+                <h3>Add New Pet</h3>
+                <p>Register another furry friend</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add/Edit Pet Form -->
+          <div *ngIf="isPetFormVisible" class="pet-form-modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3>{{ editingPet ? 'Edit Pet' : 'Add New Pet' }}</h3>
+                <button class="close-btn" (click)="cancelPetForm()">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              
+              <form (ngSubmit)="savePet()" #petForm="ngForm" class="pet-form">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="pet_name">
+                      <i class="fas fa-signature"></i>
+                      Pet Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="pet_name"
+                      name="pet_name"
+                      [(ngModel)]="currentPet.pet_name"
+                      required
+                      placeholder="Enter pet name"
+                      class="form-input">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="species">
+                      <i class="fas fa-dog"></i>
+                      Species *
+                    </label>
+                    <select
+                      id="species"
+                      name="species"
+                      [(ngModel)]="currentPet.species"
+                      required
+                      class="form-input">
+                      <option value="">Select Species</option>
+                      <option value="Dog">Dog</option>
+                      <option value="Cat">Cat</option>
+                      <option value="Bird">Bird</option>
+                      <option value="Rabbit">Rabbit</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="breed">
+                      <i class="fas fa-dna"></i>
+                      Breed *
+                    </label>
+                    <input
+                      type="text"
+                      id="breed"
+                      name="breed"
+                      [(ngModel)]="currentPet.breed"
+                      required
+                      placeholder="Enter breed"
+                      class="form-input">
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary" [disabled]="petForm.invalid || loadingPets">
+                    <i class="fas" [class.fa-spinner]="loadingPets" [class.fa-save]="!loadingPets"></i>
+                    {{ editingPet ? 'Update Pet' : 'Add Pet' }}
+                  </button>
+                  <button type="button" class="btn btn-secondary" (click)="cancelPetForm()">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

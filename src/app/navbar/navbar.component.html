@@ -1,0 +1,36 @@
+<nav class="navbar">
+  <div class="nav-brand">
+    <img src="assets/images/pet_logo.jpg" alt="Tail Cart Logo" class="nav-logo" />
+    <div class="brand-text">
+      <h1>Tail Cart</h1>
+      <p>Make your pets safe</p>
+    </div>
+  </div>
+
+  <!-- Single Hamburger Menu -->
+  <button class="menu-toggle" [class.mobile-active]="isMobileMenuOpen" (click)="toggleMobileMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Nav Links -->
+  <div class="nav-links-container" [class.mobile-active]="isMobileMenuOpen">
+    <div class="nav-links">
+      <button class="nav-link" routerLink="/home" routerLinkActive="active" (click)="onNavLinkClick()">HOME</button>
+      <button class="nav-link" routerLink="/shop" routerLinkActive="active" (click)="onNavLinkClick()">KEYCHAINS</button>
+      <button class="nav-link" routerLink="/document" routerLinkActive="active" (click)="onNavLinkClick()">DOCUMENTS</button>
+      <button class="nav-link" routerLink="/doctor-ai" routerLinkActive="active" (click)="onNavLinkClick()">Doctor AI</button>
+      <button class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="onNavLinkClick()">Reach Us</button>
+    </div>
+
+    <div class="nav-user">
+      <button class="nav-icon-btn" (click)="navigateToProfile()">👤 My Account</button>
+      <button class="nav-icon-btn cart-btn" routerLink="/cart">
+        🛒 Orders
+        <span class="cart-badge">{{ cartItems }}</span>
+      </button>
+      <button class="nav-icon-btn logout-btn" (click)="logout()">🚪 Logout</button>
+    </div>
+  </div>
+</nav>

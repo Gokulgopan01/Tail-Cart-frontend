@@ -1,0 +1,163 @@
+<div class="documents-container">
+  <!-- Hero Section -->
+  <section class="documents-hero">
+    <div class="hero-content">
+      <h1>My Documents</h1>
+      <p>Manage and upload your pet's important documents</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="documents-main-section">
+    <div class="container">
+      <div class="documents-layout">
+        <!-- Documents List -->
+        <main class="documents-content">
+          <div class="section-header">
+            <h2>Existing Documents</h2>
+            <p>All your uploaded pet documents</p>
+          </div>
+
+          <div class="documents-grid" *ngIf="documents.length > 0; else noDocuments">
+            <div class="document-card" *ngFor="let doc of documents">
+              <div class="document-header">
+                <div class="document-icon">
+                  <i class="fas fa-file-medical"></i>
+                </div>
+                <div class="document-info">
+                  <h3>{{ doc.document_title }}</h3>
+                  <div class="document-meta">
+                    <span class="pet-badge">Pet ID: {{ doc.pet }}</span>
+                    <span class="upload-date">{{ doc.upload_date | date:'mediumDate' }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="document-actions">
+                <button class="btn-action btn-download" (click)="downloadDocument(doc)">
+                  <i class="fas fa-download"></i>
+                  Download
+                </button>
+                <button class="btn-action btn-delete" (click)="deleteDocument(doc.document_id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noDocuments>
+            <div class="no-documents">
+              <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <h3>No documents found</h3>
+                <p>Upload your first document to get started</p>
+              </div>
+            </div>
+          </ng-template>
+        </main>
+
+        <!-- Upload Sidebar -->
+        <aside class="upload-sidebar">
+          <div class="upload-card">
+            <div class="upload-header">
+              <h3>Upload New Document</h3>
+              <p>Add a new document for your pet</p>
+            </div>
+
+            <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" class="upload-form">
+              <div class="form-group">
+                <label for="documentTitle">Document Title</label>
+                <input
+                  type="text"
+                  id="documentTitle"
+                  formControlName="document_title"
+                  placeholder="e.g., Vet Report, Vaccination Record"
+                  class="form-input"
+                >
+                <div *ngIf="uploadForm.get('document_title')?.invalid && uploadForm.get('document_title')?.touched" 
+                     class="error-message">
+                  Document title is required
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="petId">Pet ID</label>
+                <input
+                  type="number"
+                  id="petId"
+                  formControlName="pet"
+                  placeholder="Enter your pet ID"
+                  class="form-input"
+                >
+                <div *ngIf="uploadForm.get('pet')?.invalid && uploadForm.get('pet')?.touched" 
+                     class="error-message">
+                  Pet ID is required
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="documentFile" class="file-upload-area">
+                  <div class="file-upload-content">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span class="file-upload-text">Choose Document File</span>
+                    <span class="file-hint">Max 10MB - PDF, DOC, Images</span>
+                  </div>
+                  <input
+                    type="file"
+                    id="documentFile"
+                    formControlName="document_file"
+                    (change)="onFileSelected($event)"
+                    accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
+                    class="file-input"
+                  >
+                </label>
+                <div *ngIf="selectedFile" class="file-selected">
+                  <i class="fas fa-file-check"></i>
+                  <span>{{ selectedFile.name }}</span>
+                </div>
+                <div *ngIf="uploadForm.get('document_file')?.invalid && uploadForm.get('document_file')?.touched" 
+                     class="error-message">
+                  Please select a file
+                </div>
+              </div>
+
+              <button 
+                type="submit" 
+                class="btn-primary btn-upload"
+                [disabled]="uploadForm.invalid || isUploading"
+              >
+                <i class="fas fa-upload" *ngIf="!isUploading"></i>
+                <i class="fas fa-spinner fa-spin" *ngIf="isUploading"></i>
+                {{ isUploading ? 'Uploading...' : 'Upload Document' }}
+              </button>
+            </form>
+          </div>
+
+          <!-- Stats Card -->
+          <div class="stats-card">
+            <h4>Document Stats</h4>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="fas fa-file"></i>
+                </div>
+                <div class="stat-content">
+                  <span class="stat-number">{{ documents.length }}</span>
+                  <span class="stat-label">Total Documents</span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="fas fa-hdd"></i>
+                </div>
+                <div class="stat-content">
+                  <span class="stat-number">{{ getTotalSize() }}</span>
+                  <span class="stat-label">Total Size</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</div>

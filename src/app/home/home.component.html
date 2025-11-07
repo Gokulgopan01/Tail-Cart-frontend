@@ -1,0 +1,202 @@
+<!-- Home Section -->
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="badge animate-fade-in">Premium Pet Safety</div>
+        <h2 class="hero-subtitle animate-slide-left">Protect Your Pets With</h2>
+        <h1 class="hero-title animate-slide-right">QR <span class="gradient-text">Keychains</span></h1>
+        <p class="hero-description animate-fade-in-delay">If someone finds your pet, scanning the QR on their keychain will show your contact details instantly.</p>
+        <div class="hero-buttons animate-bounce-in">
+          <button class="btn btn-primary" (click)="navigateToProfile()">
+            {{ hasProfile ? 'My Profile' : 'Create Owner Profile' }}
+          </button>
+          <button class="btn btn-secondary" (click)="navigateTo('/shop')">Shop Now</button>
+        </div>
+        <div class="hero-stats animate-stagger">
+          <div class="stat">
+            <div class="stat-number">5000+</div>
+            <div class="stat-label">Pets Protected</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Recovery Rate</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Support</div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="hero-image animate-float">
+        <img src="assets/images/dog_superhero.jpg" alt="Happy Dog with QR Keychain" class="hero-pet-img">
+      </div> -->
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title animate-on-scroll">What We Offer</h2>
+        <p class="section-subtitle animate-on-scroll">Safety, convenience, and care for your beloved pets</p>
+        <div class="section-divider animate-on-scroll"></div>
+      </div>
+      
+      <div class="features-grid">
+        
+        <!-- Health Documents -->
+        <div class="feature-card animate-on-scroll">
+            <img src="assets/images/Home-Catalog-Pet_Doc.jpg" alt="Pet Health Records" class="feature-img">
+            <div class="image-overlay"></div>
+            <div class="feature-content">
+              <button class="feature-btn" (click)="navigateTo('/document')">Manage Documents</button>
+            </div>
+        </div>
+
+        <!-- Pet Supplies -->
+        <div class="feature-card animate-on-scroll">
+            <img src="assets/images/Home-Catalog-Pet_cart.jpg" alt="Keychain Store" class="feature-img">
+            <div class="image-overlay"></div>
+            <div class="feature-content">
+              <button class="feature-btn" (click)="navigateTo('/shop')">Browse Products</button>
+          </div>
+        </div>
+
+        <div class="feature-card animate-on-scroll">
+            <img src="assets/images/Home-Catalog-Pet_Doctor.jpg" alt="Doctor AI" class="feature-img">
+            <div class="image-overlay"></div>
+            <div class="feature-content">
+              <button class="feature-btn" (click)="navigateTo('/training')">Ask Doctor</button>
+          </div>
+        </div>
+
+        <div class="feature-card animate-on-scroll">
+            <img src="assets/images/Home-Catalog-Pet_Profile.jpg" alt="Future Services" class="feature-img">
+            <div class="image-overlay"></div>
+            <div class="feature-content">
+              <button class="feature-btn">Manage Pets</button>
+          </div>
+        </div>
+
+        <div class="feature-card animate-on-scroll">
+            <img src="assets/images/Home-Catalog-pet_community.jpg" alt="Pet Community" class="feature-img">
+            <div class="image-overlay"></div>
+            <div class="feature-content">
+              <h3>Pet Community</h3>
+              <p>Connect with other pet owners and share experiences.</p>
+              <button class="feature-btn">Comming Soon</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Showcase -->
+  <section class="category-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title animate-on-scroll">Choose Your Keychain</h2>
+        <p class="section-subtitle animate-on-scroll">Designed for every type of pet personality</p>
+      </div>
+      
+      <div class="category-grid">
+        <div class="category-card dogs animate-on-scroll" (click)="navigateTo('/shop')">
+          <div class="category-image">
+            <img src="assets/images/Home-Card-Puppe.jpg" alt="Dog Keychains">
+          </div>
+          <div class="category-overlay"></div>
+          <div class="category-content">
+            <h3>Dog Keychains</h3>
+            <p>Durable tags designed for active dogs</p>
+            <button class="btn-category">Shop Now</button>
+          </div>
+          <div class="category-badge">Most Popular</div>
+        </div>
+
+        <div class="category-card cats animate-on-scroll" (click)="navigateTo('/shop')">
+          <div class="category-image">
+            <img src="assets/images/Home-Card-cat.jpg" alt="Cat Keychains">
+          </div>
+          <div class="category-overlay"></div>
+          <div class="category-content">
+            <h3>Cat Keychains</h3>
+            <p>Lightweight designs perfect for curious cats</p>
+            <button class="btn-category">Shop Now</button>
+          </div>
+        </div>
+
+        <div class="category-card birds animate-on-scroll" (click)="navigateTo('/shop')">
+          <div class="category-image">
+            <img src="assets/images/Home-Card-Other.jpg" alt="Other Pets">
+          </div>
+          <div class="category-overlay"></div>
+          <div class="category-content">
+            <h3>Other Pets</h3>
+            <p>Custom keychains for birds, fish tanks, and more</p>
+            <button class="btn-category">Shop Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title animate-on-scroll">Happy Pet Owners</h2>
+        <p class="section-subtitle animate-on-scroll">See what our customers have to say</p>
+      </div>
+      
+      <div class="testimonials-grid">
+        <div class="testimonial-card animate-on-scroll">
+          <div class="testimonial-image">
+            <img src="assets/images/Home-review1.jpg" alt="Sarah Johnson">
+          </div>
+          <div class="testimonial-content">
+            <p>"The QR keychain saved my dog Max when he got lost last month. Someone found him and contacted me within minutes!"</p>
+          </div>
+          <div class="testimonial-author">
+            <h4>Sarah Johnson</h4>
+            <p>Dog Owner</p>
+          </div>
+        </div>
+        
+        <div class="testimonial-card animate-on-scroll">
+          <div class="testimonial-image">
+            <img src="assets/images/Home-review3.jpg" alt="Michael Chen">
+          </div>
+          <div class="testimonial-content">
+            <p>"I love how I can store all my cat's medical records in one place. The vet appointments are so much easier now."</p>
+          </div>
+          <div class="testimonial-author">
+            <h4>Michael Chen</h4>
+            <p>Cat Owner</p>
+          </div>
+        </div>
+        
+        <div class="testimonial-card animate-on-scroll">
+          <div class="testimonial-image">
+            <img src="assets/images/Home-review2.jpg" alt="Emily Rodriguez">
+          </div>
+          <div class="testimonial-content">
+            <p>"The peace of mind knowing my pets are protected is priceless. The keychains are stylish and durable too!"</p>
+          </div>
+          <div class="testimonial-author">
+            <h4>Emily Rodriguez</h4>
+            <p>Multiple Pet Owner</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  
+</div>

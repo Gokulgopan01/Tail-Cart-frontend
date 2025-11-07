@@ -1,0 +1,218 @@
+<div class="cart-container" *ngIf="!loading; else loadingTpl">
+  <!-- Hero Section -->
+  <section class="cart-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i class="fas fa-shopping-cart"></i>
+        Your Shopping Cart
+      </div>
+      <h1>Your Cart</h1>
+      <p>Review your items and proceed to checkout</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="cart-main-section">
+    <div class="container">
+      <div class="cart-layout">
+        <!-- Cart Items -->
+        <main class="cart-content">
+          <div class="section-header">
+            <h2>Cart Items ({{ cartItems.length }})</h2>
+            <p>Products you're about to purchase</p>
+          </div>
+
+          <!-- Messages -->
+          <div class="messages-container">
+            <div *ngIf="errorMessage" class="message error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ errorMessage }}
+            </div>
+            <div *ngIf="successMessage" class="message success-message">
+              <i class="fas fa-check-circle"></i>
+              {{ successMessage }}
+            </div>
+          </div>
+
+          <!-- Empty Cart -->
+          <div *ngIf="cartItems.length === 0 && !errorMessage" class="empty-cart">
+            <div class="empty-state">
+              <div class="empty-icon">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <h3>Your Cart is Empty</h3>
+              <p>Looks like you haven't added any items to your cart yet</p>
+              <button class="btn btn-primary" routerLink="/shop">
+                <i class="fas fa-shopping-bag"></i>
+                Start Shopping
+              </button>
+            </div>
+          </div>
+
+          <!-- Cart Items List -->
+          <div class="cart-items" *ngIf="cartItems.length > 0">
+            <div class="cart-item" *ngFor="let item of cartItems; let i = index">
+              <div class="item-image">
+                <img [src]="item.product_image" 
+     [alt]="item.product_name"
+     onerror="this.src='assets/images/shop-main.jpg'" />
+                <div class="item-badge" *ngIf="item.status === 'pending'">Pending</div>
+              </div>
+              
+              <div class="item-details">
+                <div class="item-header">
+                  <h3 class="item-title">{{ item.product_name }}</h3>
+                  <button class="btn-remove" (click)="removeItem(item)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+                
+                <div class="item-meta">
+                  <div class="meta-item">
+                    <i class="fas fa-paw"></i>
+                    <span>{{ item.pet_name || 'Generic Pet' }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <i class="fas fa-tag"></i>
+                    <span class="status-badge" [class]="item.status">{{ item.status }}</span>
+                  </div>
+                </div>
+                
+                <div class="item-pricing">
+                  <div class="price-display">
+                    <span class="price">₹{{ item.product_price  }}</span>
+                    <span class="quantity">× {{ item.quantity }}</span>
+                    <span class="subtotal">= ₹{{ item.product_price  * item.quantity }}</span>
+                  </div>
+                </div>
+                
+                  <div class="item-actions">
+                    <div class="quantity-controls">
+                      <button class="qty-btn" (click)="updateQuantity(item, item.quantity - 1)" [disabled]="item.quantity <= 1">−</button>
+<span>{{ item.quantity }}</span>
+<button class="qty-btn" (click)="updateQuantity(item, item.quantity + 1)">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Checkout Summary -->
+        <aside class="checkout-sidebar" *ngIf="cartItems.length > 0">
+          <div class="summary-card">
+            <div class="summary-header">
+              <h3>Order Summary</h3>
+              <i class="fas fa-receipt"></i>
+            </div>
+            
+            <div class="summary-details">
+              <div class="summary-row">
+                <span>Items ({{ getTotalItems() }})</span>
+                <span>₹{{ getSubtotal() }}</span>
+              </div>
+              <div class="summary-row">
+                <span>Shipping</span>
+                <span class="free">FREE</span>
+              </div>
+              <div class="summary-row">
+                <span>Tax</span>
+                <span>₹{{ getTax() }}</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-row total">
+                <span>Total Amount</span>
+                <span>₹{{ totalAmount }}</span>
+              </div>
+            </div>
+            
+            <div class="summary-features">
+              <div class="feature">
+                <i class="fas fa-shield-alt"></i>
+                <span>Secure Checkout</span>
+              </div>
+              <div class="feature">
+                <i class="fas fa-truck"></i>
+                <span>Free Shipping</span>
+              </div>
+              <div class="feature">
+                <i class="fas fa-undo"></i>
+                <span>Easy Returns</span>
+              </div>
+            </div>
+            
+            <button class="btn btn-primary btn-checkout" (click)="checkout()">
+              <i class="fas fa-lock"></i>
+              Proceed to Checkout
+            </button>
+            
+            <div class="security-notice">
+              <i class="fas fa-lock"></i>
+              <span>Your payment information is secure and encrypted</span>
+            </div>
+          </div>
+
+          <!-- Continue Shopping -->
+          <div class="continue-shopping">
+            <h4>Need more items?</h4>
+            <button class="btn btn-secondary" routerLink="/shop">
+              <i class="fas fa-arrow-left"></i>
+              Continue Shopping
+            </button>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Recommended Products -->
+      <div class="recommended-section" *ngIf="cartItems.length > 0">
+        <div class="section-header">
+          <h2>You Might Also Like</h2>
+          <p>Popular products other customers are buying</p>
+        </div>
+        
+        <div class="recommended-grid">
+          <div class="product-mini-card">
+            <div class="mini-image">
+              <img src="assets/images/Cart-Card1.jpg" alt="Premium Food" />
+            </div>
+            <div class="mini-details">
+              <h4>Premium Pet Food</h4>
+              <p>₹299</p>
+              <button class="btn-mini">Add to Cart</button>
+            </div>
+          </div>
+          
+          <div class="product-mini-card">
+            <div class="mini-image">
+              <img src="assets/images/pet_logo.jpg" alt="Health Supplements" />
+            </div>
+            <div class="mini-details">
+              <h4>Health Supplements</h4>
+              <p>₹199</p>
+              <button class="btn-mini">Add to Cart</button>
+            </div>
+          </div>
+          
+          <div class="product-mini-card">
+            <div class="mini-image">
+              <img src="assets/images/Cart-Card3.jpg" alt="Toys & Accessories" />
+            </div>
+            <div class="mini-details">
+              <h4>Toys & Accessories</h4>
+              <p>₹149</p>
+              <button class="btn-mini">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading your cart...</p>
+  </div>
+</ng-template>
