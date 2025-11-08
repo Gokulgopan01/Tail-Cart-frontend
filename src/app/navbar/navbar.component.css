@@ -197,6 +197,10 @@
     .navbar {
         display: none !important;
     }
+    
+    body {
+        padding-bottom: 100px !important;
+    }
 
     /* MOBILE NAVBAR STYLES */
     .mobile-navbar {
@@ -255,7 +259,7 @@
         transform: rotate(-45deg) translate(6px, -6px);
     }
 
-    /* Mobile Nav Links Container */
+    /* FIXED: Mobile Nav Links Container - More space for text */
     .mobile-navbar .nav-links-container {
         position: fixed;
         bottom: 90px;
@@ -264,17 +268,19 @@
         transform-origin: bottom center;
         opacity: 0;
         background: rgba(17,17,17,0.95);
-        border-radius: 50px;
-        padding: 15px 25px;
+        border-radius: 25px;
+        padding: 20px 30px;
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 15px;
+        gap: 10px;
         transition: all 0.35s ease;
         box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         z-index: 9998;
         pointer-events: none;
-        min-width: 220px;
+        min-width: 280px;
+        max-width: 90vw;
+        flex-wrap: wrap;
     }
 
     .mobile-navbar .nav-links-container.mobile-active {
@@ -286,21 +292,27 @@
     .mobile-navbar .nav-links {
         display: flex;
         flex-direction: row;
-        gap: 15px;
+        gap: 12px;
         margin: 0;
         padding: 0;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
+    /* FIXED: Nav link styles - Better spacing and text */
     .mobile-navbar .nav-link {
         background: transparent;
         color: #fff;
-        font-size: 0.8rem;
-        font-weight: 500;
+        font-size: 0.75rem;
+        font-weight: 600;
         border: none;
-        padding: 8px 12px;
+        padding: 10px 14px;
         transition: all 0.3s ease;
         white-space: nowrap;
         border-radius: 20px;
+        min-width: 60px;
+        text-align: center;
+        flex-shrink: 0;
     }
 
     .mobile-navbar .nav-link:hover,
@@ -330,11 +342,164 @@
         backdrop-filter: blur(2px);
         z-index: 9997;
     }
+
+
+    /* =========================================================
+       MOBILE CONTENT STYLES - FIX CONTENT DISPLAY
+       ========================================================= */
+    
+    /* Reset body and html */
+    body, html {
+        width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Main container fixes */
+    .container, .main-container, .app-root, router-outlet + * {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 15px !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Hero section fixes */
+    .hero-section, .banner, .main-banner {
+        padding: 60px 20px 40px !important;
+        text-align: center !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Text sizing for mobile */
+    h1 {
+        font-size: 2rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 15px !important;
+    }
+
+    h2 {
+        font-size: 1.75rem !important;
+        line-height: 1.3 !important;
+    }
+
+    h3 {
+        font-size: 1.5rem !important;
+    }
+
+    p {
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* Button fixes */
+    .btn, button {
+        padding: 12px 24px !important;
+        font-size: 1rem !important;
+        margin: 8px 5px !important;
+        width: auto !important;
+        display: inline-block !important;
+    }
+
+    /* Grid and layout fixes */
+    .row, .flex-container, .grid {
+        flex-direction: column !important;
+        gap: 20px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .col, .flex-item, .grid-item {
+        width: 100% !important;
+        margin-bottom: 20px !important;
+        padding: 0 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Image fixes */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+        display: block !important;
+    }
+
+    /* Card and section fixes */
+    .card, .section, .feature {
+        width: 100% !important;
+        margin: 10px 0 !important;
+        padding: 20px 15px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Form elements */
+    input, textarea, select {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 8px 0 !important;
+    }
+
+    /* Specific to your content based on the image */
+    .premium-pet-safety, .hero-content {
+        text-align: center !important;
+        padding: 20px 15px !important;
+    }
+
+    .qr-keychains-section {
+        padding: 30px 15px !important;
+    }
+
+    /* Force single column layout */
+    [class*="col-"], [class*="grid-"] {
+        width: 100% !important;
+        float: none !important;
+    }
+
+    /* Remove any horizontal scroll */
+    * {
+        max-width: 100% !important;
+    }
+
+    /* Padding for safe areas (notch phones) */
+    .safe-area-padding {
+        padding-left: env(safe-area-inset-left) !important;
+        padding-right: env(safe-area-inset-right) !important;
+    }
 }
 
 /* Hide mobile navbar on desktop */
 @media (min-width: 769px) {
     .mobile-navbar {
         display: none !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+    .mobile-navbar .nav-links-container {
+    .mobile-navbar .nav-links-container {
+        min-width: 250px !important;
+        padding: 18px 25px !important;
+        gap: 8px !important;
+    }
+    
+    .mobile-navbar .nav-links {
+        gap: 8px !important;
+    }
+    
+    .mobile-navbar .nav-link {
+        font-size: 0.7rem !important;
+        padding: 8px 12px !important;
+        min-width: 55px !important;
+    }}
+    
+    h1 {
+        font-size: 1.75rem !important;
+    }
+    
+    .hero-section {
+        padding: 50px 15px 30px !important;
     }
 }
