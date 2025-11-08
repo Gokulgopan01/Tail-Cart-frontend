@@ -4,7 +4,7 @@
     top: 0;
     left: 0;
     right: 0;
-    background-color: white;
+    background: rgba(247, 250, 252, 0.95); /* var(--light) with transparency */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--gray-light);
@@ -17,18 +17,51 @@
     box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
 }
 
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .nav-logo {
-  height: 55px;            /* increased height */
-  width: 200px;            /* increased width for wider look */
-  object-fit: contain;     /* keeps proportions intact */
-  border-radius: 8px;
-  display: block;
-  transition: transform 0.3s ease;
-  margin: 0 auto;          /* centers inside container */
+    height: 50px;         /* keep height same */
+    width: 90px;          /* increase width to stretch it */
+    object-fit: contain;  /* keeps full image visible without crop */
+    border-radius: 8px;   /* optional, keeps corners smooth */
+    transition: transform 0.3s ease;
 }
 
 .nav-logo:hover {
-  transform: scale(1.08);
+    transform: scale(1.05);
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.nav-brand h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.dark-theme .nav-brand h1 {
+    color: var(--white);
+}
+
+.nav-brand p {
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 /* Scrolled state for navbar */
@@ -244,8 +277,8 @@
     }
 
     .nav-logo {
-        height: 55px;
-        width: 250px;
+        height: 40px;
+        width: 70px;
     }
 
     .nav-brand h1 {
