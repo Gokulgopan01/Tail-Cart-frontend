@@ -1,24 +1,20 @@
+<!-- DESKTOP NAVBAR (shown on desktop only) -->
 <nav class="navbar">
   <div class="nav-brand">
     <img src="assets/images/Tail_cart_logo.jpg" alt="Tail Cart Logo" class="nav-logo" />
   </div>
 
-  <!-- Single Hamburger Menu -->
-  <button class="menu-toggle" [class.mobile-active]="isMobileMenuOpen" (click)="toggleMobileMenu()">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-
-  <!-- Nav Links -->
-  <div class="nav-links-container" [class.mobile-active]="isMobileMenuOpen">
+  <!-- Desktop Nav Links -->
+  <div class="nav-links-container">
     <div class="nav-links">
-      <button class="nav-link" routerLink="/home" routerLinkActive="active" (click)="onNavLinkClick()">HOME</button>
-      <button class="nav-link" routerLink="/shop" routerLinkActive="active" (click)="onNavLinkClick()">KEYCHAINS</button>
-      <button class="nav-link" routerLink="/document" routerLinkActive="active" (click)="onNavLinkClick()">DOCUMENTS</button>
-      <button class="nav-link" routerLink="/doctor-ai" routerLinkActive="active" (click)="onNavLinkClick()">Doctor AI</button>
-      <button class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="onNavLinkClick()">Reach Us</button>
-      <div class="nav-user">
+      <button class="nav-link" routerLink="/home" routerLinkActive="active">HOME</button>
+      <button class="nav-link" routerLink="/shop" routerLinkActive="active">KEYCHAINS</button>
+      <button class="nav-link" routerLink="/document" routerLinkActive="active">DOCUMENTS</button>
+      <button class="nav-link" routerLink="/doctor-ai" routerLinkActive="active">Doctor AI</button>
+      <button class="nav-link" routerLink="/contact" routerLinkActive="active">Reach Us</button>
+    </div>
+
+    <div class="nav-user">
       <button class="nav-icon-btn" (click)="navigateToProfile()">👤 My Account</button>
       <button class="nav-icon-btn cart-btn" routerLink="/cart">
         🛒 Orders
@@ -26,8 +22,24 @@
       </button>
       <button class="nav-icon-btn logout-btn" (click)="logout()">🚪 Logout</button>
     </div>
-    </div>
+  </div>
+</nav>
 
-    
+<nav class="mobile-navbar">
+  <button class="menu-toggle" (click)="toggleMobileMenu()">
+    <i *ngIf="!isMobileMenuOpen" class="fas fa-bars"></i>     <!-- Hamburger -->
+    <i *ngIf="isMobileMenuOpen" class="fas fa-times"></i>     <!-- Close (X) -->
+  </button>
+
+  <!-- Mobile Nav Links -->
+  <div class="nav-links-container" [class.mobile-active]="isMobileMenuOpen">
+    <div class="nav-links">
+      <button class="nav-link" routerLink="/home" routerLinkActive="active" (click)="onNavLinkClick()">HOME</button>
+      <button class="nav-link" routerLink="/shop" routerLinkActive="active" (click)="onNavLinkClick()">KEYCHAINS</button>
+      <button class="nav-link" routerLink="/document" routerLinkActive="active" (click)="onNavLinkClick()">DOCUMENTS</button>
+      <button class="nav-link" routerLink="/doctor-ai" routerLinkActive="active" (click)="onNavLinkClick()">Doctor AI</button>
+      <button class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="onNavLinkClick()">Reach Us</button>
+      <button class="nav-link" (click)="logout(); onNavLinkClick()">Log In</button>
+    </div>
   </div>
 </nav>

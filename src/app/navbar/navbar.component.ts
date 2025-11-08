@@ -1,10 +1,11 @@
 import { Component, OnInit , HostListener} from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],   // <-- add this
+  imports: [RouterLink, RouterLinkActive, CommonModule],   // <-- add this
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
@@ -28,6 +29,16 @@ export class NavbarComponent implements OnInit {
       this.closeMobileMenu();
     }
   }
+
+  @HostListener('document:click', ['$event'])
+onDocumentClick(event: Event) {
+  // Close mobile menu when clicking outside
+  if (this.isMobileMenuOpen && 
+      !(event.target as Element).closest('.mobile-navbar') &&
+      !(event.target as Element).closest('.nav-links-container')) {
+    this.closeMobileMenu();
+  }
+}
 
   constructor(private router: Router) {}
 
