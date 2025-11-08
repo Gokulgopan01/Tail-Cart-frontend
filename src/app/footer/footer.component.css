@@ -1,12 +1,16 @@
 /* Modern Footer with Your Theme */
 .footer {
-    background: url('/assets/images/Navbar-Dog.jpg') center/cover;
-    color: var(--white);
-    position: relative;
-    margin-top: 100px;
-    border-top: 3px solid var(--primary);
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+  background: url('/assets/images/Navbar-Dog.jpg') center/cover no-repeat;
+  color: var(--white);
+  position: relative;
+  margin-top: 100px;
+  border-top: 3px solid var(--primary);
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+  min-height: 450px; /* ensures image is visible */
+  display: flex;
+  align-items: center;
 }
+
 
 /* Wave Separator */
 .footer-wave {
@@ -29,11 +33,28 @@
     fill: var(--dark);
 }
 
+.footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(31,41,55,0.8) 0%, rgba(31,41,55,0.3) 40%, transparent 100%);
+  z-index: 1;
+}
+.footer h2, .footer h4, .footer a, .footer p {
+  color: #fff !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
 /* Main Content */
 .footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 80px 20px 40px;
+  max-width: 1200px;
+  margin-left: 80px;   /* shifts content into the left open area */
+  padding: 60px 20px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr; /* left-heavy balance */
+  gap: 40px;
+  z-index: 2;
+  position: relative;
 }
 
 /* Brand Section */
@@ -41,8 +62,13 @@
     margin-bottom: 60px;
 }
 
+/* Adjust brand section to appear prominent */
 .brand-section {
-    max-width: 400px;
+  max-width: 350px;
+}
+
+.logo-text h2 {
+  font-size: 2.4rem;
 }
 
 .logo {
@@ -139,10 +165,9 @@
 
 /* Footer Grid */
 .footer-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 40px;
+  display: contents; /* reuses grid from .footer-content */
 }
+
 
 .column-title {
     display: flex;
@@ -316,6 +341,10 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 40px;
     }
+    .footer-content {
+    grid-template-columns: repeat(2, 1fr);
+    margin-left: 40px;
+  }
     
     .footer-bottom-content {
         flex-direction: column;
@@ -326,8 +355,18 @@
 
 @media (max-width: 768px) {
     .footer-content {
-        padding: 60px 20px 30px;
-    }
+    margin-left: 0;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 40px 20px;
+  }
+  .footer::before {
+    background: rgba(31,41,55,0.7);
+  }
+
+    .footer {
+    align-items: flex-start;
+  }
     
     .footer-grid {
         grid-template-columns: 1fr;
@@ -355,6 +394,9 @@
         height: 50px;
     }
 }
+.footer-column.contact {
+  margin-top: 100px; /* visually aligns with dog’s head */
+}
 
 /* Animations */
 @keyframes fadeInUp {
@@ -367,9 +409,8 @@
         transform: translateY(0);
     }
 }
-
 .footer-column {
-    animation: fadeInUp 0.6s ease-out;
+  animation: fadeInUp 0.6s ease-out;
 }
 
 .footer-column:nth-child(1) { animation-delay: 0.1s; }

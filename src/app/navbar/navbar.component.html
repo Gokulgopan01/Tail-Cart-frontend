@@ -1,10 +1,6 @@
 <nav class="navbar">
   <div class="nav-brand">
-    <img src="assets/images/pet_logo.jpg" alt="Tail Cart Logo" class="nav-logo" />
-    <div class="brand-text">
-      <h1>Tail Cart</h1>
-      <p>Make your pets safe</p>
-    </div>
+    <img src="assets/images/Tail_cart_logo.jpg" alt="Tail Cart Logo" class="nav-logo" />
   </div>
 
   <!-- Single Hamburger Menu -->
@@ -22,9 +18,7 @@
       <button class="nav-link" routerLink="/document" routerLinkActive="active" (click)="onNavLinkClick()">DOCUMENTS</button>
       <button class="nav-link" routerLink="/doctor-ai" routerLinkActive="active" (click)="onNavLinkClick()">Doctor AI</button>
       <button class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="onNavLinkClick()">Reach Us</button>
-    </div>
-
-    <div class="nav-user">
+      <div class="nav-user">
       <button class="nav-icon-btn" (click)="navigateToProfile()">👤 My Account</button>
       <button class="nav-icon-btn cart-btn" routerLink="/cart">
         🛒 Orders
@@ -32,5 +26,8 @@
       </button>
       <button class="nav-icon-btn logout-btn" (click)="logout()">🚪 Logout</button>
     </div>
+    </div>
+
+    
   </div>
 </nav>
