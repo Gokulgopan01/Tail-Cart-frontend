@@ -20,7 +20,7 @@ export const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'document', component: DocumentsComponent },
   { path: 'about', component: AboutComponent },
-  { path: '', component: HomeComponent },
+  { path: '', component: AuthComponent },
   { path: 'cart', component: CartComponent },
-  { path: '**', component: HomeComponent }
+  { path: '**', component: AuthComponent }
 ];

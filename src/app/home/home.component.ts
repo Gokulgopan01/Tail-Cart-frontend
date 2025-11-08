@@ -25,12 +25,9 @@ export class HomeComponent implements OnInit {
     this.username = localStorage.getItem('username');
     this.userId = localStorage.getItem('user_id');
     
-    if (!this.userId) {
-      this.router.navigate(['/auth']);
-      return;
-    }
-    
+    if (this.userId) {
     this.checkProfile();
+  }
   }
 
   checkProfile(): void {
