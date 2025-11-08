@@ -26,7 +26,7 @@ export class DocumentsComponent implements OnInit  {
   uploadForm: FormGroup;
   selectedFile: File | null = null;
   isUploading = false;
-  private apiUrl = 'http://127.0.0.1:8000/api/user/documents/';
+  private apiUrl = 'http://13.60.65.166/api/user/documents/';
   private userId: string = '';
 
   constructor(
@@ -124,7 +124,7 @@ export class DocumentsComponent implements OnInit  {
   }
 
   downloadDocument(doc: Document): void {
-    const fileUrl = `http://127.0.0.1:8000${doc.document_file}`;
+    const fileUrl = `http://13.60.65.166${doc.document_file}`;
     const link = document.createElement('a');
     link.href = fileUrl;
     link.download = doc.document_title;

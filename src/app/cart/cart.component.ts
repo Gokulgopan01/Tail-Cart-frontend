@@ -50,14 +50,14 @@ export class CartComponent implements OnInit {
   /** 🛒 Load all cart items for user */
   loadCart(): void {
     this.loading = true;
-    this.http.get<CartItem[]>(`http://127.0.0.1:8000/api/user/cart/?user_id=${this.userId}`)
+    this.http.get<CartItem[]>(`http://13.60.65.166/api/user/cart/?user_id=${this.userId}`)
       .subscribe({
         next: (res) => {
           this.cartItems = res.map(item => ({
             ...item,
             product_image: item.product_image?.startsWith('http')
               ? item.product_image
-              : 'http://127.0.0.1:8000' + item.product_image
+              : 'http://13.60.65.166' + item.product_image
           }));
           this.calculateTotal();
           this.loading = false;
@@ -79,7 +79,7 @@ export class CartComponent implements OnInit {
     const oldQuantity = item.quantity;
     item.quantity = newQuantity; // Update instantly on UI
 
-    this.http.put(`http://127.0.0.1:8000/api/user/cart/`, {
+    this.http.put(`http://13.60.65.166/api/user/cart/`, {
       user_id: this.userId,
       cart_id: item.cart_id,
       quantity: newQuantity
@@ -108,7 +108,7 @@ export class CartComponent implements OnInit {
     }).then(result => {
       if (!result.isConfirmed) return;
 
-      this.http.delete(`http://127.0.0.1:8000/api/user/cart/?cart_id=${item.cart_id}`)
+      this.http.delete(`http://13.60.65.166/api/user/cart/?cart_id=${item.cart_id}`)
         .subscribe({
           next: () => {
             this.cartItems = this.cartItems.filter(i => i.cart_id !== item.cart_id);
@@ -151,7 +151,7 @@ export class CartComponent implements OnInit {
       if (!result.isConfirmed) return;
 
       this.loading = true;
-      this.http.post(`http://127.0.0.1:8000/api/checkout/`, {
+      this.http.post(`http://13.60.65.166/api/checkout/`, {
         user_id: this.userId,
         items: this.cartItems,
         total_amount: this.totalAmount

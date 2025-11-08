@@ -70,7 +70,7 @@ export class ProductsComponent implements OnInit {
   }
 
   fetchProducts() {
-    this.http.get<Product[]>('http://127.0.0.1:8000/api/admin/products/').subscribe({
+    this.http.get<Product[]>('http://13.60.65.166/api/admin/products/').subscribe({
       next: (products) => {
         this.products = products;
         this.applyFilters();
@@ -230,7 +230,7 @@ export class ProductsComponent implements OnInit {
 
     const payload = { owner: userId, pet: petId, product: product.id, quantity };
 
-    this.http.post('http://127.0.0.1:8000/api/user/cart/', payload).subscribe({
+    this.http.post('http://13.60.65.166/api/user/cart/', payload).subscribe({
       next: (res: any) => {
         Swal.fire({
           icon: 'success',

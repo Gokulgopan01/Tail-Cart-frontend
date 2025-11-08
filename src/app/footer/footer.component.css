@@ -11,6 +11,18 @@
   align-items: center;
 }
 
+.nav-logo {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    display: block;
+}
+
+.nav-logo:hover {
+    transform: scale(1.05);
+}
 
 /* Wave Separator */
 .footer-wave {
@@ -366,6 +378,7 @@
 
     .footer {
     align-items: flex-start;
+    background: url('/assets/images/mobile-footer.jpg') center/cover no-repeat;
   }
     
     .footer-grid {

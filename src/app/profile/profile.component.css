@@ -720,308 +720,197 @@
 
 
 /*Mobile View*/
+/* =========================
+   Mobile Responsive Profile
+   ========================= */
 
-/* Mobile Responsive Improvements */
+/* Base mobile: max-width 768px */
 @media (max-width: 768px) {
+  /* Hero Section */
   .profile-hero {
     padding: 3rem 1rem;
     min-height: 50vh;
     display: flex;
     align-items: center;
   }
-  
+
   .hero-content h1 {
     font-size: 2.2rem;
     line-height: 1.2;
   }
-  
+
   .hero-content p {
     font-size: 1.1rem;
     line-height: 1.4;
   }
-  
+
   .hero-badge {
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
     margin-bottom: 1.5rem;
   }
-  
+
+  /* Main Profile Section */
   .profile-main-section {
     padding: 2rem 0;
   }
-  
+
   .container {
     padding: 0 1rem;
   }
-  
+
   .profile-layout {
     gap: 1.5rem;
   }
-  
+
+  /* Profile Card */
   .profile-card {
     padding: 3rem 1.5rem;
     border-radius: 20px;
     margin: 0 -0.5rem;
   }
-  
+
+  /* Profile Header */
   .profile-header {
     padding: 1.5rem;
     flex-direction: column;
     text-align: center;
     gap: 1rem;
   }
-  
+
   .header-content {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .avatar-container i {
     font-size: 3rem;
   }
-  
+
   .header-text h2 {
     font-size: 1.5rem;
   }
-  
+
   .header-text p {
     font-size: 0.9rem;
   }
-  
-  .profile-content,
-  .section-header,
-  .pets-grid {
-    padding: 1.5rem;
-  }
-  
+
+  /* Profile Info */
   .profile-info-grid,
   .form-grid,
   .pets-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .info-item {
     padding: 1.2rem;
     border-radius: 12px;
+    gap: 0.8rem;
     flex-direction: row;
+    align-items: flex-start;
     text-align: left;
   }
-  
+
   .info-content span {
     font-size: 1rem;
   }
-  
+
+  /* Forms */
   .form-actions {
     flex-direction: column;
     gap: 0.8rem;
   }
-  
-  .btn {
+
+  .btn,
+  .btn-edit,
+  .btn-action,
+  .close-btn {
     width: 100%;
     justify-content: center;
     padding: 0.9rem 1.5rem;
     font-size: 0.95rem;
+    min-height: 44px; /* touch-friendly */
   }
-  
+
   .pet-form-modal {
     padding: 1rem;
   }
-  
+
   .modal-content {
     margin: 0;
     border-radius: 16px;
+    -webkit-overflow-scrolling: touch; /* smooth scroll */
   }
-  
+
   .modal-header {
     padding: 1.5rem 1.5rem 1rem;
   }
-  
+
   .pet-form {
     padding: 1.5rem;
   }
-}
 
-@media (max-width: 480px) {
-  .profile-hero {
-    padding: 2.5rem 1rem;
-    min-height: 45vh;
+  /* Pets Grid */
+  .pets-grid {
+    padding: 1.5rem;
+    gap: 1rem;
   }
-  
-  .hero-content h1 {
-    font-size: 1.8rem;
+
+  .pet-card,
+  .add-pet-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+    min-height: 160px;
+  }
+
+  .add-pet-content i {
+    font-size: 2rem;
     margin-bottom: 0.8rem;
   }
-  
-  .hero-content p {
-    font-size: 1rem;
+
+  .add-pet-content h3 {
+    font-size: 1.1rem;
   }
-  
-  .hero-badge {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-    margin-bottom: 1.2rem;
-  }
-  
-  .profile-main-section {
-    padding: 1.5rem 0;
-  }
-  
-  .profile-card {
-    padding: 2.5rem 1rem;
-    border-radius: 16px;
-    margin: 0 -0.25rem;
-  }
-  
-  .profile-header {
-    padding: 1.2rem;
-    gap: 0.8rem;
-  }
-  
-  .header-content {
-    gap: 0.8rem;
-  }
-  
-  .avatar-container i {
-    font-size: 2.5rem;
-  }
-  
-  .avatar-status {
-    width: 12px;
-    height: 12px;
-    bottom: 1px;
-    right: 1px;
-  }
-  
-  .header-text h2 {
-    font-size: 1.3rem;
-  }
-  
-  .header-text p {
+
+  .add-pet-content p {
     font-size: 0.85rem;
   }
-  
-  .btn-edit {
-    padding: 0.7rem 1.2rem;
-    font-size: 0.9rem;
-  }
-  
-  .profile-content {
-    padding: 1.2rem;
-  }
-  
-  .info-item {
-    padding: 1rem;
-    gap: 0.8rem;
-    flex-direction: row;
-    align-items: flex-start;
-  }
-  
-  .info-icon {
-    font-size: 1rem;
-    min-width: 20px;
-  }
-  
-  .info-content label {
-    font-size: 0.75rem;
-    margin-bottom: 0.2rem;
-  }
-  
-  .info-content span {
-    font-size: 0.9rem;
-    line-height: 1.3;
-  }
-  
-  .section-header {
-    padding: 1.2rem 1.2rem 0.8rem;
-  }
-  
-  .section-header h2 {
-    font-size: 1.5rem;
-  }
-  
-  .section-header p {
-    font-size: 0.9rem;
-  }
-  
-  .pets-grid {
-    padding: 1.2rem;
-    gap: 0.8rem;
-  }
-  
-  .pet-card {
-    padding: 1.2rem;
-    border-radius: 12px;
-  }
-  
+
   .pet-header {
     flex-direction: row;
     text-align: left;
     gap: 0.8rem;
     margin-bottom: 0.8rem;
   }
-  
+
   .pet-avatar {
     width: 45px;
     height: 45px;
     font-size: 1.1rem;
     border-radius: 10px;
   }
-  
+
   .pet-info h3 {
     font-size: 1.1rem;
   }
-  
+
   .pet-badge {
     font-size: 0.75rem;
     padding: 0.2rem 0.6rem;
   }
-  
-  .detail-item {
-    font-size: 0.85rem;
-    gap: 0.6rem;
-    margin-bottom: 0.3rem;
-  }
-  
+
   .pet-actions {
     flex-direction: row;
     gap: 0.6rem;
   }
-  
-  .btn-action {
-    padding: 0.5rem 0.8rem;
-    font-size: 0.85rem;
-  }
-  
-  .btn-delete {
-    width: 35px;
-    height: 35px;
-  }
-  
-  .add-pet-card {
-    min-height: 160px;
-    padding: 1.5rem;
-  }
-  
-  .add-pet-content i {
-    font-size: 2rem;
-    margin-bottom: 0.8rem;
-  }
-  
-  .add-pet-content h3 {
-    font-size: 1.1rem;
-  }
-  
-  .add-pet-content p {
-    font-size: 0.85rem;
-  }
-  
-  /* Form improvements for mobile */
+
+  /* Inputs & Forms */
   .form-group label {
     font-size: 0.9rem;
     margin-bottom: 0.6rem;
   }
-  
+
   .input-with-icon input,
   .input-with-icon textarea,
   .form-input {
@@ -1029,112 +918,188 @@
     font-size: 0.95rem;
     border-radius: 10px;
   }
-  
+
   .valid-icon {
     right: 0.8rem;
     font-size: 0.8rem;
   }
-  
-  .error {
-    font-size: 0.8rem;
-  }
-  
+
+  .error,
   .error-message,
   .success-message {
+    font-size: 0.8rem;
     padding: 0.8rem 1rem;
-    font-size: 0.85rem;
     border-radius: 10px;
-  }
-  
-  /* Modal improvements */
-  .pet-form-modal {
-    padding: 0.5rem;
-  }
-  
-  .modal-content {
-    border-radius: 14px;
-  }
-  
-  .modal-header {
-    padding: 1.2rem 1.2rem 0.8rem;
-  }
-  
-  .modal-header h3 {
-    font-size: 1.3rem;
-  }
-  
-  .close-btn {
-    width: 35px;
-    height: 35px;
-  }
-  
-  .pet-form {
-    padding: 1.2rem;
   }
 }
 
-/* Extra small devices (phones under 360px) */
+/* Small devices: max-width 480px */
+@media (max-width: 480px) {
+  .profile-hero {
+    padding: 2.5rem 1rem;
+    min-height: 45vh;
+  }
+
+  .hero-content h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+
+  .hero-badge {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .profile-main-section {
+    padding: 1.5rem 0;
+  }
+
+  .profile-card {
+    padding: 2.5rem 1rem;
+    border-radius: 16px;
+    margin: 0 -0.25rem;
+  }
+
+  .profile-header {
+    padding: 1.2rem;
+    gap: 0.8rem;
+  }
+
+  .header-content {
+    gap: 0.8rem;
+  }
+
+  .avatar-container i {
+    font-size: 2.5rem;
+  }
+
+  .avatar-status {
+    width: 12px;
+    height: 12px;
+    bottom: 1px;
+    right: 1px;
+  }
+
+  .header-text h2 {
+    font-size: 1.3rem;
+  }
+
+  .header-text p {
+    font-size: 0.85rem;
+  }
+
+  .section-header {
+    padding: 1.2rem 1.2rem 0.8rem;
+  }
+
+  .section-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .section-header p {
+    font-size: 0.9rem;
+  }
+
+  .pets-grid {
+    padding: 1.2rem;
+    gap: 0.8rem;
+  }
+
+  .pet-card {
+    padding: 1.2rem;
+    border-radius: 12px;
+  }
+
+  .pet-header {
+    gap: 0.8rem;
+  }
+
+  .pet-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .pet-info h3 {
+    font-size: 1rem;
+  }
+
+  .pet-badge {
+    font-size: 0.7rem;
+  }
+
+  .pet-actions {
+    gap: 0.5rem;
+  }
+
+  .btn-delete {
+    width: 35px;
+    height: 35px;
+  }
+
+  .add-pet-card {
+    min-height: 140px;
+    padding: 1.2rem;
+  }
+
+  .add-pet-content i {
+    font-size: 1.8rem;
+  }
+
+  .add-pet-content h3 {
+    font-size: 1rem;
+  }
+
+  .add-pet-content p {
+    font-size: 0.8rem;
+  }
+}
+
+/* Extra small devices: max-width 360px */
 @media (max-width: 360px) {
   .profile-hero {
     padding: 2rem 0.8rem;
     min-height: 40vh;
   }
-  
+
   .hero-content h1 {
     font-size: 1.6rem;
   }
-  
+
   .profile-card {
     padding: 2rem 0.8rem;
     border-radius: 14px;
   }
-  
+
   .info-item {
     padding: 0.8rem;
   }
-  
+
   .pets-grid {
     padding: 1rem;
   }
-  
+
   .pet-card {
     padding: 1rem;
   }
 }
 
-/* Touch-friendly improvements for mobile */
+/* Touch & iOS Improvements */
 @media (max-width: 768px) {
-  .btn,
-  .btn-action,
-  .btn-edit,
-  .close-btn {
-    min-height: 44px; /* Minimum touch target size */
-  }
-  
-  .info-item,
-  .pet-card,
-  .add-pet-card {
-    cursor: default; /* Remove pointer cursor on touch devices */
-  }
-  
-  /* Improve scrolling */
+  /* Smooth scrolling for modals */
   .modal-content {
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
   }
-}
 
-/* Prevent zoom on input focus for iOS */
-@media (max-width: 768px) {
+  /* Prevent zoom on input focus for iOS */
   .input-with-icon input,
   .input-with-icon textarea,
   .form-input {
-    font-size: 16px; /* Prevents zoom on iOS */
-  }
-}
-
-/* High-resolution mobile devices */
-@media (max-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
-  .profile-hero {
-    background-attachment: scroll; /* Improve performance */
+    font-size: 16px;
   }
 }

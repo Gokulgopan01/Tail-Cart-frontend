@@ -1,14 +1,17 @@
 import { Component, OnInit , HostListener} from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd  } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],   // <-- add this
+  imports: [RouterLink, RouterLinkActive, CommonModule],   
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
+
+
 export class NavbarComponent implements OnInit {
   username: string | null = '';
   userId: string | null = '';
@@ -44,6 +47,12 @@ onDocumentClick(event: Event) {
 
    ngOnInit() {
         this.addScrollEffect();
+        
+        this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
   }
 
   toggleMobileMenu() {
@@ -60,6 +69,7 @@ onDocumentClick(event: Event) {
     if (this.isMobileMenuOpen) {
       this.closeMobileMenu();
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   

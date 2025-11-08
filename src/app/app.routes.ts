@@ -1,4 +1,5 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes, ExtraOptions } from '@angular/router';
 import { AuthComponent } from './auth/auth.component';   
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -24,3 +25,15 @@ export const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: '**', component: AuthComponent }
 ];
+
+
+const routerOptions: ExtraOptions = {
+  scrollPositionRestoration: 'enabled',
+  anchorScrolling: 'enabled',     
+};
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, routerOptions)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}

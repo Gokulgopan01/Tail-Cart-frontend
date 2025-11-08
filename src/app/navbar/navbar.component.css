@@ -28,11 +28,12 @@
 }
 
 .nav-logo {
-    height: 50px;
-    width: 90px;
+    height: 60px;
+    width: auto;
     object-fit: contain;
     border-radius: 8px;
     transition: transform 0.3s ease;
+    display: block;
 }
 
 .nav-logo:hover {
