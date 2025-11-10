@@ -56,7 +56,7 @@ export class DoctorComponent implements AfterViewChecked {
     this.error = '';
     // Don't clear response immediately to show previous conversation
 
-    this.http.post<{response: string}>('http://13.60.65.166/api/ai-doctor/', {
+    this.http.post<{response: string}>('https://bulbous-unaesthetical-albert.ngrok-free.dev/api/ai-doctor/', {
       question: this.userInput
     }).subscribe({
       next: (res) => {

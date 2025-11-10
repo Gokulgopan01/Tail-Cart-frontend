@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
   }
 
   checkProfile(): void {
-    this.http.get<any>(`http://13.60.65.166/api/user/profile/?user_id=${this.userId}`)
+    this.http.get<any>(`https://bulbous-unaesthetical-albert.ngrok-free.dev/api/user/profile/?user_id=${this.userId}`)
       .subscribe({
         next: (response) => {
           this.hasProfile = !!response.owner_name;

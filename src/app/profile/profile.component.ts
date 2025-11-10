@@ -70,7 +70,7 @@ export class ProfileComponent implements OnInit {
       cancelButtonText: 'Cancel'
     }).then(result => {
       if (result.isConfirmed) {
-        this.http.delete(`http://13.60.65.166/api/user/pets/${pet.pet_id}/`)
+        this.http.delete(`https://bulbous-unaesthetical-albert.ngrok-free.dev/api/user/pets/${pet.pet_id}/`)
           .subscribe({
             next: () => {
               Swal.fire('Deleted!', `${pet.pet_name} has been deleted.`, 'success');
@@ -86,7 +86,7 @@ export class ProfileComponent implements OnInit {
 
   loadProfile(): void {
     this.isLoading = true;
-    this.http.get<UserProfile>(`http://13.60.65.166/api/user/profile/?user_id=${this.userId}`)
+    this.http.get<UserProfile>(`https://bulbous-unaesthetical-albert.ngrok-free.dev/api/user/profile/?user_id=${this.userId}`)
       .subscribe({
         next: (response) => {
           this.isLoading = false;
@@ -123,8 +123,8 @@ export class ProfileComponent implements OnInit {
     const profileData = { ...this.profile, user_id: this.userId };
 
     const request$ = this.hasProfile
-      ? this.http.patch<ProfileResponse>('http://13.60.65.166/api/user/profile/', profileData)
-      : this.http.post<ProfileResponse>('http://13.60.65.166/api/user/profile/', profileData);
+      ? this.http.patch<ProfileResponse>('https://bulbous-unaesthetical-albert.ngrok-free.dev/api/user/profile/', profileData)
+      : this.http.post<ProfileResponse>('https://bulbous-unaesthetical-albert.ngrok-free.dev/api/user/profile/', profileData);
 
     request$.subscribe({
       next: (response) => {
@@ -154,7 +154,7 @@ export class ProfileComponent implements OnInit {
   loadPets(): void {
     if (!this.userId) return;
     this.loadingPets = true;
-    this.http.get<any[]>(`http://13.60.65.166/api/user/pets/?user_id=${this.userId}`)
+    this.http.get<any[]>(`https://bulbous-unaesthetical-albert.ngrok-free.dev/api/user/pets/?user_id=${this.userId}`)
       .subscribe({
         next: (response) => {
           this.pets = response;
@@ -189,8 +189,8 @@ export class ProfileComponent implements OnInit {
     this.loadingPets = true;
 
     const request$ = this.editingPet
-      ? this.http.put('http://13.60.65.166/api/user/pets/', { ...payload, pet_id: this.currentPet.pet_id, user_id: this.userId })
-      : this.http.post('http://13.60.65.166/api/user/pets/', payload);
+      ? this.http.put('https://bulbous-unaesthetical-albert.ngrok-free.dev/api/user/pets/', { ...payload, pet_id: this.currentPet.pet_id, user_id: this.userId })
+      : this.http.post('https://bulbous-unaesthetical-albert.ngrok-free.dev/api/user/pets/', payload);
 
     request$.subscribe({
       next: () => {
