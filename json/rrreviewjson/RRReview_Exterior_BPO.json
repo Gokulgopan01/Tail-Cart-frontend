@@ -1,0 +1,83 @@
+{
+     "page": [
+    {
+      "Subject Information": [
+        {
+          "filedtype": "select_data",
+          "values": [
+            ["sub_data['Style']", "//*[@id='ddlStyleType']", "xpath"]
+          ]
+        },
+        {
+          "filedtype": "Textbox",
+          "values": [
+            ["sub_data['Address']", "//*[@id='txtNewAddress']", "xpath"]
+          ]
+        },
+        {
+          "filedtype": "Textbox",
+          "values": [
+            ["sub_data['City']", "//*[@id='txtNewCity']", "xpath"]
+          ]
+        },
+         {
+          "filedtype": "select_data",
+          "values": [
+            ["sub_data['State']", "//*[@id='ddlNewState']", "xpath"]
+          ]
+        },
+        {
+          "filedtype":"Textbox",
+           "values":[
+            ["sub_data['Zipcode']","//*[@id='txtNewZip']","xpath"]
+            ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[
+            ["sub_data['Location']","//*[@id='ddlLocationType']","xpath"]
+            ]
+        },
+        {
+          "filedtype":"Textbox",
+          "values":[
+            ["sub_data['InspectionDate']","//*[@id='txtInspectionDate']","xpath"]
+            ]
+        },
+        {
+            "filedtype":"Textbox",
+            "values":[   
+            ["sub_data['OriginalListDateListing']","//*[@id='txtListingDate']","xpath"]
+               ]
+         },
+         {
+            "filedtype":"Textbox",
+            "values":[   
+            ["sub_data['OriginalListPriceListing']","//*[@id='txtOrigListPrice']","xpath"]
+               ]
+         },
+         {
+            "filedtype":"select_data", 
+            "values":[
+            ["sub_data['DOM']","//*[@id='txtDOM']","xpath"]
+            ]
+         },
+         {
+            "filedtype":"Textbox",
+            "values":[   
+            ["sub_data['MLS']","//*[@id='txtMLSNumber']","xpath"]
+               ]
+         },
+         {
+            "filedtype":"Textbox",
+            "values":[   
+            ["sub_data['MNeighborhoodDescriptionLS']","//*[@id='txtNeighborhoodComments']","xpath"]
+               ]
+         }
+      ]
+     }
+   ]
+}
+              
+                     

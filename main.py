@@ -143,4 +143,4 @@ if __name__ == "__main__":
     # Step 1: Run version check first, then launch_app
     # version_update(lambda: Application().mainloop())
     # launch_app()
-    version_update(launch_app) 
+    version_update(launch_app)
