@@ -62,6 +62,8 @@ export class ProductsComponent implements OnInit {
   };
 
   sortOption: string = 'featured';
+  isMobileSortOpen = false;
+  isMobileFiltersOpen = false;
 
   constructor(private http: HttpClient) {}
 
@@ -108,6 +110,31 @@ export class ProductsComponent implements OnInit {
     this.applySorting();
     this.updatePagination();
   }
+
+  toggleMobileFilters() {
+  const sidebar = document.querySelector('.filter-sidebar-mobile');
+  const overlay = document.querySelector('.filter-overlay');
+  sidebar?.classList.toggle('active');
+  overlay?.classList.toggle('active');
+}
+
+closeMobileFilters() {
+  const sidebar = document.querySelector('.filter-sidebar-mobile');
+  const overlay = document.querySelector('.filter-overlay');
+  sidebar?.classList.remove('active');
+  overlay?.classList.remove('active');
+}
+
+toggleMobileSort() {
+  this.isMobileSortOpen = !this.isMobileSortOpen;
+  // Prevent body scrolling when modal is open
+  document.body.style.overflow = this.isMobileSortOpen ? 'hidden' : '';
+}
+
+closeMobileSort() {
+  this.isMobileSortOpen = false;
+  document.body.style.overflow = '';
+}
 
   applySorting() {
     switch(this.sortOption) {
@@ -172,6 +199,8 @@ export class ProductsComponent implements OnInit {
       });
       return;
     }
+
+    
 
     // Modern Pet ID Selection (dropdown)
     const petResult = await Swal.fire({

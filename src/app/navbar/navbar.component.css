@@ -189,7 +189,6 @@
 .menu-toggle {
     display: none;
 }
-
 /* =========================================================
    MOBILE VIEW STYLES (max-width: 768px)
    ========================================================= */
@@ -203,25 +202,24 @@
         padding-bottom: 100px !important;
     }
 
-    /* MOBILE NAVBAR STYLES */
+    /* MOBILE NAVBAR STYLES - TOP LEFT POSITION */
     .mobile-navbar {
         position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
+        top: 20px;
+        left: 20px;
         background: transparent;
         padding: 0;
         width: auto;
         height: auto;
         display: flex !important;
-        justify-content: center;
-        align-items: center;
+        justify-content: flex-start;
+        align-items: flex-start;
         z-index: 9999;
         box-shadow: none;
         border: none;
     }
 
-    /* Toggle Button */
+    /* Toggle Button - Top Left */
     .mobile-navbar .menu-toggle {
         display: flex !important;
         flex-direction: column;
@@ -260,60 +258,71 @@
         transform: rotate(-45deg) translate(6px, -6px);
     }
 
-    /* FIXED: Mobile Nav Links Container - More space for text */
+    /* FIXED: Mobile Nav Links Container - VERTICAL DROPDOWN FROM TOP LEFT */
     .mobile-navbar .nav-links-container {
         position: fixed;
-        bottom: 90px;
-        left: 50%;
-        transform: translateX(-50%) scale(0);
-        transform-origin: bottom center;
+        top: 90px; /* Below the toggle button */
+        left: 20px;
+        transform: translateY(-20px) scale(0.95);
+        transform-origin: top left;
         opacity: 0;
         background: rgba(17,17,17,0.95);
-        border-radius: 25px;
-        padding: 20px 30px;
+        border-radius: 15px;
+        padding: 15px 0;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 0;
         transition: all 0.35s ease;
         box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         z-index: 9998;
         pointer-events: none;
-        min-width: 280px;
-        max-width: 90vw;
-        flex-wrap: wrap;
+        min-width: 200px;
+        max-width: 80vw;
+        backdrop-filter: blur(10px);
     }
 
     .mobile-navbar .nav-links-container.mobile-active {
-        transform: translateX(-50%) scale(1);
+        transform: translateY(0) scale(1);
         opacity: 1;
         pointer-events: all;
     }
 
     .mobile-navbar .nav-links {
         display: flex;
-        flex-direction: row;
-        gap: 12px;
+        flex-direction: column;
+        gap: 0;
         margin: 0;
         padding: 0;
-        flex-wrap: wrap;
-        justify-content: center;
+        width: 100%;
     }
 
-    /* FIXED: Nav link styles - Better spacing and text */
+    /* FIXED: Nav link styles - VERTICAL STACK */
     .mobile-navbar .nav-link {
         background: transparent;
         color: #fff;
-        font-size: 0.75rem;
+        font-size: 0.9rem;
         font-weight: 600;
         border: none;
-        padding: 10px 14px;
+        padding: 15px 20px;
         transition: all 0.3s ease;
-        white-space: nowrap;
-        border-radius: 20px;
-        min-width: 60px;
-        text-align: center;
-        flex-shrink: 0;
+        text-align: left;
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 0;
+        margin: 0;
+        display: block;
+        text-decoration: none;
+    }
+
+    /* Remove border radius from first and last items for clean look */
+    .mobile-navbar .nav-link:first-child {
+        border-radius: 15px 15px 0 0;
+    }
+
+    .mobile-navbar .nav-link:last-child {
+        border-radius: 0 0 15px 15px;
     }
 
     .mobile-navbar .nav-link:hover,
@@ -479,22 +488,26 @@
 
 /* Extra small devices */
 @media (max-width: 480px) {
-    .mobile-navbar .nav-links-container {
-    .mobile-navbar .nav-links-container {
-        min-width: 250px !important;
-        padding: 18px 25px !important;
-        gap: 8px !important;
+    .mobile-navbar {
+        top: 15px;
+        left: 15px;
     }
     
-    .mobile-navbar .nav-links {
-        gap: 8px !important;
+    .mobile-navbar .menu-toggle {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .mobile-navbar .nav-links-container {
+        top: 80px;
+        left: 15px;
+        min-width: 180px !important;
     }
     
     .mobile-navbar .nav-link {
-        font-size: 0.7rem !important;
-        padding: 8px 12px !important;
-        min-width: 55px !important;
-    }}
+        font-size: 0.85rem !important;
+        padding: 14px 18px !important;
+    }
     
     h1 {
         font-size: 1.75rem !important;
