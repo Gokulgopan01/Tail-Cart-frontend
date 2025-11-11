@@ -175,23 +175,18 @@ export class ProductsComponent implements OnInit {
 
     // Modern Pet ID Selection (dropdown)
     const petResult = await Swal.fire({
-      title: 'Select Your Pet',
-      html: `
-        <select id="petSelect" class="swal2-select" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
-          <option value="">--Select Pet--</option>
-          <option value="1">Pet 1</option>
-          <option value="2">Pet 2</option>
-          <option value="3">Pet 3</option>
-        </select>
-      `,
-      focusConfirm: false,
-      preConfirm: () => {
-        const petId = (document.getElementById('petSelect') as HTMLSelectElement).value;
-        if (!petId) Swal.showValidationMessage('Please select a pet!');
-        return petId;
-      },
-      showCancelButton: true
-    });
+  title: 'Enter Your Pet ID',
+  input: 'text',
+  inputLabel: 'Pet ID',
+  inputPlaceholder: 'Enter your pet ID',
+  showCancelButton: true,
+  inputValidator: (value) => {
+    if (!value) return 'Please enter a pet ID!';
+    if (isNaN(Number(value)) || Number(value) <= 0) return 'Please enter a valid numeric Pet ID!';
+    return null;
+  }
+});
+
 
     if (!petResult.value) return;
     const petId = petResult.value;
