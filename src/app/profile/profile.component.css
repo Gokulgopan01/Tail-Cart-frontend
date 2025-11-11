@@ -759,8 +759,10 @@
     padding: 0 1rem;
   }
 
+  /* CHANGE: Stack profile and pets vertically */
   .profile-layout {
-    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   /* Profile Card */
