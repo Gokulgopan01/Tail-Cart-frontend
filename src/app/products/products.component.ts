@@ -112,37 +112,72 @@ export class ProductsComponent implements OnInit {
   }
 
   toggleMobileFilters() {
-  const sidebar = document.querySelector('.filter-sidebar-mobile');
-  const overlay = document.querySelector('.filter-overlay');
-  sidebar?.classList.toggle('active');
-  overlay?.classList.toggle('active');
-}
+    this.isMobileFiltersOpen = !this.isMobileFiltersOpen;
+    const sidebar = document.querySelector('.filter-sidebar-mobile');
+    const overlay = document.querySelector('.filter-overlay');
+    
+    if (this.isMobileFiltersOpen) {
+      sidebar?.classList.add('active');
+      overlay?.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    } else {
+      sidebar?.classList.remove('active');
+      overlay?.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
 
-closeMobileFilters() {
-  const sidebar = document.querySelector('.filter-sidebar-mobile');
-  const overlay = document.querySelector('.filter-overlay');
-  sidebar?.classList.remove('active');
-  overlay?.classList.remove('active');
-}
+  closeMobileFilters() {
+    this.isMobileFiltersOpen = false;
+    const sidebar = document.querySelector('.filter-sidebar-mobile');
+    const overlay = document.querySelector('.filter-overlay');
+    sidebar?.classList.remove('active');
+    overlay?.classList.remove('active');
+    document.body.style.overflow = '';
+  }
 
-toggleMobileSort() {
-  this.isMobileSortOpen = !this.isMobileSortOpen;
-  // Prevent body scrolling when modal is open
-  document.body.style.overflow = this.isMobileSortOpen ? 'hidden' : '';
-}
+  toggleMobileSort() {
+    this.isMobileSortOpen = !this.isMobileSortOpen;
+    const sortModal = document.querySelector('.sort-sidebar-mobile');
+    const sortOverlay = document.querySelector('.sort-overlay');
+    
+    if (this.isMobileSortOpen) {
+      sortModal?.classList.add('active');
+      sortOverlay?.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    } else {
+      sortModal?.classList.remove('active');
+      sortOverlay?.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
 
-closeMobileSort() {
-  this.isMobileSortOpen = false;
-  document.body.style.overflow = '';
-}
+  closeMobileSort() {
+    this.isMobileSortOpen = false;
+    const sortModal = document.querySelector('.sort-sidebar-mobile');
+    const sortOverlay = document.querySelector('.sort-overlay');
+    sortModal?.classList.remove('active');
+    sortOverlay?.classList.remove('active');
+    document.body.style.overflow = '';
+  }
 
   applySorting() {
     switch(this.sortOption) {
-      case 'priceLow': this.filteredProducts.sort((a,b) => a.price - b.price); break;
-      case 'priceHigh': this.filteredProducts.sort((a,b) => b.price - a.price); break;
-      case 'name': this.filteredProducts.sort((a,b) => a.model.localeCompare(b.model)); break;
-      default: break;
+      case 'priceLow': 
+        this.filteredProducts.sort((a,b) => a.price - b.price); 
+        break;
+      case 'priceHigh': 
+        this.filteredProducts.sort((a,b) => b.price - a.price); 
+        break;
+      case 'name': 
+        this.filteredProducts.sort((a,b) => a.model.localeCompare(b.model)); 
+        break;
+      default: 
+        // For 'featured', you might want to reset to original order
+        // or apply some other default sorting
+        break;
     }
+    this.updatePagination();
   }
 
   updatePagination() {
@@ -165,6 +200,7 @@ closeMobileSort() {
       minRating: 0
     };
     this.applyFilters();
+    this.closeMobileFilters();
   }
 
   nextPage() {
@@ -200,22 +236,19 @@ closeMobileSort() {
       return;
     }
 
-    
-
     // Modern Pet ID Selection (dropdown)
     const petResult = await Swal.fire({
-  title: 'Enter Your Pet ID',
-  input: 'text',
-  inputLabel: 'Pet ID',
-  inputPlaceholder: 'Enter your pet ID',
-  showCancelButton: true,
-  inputValidator: (value) => {
-    if (!value) return 'Please enter a pet ID!';
-    if (isNaN(Number(value)) || Number(value) <= 0) return 'Please enter a valid numeric Pet ID!';
-    return null;
-  }
-});
-
+      title: 'Enter Your Pet ID',
+      input: 'text',
+      inputLabel: 'Pet ID',
+      inputPlaceholder: 'Enter your pet ID',
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value) return 'Please enter a pet ID!';
+        if (isNaN(Number(value)) || Number(value) <= 0) return 'Please enter a valid numeric Pet ID!';
+        return null;
+      }
+    });
 
     if (!petResult.value) return;
     const petId = petResult.value;
