@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import Swal from 'sweetalert2';
 
 interface Product {
@@ -41,7 +41,8 @@ interface Filters {
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
-export class ProductsComponent implements OnInit {
+
+export class ProductsComponent implements OnInit, AfterViewInit  {
   products: Product[] = [];
   filteredProducts: Product[] = [];
   paginatedProducts: Product[] = [];
@@ -70,6 +71,51 @@ export class ProductsComponent implements OnInit {
   ngOnInit() {
     this.fetchProducts();
   }
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.initScrollAnimations();
+    }, 100);
+  }
+  initScrollAnimations() {
+    // Trigger hero animations immediately
+    const heroElements = document.querySelectorAll('.hero-badge, .hero-content h1, .hero-content p, .hero-stats');
+    heroElements.forEach((el, index) => {
+      setTimeout(() => {
+        el.classList.add('animated');
+      }, index * 200);
+    });
+
+    // Scroll animations for product cards and other elements
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animated');
+          entry.target.classList.add('animate');
+          
+          // Add staggered animation for product cards
+          if (entry.target.classList.contains('product-card')) {
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach((card, index) => {
+              setTimeout(() => {
+                card.classList.add('animated');
+              }, index * 100);
+            });
+          }
+        }
+      });
+    }, { 
+      threshold: 0.1,
+      rootMargin: '0px 0px -10% 0px'
+    });
+
+    // Observe all elements that need scroll animations
+    const scrollElements = document.querySelectorAll(
+      '.scroll-animate, .scroll-animate-left, .scroll-animate-right, .product-card, .filter-card, .products-header'
+    );
+    
+    scrollElements.forEach(el => observer.observe(el));
+  }
+
 
   fetchProducts() {
     this.http.get<Product[]>('https://tailcart.duckdns.org/api/admin/products/').subscribe({

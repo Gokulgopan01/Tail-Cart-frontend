@@ -3,14 +3,13 @@
   background: url('/assets/images/Navbar-Dog.jpg') center/cover no-repeat;
   color: var(--white);
   position: relative;
-  margin-top: 100px;
+  margin-top: 0; 
   border-top: 3px solid var(--primary);
   box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
-  min-height: 450px; /* ensures image is visible */
+  min-height: 400px; 
   display: flex;
   align-items: center;
 }
-
 .nav-logo {
     height: 100px;
     width: auto;
