@@ -522,7 +522,7 @@ def select_checkboxes_from_list(driver, values_list, id_prefix):
 #             # Fill comments
 #             comment_elem = driver.find_element(By.XPATH, comment_xpath)
 #             comment_elem.clear()
-#             comment_elem.send_keys(repair.get("comments", ""))
+#             comment_elem.send_keys(repair.get("comments", ""))    
 
 #             # Fill estimated cost
 #             cost_elem = driver.find_element(By.XPATH, cost_xpath)
@@ -660,6 +660,67 @@ def SS_fill_repair_details(driver, repair_details):
             logging.info(f"Updated Total_Estimated_Repairs with: {total_cost_from_json}")
         except Exception as e:
             logging.error(f"Error updating Total_Estimated_Repairs: {e}")
+
+
+def rrr_fill_repair_details(driver, repair_list):
+    """
+    Fills Repair Information Tab (RRReview) ONLY for fields available in merged JSON.
+    Missing portal fields remain blank.
+    """
+
+    # Portal fixed mapping
+    portal_map = {
+        "exteriorfinish": ("txtExteriorFinish", "txtExteriorFinishLow"),
+        "painting": ("txtExteriorPainting", "txtExteriorPaintingLow"),
+        "windows": ("txtExteriorWindows", "txtExteriorWindowsLow"),
+        "roof": ("txtExteriorRoof", "txtExteriorRoofLow"),
+        "structural": ("txtExteriorStructural", "txtExteriorStructuralLow"),
+        "landscaping": ("txtExteriorLandscaping", "txtExteriorLandscapingLow"),
+        "outbuildings": ("txtExteriorOutbuildings", "txtExteriorOutbuildingsLow"),
+        "debrisremoval": ("txtExteriorDebris_Removal", "txtExteriorDebris_RemovalLow"),
+        "utility": ("txtExteriorUtility", "txtExteriorUtilityLow"),
+        "other": ("txtExteriorOther", "txtExteriorOtherLow"),
+    }
+
+    def normalize(txt):
+        if not txt:
+            return ""
+        return txt.lower().strip().replace(" ", "").replace("_", "")
+
+    # Normalized portal mapping
+    normalized_portal = {normalize(k): v for k, v in portal_map.items()}
+
+    # RPAD repair list may contain only some fields
+    for item in repair_list:
+        r_type_raw = item.get("repair_type", "")
+        r_type = normalize(r_type_raw)
+
+        if r_type not in normalized_portal:
+            continue  # skip items not relevant to portal
+
+        desc_value = item.get("comments", "")
+        cost_value = item.get("estimated_cost", "")
+
+        desc_id, cost_id = normalized_portal[r_type]
+
+        # Fill Description
+        try:
+            elem = driver.find_element(By.ID, desc_id)
+            elem.clear()
+            if desc_value:
+                elem.send_keys(desc_value)
+        except:
+            pass
+
+        # Fill Cost
+        try:
+            elem = driver.find_element(By.ID, cost_id)
+            elem.clear()
+            if cost_value:
+                elem.send_keys(str(cost_value))
+        except:
+            pass
+
 
 
 def save_form(driver):

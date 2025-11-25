@@ -99,7 +99,7 @@ def is_protocol_registered(protocol_name):
 def register_url_protocol(protocol_name, exe_path):
     base_path = f"Software\\Classes\\{protocol_name}"
     command = f'"{exe_path}" "%1"'
-
+ 
     try:
         print(f" Registering protocol: {protocol_name} -> {command}")
         # Create protocol root

@@ -1,3 +1,4 @@
+import re
 import time
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -26,7 +27,7 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from config import env
 load_dotenv()
 from condtions.all_portal_conditions import generate_condition_data
-from utils.helper import extract_data_sections, get_cookie_from_api, get_order_address_from_assigned_order, handle_login_status, load_form_config_and_data, params_check, setup_driver, update_client_account_status, update_order_status
+from utils.helper import data_filling_text, extract_data_sections, fill_repair_details, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_repair_details, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, tfs_statuschange, update_client_account_status, update_order_status
 from integrations.hybrid_bpo_api import HybridBPOApi
 arg1, arg2,arg3 = params_check()
 print(arg1,arg2,arg3)
@@ -301,216 +302,242 @@ class rrreview:
             logging.exception(f"Exception in rrreview_formopen_fill: {e}")
             pass
 
-    # def fill_form_multi(self, merged_json, order_id, form_config, session):
-    #     print("Filling form now...")
-    
-
-
-
-    # def fill_form_multi(self, merged_json, order_id, form_config, session):
-    #     """
-    #     SmartEntry: Auto-fills form fields across multiple tabs dynamically
-    #     using the configuration defined in form_config.json
-    #     and data from merged_json.
-    #     """
-    #     driver = self.driver
-    #     print("🚀 Starting SmartEntry multi-tab form filling...")
-    #     print(f"Order ID: {order_id}")
-
-    #     try:
-    #         # ✅ Extract subject data from merged_json
-    #         sub_data = merged_json.get("entry_data", [{}])[0].get("sub_data", {})
-    #         form_pages = form_config.get("page", [])
-    #         print("📄 Loaded form configuration:", form_pages)
-
-    #         # ✅ Loop through each page/tab in the form config
-    #         for page in form_pages:
-    #             for tab_name, fields in page.items():
-    #                 print(f"\n🔹 Switching to tab: {tab_name}")
-    #                 tab_xpath = f"//a[contains(@class, 'ui-tabs-anchor') and normalize-space(text())='{tab_name}']"
-
-    #                 # Switch to tab
-    #                 try:
-    #                     WebDriverWait(driver, 10).until(
-    #                         EC.element_to_be_clickable((By.XPATH, tab_xpath))
-    #                     ).click()
-    #                     time.sleep(1)
-    #                 except Exception:
-    #                     print(f"⚠️ Unable to switch to tab {tab_name}")
-    #                     continue
-
-    #                 # ✅ Fill each field defined for this tab
-    #                 for field in fields:
-    #                     fieldtype = field.get("filedtype", "").lower()
-    #                     values = field.get("values", [])
-    #                     for val in values:
-    #                         try:
-    #                             data_expr, xpath, locator_type = val
-    #                             print(f"➡️ Processing field: {data_expr} | {xpath}")
-
-    #                             # ✅ Evaluate data expression safely
-    #                             value = None
-    #                             if "sub_data" in data_expr:
-    #                                 try:
-    #                                     value = eval(data_expr, {"sub_data": sub_data})
-    #                                 except Exception as e:
-    #                                     print(f"⚠️ Failed to eval sub_data expr {data_expr}: {e}")
-    #                             else:
-    #                                 try:
-    #                                     value = eval(data_expr, {"merged_json": merged_json})
-    #                                 except Exception:
-    #                                     value = merged_json.get(data_expr.strip("'"), None)
-
-    #                             # Skip if value is empty
-    #                             if not value or str(value).strip() == "":
-    #                                 print(f"⏭️ Skipping empty value for {data_expr}")
-    #                                 continue
-
-    #                             # ✅ Locate field element
-    #                             element = WebDriverWait(driver, 10).until(
-    #                                 EC.presence_of_element_located((By.XPATH, xpath))
-    #                             )
-    #                             driver.execute_script("arguments[0].scrollIntoView(true);", element)
-    #                             time.sleep(0.3)
-
-    #                             # ✅ Fill based on field type
-    #                             if fieldtype == "textbox":
-    #                                 element.clear()
-    #                                 element.send_keys(str(value))
-    #                                 print(f"🟢 Textbox filled: {xpath} = {value}")
-
-    #                             elif fieldtype == "select_data":
-    #                                 try:
-    #                                     Select(element).select_by_visible_text(str(value))
-    #                                     print(f"🟢 Dropdown selected: {xpath} = {value}")
-    #                                 except Exception:
-    #                                     element.send_keys(str(value))
-    #                                     print(f"🟢 Dropdown fallback send_keys: {xpath} = {value}")
-
-    #                             elif fieldtype == "checkbox":
-    #                                 if str(value).lower() in ["yes", "true", "1"]:
-    #                                     if not element.is_selected():
-    #                                         element.click()
-    #                                         print(f"🟢 Checkbox checked: {xpath}")
-
-    #                         except Exception as e:
-    #                             print(f"⚠️ Error filling field {val}: {e}")
-    #                             continue
-
-    #         print("\n✅ All fields processed successfully for order:", order_id)
-
-    #     except Exception as e:
-    #         logging.exception(f"❌ Error while filling SmartEntry form: {e}")
-    
     def fill_form_multi(self, merged_json, order_id, form_config, session):
         """
-        Smart Entry auto-filling for RRReview form.
-        Handles multiple tabs and iframes using form_config mapping.
+         form filling function for RRReview portal.
         """
-        driver = self.driver
-        print("🚀 Starting SmartEntry form auto-fill for order:", order_id)
+
+        # --- Internal caches for optimization ---
+        key_expr_cache = {}
+        value_cache = {}
+
+        # --------------------------
+        # Cached key extraction
+        # --------------------------
+        def get_keys_cached(key_expr):
+            if key_expr not in key_expr_cache:
+                key_expr_cache[key_expr] = re.findall(r"\['(.*?)'\]", key_expr)
+            return key_expr_cache[key_expr]
+
+        # --------------------------
+        # Value extraction handler
+        # --------------------------
+
+        def extract_value_from_expr(expr: str):
+            """Extracts values from nested merged_json."""
+            if expr in value_cache:
+                return value_cache[expr]
+
+            # Define data sources (similar to redbell)
+            data_sources = {
+                "sub_data": sub_data,
+                "comp_data": comp_data,
+                "adj_data": adj_data,
+                "rental_data": rental_data,
+                "condition_data": condition_data,
+                "entry_data[0]": merged_json.get("entry_data", [{}])[0],
+                "sold1": sold1, "sold2": sold2, "sold3": sold3,
+                "list1": list1, "list2": list2, "list3": list3,
+                "rental_list1": rental_list1, "rental_list2": rental_list2,
+                "rental_leased1": rental_leased1, "rental_leased2": rental_leased2,
+                "adj_sold1": adj_sold1, "adj_sold2": adj_sold2, "adj_sold3": adj_sold3,
+                "adj_list1": adj_list1, "adj_list2": adj_list2, "adj_list3": adj_list3,
+            }
+
+            # Find matching prefix and extract nested keys
+            for prefix, source in data_sources.items():
+                if expr.startswith(prefix):
+                    suffix = expr[len(prefix):]
+                    keys = re.findall(r"\['(.*?)'\]", suffix)
+                    value = get_nested(source, keys, None)
+
+                    if isinstance(value, (int, float)):
+                        value = str(value)
+
+                    value_cache[expr] = value
+                    return value
+
+            # Default fallback
+            value_cache[expr] = None
+            logging.warning(f"[extract_value_from_expr] No value found for {expr}")
+            return None
+
+        # --------------------------
+        # Field type to function map
+        # --------------------------
+        field_actions = {
+            "Textbox": data_filling_text,
+            "Textbox_default": data_filling_text,
+            "select_data": select_field,
+            "select_default": select_field,
+            "radiobutton_data": radio_btn_click,
+            "radiobutton_default": radio_btn_click,
+            "date_fill_javascript": javascript_excecuter_filling,
+            "checkbox": select_checkboxes_from_list,
+        }
+
+        # --------------------------
+        # RRReview iframe tab mapping
+        # --------------------------
+        iframe_id_map = {
+            "Work Order Detail": "iframeBPOBPOEntryFormTab1",
+            "Subject Information": "iframeBPOBPOEntryFormTab2",
+            "Repair Information": "iframeBPOBPOEntryFormTab3",
+            "Comparable Information": "iframeBPOBPOEntryFormTab4",
+            "Photos/Documents": "iframeBPOBPOEntryFormTab5",
+            "Validation Results": "iframeBPOBPOEntryFormTab6",
+        }
 
         try:
-            # Extract the sub_data block (subject property data)
-            sub_data = merged_json.get("entry_data", [{}])[0].get("sub_data", {})
-            formdata = form_config.get("page", [])
+            # --- Extract all JSON data sections ---
+            (
+                sub_data, comp_data, adj_data, rental_data,
+                sold1, sold2, sold3,
+                list1, list2, list3,
+                rental_list1, rental_list2,
+                rental_leased1, rental_leased2,
+                adj_sold1, adj_sold2, adj_sold3,
+                adj_list1, adj_list2, adj_list3) = extract_data_sections(merged_json)
 
-            # Loop through each page (tab)
-            for page in formdata:
-                for tab_name, fields in page.items():
+            if sub_data is None:
+                logging.error("'entry_data' missing or empty in merged_json")
+                update_order_status(order_id, "In Progress", "Entry", "Failed")
+                return False
+
+            # --- Generate computed conditional data ---
+            condition_data = generate_condition_data(
+                sub_data, comp_data, adj_data, rental_data,
+                sold1, sold2, sold3, list1, list2, list3,
+                rental_list1, rental_list2, rental_leased1, rental_leased2,
+                adj_sold1, adj_sold2, adj_sold3, adj_list1, adj_list2, adj_list3
+            )
+
+            saved_form = False
+            form_pages = form_config.get("page", [])
+
+            # --------------------------
+            # Iterate through pages & tabs
+            # --------------------------
+            for page in form_pages:
+                for tab_name, controls in page.items():
+                    
+                    # ALWAYS exit iframe before switching tab
+                    self.driver.switch_to.default_content()
+                    time.sleep(0.5)
+                    # Step 1: Click the corresponding tab
                     print(f"\n🔹 Switching to tab: {tab_name}")
+                    
+                    try:
+                        tab_xpath = f"//a[contains(@class,'ui-tabs-anchor') and contains(.,'{tab_name}')]"
+                        tab_element = WebDriverWait(self.driver, 10).until(
+                            EC.element_to_be_clickable((By.XPATH, tab_xpath))
+                        )
+                        self.driver.execute_script("arguments[0].scrollIntoView({block:'center'});", tab_element)
+                        time.sleep(0.5)
+                        tab_element.click()
+                        print(f"✔ Clicked tab: {tab_name}")
+                        time.sleep(1)
+                    except Exception as e:
+                        print(f"⚠️ Could not click tab '{tab_name}': {e}")
+                        continue
 
-                    # Construct tab and iframe IDs dynamically
-                    tab_xpath = f"//a[contains(@class, 'ui-tabs-anchor') and normalize-space(text())='{tab_name}']"
-
-                    # --- STEP 1: Click the tab ---
-                    WebDriverWait(driver, 15).until(
-                        EC.element_to_be_clickable((By.XPATH, tab_xpath))
-                    ).click()
-                    time.sleep(1)
-
-                    # --- STEP 2: Switch to corresponding iframe ---
-                    iframe_id_map = {
-                        "Work Order Detail": "iframeBPOBPOEntryFormTab1",
-                        "Subject Information": "iframeBPOBPOEntryFormTab2",
-                        "Repair Information": "iframeBPOBPOEntryFormTab3",
-                        "Comparable Information": "iframeBPOBPOEntryFormTab4",
-                        "Photos/Documents": "iframeBPOBPOEntryFormTab5",
-                        "Validation Results": "iframeBPOBPOEntryFormTab6",
-                    }
+                    # Step 2: Switch to iframe
+                    # self.driver.switch_to.default_content()
                     iframe_id = iframe_id_map.get(tab_name)
-
-                    driver.switch_to.default_content()
                     if iframe_id:
                         try:
-                            iframe = WebDriverWait(driver, 10).until(
+                            iframe = WebDriverWait(self.driver, 10).until(
                                 EC.presence_of_element_located((By.ID, iframe_id))
                             )
-                            driver.switch_to.frame(iframe)
-                            print(f"Switched to iframe: {iframe_id}")
-                        except Exception:
-                            print(f"Could not locate iframe {iframe_id}, continuing in main content.")
+                            self.driver.switch_to.frame(iframe)
+                            print(f"✅ Switched to iframe: {iframe_id}")
+                        except Exception as e:
+                            print(f"⚠️ Could not switch to iframe {iframe_id}: {e}")
+                            continue
                     else:
-                        print(f"No iframe mapping found for tab '{tab_name}'")
+                        print(f"No iframe mapping for tab: {tab_name}")
 
-                    # --- STEP 3: Fill fields from config ---
-                    for field in fields:
-                        fieldtype = field.get("filedtype", "").lower()
-                        values = field.get("values", [])
+                    # Step 3: Process field controls in this tab
+                    
+                    for control in controls:
+                        field_type = control.get("filedtype")
+                        values = control.get("values", [])
 
-                        for val in values:
-                            try:
-                                data_expr, xpath, locator_type = val
-                                print(f"Filling {data_expr} → {xpath}")
+                        if field_type == "save_data":
+                          if not saved_form:
+                            save_form(self.driver)
+                            logging.info("Form saved.")
+                            # for cookie in self.driver.get_cookies():
+                            #     session.cookies.set(cookie['name'], cookie['value'])
+                            # time.sleep(5)
+                            saved_form = True
+                            continue
 
-                                # Safely evaluate expression from JSON (e.g., sub_data['City'])
-                                try:
-                                    value = eval(data_expr, {"merged_json": merged_json, "sub_data": sub_data})
-                                except Exception:
-                                    value = merged_json.get(data_expr.strip("'"), None)
+                        if field_type == "save_data_adj":
+                            if not saved_form:
+                                save_form_adj(self.driver)
+                                logging.info("Form saved.")
+                                # for cookie in self.driver.get_cookies():
+                                #     session.cookies.set(cookie['name'], cookie['value'])
+                                # time.sleep(5)
+                                saved_form = True
+                            continue
 
-                                if not value or str(value).strip() == "":
+                        if field_type == "checkbox_list":
+                             for field in values:
+                                if not (isinstance(field, list) and len(field) == 3):
+                                    logging.warning(f"Invalid checkbox_list field: {field}")
                                     continue
-
-                                # Wait for the element
-                                element = WebDriverWait(driver, 15).until(
-                                    EC.presence_of_element_located((By.XPATH, xpath))
-                                )
-
-                                driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
-                                time.sleep(0.4)
-
-                                # --- Fill element based on fieldtype ---
-                                if fieldtype == "textbox":
-                                    element.clear()
-                                    element.send_keys(str(value))
-                                    print(f"Textbox filled: {xpath} = {value}")
-
-                                elif fieldtype == "select_data":
-                                    try:
-                                        Select(element).select_by_visible_text(str(value))
-                                        print(f"Dropdown selected: {xpath} = {value}")
-                                    except Exception:
-                                        element.send_keys(str(value))
-                                        print(f"Dropdown fallback send_keys: {xpath} = {value}")
-
-                                elif fieldtype == "checkbox":
-                                    if str(value).lower() in ["yes", "true", "1"]:
-                                        if not element.is_selected():
-                                            element.click()
-                                            print(f"Checkbox checked: {xpath}")
-
-                            except Exception as e:
-                                print(f" Error filling field {val}: {e}")
+                                key_expr, id_prefix, mode = field
+                                try:
+                                    value = extract_value_from_expr(key_expr)
+                                    if value:
+                                        select_checkboxes_from_list(self.driver, value, id_prefix)
+                                        logging.info(f"Checkboxes selected for {key_expr} with prefix {id_prefix}")
+                                except Exception as e:
+                                    logging.error(f"Error selecting checkboxes for {key_expr}: {e}")
                                 continue
 
-                    # --- STEP 4: Exit current iframe before moving to next tab ---
-                    driver.switch_to.default_content()
-                    print(f"Returned to main page after '{tab_name}' tab.\n")
+                        elif field_type == "repair_details_fill":
+                            for value_config in values:
+                                key_expr, _, _ = value_config
+                                repair_data = extract_value_from_expr(key_expr)
 
-            print("\nSmart Entry filling completed for all tabs.")
+                                if isinstance(repair_data, list):
+                                    rrr_fill_repair_details(self.driver, repair_data)
+                            continue
+
+
+                        for field in values:
+                            if not (isinstance(field, list) and len(field) == 3):
+                                logging.warning(f"Invalid field format: {field}")
+                                continue
+
+                            key_expr, xpath, mode = field
+                            try:
+                                value = extract_value_from_expr(key_expr)
+
+                                if value in [None, ""]:
+                                    continue
+                                # WebDriverWait(self.driver, 3).until(
+                                #     EC.element_to_be_clickable((By.XPATH, xpath))
+                                # )
+                                action_func = field_actions.get(field_type)
+                                if action_func:
+                                    action_func(self.driver, value, xpath, mode)
+                                else:
+                                    logging.warning(f"Unknown field type: {field_type}")
+                            except Exception as e:
+                                logging.error(f"Exception filling field {key_expr}: {e}")
+
+            # --- Final Status Update ---
+            update_order_status(order_id, "In Progress", "Entry", "Completed")
+            return saved_form
 
         except Exception as e:
-            logging.exception(f"Error while filling SmartEntry form: {e}")
-            driver.switch_to.default_content()
+            logging.error(f"Critical error in fill_form_multi: {e}")
+            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            return False
+        
 
+        

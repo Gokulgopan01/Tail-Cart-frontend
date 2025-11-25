@@ -9,6 +9,18 @@
           ]
         },
         {
+          "filedtype":"select_data",
+          "values":[
+            ["sub_data['Location']","//*[@id='ddlLocationType']","xpath"]
+            ]
+        },
+        {
+          "filedtype":"Textbox",
+          "values":[
+            ["sub_data['County']","//*[@id='txtCounty']","xpath"]
+            ]
+        },
+        {
           "filedtype": "Textbox",
           "values": [
             ["sub_data['Address']", "//*[@id='txtNewAddress']", "xpath"]
@@ -32,51 +44,240 @@
             ["sub_data['Zipcode']","//*[@id='txtNewZip']","xpath"]
             ]
         },
-
         {
-          "filedtype":"select_data",
+          "filedtype":"date_fill_javascript",
           "values":[
-            ["sub_data['Location']","//*[@id='ddlLocationType']","xpath"]
+            ["condition_data['InspectionDate']","//*[@id='txtInspectionDate']","xpath"]
             ]
         },
         {
-          "filedtype":"Textbox",
-          "values":[
-            ["sub_data['InspectionDate']","//*[@id='txtInspectionDate']","xpath"]
-            ]
-        },
-        {
-            "filedtype":"Textbox",
+            "filedtype":"date_fill_javascript",
             "values":[   
-            ["sub_data['OriginalListDateListing']","//*[@id='txtListingDate']","xpath"]
+            ["condition_data['OriginalListDateListing']","//*[@id='txtListingDate']","xpath"]
                ]
          },
          {
-            "filedtype":"Textbox",
+            "filedtype":"date_fill_javascript",
             "values":[   
             ["sub_data['OriginalListPriceListing']","//*[@id='txtOrigListPrice']","xpath"]
                ]
          },
          {
-            "filedtype":"select_data", 
-            "values":[
-            ["sub_data['DOM']","//*[@id='txtDOM']","xpath"]
-            ]
-         },
-         {
             "filedtype":"Textbox",
             "values":[   
-            ["sub_data['MLS']","//*[@id='txtMLSNumber']","xpath"]
-               ]
-         },
-         {
-            "filedtype":"Textbox",
-            "values":[   
-            ["sub_data['MNeighborhoodDescriptionLS']","//*[@id='txtNeighborhoodComments']","xpath"]
+            ["sub_data['NeighborhoodDescription']","//*[@id='txtNeighborhoodComments']","xpath"]
                ]
          }
+       ]
+     },
+    
+    
+     {
+  "Repair Information": [
+    {
+      "filedtype": "repair_details_fill",
+      "values": [
+        ["sub_data['repair_details']['repairs']", "repair_table", "auto"]
       ]
-     }
+    }
+  ]
+},
+
+     
+     {
+      "Comparable Information": [
+       {
+          "filedtype":"select_data",
+          "values":[
+            ["sub_data['DataSource']","//*[@id='rrrSubject_ddlDataSource']","xpath"]
+            ]
+       },
+
+       {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['HoaFees']","//*[@id='rrrSubject_txtHOA']","xpath"]
+          ]
+        },
+
+        
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['MarketValue']","//*[@id='rrrSubject_txtMarketRent']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['Units']","//*[@id='rrrSubject_txtNoUnits']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['LotAcrs']","//*[@id='rrrSubject_txtLotSizeAcres']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["sub_data['View']","//*[@id='rrrSubject_ddlView']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["sub_data['Condition']","//*[@id='rrrSubject_ddlConditionType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['YearBuilt']","//*[@id='rrrSubject_txtYearBuilt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['TotalRooms']","//*[@id='rrrSubject_txtRooms']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['Bed']","//*[@id='rrrSubject_txtBeds']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['FullBath']","//*[@id='rrrSubject_txtFullBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['HalfBath']","//*[@id='rrrSubject_txtHalfBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['BasementArea']","//*[@id='rrrSubject_txtBasementSqFt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['Garage']","//*[@id='rrrSubject_ddlGarageType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["sub_data['Pool']","//*[@id='rrrSubject_ddlPoolSpa']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["sub_data['Pool']","//*[@id='rrrSubject_ddlPoolSpa']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['Address']","//*[@id='rrrSale1_txtAddress']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['City']","//*[@id='rrrSale1_txtCity']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['Zipcode']","//*[@id='rrrSale1_txtZip']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 1']['Proximity']","//*[@id='rrrSale1_ddlProximityType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 1']['DataSource']","//*[@id='rrrSale1_ddlDataSource']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['MLS']","//*[@id='rrrSale1_txtMLSNumber']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['OriginalListPriceListing']","//*[@id='rrrSale1_txtListPrice']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['']","//*[@id='']","xpath"]
+          ]
+        }
+
+      ]
+    },
+     
+    {
+      "Photos/Documents": [
+       
+      ]
+    },
+     
+    {
+      "Validation Results": [
+       {
+          "filedtype": "Textbox",
+          "values": [
+            ["sub_data['Roof']", "//*[@id='txtExteriorRoof']", "xpath"]
+          ]
+        }
+      ]
+    }
+
+
+
+     
    ]
 }
               
