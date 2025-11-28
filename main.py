@@ -1,11 +1,11 @@
 
-# import sentry_sdk
-# sentry_sdk.init(
-#     dsn="https://f2e54459e6cc029fa6c1d4499a616e67@o4509790213898240.ingest.us.sentry.io/4509790220058625",
-#     traces_sample_rate=1.0,
-#     environment="production",
-#     send_default_pii=True
-# )
+# # import sentry_sdk
+# # sentry_sdk.init(
+# #     dsn="https://f2e54459e6cc029fa6c1d4499a616e67@o4509790213898240.ingest.us.sentry.io/4509790220058625",
+# #     traces_sample_rate=1.0,
+# #     environment="production",
+# #     send_default_pii=True
+# # )
 
 # import os
 # import subprocess
@@ -79,11 +79,18 @@
 #     # launch_app()
 #     version_update(launch_app) 
 
+from datetime import datetime
+import logging
 import sys, os
 import subprocess
 import winreg as reg
 from app import Application
+
+# from utils.glogger import send_log_sync
 from version import version_update
+  
+
+
 
 # --- Check if protocol is already registered ---
 def is_protocol_registered(protocol_name):
@@ -144,3 +151,6 @@ if __name__ == "__main__":
     # version_update(lambda: Application().mainloop())
     # launch_app()
     version_update(launch_app) 
+
+
+

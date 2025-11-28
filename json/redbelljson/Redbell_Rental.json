@@ -1144,6 +1144,7 @@
                      ["adj_sold1['Style']","//*[@id='PropertyStyleLIA_SoldComp1']","xpath"],
                      ["adj_sold1['LocationAdj']","//*[@id='LocationLIA_SoldComp1']","xpath"],
                      ["adj_sold1['Age']","//*[@id='YearBuiltLIA_SoldComp1']","xpath"],
+                     ["adj_sold1['EnergyEfficientItems']","//*[@id='EnergyefficientitemsLIA_SoldComp1']","xpath"],
                      ["adj_sold2['Lot']","//*[@id='LotSizeLIA_SoldComp2']","xpath"],
                      ["adj_sold2['Quality']","//*[@id='QualtiyAdj_SoldComp2']","xpath"], 
                      ["adj_sold2['Condition']","//*[@id='ConditionLIA_SoldComp2']","xpath"], 
@@ -1160,6 +1161,7 @@
                      ["adj_sold2['Style']","//*[@id='PropertyStyleLIA_SoldComp2']","xpath"],
                      ["adj_sold2['LocationAdj']","//*[@id='LocationLIA_SoldComp2']","xpath"],
                      ["adj_sold2['Age']","//*[@id='YearBuiltLIA_SoldComp2']","xpath"],
+                     ["adj_sold2['EnergyEfficientItems']","//*[@id='EnergyefficientitemsLIA_SoldComp2']","xpath"],
                      ["adj_sold3['Lot']","//*[@id='LotSizeLIA_SoldComp3']","xpath"],
                      ["adj_sold3['Quality']","//*[@id='QualtiyAdj_SoldComp3']","xpath"], 
                      ["adj_sold3['Condition']","//*[@id='ConditionLIA_SoldComp3']","xpath"], 
@@ -1176,6 +1178,7 @@
                      ["adj_sold3['Style']","//*[@id='PropertyStyleLIA_SoldComp3']","xpath"],
                      ["adj_sold3['LocationAdj']","//*[@id='LocationLIA_SoldComp3']","xpath"],
                      ["adj_sold3['Age']","//*[@id='YearBuiltLIA_SoldComp3']","xpath"],
+                     ["adj_sold3['EnergyEfficientItems']","//*[@id='EnergyefficientitemsLIA_SoldComp3']","xpath"],
                      ["adj_list1['Lot']","//*[@id='LotSizeLIA_ListedComp1']","xpath"],
                      ["adj_list1['Quality']","//*[@id='QualtiyAdj_ListedComp1']","xpath"], 
                      ["adj_list1['Condition']","//*[@id='ConditionLIA_ListedComp1']","xpath"], 
@@ -1191,7 +1194,8 @@
                      ["adj_list1['Basement']","//*[@id='BasementSqftLIA_ListedComp1']","xpath"],
                      ["adj_list1['Style']","//*[@id='PropertyStyleLIA_ListedComp1']","xpath"],
                      ["adj_list1['LocationAdj']","//*[@id='LocationLIA_ListedComp1']","xpath"],
-                     ["adj_list1['Age']","//*[@id='YearBuiltLIA_ListedComp1']","xpath"],
+                     ["adj_list1['Age']","//*[@id='YearBuiltLIA_ListedComp1']","xpath"], 
+                     ["adj_list1['EnergyEfficientItems']","//*[@id='EnergyefficientitemsLIA_ListedComp1']","xpath"],
                      ["adj_list2['Lot']","//*[@id='LotSizeLIA_ListedComp2']","xpath"],
                      ["adj_list2['Quality']","//*[@id='QualtiyAdj_ListedComp2']","xpath"], 
                      ["adj_list2['Condition']","//*[@id='ConditionLIA_ListedComp2']","xpath"], 
@@ -1208,6 +1212,7 @@
                      ["adj_list2['Style']","//*[@id='PropertyStyleLIA_ListedComp2']","xpath"],
                      ["adj_list2['LocationAdj']","//*[@id='LocationLIA_ListedComp2']","xpath"],
                      ["adj_list2['Age']","//*[@id='YearBuiltLIA_ListedComp2']","xpath"],
+                     ["adj_list2['EnergyEfficientItems']","//*[@id='EnergyefficientitemsLIA_ListedComp2']","xpath"],
                      ["adj_list3['Lot']","//*[@id='LotSizeLIA_ListedComp3']","xpath"],
                      ["adj_list3['Quality']","//*[@id='QualtiyAdj_ListedComp3']","xpath"], 
                      ["adj_list3['Condition']","//*[@id='ConditionLIA_ListedComp3']","xpath"], 
@@ -1223,7 +1228,8 @@
                      ["adj_list3['Basement']","//*[@id='BasementSqftLIA_ListedComp3']","xpath"],
                      ["adj_list3['Style']","//*[@id='PropertyStyleLIA_ListedComp3']","xpath"],
                      ["adj_list3['LocationAdj']","//*[@id='LocationLIA_ListedComp3']","xpath"],
-                     ["adj_list3['Age']","//*[@id='YearBuiltLIA_ListedComp3']","xpath"]
+                     ["adj_list3['Age']","//*[@id='YearBuiltLIA_ListedComp3']","xpath"],
+                     ["adj_list3['EnergyEfficientItems']","//*[@id='EnergyefficientitemsLIA_ListedComp3']","xpath"]
                      ]
                      }, 
                      {

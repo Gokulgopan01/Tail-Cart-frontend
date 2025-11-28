@@ -19,6 +19,8 @@ from screens.portal_login_screen import PortalLoginScreen
 from utils.helper import params_check, setup_driver
 from utils.user_data import save_login_data, load_login_data
 from config import env
+from utils.glogger import GLogger
+logger = GLogger()
 # Load variables from .env file
 
 load_dotenv()
@@ -38,6 +40,12 @@ print(f"Main Clients API: {MAIN_CLIENTS_API}")
 print(f"Login API: {LOGIN_API}")
 
 arg1, arg2,arg3 = params_check()  # Extract parameters at the top
+
+
+
+
+
+
 class EcesisLoginScreen(tk.Frame):
 
     def __init__(self,parent, controller):
@@ -81,6 +89,15 @@ class EcesisLoginScreen(tk.Frame):
         self.create_login_frame()
 
     def create_login_frame(self):
+
+
+#         logger.log(
+#     module="OtherModule",
+#     order_id="123",
+#     action_type="step_done",
+#     remarks="Step completed successfully",
+#     severity="INFO"
+# )
 
         # ttk.Label(self.login_frame, text="ECESIS", font=("sans-serif", 14, "bold"), background="#FFFFFF").pack(pady=10)
         ttk.Label(self.login_frame, text="HYBRID CLIENT LOGIN", font=("sans-serif", 16, "bold"), background="#FFFFFF").pack(pady=20)

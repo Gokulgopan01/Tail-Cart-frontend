@@ -3,6 +3,7 @@ import os
 import re
 import time
 import traceback
+from venv import logger
 import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -17,14 +18,32 @@ import sys
 from urllib.parse import urlparse, parse_qs
 from dotenv import load_dotenv
 from config import env
-
-
-
+from utils.glogger import GLogger
+logger = GLogger()
 # Load variables from .env file
 load_dotenv()
 
 # Retrieve API URLs from environment variables
 ASSIGNEDORDERS_URL = env.ASSIGNEDORDERS_URL   
+
+def params_check():
+    print("123",sys.argv)
+    if len(sys.argv) >= 2:
+            url = sys.argv[1]  # Example: 'myapp://?arg1=mlsdownloader&arg2=order123'
+            parsed_url = urlparse(url)
+            args = parse_qs(parsed_url.query)
+            arg1 = args.get('arg1', [None])[0]  # Get 'arg1' or None if not present
+            arg2 = args.get('arg2', [None])[0]
+            arg3 = args.get('arg3', [None])[0]
+            print(f"Args : {arg1}")   
+            return arg1,arg2,arg3
+    else:
+          #return None,None  
+          # Returns auto for manualy opening Autologin  
+          return "AutoLogin",None,None   
+process_type, hybrid_orderid,hybrid_token = params_check()
+
+
 
 # def initialize_driver(self):
 #         """Initialize Selenium WebDriver."""
@@ -47,10 +66,25 @@ def handle_login_status(login_title_or_url, username,login_check_keywords, porta
 
     # Check if the current URL contains any of the success indicators
     if any(keyword in login_title_or_url for keyword in login_check_keywords):
-        logging.info(f"Successfully logged in to {portal_name} as {username}.")
+        #logging.info(f"Successfully logged in to {portal_name} as {username}.")
+        logger.log(
+                    module=f"{portal_name}-handle_login_status",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Successfully logged in to {portal_name} as {username}.",
+                    severity="INFO"
+                )
+
         messagebox.showinfo("Login Successful", f"Successfully logged in to {portal_name} .")
     else:
-        logging.error(f"Login failed for {username} on {portal_name}. Possible incorrect credentials or login issue.")
+        #logging.error(f"Login failed for {username} on {portal_name}. Possible incorrect credentials or login issue.")
+        logger.log(
+                    module=f"{portal_name}-handle_login_status",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Login failed for {username} on {portal_name}. Possible incorrect credentials or login issue.",
+                    severity="INFO"
+                )
         messagebox.showerror("Login Failed", f"Invalid credentials or login error for {portal_name}.")
 
     # --- Handle unexpected popups (if any) ---
@@ -79,21 +113,7 @@ def handle_exception(self, e):
         self.update_report_data(None, str(e), 'UNABLE TO LOGIN')        
 
 
-def params_check():
-    print("123",sys.argv)
-    if len(sys.argv) >= 2:
-            url = sys.argv[1]  # Example: 'myapp://?arg1=mlsdownloader&arg2=order123'
-            parsed_url = urlparse(url)
-            args = parse_qs(parsed_url.query)
-            arg1 = args.get('arg1', [None])[0]  # Get 'arg1' or None if not present
-            arg2 = args.get('arg2', [None])[0]
-            arg3 = args.get('arg3', [None])[0]
-            print(f"Args : {arg1}")   
-            return arg1,arg2,arg3
-    else:
-          #return None,None  
-          # Returns auto for manualy opening Autologin  
-          return "AutoLogin",None,None   
+
 # Function to fetch stored token (assuming it was saved as JSON)
 # def get_saved_token():
 #     try:
@@ -122,32 +142,74 @@ def params_check():
 
 def get_saved_token():
     app_data_dir = os.path.join(os.getenv("APPDATA") or os.path.expanduser("~"), "HybridBPO")
-    print(app_data_dir)
+    #print(app_data_dir)
+    logger.log(
+                    module="get_saved_token",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"app_data_dir-{app_data_dir}",
+                    severity="INFO"
+                )
     os.makedirs(app_data_dir, exist_ok=True)  # Make sure the directory exists
 
     # Final path: C:\Users\<User>\AppData\Roaming\HybridBPO\login_data.json
     login_data_file = os.path.join(app_data_dir, "login_data.json")
     try:
         if not os.path.exists(login_data_file):
-            print("Token file does not exist.")
+            #print("Token file does not exist.")
+            logger.log(
+                    module="get_saved_token",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Token file does not exist.",
+                    severity="INFO"
+                )
             return None
 
         with open(login_data_file, "r") as file:
             content = file.read().strip()
             if not content:
-                print("Token file is empty.")
+                #print("Token file is empty.")
+                logger.log(
+                    module="get_saved_token",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Token file is empty.",
+                    severity="INFO"
+                )
                 return None
 
             data = json.loads(content)
             token = data.get("token", None)
             if token:
-                print("Token loaded successfully.")
+                #print("Token loaded successfully.")
+                logger.log(
+                    module="get_saved_token",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Token loaded successfully.",
+                    severity="INFO"
+                )
             else:
-                print("Token missing in file.")
+                #print("Token missing in file.")
+                logger.log(
+                    module="get_saved_token",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Token missing in file.",
+                    severity="INFO"
+                )
             return token
 
     except (json.JSONDecodeError, ValueError):
         print(" Corrupted token file.")
+        logger.log(
+                    module="get_saved_token",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Corrupted token file.",
+                    severity="INFO"
+                )
         return None
 
 
@@ -195,12 +257,35 @@ def get_order_address_from_assigned_order(order_id, token):
                 tfs_orderid = order_data.get("tfs_orderid", "TFS ID Not Found")
                 return portal_order_id, tfs_orderid
             else:
+                logger.log(
+                    module="get_order_address_from_assigned_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Invalid Response Format.",
+                    severity="INFO"
+                )
                 return "Invalid Response Format"
+                
         else:
+            logger.log(
+                    module="get_order_address_from_assigned_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Error: {response.status_code} - {response.text}",
+                    severity="INFO"
+                )
             return f"Error: {response.status_code} - {response.text}"
     
     except Exception as e:
+        logger.log(
+                    module="get_order_address_from_assigned_order",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Request Failed: {str(e)}",
+                    severity="INFO"
+                )
         return f"Request Failed: {str(e)}"
+        
 
 
 def clean_address(address):
@@ -271,7 +356,14 @@ def get_cookie_from_api(username, portal, proxy=None):
                 'http': f'http://{proxy}',
                 'https': f'http://{proxy}'
             })
-            logging.info(f"Using proxy: {proxy}")
+            #logging.info(f"Using proxy: {proxy}")
+            logger.log(
+                    module="get_cookie_from_api",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Using proxy: {proxy}",
+                    severity="INFO"
+                )
 
         headers = {'Content-Type': env.API_HEADERS_CONTENT_TYPE}
         payload = json.dumps({
@@ -286,7 +378,15 @@ def get_cookie_from_api(username, portal, proxy=None):
         return response.json()
 
     except requests.exceptions.RequestException as e:
-        logging.error(f"API request failed: {e}")
+        #logging.error(f"API request failed: {e}")
+        logger.log(
+                    module="get_cookie_from_api",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"API request failed: {e}",
+                    severity="INFO"
+                )
+
         return None
     
 def setup_driver(self):
@@ -299,17 +399,45 @@ def setup_driver(self):
         chrome_options.add_experimental_option("detach", True)
 
         if hasattr(self, 'proxy') and self.proxy:
-            logging.info(f"Using proxy: {self.proxy}")
+            #logging.info(f"Using proxy: {self.proxy}")
+            logger.log(
+                    module="setup_driver",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Using proxy: {self.proxy}",
+                    severity="INFO"
+                )
             chrome_options.add_argument(f'--proxy-server={self.proxy}')
         else:
-            logging.info("No proxy provided. Continuing without proxy.")
+            #logging.info("No proxy provided. Continuing without proxy.")
+            logger.log(
+                    module="setup_driver",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"No proxy provided. Continuing without proxy.",
+                    severity="INFO"
+                )
 
         self.driver = webdriver.Chrome(options=chrome_options)
-        logging.info("Chrome driver initialized successfully.")
+        logger.log(
+                    module="setup_driver",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Chrome driver initialized successfully.",
+                    severity="INFO"
+                )
+        #logging.info("Chrome driver initialized successfully.")
 
 
     except Exception as e:
-        logging.error(f"Failed to initialize Chrome driver: {e}")
+        #logging.error(f"Failed to initialize Chrome driver: {e}")
+        logger.log(
+                    module="setup_driver",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Failed to initialize Chrome driver: {e}",
+                    severity="INFO"
+                )
         self.login_status = "Driver initialization failed"
         raise e    
 
@@ -376,8 +504,14 @@ def radio_btn_click(driver, btn_value, element_identifier, element_type):
             elem.click()
             return
 
-    print(f"[radio_btn_click] No matching radio found for value: {btn_value}")
-
+    #print(f"[radio_btn_click] No matching radio found for value: {btn_value}")
+    logger.log(
+                    module="radio_btn_click",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"[radio_btn_click] No matching radio found for value: {btn_value}",
+                    severity="INFO"
+                )
 
 # def data_filling_text(driver,data,elementlocator,selector):
 #     selector_map=selector_mapping(selector)
@@ -425,9 +559,16 @@ def data_filling_text(driver, data, elementlocator, selector):
         time.sleep(0.1)
 
     except Exception as e:
-        logging.error(f"[data_filling_text] Error filling element {elementlocator}: {e}")
+        #logging.error(f"[data_filling_text] Error filling element {elementlocator}: {e}")
+        
+        logger.log(
+                    module="data_filling_text",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"[data_filling_text] Error filling element {elementlocator}: {e}",
+                    severity="INFO"
            
-
+        )
 
 
 def select_field(driver, data, elementlocator, selector):
@@ -444,10 +585,26 @@ def select_field(driver, data, elementlocator, selector):
             if option.text.strip().lower() == data:
                 dropdown.select_by_visible_text(option.text)
                 return
-        print(f"[select_field] No matching option found for: '{data}'")
+        #print(f"[select_field] No matching option found for: '{data}'")
+        logger.log(
+                    module="select_field",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"[select_field] No matching option found for: {data}",
+                    severity="INFO"
+           
+        )
     except Exception as e:
         data='' 
-        print(f"[select_field] Error selecting option: {e}")
+        #print(f"[select_field] Error selecting option: {e}")
+        logger.log(
+                    module="select_field",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"[select_field] Error selecting option: {e}",
+                    severity="INFO"
+           
+        )
 
 
 def find_elem(driver,selector,elementlocator):
@@ -505,13 +662,45 @@ def select_checkboxes_from_list(driver, values_list, id_prefix):
             )
             if not checkbox.is_selected():
                 checkbox.click()
-                logging.info(f"Checked: {checkbox_id}")
+                #logging.info(f"Checked: {checkbox_id}")
+                logger.log(
+                    module="select_checkboxes_from_list",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Checked: {checkbox_id}",
+                    severity="INFO"
+           
+        )
             else:
-                logging.info(f"Already checked: {checkbox_id}")
+                #logging.info(f"Already checked: {checkbox_id}")
+                logger.log(
+                    module="select_checkboxes_from_list",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Already checked: {checkbox_id}",
+                    severity="INFO"
+           
+        )
         except TimeoutException:
-            logging.warning(f"Checkbox not found (timeout): {checkbox_id}")
+            #logging.warning(f"Checkbox not found (timeout): {checkbox_id}")
+            logger.log(
+                    module="select_checkboxes_from_list",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Checkbox not found (timeout): {checkbox_id}",
+                    severity="INFO"
+           
+        )
         except Exception as e:
-            logging.error(f"Error clicking checkbox {checkbox_id}: {e}")
+            #logging.error(f"Error clicking checkbox {checkbox_id}: {e}")
+            logger.log(
+                    module="select_checkboxes_from_list",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Error clicking checkbox {checkbox_id}: {e}",
+                    severity="INFO"
+           
+        )
 
 # def fill_repair_details(driver, repair_list):
 #     for idx, repair in enumerate(repair_list):
@@ -564,7 +753,15 @@ def fill_repair_details(driver, repair_list):
         r_type_key = normalize(repair.get("repair_type"))
         r_type_form = repair_type_mapping.get(r_type_key)
         if not r_type_form:
-            print(f"Warning: Repair type '{repair.get('repair_type')}' has no mapping.")
+            #print(f"Warning: Repair type '{repair.get('repair_type')}' has no mapping.")
+            logger.log(
+                    module="fill_repair_details",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Warning: Repair type '{repair.get('repair_type')}' has no mapping.",
+                    severity="INFO"
+           
+        )
             continue
 
         comments = repair.get("comments", "")
@@ -592,7 +789,15 @@ def fill_repair_details(driver, repair_list):
                 break  # stop after filling this repair
 
         if not matched:
-            print(f"Warning: Repair type '{r_type_form}' not found in table.")
+            #print(f"Warning: Repair type '{r_type_form}' not found in table.")
+            logger.log(
+                    module="fill_repair_details",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Warning: Repair type '{r_type_form}' not found in table.",
+                    severity="INFO"
+           
+        )
 
 
 # Map JSON repair types to portal input IDs
@@ -669,7 +874,15 @@ def save_form(driver):
         element=driver.find_element(By.XPATH,"//*[@id='msg']")
         time.sleep(5)
         value1 = element.text  
-        logging.info("Extracted Value in the ok button click:{}".format((value1)))
+        #logging.info("Extracted Value in the ok button click:{}".format((value1)))
+        logger.log(
+                    module="save_form",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Extracted Value in the ok button click:{format((value1))}",
+                    severity="INFO"
+           
+        )
         time.sleep(3)
         if value1:
             driver.find_element(By.XPATH,"//*[@id='msg']/button").click()
@@ -677,7 +890,15 @@ def save_form(driver):
             driver.find_element(By.XPATH,"//*[@id='btnSave']").click()
         else:
             driver.find_element(By.XPATH,"//*[@id='btnSave']").click()
-            logging.info("There is no OK button to click")
+            #logging.info("There is no OK button to click")
+            logger.log(
+                    module="save_form",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"There is no OK button to click",
+                    severity="INFO"
+           
+        )
     except Exception as e:
     # value = element.text
         driver.find_element(By.XPATH,"//*[@id='btnSave']").click()
@@ -689,21 +910,53 @@ def save_form_adj(driver,order_id):
     try:
         element=driver.find_element(By.XPATH,"//*[@id='msg']")
         value1 = element.text  
-        logging.info("Extracted Value in the ok button click:{}".format((value1)))
+        #logging.info("Extracted Value in the ok button click:{}".format((value1)))
+        logger.log(
+                    module="save_form_adj",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Extracted Value in the ok button click:{format((value1))}",
+                    severity="INFO"
+           
+        )
         time.sleep(3)
         if value1:
             driver.find_element(By.XPATH,"//*[@id='msg']/button").click()
         else:
-            logging.info("There is no OK button to click")
+            #logging.info("There is no OK button to click")
+            logger.log(
+                    module="save_form_adj",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"There is no OK button to click",
+                    severity="INFO"
+           
+        )
     except Exception as e:
-        logging.info(e)
+        #logging.info(e)
+        logger.log(
+                    module="save_form_adj",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Exception-{e}",
+                    severity="INFO"
+           
+        )
      
         
         
-    logging.info("order saved :{}".format(order_id))        
-        
+    #logging.info("order saved :{}".format(order_id))        
+    logger.log(
+                    module="save_form_adj",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"order saved :{format(order_id)}",
+                    severity="INFO"
+           
+        )
+         
    # logging.info("order saved :{}".format(order_id))
-def update_order_status(assigned_order_id, status, stage, order_event_status):
+def update_order_status(assigned_order_id, status, stage, order_event_status,token):
    
     status_update_url = env.STATUS_UPDATE_URL
 
@@ -715,15 +968,35 @@ def update_order_status(assigned_order_id, status, stage, order_event_status):
     }
 
     headers = {
+        "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
 
     try:
         response = requests.put(status_update_url, params=params, headers=headers)
-        print(f"{order_event_status} status PUT response: {response.status_code} - {response.text}")
+        #print(f"{order_event_status} status PUT response: {response.status_code} - {response.text}")
+        #logging.info(f"{order_event_status} status PUT response: {response.status_code} - {response.text}")
+        logger.log(
+                    module="update_order_status",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"{order_event_status} status PUT response: {response.status_code} - {response.text}",
+                    severity="INFO"
+           
+        )
+         
         return response
     except Exception as e:
-        print(f"Error while updating status via PUT: {e}")
+        #print(f"Error while updating status via PUT: {e}")
+        #logging.info((f"Error while updating status via PUT: {e}"))
+        logger.log(
+                    module="update_order_status",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Error while updating status via PUT: {e}",
+                    severity="INFO"
+           
+        )
         return None
 
 def update_client_account_status(client_account_id):
@@ -740,10 +1013,26 @@ def update_client_account_status(client_account_id):
 
     try:
         response = requests.put(url, json=payload, headers=headers)
-        print(f"PUT status response: {response.status_code} - {response.text}")
+        #print(f"PUT status response: {response.status_code} - {response.text}")
+        logger.log(
+                    module="update_client_account_status",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"PUT status response: {response.status_code} - {response.text}",
+                    severity="INFO"
+           
+        )
         return response
     except Exception as e:
-        print(f"Error while updating client account status: {e}")
+        #print(f"Error while updating client account status: {e}")
+        logger.log(
+                    module="update_client_account_status",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Error while updating client account status: {e}",
+                    severity="INFO"
+           
+        )
         return None
 
 
@@ -755,7 +1044,15 @@ def fetch_upload_data(self, order_id: int):
         response.raise_for_status()
         json_data = response.json()
     except Exception as e:
-        print(f" Failed to fetch data from API: {e}")
+        #print(f" Failed to fetch data from API: {e}")
+        logger.log(
+                    module="fetch_upload_data",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f" Failed to fetch data from API: {e}",
+                    severity="INFO"
+           
+        )
         return None
 
     content = json_data.get("content", {}).get("data", {})
@@ -784,7 +1081,15 @@ def list_files_from_server(folder: str):
         # Assuming response: {"files": ["a1.jpg", "a2.jpg", "s1.jpg"]}
         return data.get("files", [])
     except Exception as e:
-        print(f"Error fetching files from server: {e}")
+        #print(f"Error fetching files from server: {e}")
+        logger.log(
+                    module="list_files_from_server",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f" Error fetching files from server: {e}",
+                    severity="INFO"
+           
+        )
         return []
 
 label_to_file_map = {}
@@ -932,15 +1237,23 @@ def single_source_save_form(driver, timeout=15):
 
 
 def load_form_config_and_data(order_id, config_path, researchpad_data_retrival_url,
-                            session=None, merged_json=None):
+                            session=None, merged_json=None,token=None):
 
 
     try:
         with open(resource_path(config_path), 'r') as f:
             form_config = json.load(f)
     except Exception as e:
-        logging.error(f"Failed to load form config JSON: {e}")
-        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        logger.log(
+                    module="load_form_config_and_data",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f" Failed to load form config JSON: {e}",
+                    severity="INFO"
+           
+        )
+        #logging.error(f"Failed to load form config JSON: {e}")
+        update_order_status(order_id, "In Progress", "Entry", "Failed",token)
         return None, None
 
     if session is None:
@@ -948,18 +1261,42 @@ def load_form_config_and_data(order_id, config_path, researchpad_data_retrival_u
 
     if not merged_json:
         url = f"{researchpad_data_retrival_url}?order_id={order_id}"
-        logging.info(f"Fetching merged_json from API: {url}")
+        logger.log(
+                    module="load_form_config_and_data",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f" Fetching merged_json from API: {url}",
+                    severity="INFO"
+           
+        )
+        #logging.info(f"Fetching merged_json from API: {url}")
         try:
             response = session.get(url)
             if response.status_code == 200:
                 merged_json = response.json()
             else:
-                logging.error(f"Failed to fetch merged_json, status code: {response.status_code}")
-                update_order_status(order_id, "In Progress", "Entry", "Failed")
+                #logging.error(f"Failed to fetch merged_json, status code: {response.status_code}")
+                logger.log(
+                    module="load_form_config_and_data",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f" Failed to fetch merged_json, status code: {response.status_code}",
+                    severity="INFO"
+           
+        )
+                update_order_status(order_id, "In Progress", "Entry", "Failed",token)
                 return None, None
         except Exception as e:
-            logging.error(f"Exception during API call: {e}")
-            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            #logging.error(f"Exception during API call: {e}")
+            logger.log(
+                    module="load_form_config_and_data",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Exception during API call: {e}",
+                    severity="INFO"
+           
+        )
+            update_order_status(order_id, "In Progress", "Entry", "Failed",token)
             return None, None
     
     return form_config, merged_json
@@ -1018,18 +1355,93 @@ def tfs_statuschange(tfs_order_id,bpo_statusid,tfs_status,tfs_status_reason):
                 
                 #response2=requests.post("https://bpotrackers.com/bvupcqp/home/ProcUpdateTFSstatusEntry",data=data)
                 response2=requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateTFSstatusEntry",data=data)                
-                logging.info(f"response2 :{response2.text} , ordID {tfs_order_id}")
+                #logging.info(f"response2 :{response2.text} , ordID {tfs_order_id}")
+                logger.log(
+                    module="tfs_statuschange",
+                    order_id=hybrid_orderid,
+                    action_type="Status-change",
+                    remarks=f"response2 :{response2.text} , ordID {tfs_order_id}",
+                    severity="INFO"
+           
+        )
 
                 #response1 =requests.post("https://bpotrackers.com/bvupcqp/Home/ProcUpdateAutoEntry",data=data1)
                 response1 =requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateAutoEntry",data=data1)
           
-                logging.info(f"response1 :{response1.text} , ordID: {tfs_order_id}")
+                #logging.info(f"response1 :{response1.text} , ordID: {tfs_order_id}")
+                logger.log(
+                    module="tfs_statuschange",
+                    order_id=hybrid_orderid,
+                    action_type="Status-change",
+                    remarks=f"response1 :{response1.text} , ordID: {tfs_order_id}",
+                    severity="INFO"
+           
+        )
 
             
-                print("Status changed succesfully")
-                logging.info("Status changed succesfully")
-               
+                #print("Status changed succesfully")
+                #logging.info("Status changed succesfully")
+                logger.log(
+                    module="tfs_statuschange",
+                    order_id=hybrid_orderid,
+                    action_type="Status-change",
+                    remarks=f"Status changed succesfully",
+                    severity="INFO"
+           
+        )
+
 
             
-    except Exception as error:logging.info(f"Exception occured on sttaus change {error}")
+    except Exception as error:
+        #logging.info(f"Exception occured on sttaus change {error}")
+        logger.log(
+                    module="tfs_statuschange",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Status changed succesfully",
+                    severity="INFO"
+           
+        )
+
+def update_portal_login_confirmation_status(order_id):
+    try:
+        url = env.PORTAL_LOGIN_CONFIRMATION + str(order_id)
+        response = requests.get(url)
         
+        if response.status_code == 200:
+            data = response.json()
+            #logging.info(f"Portal login update success: {data}")
+            logger.log(
+                    module="update_portal_login_confirmation_status",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Portal login update success: {data}",
+                    severity="INFO"
+           
+        )
+            return True
+        else:
+            #logging.error(f"Portal login update failed: {response.status_code}")
+            logger.log(
+                    module="update_portal_login_confirmation_status",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Portal login update failed: {response.status_code}",
+                    severity="INFO"
+           
+        )
+            return False
+
+    except Exception as e:
+        #logging.error(f"Exception occurred: {e}")
+        logger.log(
+                    module="update_portal_login_confirmation_status",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Exception occurred: {e}",
+                    severity="INFO"
+           
+        )
+        return False
+
+    
