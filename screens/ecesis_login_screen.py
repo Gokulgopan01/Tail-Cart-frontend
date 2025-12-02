@@ -16,16 +16,18 @@ from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageTk
 
 from screens.portal_login_screen import PortalLoginScreen
-import app
-from utils.helper import setup_driver
+from utils.helper import params_check, setup_driver
 from utils.user_data import save_login_data, load_login_data
-
+from config import env
+from utils.glogger import GLogger
+logger = GLogger()
 # Load variables from .env file
+
 load_dotenv()
 
 # Retrieve API URLs from environment variables
-BASE_URL = os.getenv("BASE_URL")
-LOGIN_API = os.getenv("LOGIN_API")
+BASE_URL = env.BASE_URL
+LOGIN_API = env.LOGIN_API
 
 # Construct API endpoints dynamically
 MAIN_CLIENTS_API = f"{BASE_URL}/getMainClients"
@@ -36,6 +38,12 @@ ACCOUNT_API = f"{BASE_URL}/getAccountInfo"
 #Print API URLs (Remove in Production)
 print(f"Main Clients API: {MAIN_CLIENTS_API}")
 print(f"Login API: {LOGIN_API}")
+
+arg1, arg2,arg3 = params_check()  # Extract parameters at the top
+
+
+
+
 
 
 class EcesisLoginScreen(tk.Frame):
@@ -49,16 +57,26 @@ class EcesisLoginScreen(tk.Frame):
         img_path = resource_path("settings.jpg")
         image = Image.open(img_path)
         image = image.resize((30, 30))  # Resize if needed
-        self.logo = ImageTk.PhotoImage(image)
+        self.settings_logo = ImageTk.PhotoImage(image)
         # Set the window icon
 
         self.top_frame = tk.Frame(self, bg="white")
         self.top_frame.pack(fill="x", side="top")
         style = ttk.Style()
         style.configure("Custom.TButton", background="white", relief="flat")
-        btn = ttk.Button(self.top_frame, image=self.logo, command=lambda: controller.show_frame("SettingsScreen"),style="Custom.TButton",cursor="hand2")
+        btn = ttk.Button(self.top_frame, image=self.settings_logo, command=lambda: controller.show_frame("SettingsScreen"),style="Custom.TButton",cursor="hand2")
         btn.pack(side="right", padx=5, pady=5)
-
+        #btn.image = self.settings_logo
+        # 2. Version Label (Packs left of the button)
+        # ✨ CHANGE: Uses self.app_version (which holds "1.1")
+        self.version_label = tk.Label(
+            self.top_frame,
+            text=f"Version: {env.VERSION_FILE}",
+            bg="white",
+            fg="#333333",
+            font=("Arial", 9)
+        )
+        self.version_label.pack(side="right", padx=5, pady=5)
         """Create a login UI with a dark blue, yellow, and white color scheme."""
         self.login_frame = tk.Frame(self, bg="#FFFFFF")  # White
         self.login_frame.pack(fill="both", expand=True)
@@ -71,6 +89,15 @@ class EcesisLoginScreen(tk.Frame):
         self.create_login_frame()
 
     def create_login_frame(self):
+
+
+#         logger.log(
+#     module="OtherModule",
+#     order_id="123",
+#     action_type="step_done",
+#     remarks="Step completed successfully",
+#     severity="INFO"
+# )
 
         # ttk.Label(self.login_frame, text="ECESIS", font=("sans-serif", 14, "bold"), background="#FFFFFF").pack(pady=10)
         ttk.Label(self.login_frame, text="HYBRID CLIENT LOGIN", font=("sans-serif", 16, "bold"), background="#FFFFFF").pack(pady=20)
@@ -112,24 +139,6 @@ class EcesisLoginScreen(tk.Frame):
         self.show_password_btn.pack(side="right", padx=(0, 3))
 
 
-    #     forgot_password_frame = tk.Frame(self.input_frame, bg="#FFFFFF")
-    #     forgot_password_frame.pack(pady=1, anchor="e")
-    #     forgot_password_label = tk.Label(
-    #         forgot_password_frame, 
-    #         text="Forgot Password?", 
-    #         font=("sans-serif", 11, "underline"),  # Underlined text
-    #         fg="black",  # Hyperlink-like color
-    #         bg="#FFFFFF",
-    #         cursor="hand2"  # Hand cursor like a link
-    # )
-              
-    #     forgot_password_label.pack(anchor="e",pady=5,padx=1)
-    #     # Bind click event to act like a button
-    #     forgot_password_label.bind("<Button-1>", lambda e: self.forgot_password())
-    #     # Bind Enter key to password entry (triggers login when pressed)
-    #     self.password_entry.bind("<Return>", self.login)
-    #     # Login Button
-
 
         canvas = tk.Canvas(self.input_frame, width=200, height=50, bg="#FFFFFF", highlightthickness=0,cursor="hand2")
         canvas.pack(pady=30)
@@ -148,6 +157,9 @@ class EcesisLoginScreen(tk.Frame):
 
         # Bind click
         canvas.bind("<Button-1>", lambda event: self.login())
+
+            # Enter key triggers login from anywhere in the login frame
+        #self.login_frame.bind_all("<Return>", self.login())
 
         # Center the elements
         self.login_frame.pack_propagate(False)
@@ -208,19 +220,61 @@ class EcesisLoginScreen(tk.Frame):
         password = self.password_entry.get()
         payload = {"email": email, "password": password}
 
+        # def login_request():
+        #     try:
+        #         response = requests.post(LOGIN_API, json=payload, timeout=5)
+        #         if response.status_code == 200:
+        #             data = response.json()
+        #             if data.get("status_code") == 200 and data.get("content", {}).get("data", {}).get("success"):
+        #                 username = data["content"]["data"]["username"]
+        #                 self.after(0, lambda: self.show_client_login(username))
+        #                 token = data["content"]["data"]["token"]
+        #                 user_details = data["content"]["data"]
+        #                 logged_in = True
+        #                 # store the data:
+        #                 save_login_data(logged_in,token,user_details)
+
+        #             else:
+        #                 self.after(0, lambda: messagebox.showerror("Error", "Invalid credentials"))
+        #         else:
+        #             self.after(0, lambda: messagebox.showerror("Error", "Invalid email or password"))
+        #     except requests.exceptions.RequestException as e:
+        #         self.after(0, lambda: messagebox.showerror("Error", f"Request failed: {e}"))
+
+        # threading.Thread(target=login_request, daemon=True).start()
+        
+        #arg1="SmartEntry"
+        #arg1="PortalLogin"
+        #arg1="AutoLogin"
+        # Inside your login function
         def login_request():
             try:
                 response = requests.post(LOGIN_API, json=payload, timeout=5)
                 if response.status_code == 200:
                     data = response.json()
-                    if data.get("status_code") == 200 and data.get("content", {}).get("data", {}).get("success"):
+                    if data.get("status_code") == 200 and data["content"]["data"].get("success"):
                         username = data["content"]["data"]["username"]
-                        self.after(0, lambda: self.show_client_login(username))
                         token = data["content"]["data"]["token"]
                         user_details = data["content"]["data"]
                         logged_in = True
-                        # store the data:
-                        save_login_data(logged_in,token,user_details)
+
+                        # #  Save token and details
+                        # save_login_data(logged_in, token, user_details)
+
+                        # # Update UI in main thread
+                        # self.after(0, lambda: self.show_welcome_message(username))
+                        #self.after(0, self.close_login_screen)  
+                        # Conditionally show client selection screen
+                        if arg1 not in ["PortalLogin", "SmartEntry"]:
+                            self.after(0, lambda: self.show_client_login(username))
+                            save_login_data(logged_in, token, user_details)
+                        else:
+                                #  Save token and details
+                            #save_login_data(logged_in, token, user_details)
+
+                            # Update UI in main thread
+                            self.after(0, lambda: self.show_welcome_message(username))
+                            self.after(0, self.close_login_screen)  # close popup if used in modal
 
                     else:
                         self.after(0, lambda: messagebox.showerror("Error", "Invalid credentials"))
@@ -229,9 +283,12 @@ class EcesisLoginScreen(tk.Frame):
             except requests.exceptions.RequestException as e:
                 self.after(0, lambda: messagebox.showerror("Error", f"Request failed: {e}"))
 
+        # Start the login request in a background thread
         threading.Thread(target=login_request, daemon=True).start()
 
-
+    def close_login_screen(self):
+        """Destroy the login popup frame (only used when run as modal popup)"""
+        self.winfo_toplevel().destroy()
     def forgot_password(self):
         messagebox.showinfo("Forgot Password", "Redirecting to password recovery page.")
 
@@ -336,9 +393,11 @@ class EcesisLoginScreen(tk.Frame):
 
         # Bind click
         canvas.bind("<Button-1>", lambda event: self.confirm_selection())
-
+      
 
         threading.Thread(target=self.load_main_clients, daemon=True).start()
+
+   
 
     def create_combobox(self, parent, var, placeholder, callback):
         """Create a searchable dropdown with a placeholder."""
@@ -347,35 +406,6 @@ class EcesisLoginScreen(tk.Frame):
         cb.bind("<<ComboboxSelected>>", callback)
         return cb
 
-    # def logout(self):
-    #     """Logs out the user, resets UI, and clears login fields."""
-    #     confirm = messagebox.askyesno("Logout", "Are you sure you want to log out?")
-    #     if confirm:
-    #         # Hide the client frame
-    #         if hasattr(self, "client_frame"):
-    #             self.client_frame.pack_forget()
-
-    #         # Unhide the login frame
-    #         if hasattr(self, "login_frame"):
-    #             self.login_frame.pack(fill="both", expand=True)
-
-    #             # **Restore placeholders for email and password fields**
-    #         if hasattr(self, "email_entry"):
-    #             self.email_entry.delete(0, tk.END)  # Clear the field
-    #             self.email_entry.insert(0, "Enter your email")  # Restore placeholder
-    #         if hasattr(self, "password_entry"):
-    #             self.password_entry.delete(0, tk.END)  # Clear the field
-    #             self.password_entry.insert(0, "Enter your password")  # Restore placeholder
-    #             #self.password_entry.config(show="")  # Ensure it appears as placeholder text
-
-    #         # **Hide the logout button on the login screen**
-    #         if hasattr(self, "logout_button_top"):
-    #             self.logout_button_top.pack_forget()  # Hide the logout button
-
-    #         # Set focus to login button after logout
-    #         self.after(100, self.login_button.focus_set)
-    #         # Switch to the login screen
-    #         self.controller.show_frame("EcesisLoginScreen")
 
     def logout(self):
         """Logs out the user, resets UI, and clears login fields."""
@@ -415,32 +445,603 @@ class EcesisLoginScreen(tk.Frame):
         for widget in self.winfo_children():
             widget.destroy()
 
+    # def load_main_clients(self):
+    #     """Fetch and populate main clients."""
+    #     response = self.fetch_data(MAIN_CLIENTS_API)
+    #     if response:
+    #         self.client_data["main_clients"] = response
+    #         self.main_client_dropdown["values"] = [c["client_name"] for c in self.client_data["main_clients"]]
+
+   
+    # def on_main_client_select(self, event):
+    #     """Handle main client selection and fetch sub-clients."""
+    #     # Reset dependent dropdowns immediately
+    #     self.sub_client_var.set("Select Subclient")
+    #     self.sub_client_dropdown["values"] = []
+        
+    #     self.portal_var.set("Select Portal")
+    #     self.portal_dropdown["values"] = []
+        
+    #     self.account_var.set("Select Account")
+    #     self.account_dropdown["values"] = []
+        
+    #     # Optionally clear labels showing account details if needed
+    #     self.username_label.config(text="Username: ")
+    #     self.password_label.config(text="Password: ")
+    #     self.session_label.config(text="Session: ")
+    #     self.portal_url_label.config(text="Portal URL: ")
+    #     self.proxy_label.config(text="Proxy: ")
+
+    #     # Proceed to load sub-clients for the selected main client
+    #     selected_client = next(
+    #         (c for c in self.client_data["main_clients"] if c["client_name"] == self.main_client_var.get()), 
+    #         None
+    #     )
+    #     if selected_client:
+    #         client_id = selected_client["id"]
+    #         threading.Thread(target=self.load_sub_clients, args=(client_id,), daemon=True).start()
+
+    # def load_sub_clients(self, client_id):
+    #     """Fetch and populate sub-clients."""
+    #     #self.client_data["sub_clients"] = self.account_fetch_data(SUB_CLIENTS_API,{"mainClientId":client_id})
+    #     response = self.account_fetch_data(SUB_CLIENTS_API,{"mainClientId":client_id})
+    #     print(response)
+    #     if response and response.get("status_code") == 200 and response.get("content") and response.get("content").get("data"):
+    #         sub_clients_data = response["content"]["data"]
+    #         self.client_data["sub_clients"] = response #store the entire response, not just the data.
+    #         self.sub_client_dropdown["values"] = [sc["client_name"] for sc in sub_clients_data]
+    #     else:
+    #         # Handle cases where the API response is not in the expected format
+    #         messagebox.showerror("Error", "Failed to load sub-clients or unexpected API response.")
+    # def on_sub_client_select(self, event):
+    #     """Handle sub-client selection and store `sub_client_id` for later use."""
+    #     sub_clients_data = self.client_data["sub_clients"]["content"]["data"]
+    #     selected_sub_client = next((sc for sc in sub_clients_data if sc["client_name"] == self.sub_client_var.get()), None)
+
+    #     if selected_sub_client:
+    #         self.selected_sub_client_id = selected_sub_client["sub_client_id"]
+    #         threading.Thread(target=self.load_portals, args=(self.selected_sub_client_id,), daemon=True).start()
+
+    # def load_portals(self, sub_client_id):
+    #     """Fetch and populate portals."""
+    #     response = self.account_fetch_data(PORTALS_API, {"client_id": sub_client_id})
+    #     if response:
+    #         self.client_data["portals"] = response["content"]["data"]
+    #         self.portal_dropdown["values"] = [p["portal_name"] for p in self.client_data["portals"]]
+
+    # def on_portal_select(self, event):
+    #     """Handle portal selection and fetch accounts."""
+    #     selected_portal = next((p for p in self.client_data["portals"] if p["portal_name"] == self.portal_var.get()), None)
+    #     if selected_portal:
+    #         self.selected_portal_id = selected_portal["portal_id"]
+    #         self.selected_portal_url = selected_portal["portal_url"]
+    #         threading.Thread(target=self.load_accounts, args=(self.selected_sub_client_id, self.selected_portal_id), daemon=True).start()
+
+    # def load_accounts(self, sub_client_id, portal_id):
+    #     """Fetch and populate accounts."""
+    #     response = self.account_fetch_data(ACCOUNT_API, {"client_id": sub_client_id, "portal_id": portal_id})
+    #     if response:
+    #         self.accounts = response["content"]["data"]
+    #         self.account_dropdown["values"] = [str(acc["account_id"]) for acc in self.accounts]
+
+    # def on_account_select(self, event):
+    #     """Handle account selection and display details."""
+    #     selected_account = next((acc for acc in self.accounts if str(acc["account_id"]) == self.account_var.get()), None)
+    #     if selected_account:
+    #         self.load_selected_account_info(selected_account)
+
+    # def load_selected_account_info(self, account):
+    #     """Display selected account details."""
+    #     self.username_label.config(text=f"Username: {account['username']}")
+    #     self.password_label.config(text=f"Password: {account['password']}")
+    #     self.session_label.config(text=f"Session: {account['session']}")
+    #     self.portal_url_label.config(text=f"Portal URL: {self.selected_portal_url}")
+    #     self.proxy_label.config(text=f"Proxy: {account['proxy']}")
+
+###################
+
+
+
+######################################select ##########################
+    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
+    #     """
+    #     Adds live starts-with filtering to a ttk.Combobox.
+    #     The full list always includes the default_text at the top.
+    #     Handles backspace, escape, and cumulative typing.
+    #     """
+    #     # Make sure default_text is the first item
+    #     original_values = [default_text] + [v for v in values_list if v != default_text]
+    #     typed_chars = []
+    #     reset_next_key = False  # True if next key should start fresh
+
+    #     def on_keypress(event):
+    #         nonlocal typed_chars, reset_next_key
+
+    #         if len(event.char) == 0:
+    #             return
+
+    #         # Backspace handling
+    #         if event.keysym == "BackSpace":
+    #             if typed_chars:
+    #                 typed_chars.pop()
+    #         # Escape resets everything
+    #         elif event.keysym == "Escape":
+    #             typed_chars.clear()
+    #             combobox["values"] = original_values
+    #             combobox.set(default_text)
+    #             reset_next_key = False
+    #             return
+    #         # Printable typing
+    #         elif event.char.isprintable():
+    #             if reset_next_key:
+    #                 typed_chars = [event.char.upper()]
+    #                 reset_next_key = False
+    #             else:
+    #                 typed_chars.append(event.char.upper())
+
+    #         search_str = "".join(typed_chars)
+    #         # Always keep default_text at the top
+    #         filtered = [default_text] + sorted(
+    #             [v for v in values_list if v.upper().startswith(search_str)]
+    #         )
+
+    #         if filtered:
+    #             combobox["values"] = filtered
+    #             combobox.set(filtered[1] if len(filtered) > 1 else filtered[0])
+    #         else:
+    #             combobox["values"] = original_values
+    #             combobox.set(default_text)
+
+    #         # Reset next key if no match
+    #         if search_str and event.keysym.isalpha() and len(filtered) <= 1:
+    #             typed_chars = []
+    #             reset_next_key = True
+
+    #     combobox.bind("<Key>", on_keypress)
+    #     combobox.set(default_text)
+
+
+
+
+        
+
+##############################
+    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
+    #     """
+    #     Adds live starts-with filtering to a ttk.Combobox.
+    #     The full list always includes the default_text at the top.
+    #     Handles backspace, escape, and cumulative typing.
+    #     """
+    #     # Make sure default_text is the first item
+    #     original_values = [default_text] + [v for v in values_list if v != default_text]
+    #     typed_chars = []
+    #     reset_next_key = False  # True if next key should start fresh
+
+    #     # Set initial values and text
+    #     combobox["values"] = original_values
+    #     combobox.set(default_text)
+
+    #     def on_keypress(event):
+    #         nonlocal typed_chars, reset_next_key
+
+    #         # Ignore keys that don't produce a character (Shift, Ctrl, F keys, etc.)
+    #         if len(event.char) == 0:
+    #             # Allow default behavior for navigation keys (Up/Down)
+    #             if event.keysym in ("Up", "Down", "Return"):
+    #                 return
+    #             # Break for other non-character keys to avoid confusion
+    #             return "break" 
+
+    #         # --- Keyboard Control ---
+    #         if event.keysym == "BackSpace":
+    #             if typed_chars:
+    #                 typed_chars.pop()
+    #             return "break" 
+            
+    #         elif event.keysym == "Escape":
+    #             typed_chars.clear()
+    #             combobox["values"] = original_values
+    #             combobox.set(default_text)
+    #             reset_next_key = False
+    #             return "break" 
+            
+    #         # --- Printable Typing ---
+    #         elif event.char.isprintable():
+    #             if reset_next_key:
+    #                 typed_chars = [event.char.upper()]
+    #                 reset_next_key = False
+    #             else:
+    #                 typed_chars.append(event.char.upper())
+                
+    #             # --- Filtering Logic ---
+    #             search_str = "".join(typed_chars)
+                
+    #             # Always keep default_text at the top
+    #             filtered = [default_text] + sorted(
+    #                 [v for v in values_list if v.upper().startswith(search_str)]
+    #             )
+                
+    #             # --- Update Combobox ---
+    #             combobox["values"] = filtered
+                
+    #             if len(filtered) > 1:
+    #                 # Set the text field and the selection index to the first match
+    #                 first_match_index = 1 
+    #                 combobox.set(filtered[first_match_index])
+                    
+    #                 # Use .current() to set the visual selection/highlight.
+    #                 # This only works if the dropdown is actually visible.
+    #                 combobox.current(first_match_index)
+    #             else:
+    #                 # No match or only default_text
+    #                 combobox.set(default_text)
+    #                 combobox.current(0) # Select default text
+
+    #             # --- No Match Reset ---
+    #             # If search string exists, but only the default text remains in the list
+    #             if search_str and event.keysym.isalpha() and len(filtered) <= 1:
+    #                 typed_chars = []
+    #                 reset_next_key = True
+                    
+    #             return "break" # Stop default combobox processing for this key
+
+    #     # Bind the custom key handler
+    #     combobox.bind("<Key>", on_keypress)
+        
+    #     # Ensure the dropdown is accessible via the down arrow/mouse click
+    #     combobox.set(default_text) 
+##################################################
+    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
+    #     """
+    #     Adds live starts-with filtering to a ttk.Combobox.
+    #     The full list always includes the default_text at the top, and the 
+    #     original list is restored when the search string is empty (via Backspace).
+    #     """
+    #     # 1. Setup Initial Values and State
+    #     str_values = [str(v) for v in values_list]
+    #     original_values = [default_text] + [v for v in str_values if v != default_text]
+        
+    #     typed_chars = []
+        
+    #     # Initialize the Combobox
+    #     combobox["values"] = original_values
+    #     combobox.set(default_text)
+
+    #     def force_dropdown_open():
+    #         """Simulates clicking the dropdown arrow to open the list."""
+    #         # This is a common Tkinter technique to reliably open the dropdown list.
+    #         combobox.event_generate('<Control-Key-a>')
+
+    #     def on_keypress(event):
+    #         nonlocal typed_chars
+            
+    #         # Ignore keys that don't produce a character (Shift, Ctrl, F keys, etc.)
+    #         if len(event.char) == 0:
+    #             # Allow default behavior for navigation keys (Up/Down, Enter)
+    #             if event.keysym in ("Up", "Down", "Return"):
+    #                 return
+    #             return "break" 
+
+    #         # --- Keyboard Control ---
+    #         if event.keysym == "BackSpace":
+    #             if typed_chars:
+    #                 typed_chars.pop()
+                
+    #             # --- CRITICAL FIX: Restore original list if search string is empty ---
+    #             if not typed_chars:
+    #                 combobox["values"] = original_values
+    #                 combobox.set(default_text)
+    #                 combobox.current(0) # Select the default item
+    #                 return "break" # Exit after successful reset
+                
+    #             # If there are still characters, let the code fall through to re-filter
+    #             pass 
+            
+    #         elif event.keysym == "Escape":
+    #             typed_chars.clear()
+    #             combobox["values"] = original_values
+    #             combobox.set(default_text)
+    #             return "break" 
+            
+    #         # --- Printable Typing ---
+    #         elif event.char.isprintable():
+    #             typed_chars.append(event.char.upper())
+
+    #         # --- Filtering Logic (Common for typing and partial backspacing) ---
+    #         search_str = "".join(typed_chars)
+            
+    #         # Case-insensitive "starts with" filtering
+    #         filtered = [default_text] + sorted(
+    #             [v for v in str_values if v.upper().startswith(search_str)]
+    #         )
+            
+    #         # --- Update Combobox and Highlight ---
+    #         combobox["values"] = filtered
+            
+    #         if len(filtered) > 1:
+    #             first_match_index = 1 
+    #             match_text = filtered[first_match_index]
+                
+    #             # Set text and visually highlight the first match
+    #             combobox.set(match_text)
+    #             combobox.current(first_match_index) 
+    #         else:
+    #             # No match found
+    #             # Keep the current typed text visible for user feedback or default text if empty
+    #             combobox.set(search_str if search_str else default_text) 
+    #             combobox.current(-1) # Clear highlight
+
+    #         # Auto-Open Dropdown when typing
+    #         force_dropdown_open()
+                
+    #         return "break" # Prevents default widget processing
+
+    #     # Bind the custom key handler to all key presses
+    #     combobox.bind("<Key>", on_keypress)
+        
+    #     # Bind the Control sequence (used by force_dropdown_open) to do nothing
+    #     combobox.bind('<Control-Key-a>', lambda e: 'break')
+############################################################
+    def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
+        """
+        Adds live starts-with filtering to a ttk.Combobox.
+        The full list always includes the default_text at the top, and the 
+        original list is restored when the search string is empty (via Backspace).
+        """
+        # 1. Setup Initial Values and State
+        str_values = [str(v) for v in values_list]
+        original_values = [default_text] + [v for v in str_values if v != default_text]
+        
+        typed_chars = []
+        
+        # Initialize the Combobox
+        combobox["values"] = original_values
+        combobox.set(default_text)
+
+        def force_dropdown_open():
+            """Simulates clicking the dropdown arrow to open the list."""
+            combobox.event_generate('<Control-Key-a>')
+
+        def on_keypress(event):
+            nonlocal typed_chars
+            
+            # Ignore keys that don't produce a character (Shift, Ctrl, F keys, etc.)
+            if len(event.char) == 0:
+                if event.keysym in ("Up", "Down", "Return"):
+                    return
+                return "break" 
+
+            # --- Keyboard Control ---
+            if event.keysym == "BackSpace":
+                if typed_chars:
+                    typed_chars.pop()
+                
+                # Restore original list if search string is empty
+                if not typed_chars:
+                    combobox["values"] = original_values
+                    combobox.set(default_text)
+                    combobox.selection_clear() # Safely clear highlight
+                    return "break"
+                
+                # If still characters, falls through to re-filter
+                pass 
+            
+            elif event.keysym == "Escape":
+                typed_chars.clear()
+                combobox["values"] = original_values
+                combobox.set(default_text)
+                combobox.selection_clear() # Safely clear highlight
+                return "break" 
+            
+            # --- Printable Typing ---
+            elif event.char.isprintable():
+                typed_chars.append(event.char.upper())
+
+            # --- Filtering Logic (Common for typing and partial backspacing) ---
+            search_str = "".join(typed_chars)
+            
+            filtered = [default_text] + sorted(
+                [v for v in str_values if v.upper().startswith(search_str)]
+            )
+            
+            # --- Update Combobox and Highlight ---
+            combobox["values"] = filtered
+            
+            if len(filtered) > 1:
+                first_match_index = 1 
+                match_text = filtered[first_match_index]
+                
+                # Set text and visually highlight the first match
+                combobox.set(match_text)
+                combobox.current(first_match_index) 
+            else:
+                # No match found (ERROR FIXED HERE)
+                combobox.set(search_str if search_str else default_text) 
+                combobox.selection_clear() # ✨ FIXED: Safely clear highlight instead of using .current(-1)
+
+            # Auto-Open Dropdown when typing
+            force_dropdown_open()
+                
+            return "break" 
+
+        # Bind the custom key handler to all key presses
+        combobox.bind("<Key>", on_keypress)
+        
+        # Bind the Control sequence (used by force_dropdown_open) to do nothing
+        combobox.bind('<Control-Key-a>', lambda e: 'break')
+
+    
+ #######################   
+    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select Main Client"):
+    #     original_values = list(values_list)
+    #     typed_chars = []
+    #     reset_next_key = False
+
+    #     def on_keypress(event):
+    #         nonlocal typed_chars, reset_next_key
+
+    #         if len(event.char) == 0:
+    #             return
+
+    #         # Reset on Escape
+    #         if event.keysym == "Escape":
+    #             typed_chars = []
+    #             combobox['values'] = original_values
+    #             combobox.set(default_text)
+    #             return
+
+    #         # Backspace handling
+    #         if event.keysym == "BackSpace":
+    #             if typed_chars:
+    #                 typed_chars.pop()
+    #         else:
+    #             if reset_next_key:
+    #                 typed_chars = []
+    #                 reset_next_key = False
+    #             typed_chars.append(event.char.lower())
+
+    #         search_text = "".join(typed_chars)
+
+    #         # Always keep full list
+    #         combobox['values'] = original_values
+
+    #         if search_text:
+    #             for i, val in enumerate(original_values):
+    #                 if val.lower().startswith(search_text):
+    #                     combobox.current(i)  # highlight first match (not auto-select)
+    #                     break
+
+    #     combobox.bind("<KeyPress>", on_keypress)
+
+#################################right######################################################
+  
+
+    # def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select Main Client"):
+    #     original_values = list(values_list)
+    #     typed_chars = []
+    #     last_key_time = 0
+    #     reset_delay = 1.0  # seconds
+
+    #     def update_dropdown():
+    #         search_text = "".join(typed_chars).lower()
+    #         if search_text:
+    #             filtered = [v for v in original_values if v.lower().startswith(search_text)]
+    #         else:
+    #             filtered = original_values.copy()
+
+    #         combobox['values'] = filtered
+    #         if filtered:
+    #             combobox.current(0)
+    #         else:
+    #             combobox.set(default_text)
+
+    #     def on_keypress(event):
+    #         nonlocal typed_chars, last_key_time
+
+    #         if len(event.char) == 0:
+    #             return
+
+    #         current_time = time.time()
+    #         # Reset search if last key was long ago
+    #         if current_time - last_key_time > reset_delay:
+    #             typed_chars = []
+
+    #         last_key_time = current_time
+
+    #         if event.keysym == "Escape":
+    #             typed_chars = []
+    #             update_dropdown()
+    #             combobox.set(default_text)
+    #             return
+
+    #         if event.keysym == "BackSpace":
+    #             if typed_chars:
+    #                 typed_chars.pop()
+    #         elif event.keysym not in ("Up", "Down", "Left", "Right"):
+    #             typed_chars.append(event.char.lower())
+
+    #         update_dropdown()
+
+    #     def on_arrow(event):
+    #         current_index = combobox.current()
+    #         values = combobox['values']
+    #         if not values:
+    #             return
+    #         if event.keysym == "Up":
+    #             combobox.current((current_index - 1) % len(values))
+    #         elif event.keysym == "Down":
+    #             combobox.current((current_index + 1) % len(values))
+
+    #     combobox.bind("<KeyPress>", on_keypress)
+    #     combobox.bind("<Up>", on_arrow)
+    #     combobox.bind("<Down>", on_arrow)
+
+#####################################################################################
+
+
+
+
+    
+
+
+
+ 
+
+    
+
+
+
+
     def load_main_clients(self):
         """Fetch and populate main clients."""
         response = self.fetch_data(MAIN_CLIENTS_API)
         if response:
             self.client_data["main_clients"] = response
-            self.main_client_dropdown["values"] = [c["client_name"] for c in self.client_data["main_clients"]]
+            values_list = sorted([c["client_name"] for c in self.client_data["main_clients"]])
+            self.main_client_dropdown["values"] = values_list
+            self.bind_dropdown_keyboard_sort(self.main_client_dropdown, values_list, "Select Main Client")
+
 
     def on_main_client_select(self, event):
         """Handle main client selection and fetch sub-clients."""
-        selected_client = next((c for c in self.client_data["main_clients"] if c["client_name"] == self.main_client_var.get()), None)
+        # Reset dependent dropdowns immediately
+        self.sub_client_var.set("Select Subclient")
+        self.sub_client_dropdown["values"] = []
+        self.portal_var.set("Select Portal")
+        self.portal_dropdown["values"] = []
+        self.account_var.set("Select Account")
+        self.account_dropdown["values"] = []
+
+        # Reset labels
+        self.username_label.config(text="Username: ")
+        self.password_label.config(text="Password: ")
+        self.session_label.config(text="Session: ")
+        self.portal_url_label.config(text="Portal URL: ")
+        self.proxy_label.config(text="Proxy: ")
+
+        # Load sub-clients for selected main client
+        selected_client = next(
+            (c for c in self.client_data["main_clients"] if c["client_name"] == self.main_client_var.get()), 
+            None
+        )
         if selected_client:
             client_id = selected_client["id"]
             threading.Thread(target=self.load_sub_clients, args=(client_id,), daemon=True).start()
 
+
     def load_sub_clients(self, client_id):
         """Fetch and populate sub-clients."""
-        #self.client_data["sub_clients"] = self.account_fetch_data(SUB_CLIENTS_API,{"mainClientId":client_id})
-        response = self.account_fetch_data(SUB_CLIENTS_API,{"mainClientId":client_id})
-        print(response)
+        response = self.account_fetch_data(SUB_CLIENTS_API, {"mainClientId": client_id})
         if response and response.get("status_code") == 200 and response.get("content") and response.get("content").get("data"):
             sub_clients_data = response["content"]["data"]
-            self.client_data["sub_clients"] = response #store the entire response, not just the data.
-            self.sub_client_dropdown["values"] = [sc["client_name"] for sc in sub_clients_data]
+            self.client_data["sub_clients"] = response
+            values_list = sorted([sc["client_name"] for sc in sub_clients_data])
+            self.sub_client_dropdown["values"] = values_list
+            self.bind_dropdown_keyboard_sort(self.sub_client_dropdown, values_list,"Select Subclient")
         else:
-            # Handle cases where the API response is not in the expected format
             messagebox.showerror("Error", "Failed to load sub-clients or unexpected API response.")
+
+
     def on_sub_client_select(self, event):
         """Handle sub-client selection and store `sub_client_id` for later use."""
         sub_clients_data = self.client_data["sub_clients"]["content"]["data"]
@@ -450,12 +1051,16 @@ class EcesisLoginScreen(tk.Frame):
             self.selected_sub_client_id = selected_sub_client["sub_client_id"]
             threading.Thread(target=self.load_portals, args=(self.selected_sub_client_id,), daemon=True).start()
 
+
     def load_portals(self, sub_client_id):
         """Fetch and populate portals."""
         response = self.account_fetch_data(PORTALS_API, {"client_id": sub_client_id})
         if response:
             self.client_data["portals"] = response["content"]["data"]
-            self.portal_dropdown["values"] = [p["portal_name"] for p in self.client_data["portals"]]
+            values_list = sorted([p["portal_name"] for p in self.client_data["portals"]])
+            self.portal_dropdown["values"] = values_list
+            self.bind_dropdown_keyboard_sort(self.portal_dropdown, values_list,"Select Portal")
+
 
     def on_portal_select(self, event):
         """Handle portal selection and fetch accounts."""
@@ -465,18 +1070,23 @@ class EcesisLoginScreen(tk.Frame):
             self.selected_portal_url = selected_portal["portal_url"]
             threading.Thread(target=self.load_accounts, args=(self.selected_sub_client_id, self.selected_portal_id), daemon=True).start()
 
+
     def load_accounts(self, sub_client_id, portal_id):
         """Fetch and populate accounts."""
         response = self.account_fetch_data(ACCOUNT_API, {"client_id": sub_client_id, "portal_id": portal_id})
         if response:
             self.accounts = response["content"]["data"]
-            self.account_dropdown["values"] = [str(acc["account_id"]) for acc in self.accounts]
+            values_list = sorted([str(acc["account_id"]) for acc in self.accounts])
+            self.account_dropdown["values"] = values_list
+            self.bind_dropdown_keyboard_sort(self.account_dropdown, values_list,"Select Account")
+
 
     def on_account_select(self, event):
         """Handle account selection and display details."""
         selected_account = next((acc for acc in self.accounts if str(acc["account_id"]) == self.account_var.get()), None)
         if selected_account:
             self.load_selected_account_info(selected_account)
+
 
     def load_selected_account_info(self, account):
         """Display selected account details."""
@@ -498,49 +1108,6 @@ class EcesisLoginScreen(tk.Frame):
         else:
             messagebox.showwarning("Incomplete", "Please select all details to proceed.")
 
-    # def login_to_portal(self, selected_account):
-    #     """Login to the portal with the selected account details."""
-    #     portal = self.portal_var.get()
-    #     if portal:
-    #         portal_login = PortalLoginScreen.portals(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"])  # Create PortalLogin instance using portals
-    #         threading.Thread(
-    #             target=portal_login.login_to_portal,  # Correct thread target
-    #             args=(selected_account["username"], selected_account["password"], self.selected_portal_url, portal,selected_account["proxy"]),
-    #             daemon=True
-    #         ).start()
-    #     else:
-    #         messagebox.showerror("Error", "Portal login function not found.")
-
-    # def login_to_client_portal(self, selected_account):
-    #     """Login to the portal with the selected account details."""
-    #     portal = self.portal_var.get()
-    #     if portal:
-    #         # Create a new instance of the portal class for each login attempt
-    #         portal_instance = PortalLoginScreen.portals(
-    #             selected_account["username"],
-    #             selected_account["password"],
-    #             self.selected_portal_url,
-    #             portal,
-    #             selected_account["proxy"],
-    #             selected_account["session"]
-    #         )
-    #         if portal_instance:
-    #             self.active_portal_instances.append(portal_instance) # Store the instance
-    #             threading.Thread(
-    #                 target=portal_instance.login_to_portal,
-    #                 args=(
-    #                     selected_account["username"],
-    #                     selected_account["password"],
-    #                     self.selected_portal_url,
-    #                     portal,
-    #                     selected_account["proxy"],
-    #                     selected_account["session"]
-    #                 ),
-    #                 daemon=True,
-    #             ).start()
-    #     else:
-    #         messagebox.showerror("Error", "Portal login function not found.")
-
 
     def login_to_client_portal(self, selected_account):
         """Login to the portal with the selected account details."""
@@ -553,7 +1120,8 @@ class EcesisLoginScreen(tk.Frame):
                 self.selected_portal_url,
                 portal,
                 selected_account["proxy"],
-                selected_account["session"]
+                selected_account["session"],
+                selected_account["account_id"]
             )
             if portal_instance:
                 self.active_portal_instances.append(portal_instance)

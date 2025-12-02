@@ -1,0 +1,1259 @@
+
+{
+     "page": [
+    {
+      "SubjectHistoryAdj": [
+        {
+          "filedtype":"date_fill_javascript",
+          "values":[
+            ["condition_data['InspectionDate']","//*[@id='InspectionDate_Value']","xpath"]
+          ]
+        },
+        {
+          "filedtype":"select_data",
+          "values":[
+              ["sub_data['DataSource']","//*[@id='FNMADataSource_Value']","xpath"]
+          ]
+        },
+        {
+          "filedtype": "select_data",
+          "values": [
+            ["sub_data['PropertyType']", "//*[@id='MITPropertyType_Value']", "xpath"]
+          ]
+        },
+        {
+          "filedtype": "Textbox",
+          "values": [
+            ["sub_data['ApnNumber']", "//*[@id='AssessorParcel_Value']", "xpath"]
+          ]
+        },
+          {
+          "filedtype": "select_data",
+          "values": [
+            ["sub_data['Status']", "//*[@id='CurListingStatus_Value']", "xpath"]
+          ]
+        },
+         {
+          "filedtype": "Textbox",
+          "values": [
+            ["sub_data['MLS']", "//*[@id='MLS_Value']", "xpath"]
+          ]
+        },
+        {
+               "filedtype":"select_data",
+               "values":[
+                    ["sub_data['ListedLast12Month']","//*[@id='ListedLast12Mo_Value']","xpath"],
+                    ["sub_data['CurrentlyListed']","//*[@id='CurrentlyListed_Value']","xpath"]
+                   ]
+             },
+
+          {
+               "filedtype":"date_fill_javascript",
+               "values":[
+                   
+                   ["condition_data['CurrentListingDate']","//*[@id='CurrentListDate_Value']","xpath"],
+                   ["condition_data['OriginalListDateListing']","//*[@id='OriginalListDate_Value']","xpath"]
+                   ]
+             },    
+         {
+               "filedtype":"Textbox",
+               "values":[
+                   ["sub_data['CurrentListingPrice']","//*[@id='CurrentListPrice_Value']","xpath"],
+                   ["sub_data['OriginalListPriceListing']","//*[@id='OriginalListPrice_Value']","xpath"],
+                   ["sub_data['ListingBrokerListing']","//*[@id='ListingBroker_Value']","xpath"],
+                   ["sub_data['ListingCompanyListing']","//*[@id='ListingCompany_Value']","xpath"]
+
+                   ]
+             },
+             {
+               "filedtype":"date_fill_javascript",
+               "values":[
+                   
+                   ["sub_data['ListingPhoneListing']","//*[@id='ListingPhone_Value']","xpath"]
+               ]
+             },
+             {
+               "filedtype":"select_data",
+               "values":[
+                    ["sub_data['SaleSignVisible']","//*[@id='ForSaleSign_Value']","xpath"]
+                   ]
+             },
+             {
+               "filedtype":"Textbox",
+               "values":[
+                   
+                   ["sub_data['WhyDidPropertyNotSell']","//*[@id='NotSoldReason_Value']","xpath"]
+               ]
+             },
+             {
+               "filedtype":"select_data",
+               "values":[
+                    ["sub_data['SoldLast12Months']","//*[@id='SoldLast12Mo_Value']","xpath"]
+                   ]
+             },
+             {
+               "filedtype":"date_fill_javascript", 
+               "values":[
+                   
+                   ["condition_data['LastListDate']","//*[@id='SoldListDate_Value']","xpath"],
+                   ["sub_data['SaleDate']","//*[@id='SaleDate_Value']","xpath"]
+                   ]
+             },
+             {
+               "filedtype":"Textbox", 
+               "values":[
+                   ["sub_data['FinalListPriceSold']","//*[@id='SoldFinalListPrice_Value']","xpath"] 
+                   ]
+             },
+             {
+               "filedtype":"date_fill_javascript", 
+               "values":[
+                   ["condition_data['OriginalListDateSold']","//*[@id='SoldOriginalListDate_Value']","xpath"]
+                  
+                   ]
+             },
+             {
+               "filedtype":"Textbox", 
+               "values":[
+                   ["sub_data['OriginalListPriceSold']","//*[@id='SoldOriginalListPrice_Value']","xpath"],
+                    ["sub_data['SalePrice']","//*[@id='SalePrice_Value']","xpath"],
+                   ["sub_data['ListingBrokerSold']","//*[@id='SoldListingBroker_Value']","xpath"],
+                   ["sub_data['ListingCompanySold']","//*[@id='SoldListingCompany_Value']","xpath"]
+                   ]
+             },    
+              {
+               "filedtype":"date_fill_javascript",
+               "values":[
+                   
+                   ["sub_data['ListingPhoneSold']","//*[@id='SoldListingPhone_Value']","xpath"]
+               ]
+             },
+       
+        {
+               "filedtype":"select_data",
+               "values":[
+                   ["sub_data['SubjectVacant']","//*[@id='PropertyVacant_Value']","xpath"],
+                   ["sub_data['Issecured']","//*[@id='Secured_Value']","xpath"] ,
+                   ["sub_data['View']","//*[@id='PropertyView_Value']","xpath"],
+                   ["sub_data['HOA']","//*[@id='HoaOrOther_Value']","xpath"],
+                   ["sub_data['DoesSubjectHaveAGuestHouse']","//*[@id='SubjectGuestHouse_Value']","xpath"],
+                   ["sub_data['FinancingAvailable']","//*[@id='FinanceAvail_Value']","xpath"],
+                   ["sub_data['ImprovementCondition']","//*[@id='ImprovementStatus_Value']","xpath"],
+                   ["sub_data['BasementOutsideEntry']","//*[@id='BasementOutsideEntry_Value']","xpath"],
+                   ["sub_data['HoaPaymentTerm']","//*[@id='HoaFeesPeriod_Value']","xpath"],
+                   ["sub_data['IsOccupied']","//*[@id='Occupant_Value']","xpath"],
+                   ["sub_data['PropertyOccupancy']","//*[@id='PropertyOccupancy_Value']","xpath"],
+                   ["sub_data['Basement']","//*[@id='BasementOutsideEntry_Value']","xpath"]
+                   
+
+
+                   ]
+             },
+             
+             {
+               "filedtype":"Textbox",
+               "values":[
+                   
+                   ["sub_data['GuestHouseSF']","//*[@id='GuestHouseSF_Value']","xpath"],
+                   ["sub_data['GuestHouseBasementSF']","//*[@id='GuestHouseBasementSF_Value']","xpath"],
+                   ["sub_data['BasementArea']","//*[@id='BasementAreaSqft_Value']","xpath"],
+                   ["sub_data['BasementFinished']","//*[@id='BasementFinished_Value']","xpath"], 
+                  ["sub_data['HoaName']","//*[@id='HoaName_Value']","xpath"],
+                  ["sub_data['HoaPhone']","//*[@id='HoaPhone_Value']","xpath"],
+                  ["sub_data['HoaFees']","//*[@id='HoaFeesAmount_Value']","xpath"],
+                  ["sub_data['Amenities']","//*[@id='ExteriorAmenitiesDescription_Value']","xpath"],
+                  ["sub_data['OverallInspectionComments']","//*[@id='Inspectioncomments_Value']","xpath"],
+                  ["sub_data['PorchPatioDeck']","//*[@id='AmenitiesOtherDesc_Value']","xpath"] 
+
+                   ]
+             } ,
+            
+             
+           {
+            "filedtype": "checkbox_list",
+            "values": [
+               ["sub_data['HOAFeesInclude']", "HOAInsurance", "id_prefix"]
+            ]
+            }   ,   
+             {
+               "filedtype":"Textbox",
+               "values":[
+                   
+                   ["sub_data['FloorLocation']","//*[@id='FloorLocation_Value']","xpath"],
+                   ["sub_data['Stories']","//*[@id='NoOfstories_Value']","xpath"],
+                   ["sub_data['GarCarType']","//*[@id='CarstorageGaragedesc_Value']","xpath"],
+                     ["sub_data['HOAAmenities']","//*[@id='HOAAmenitites_Value']","xpath"],
+                     ["sub_data['SanitarySewer']","//*[@id='UtitlitiesComments_Value']","xpath"],
+                     ["sub_data['CommentsOffSiteImprovement']","//*[@id='OffsiteOtherdesc_Value']","xpath"]
+                 
+                   ]
+             } , 
+             {
+               "filedtype":"select_data",
+               "values":[
+                   ["sub_data['CoolingType']","//*[@id='CoolingType_Value']","xpath"],
+                   ["sub_data['HeatingType']","//*[@id='HeatingType_Value']","xpath"],
+                   ["sub_data['OverallCondition']","//*[@id='CondtionRating_Value']","xpath"],
+                   ["sub_data['OverallQuality']","//*[@id='QualityRating_Value']","xpath"]
+                   
+                   
+
+                   ]
+             },     
+        {
+          "filedtype": "save_data",
+          "values": [
+            {
+              "nextpage": "Neighborhood"
+            }
+          ]
+          
+        }
+      ]
+    },
+     {
+               "NeighborhoodInfoAdj":[
+                           {
+                     "filedtype":"select_data", 
+                     "values":[
+                        ["sub_data['PopulationDensity']","//*[@id='PopulationDensity_Value']","xpath"],
+                        ["sub_data['PrideOfOwnership']","//*[@id='PrideOfOwnership_Value']","xpath"],
+                        ["sub_data['CrimeVandalRisk']","//*[@id='CrimeVandalRisk_Value']","xpath"],
+                        ["sub_data['NeighborhoodTrend']","//*[@id='NeighborhoodTrend_Value']","xpath"],
+                        ["sub_data['PropertyHomesValues']","//*[@id='HomesValue_Value']","xpath"]
+                     ]
+                           },
+                           
+                      {
+                   "filedtype":"Textbox",
+                   "values":[   
+                    ["sub_data['MonthlyRate']","//*[@id='RateOfHomeValue_Value']","xpath"],
+                    ["sub_data['InPastMonths']","//*[@id='MarketChangeMonths_Value']","xpath"]
+                      ]
+                    },
+                      {
+                     "filedtype":"select_data", 
+                     "values":[
+                    
+                        ["sub_data['EnvironmentalIssues']","//*[@id='EnviromentalIssues_Value']","xpath"]
+                        ]},
+                     
+                  {
+                   "filedtype":"Textbox",
+                   "values":[     
+                             
+                    ["sub_data['EnvironmentalReferralReason']","//*[@id='EnvironmentalReferralReason_Value']","xpath"],
+                    ["sub_data['OwnerOccupied']","//*[@id='OwnerOccupiedPercent_Value']","xpath"] 
+                    ]},
+                     
+              
+                 {
+                     "filedtype":"select_data", 
+                     "values":[
+                      
+                        ["sub_data['Supply']","//*[@id='Supply_Value']","xpath"],
+                        ["sub_data['Demand']","//*[@id='Demand_Value']","xpath"],
+                        ["sub_data['PredominantBuyer']","//*[@id='PredominantBuyer_Value']","xpath"]
+                       
+                     ]
+                  },
+                 
+                      {
+                    "filedtype":"Textbox", 
+                     "values":[
+                    ["sub_data['NumberOfListings']","//*[@id='CompetingListings_Value']","xpath"]
+                     ]
+                
+                },
+                {
+                  "filedtype":"Textbox",
+                  "values":[  
+                   ["sub_data['ListNeighborhoodValueLow']","//*[@id='ValueRangeMin_Value']","xpath"],
+                   ["sub_data['ListNeighborhoodValueHigh']","//*[@id='ValueRangeMax_Value']","xpath"]
+                ]
+                  },
+              
+                      {
+                    "filedtype":"Textbox", 
+                     "values":[
+
+                    ["sub_data['NumberOfSales']","//*[@id='CompetingSales_Value']","xpath"]
+                    ]
+                },      
+                   
+                   
+               {
+                "filedtype":"Textbox",
+               "values":[
+                  ["sub_data['SaleNeighborhoodValueLow']","//*[@id='SaleValueRangeMin_Value']","xpath"],
+                   ["sub_data['SaleNeighborhoodValueHigh']","//*[@id='SaleValueRangeMax_Value']","xpath"]
+                   ]   
+                   
+               },
+                {
+                "filedtype":"Textbox",
+               "values":[
+                ["sub_data['CompetingREO']","//*[@id='CompsForSale_Value']","xpath"]]},
+
+                  {
+                    "filedtype":"Textbox", 
+                     "values":[
+
+                    ["sub_data['BoardedOrBlockedHomes']","//*[@id='BoardedHomes_Value']","xpath"]
+                    ]
+                },      
+                    
+
+                {
+                   "filedtype":"select_data",
+                   "values":[
+  
+                     ["sub_data['EmploymentConditions']","//*[@id='EmpConditions_Value']","xpath"],
+                     ["sub_data['OutsideOfMarketFactors']","//*[@id='RiskOfLoss_Value']","xpath"],
+                     ["sub_data['InvestorFlipActivityInNeighborhood']","//*[@id='InvestorActivity_Value']","xpath"]
+
+                     
+                   ]
+                },
+                {
+                   "filedtype":"Textbox",
+                   "values":[ 
+                    ["sub_data['Rentalvalue']","//*[@id='MarketRentMonthly_Value']","xpath"]
+                    ]
+                } ,
+                
+               
+                {
+                  "filedtype":"save_data",
+                  "values":[
+                     {
+                        "nextpage":"Neighborhood"
+                     }
+                            
+                          ]
+                   } 
+                        
+                       ]
+                
+                      },
+                      {
+                  "ComparablesAdj":[
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sub_data['DataSource']","//*[@id='MITDataSource_Subject']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sub_data['Concessions']","//*[@id='Concessions_Subject']","xpath"],  
+                         ["sub_data['LotAcrs']","//*[@id='LotSize_Subject']","xpath"],
+                         ["sub_data['Subdivision']","//*[@id='Subdivision_Subject']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sub_data['Style']","//*[@id='PropertyStyle_Subject']","xpath"],
+                          ["sub_data['ConstructionType']","//*[@id='Construction_Subject']","xpath"],
+                           ["sub_data['Quality']","//*[@id='Qualtiy_Subject']","xpath"],
+                           ["sub_data['Condition']","//*[@id='Condition_Subject']","xpath"],
+                           ["sub_data['GarCarType']","//*[@id='GarCarType_Subject']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[
+                           ["sub_data['Units']","//*[@id='NumUnits_Subject']","xpath"],
+                           ["sub_data['YearBuilt']","//*[@id='YearBuilt_Subject']","xpath"],                        
+                           ["sub_data['Gla']","//*[@id='TotalSQ_Subject']","xpath"],
+                           ["sub_data['TotalRooms']","//*[@id='TotalRooms_Subject']","xpath"],
+                           ["sub_data['Bed']","//*[@id='Bedrooms_Subject']","xpath"],
+                           ["sub_data['FullBath']","//*[@id='FullBaths_Subject']","xpath"],
+                           ["sub_data['HalfBath']","//*[@id='HalfBaths_Subject']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sub_data['HeatingType']","//*[@id='Heating_Subject']","xpath"],
+                            ["sub_data['CoolingType']","//*[@id='Cooling_Subject']","xpath"],
+                             ["sub_data['Fireplace']","//*[@id='Fireplace_Subject']","xpath"],
+                             ["sub_data['Porches']","//*[@id='Porches_Subject']","xpath"],
+                              ["sub_data['Patio']","//*[@id='Patio_Subject']","xpath"],
+                          ["sub_data['Deck']","//*[@id='Deck_Subject']","xpath"],
+                          ["sub_data['Pool']","//*[@id='Pool_Subject']","xpath"],
+                          ["sub_data['SaleType']","//*[@id='Saletype_Subject']","xpath"]
+
+                        ]
+                     },
+                      {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sub_data['FinishedBelowGrade']","//*[@id='Basement_Subject']","xpath"]
+                        ]
+                     },    
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sub_data['PercentageBasementFinished']","//*[@id='PerFinBase_Subject']","xpath"],
+                         ["sub_data['BasementArea']","//*[@id='BasementSqft_Subject']","xpath"]
+                         ]
+                     },         
+                           
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold1['Address']","//*[@id='Address_SoldComp1']","xpath"],
+                         ["sold1['City']","//*[@id='City_SoldComp1']","xpath"],   
+                         ["sold1['Zipcode']","//*[@id='Zip_SoldComp1']","xpath"],
+                         ["sold1['MLS']","//*[@id='MLS_SoldComp1']","xpath"],
+                        ["sold1['Subdivision']","//*[@id='Subdivision_SoldComp1']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold1['DataSource']","//*[@id='MITDataSource_SoldComp1']","xpath"],
+                           ["sold1['InformationSource']","//*[@id='InfoSource_SoldComp1']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['current_sold1date']","//*[@id='CurListDate_SoldComp1']","xpath"]
+                     ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold1['CurrentListingPrice']","//*[@id='CurListPrice_SoldComp1']","xpath"]
+                        ]
+                      },
+                       {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['orginal_sold1_date']","//*[@id='ListDate_SoldComp1']","xpath"]
+                         
+                         ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                      
+                         ["sold1['OriginalListPriceListing']","//*[@id='ListPrice_SoldComp1']","xpath"]
+       
+                         ]
+                     },
+
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['sale_sold1_date']","//*[@id='SaleDate_SoldComp1']","xpath"]
+                         
+                         ]
+                     },
+
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold1['Concessions']","//*[@id='Concessions_SoldComp1']","xpath"],  
+                         ["sold1['SalePrice']","//*[@id='SalePrice_SoldComp1']","xpath"],
+                         ["sold1['LotAcrs']","//*[@id='LotSize_SoldComp1']","xpath"]
+       
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold1['PropertyType']","//*[@id='MITPropertyType_SoldComp1']","xpath"],
+                           ["sold1['Style']","//*[@id='PropertyStyle_SoldComp1']","xpath"]
+                        ]
+                     },
+                     
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold1['Quality']","//*[@id='Qualtiy_SoldComp1']","xpath"],
+                           ["sold1['ConstructionType']","//*[@id='Construction_SoldComp1']","xpath"],
+                           ["sold1['Condition']","//*[@id='Condition_SoldComp1']","xpath"],
+                           ["sold1['View']","//*[@id='MITView_SoldComp1']","xpath"]
+                           
+                            ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[
+                           ["sold1['Units']","//*[@id='NumUnits_SoldComp1']","xpath"],
+                           ["sold1['YearBuilt']","//*[@id='YearBuilt_SoldComp1']","xpath"],
+                           ["sold1['Gla']","//*[@id='TotalSQ_SoldComp1']","xpath"],     
+                           ["sold1['TotalRooms']","//*[@id='TotalRooms_SoldComp1']","xpath"],
+                           ["sold1['Bed']","//*[@id='Bedrooms_SoldComp1']","xpath"],
+                           ["sold1['FullBath']","//*[@id='FullBaths_SoldComp1']","xpath"],
+                           ["sold1['HalfBath']","//*[@id='HalfBaths_SoldComp1']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold1['FinishedBelowGrade']","//*[@id='Basement_SoldComp1']","xpath"]
+                        ]
+                     },    
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold1['PercentageBasementFinished']","//*[@id='PerFinBase_SoldComp1']","xpath"],
+                         ["sold1['BasementArea']","//*[@id='BasementSqft_SoldComp1']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold1['GarCarType']","//*[@id='GarCarType_SoldComp1']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold1['HeatingType']","//*[@id='Heating_SoldComp1']","xpath"],
+                            ["sold1['CoolingType']","//*[@id='Cooling_SoldComp1']","xpath"],
+                             ["sold1['Fireplace']","//*[@id='Fireplace_SoldComp1']","xpath"],
+                             ["sold1['Porches']","//*[@id='Porches_SoldComp1']","xpath"],
+                              ["sold1['Patio']","//*[@id='Patio_SoldComp1']","xpath"],
+                          ["sold1['Deck']","//*[@id='Deck_SoldComp1']","xpath"],
+                          ["sold1['Pool']","//*[@id='Pool_SoldComp1']","xpath"],
+                          ["sold1['SuperiorInferior']","//*[@id='Superior_SoldComp1']","xpath"],
+                          ["sold1['SaleType']","//*[@id='MITSaleType_SoldComp1']","xpath"]
+
+                        ]
+                     }, 
+
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold2['Address']","//*[@id='Address_SoldComp2']","xpath"],
+                         ["sold2['City']","//*[@id='City_SoldComp2']","xpath"],   
+                         ["sold2['Zipcode']","//*[@id='Zip_SoldComp2']","xpath"],
+                         ["sold2['MLS']","//*[@id='MLS_SoldComp2']","xpath"],
+                         ["sold2['Subdivision']","//*[@id='Subdivision_SoldComp2']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold2['DataSource']","//*[@id='MITDataSource_SoldComp2']","xpath"],
+                           ["sold2['InformationSource']","//*[@id='InfoSource_SoldComp2']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['current_sold2date']","//*[@id='CurListDate_SoldComp2']","xpath"]
+                     ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold2['CurrentListingPrice']","//*[@id='CurListPrice_SoldComp2']","xpath"]
+                        ]
+                      },
+                       {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['orginal_sold2_date']","//*[@id='ListDate_SoldComp2']","xpath"]
+                         
+                         ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                      
+                         ["sold2['OriginalListPriceListing']","//*[@id='ListPrice_SoldComp2']","xpath"]
+       
+                         ]
+                     },
+
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['sale_sold2_date']","//*[@id='SaleDate_SoldComp2']","xpath"]
+                         
+                         ]
+                     },
+
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                        ["sold2['Concessions']","//*[@id='Concessions_SoldComp2']","xpath"],  
+                         ["sold2['SalePrice']","//*[@id='SalePrice_SoldComp2']","xpath"],   
+                         ["sold2['LotAcrs']","//*[@id='LotSize_SoldComp2']","xpath"]
+       
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold2['PropertyType']","//*[@id='MITPropertyType_SoldComp2']","xpath"],
+                           ["sold2['Style']","//*[@id='PropertyStyle_SoldComp2']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold2['Quality']","//*[@id='Qualtiy_SoldComp2']","xpath"],
+                           ["sold2['ConstructionType']","//*[@id='Construction_SoldComp2']","xpath"],
+                           ["sold2['Condition']","//*[@id='Condition_SoldComp2']","xpath"],
+                           ["sold2['View']","//*[@id='MITView_SoldComp2']","xpath"]
+                           
+                            ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[
+                           ["sold2['Units']","//*[@id='NumUnits_SoldComp2']","xpath"],
+                           ["sold2['YearBuilt']","//*[@id='YearBuilt_SoldComp2']","xpath"],
+                           ["sold2['Gla']","//*[@id='TotalSQ_SoldComp2']","xpath"],     
+                           ["sold2['TotalRooms']","//*[@id='TotalRooms_SoldComp2']","xpath"],
+                           ["sold2['Bed']","//*[@id='Bedrooms_SoldComp2']","xpath"],
+                           ["sold2['FullBath']","//*[@id='FullBaths_SoldComp2']","xpath"],
+                           ["sold2['HalfBath']","//*[@id='HalfBaths_SoldComp2']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold2['FinishedBelowGrade']","//*[@id='Basement_SoldComp2']","xpath"]
+                        ]
+                     },    
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold2['PercentageBasementFinished']","//*[@id='PerFinBase_SoldComp2']","xpath"],
+                         ["sold2['BasementArea']","//*[@id='BasementSqft_SoldComp2']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold2['GarCarType']","//*[@id='GarCarType_SoldComp2']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold2['HeatingType']","//*[@id='Heating_SoldComp2']","xpath"],
+                            ["sold2['CoolingType']","//*[@id='Cooling_SoldComp2']","xpath"],
+                             ["sold2['Fireplace']","//*[@id='Fireplace_SoldComp2']","xpath"],
+                             ["sold2['Porches']","//*[@id='Porches_SoldComp2']","xpath"],
+                              ["sold2['Patio']","//*[@id='Patio_SoldComp2']","xpath"],
+                          ["sold2['Deck']","//*[@id='Deck_SoldComp2']","xpath"],
+                          ["sold2['Pool']","//*[@id='Pool_SoldComp2']","xpath"],
+                          ["sold2['SuperiorInferior']","//*[@id='Superior_SoldComp2']","xpath"],
+                          ["sold2['SaleType']","//*[@id='MITSaleType_SoldComp2']","xpath"]
+
+                        ]
+                     },    
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold3['Address']","//*[@id='Address_SoldComp3']","xpath"],
+                         ["sold3['City']","//*[@id='City_SoldComp3']","xpath"],   
+                         ["sold3['Zipcode']","//*[@id='Zip_SoldComp3']","xpath"],
+                         ["sold3['MLS']","//*[@id='MLS_SoldComp3']","xpath"],
+                            ["sold3['Subdivision']","//*[@id='Subdivision_SoldComp3']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold3['DataSource']","//*[@id='MITDataSource_SoldComp3']","xpath"],
+                           ["sold3['InformationSource']","//*[@id='InfoSource_SoldComp3']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['current_sold3date']","//*[@id='CurListDate_SoldComp3']","xpath"]
+                     ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold3['CurrentListingPrice']","//*[@id='CurListPrice_SoldComp3']","xpath"]
+                        ]
+                      },
+                       {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['orginal_sold2_date']","//*[@id='ListDate_SoldComp3']","xpath"]
+                         
+                         ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                      
+                         ["sold3['OriginalListPriceListing']","//*[@id='ListPrice_SoldComp3']","xpath"]
+       
+                         ]
+                     },
+
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['sale_sold3_date']","//*[@id='SaleDate_SoldComp3']","xpath"]
+                         
+                         ]
+                     },
+
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold3['Concessions']","//*[@id='Concessions_SoldComp3']","xpath"],  
+                         ["sold3['SalePrice']","//*[@id='SalePrice_SoldComp3']","xpath"],
+                         ["sold3['LotAcrs']","//*[@id='LotSize_SoldComp3']","xpath"]
+       
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold3['PropertyType']","//*[@id='MITPropertyType_SoldComp3']","xpath"],
+                           ["sold3['Style']","//*[@id='PropertyStyle_SoldComp3']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold3['Quality']","//*[@id='Qualtiy_SoldComp3']","xpath"],
+                           ["sold3['ConstructionType']","//*[@id='Construction_SoldComp3']","xpath"],
+                           ["sold3['Condition']","//*[@id='Condition_SoldComp3']","xpath"],
+                           ["sold3['View']","//*[@id='MITView_SoldComp3']","xpath"]
+                           
+                            ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[
+                           ["sold3['Units']","//*[@id='NumUnits_SoldComp3']","xpath"],
+                           ["sold3['YearBuilt']","//*[@id='YearBuilt_SoldComp3']","xpath"],
+                           ["sold3['Gla']","//*[@id='TotalSQ_SoldComp3']","xpath"],     
+                           ["sold3['TotalRooms']","//*[@id='TotalRooms_SoldComp3']","xpath"],
+                           ["sold3['Bed']","//*[@id='Bedrooms_SoldComp3']","xpath"],
+                           ["sold3['FullBath']","//*[@id='FullBaths_SoldComp3']","xpath"],
+                           ["sold3['HalfBath']","//*[@id='HalfBaths_SoldComp3']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold3['FinishedBelowGrade']","//*[@id='Basement_SoldComp3']","xpath"]
+                        ]
+                     },    
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["sold3['PercentageBasementFinished']","//*[@id='PerFinBase_SoldComp3']","xpath"],
+                         ["sold3['BasementArea']","//*[@id='BasementSqft_SoldComp3']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold3['GarCarType']","//*[@id='GarCarType_SoldComp3']","xpath"]
+                            ]
+                     },
+                      {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["sold3['HeatingType']","//*[@id='Heating_SoldComp3']","xpath"],
+                            ["sold3['CoolingType']","//*[@id='Cooling_SoldComp3']","xpath"],
+                             ["sold3['Fireplace']","//*[@id='Fireplace_SoldComp3']","xpath"],
+                             ["sold3['Porches']","//*[@id='Porches_SoldComp3']","xpath"],
+                              ["sold3['Patio']","//*[@id='Patio_SoldComp3']","xpath"],
+                          ["sold3['Deck']","//*[@id='Deck_SoldComp3']","xpath"],
+                          ["sold3['Pool']","//*[@id='Pool_SoldComp3']","xpath"],
+                           ["sold3['SuperiorInferior']","//*[@id='Superior_SoldComp3']","xpath"],
+                          ["sold3['SaleType']","//*[@id='MITSaleType_SoldComp3']","xpath"]
+
+                        ]
+                     },    
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list1['Address']","//*[@id='Address_ListedComp1']","xpath"],
+                         ["list1['City']","//*[@id='City_ListedComp1']","xpath"],   
+                         ["list1['Zipcode']","//*[@id='Zip_ListedComp1']","xpath"],
+                         ["list1['MLS']","//*[@id='MLS_ListedComp1']","xpath"],
+                        ["list1['Subdivision']","//*[@id='Subdivision_ListedComp1']","xpath"]
+
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list1['DataSource']","//*[@id='MITDataSource_ListedComp1']","xpath"],
+                           ["list1['InformationSource']","//*[@id='InfoSource_ListedComp1']","xpath"]
+                        ]
+                        
+                     },
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['current_list1date']","//*[@id='CurListDate_ListedComp1']","xpath"]
+                     ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list1['CurrentListingPrice']","//*[@id='CurListPrice_ListedComp1']","xpath"]
+                        ]
+                      },
+                       {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['orginal_list1_date']","//*[@id='ListDate_ListedComp1']","xpath"]
+                         
+                         ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                      
+                         ["list1['OriginalListPriceListing']","//*[@id='ListPrice_ListedComp1']","xpath"],
+                         ["list1['LotAcrs']","//*[@id='LotSize_ListedComp1']","xpath"]
+       
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list1['PropertyType']","//*[@id='MITPropertyType_ListedComp1']","xpath"],
+                           ["list1['Style']","//*[@id='PropertyStyle_ListedComp1']","xpath"]
+                        ]
+                     },                  
+                          
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list1['Quality']","//*[@id='Qualtiy_ListedComp1']","xpath"],
+                           ["list1['ConstructionType']","//*[@id='Construction_ListedComp1']","xpath"],
+                           ["list1['Condition']","//*[@id='Condition_ListedComp1']","xpath"],
+                           ["list1['View']","//*[@id='MITView_ListedComp1']","xpath"]
+                           
+                            ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[
+                           ["list1['Units']","//*[@id='NumUnits_ListedComp1']","xpath"],
+                           ["list1['YearBuilt']","//*[@id='YearBuilt_ListedComp1']","xpath"],
+                           ["list1['Gla']","//*[@id='TotalSQ_ListedComp1']","xpath"],     
+                           ["list1['TotalRooms']","//*[@id='TotalRooms_ListedComp1']","xpath"],
+                           ["list1['Bed']","//*[@id='Bedrooms_ListedComp1']","xpath"],
+                           ["list1['FullBath']","//*[@id='FullBaths_ListedComp1']","xpath"],
+                           ["list1['HalfBath']","//*[@id='HalfBaths_ListedComp1']","xpath"]
+                            ]
+                     },
+                      {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list1['FinishedBelowGrade']","//*[@id='Basement_ListedComp1']","xpath"]
+                        ]
+                     },    
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list1['PercentageBasementFinished']","//*[@id='PerFinBase_ListedComp1']","xpath"],
+                         ["list1['BasementArea']","//*[@id='BasementSqft_ListedComp1']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list1['GarCarType']","//*[@id='GarCarType_ListedComp1']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list1['HeatingType']","//*[@id='Heating_ListedComp1']","xpath"],
+                            ["list1['CoolingType']","//*[@id='Cooling_ListedComp1']","xpath"],
+                             ["list1['Fireplace']","//*[@id='Fireplace_ListedComp1']","xpath"],
+                             ["list1['Porches']","//*[@id='Porches_ListedComp1']","xpath"],
+                              ["list1['Patio']","//*[@id='Patio_ListedComp1']","xpath"],
+                          ["list1['Deck']","//*[@id='Deck_ListedComp1']","xpath"],
+                          ["list1['Pool']","//*[@id='Pool_ListedComp1']","xpath"],
+                           ["list1['SuperiorInferior']","//*[@id='Superior_ListedComp1']","xpath"],
+                          ["list1['SaleType']","//*[@id='MITSaleType_ListedComp1']","xpath"]
+
+                        ]
+                     },    
+
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list2['Address']","//*[@id='Address_ListedComp2']","xpath"],
+                         ["list2['City']","//*[@id='City_ListedComp2']","xpath"],   
+                         ["list2['Zipcode']","//*[@id='Zip_ListedComp2']","xpath"],
+                         ["list2['MLS']","//*[@id='MLS_ListedComp2']","xpath"],
+                        ["list2['Subdivision']","//*[@id='Subdivision_ListedComp2']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list2['DataSource']","//*[@id='MITDataSource_ListedComp2']","xpath"],
+                           ["list2['InformationSource']","//*[@id='InfoSource_ListedComp2']","xpath"]
+                        ]
+                     },
+              
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['current_list2date']","//*[@id='CurListDate_ListedComp2']","xpath"]
+                     ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list2['CurrentListingPrice']","//*[@id='CurListPrice_ListedComp2']","xpath"]
+                        ]
+                      },
+                       {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['orginal_list2_date']","//*[@id='ListDate_ListedComp2']","xpath"]
+                         
+                         ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                      
+                         ["list2['OriginalListPriceListing']","//*[@id='ListPrice_ListedComp2']","xpath"],
+                         ["list2['LotAcrs']","//*[@id='LotSize_ListedComp2']","xpath"]
+       
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list2['PropertyType']","//*[@id='MITPropertyType_ListedComp2']","xpath"],
+                           ["list2['Style']","//*[@id='PropertyStyle_ListedComp2']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list2['Quality']","//*[@id='Qualtiy_ListedComp2']","xpath"],
+                           ["list2['ConstructionType']","//*[@id='Construction_ListedComp2']","xpath"],
+                           ["list2['Condition']","//*[@id='Condition_ListedComp2']","xpath"],
+                           ["list2['View']","//*[@id='MITView_ListedComp2']","xpath"]
+                           
+                            ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[
+                           ["list2['Units']","//*[@id='NumUnits_ListedComp2']","xpath"],
+                           ["list2['YearBuilt']","//*[@id='YearBuilt_ListedComp2']","xpath"],
+                           ["list2['Gla']","//*[@id='TotalSQ_ListedComp2']","xpath"],     
+                           ["list2['TotalRooms']","//*[@id='TotalRooms_ListedComp2']","xpath"],
+                           ["list2['Bed']","//*[@id='Bedrooms_ListedComp2']","xpath"],
+                           ["list2['FullBath']","//*[@id='FullBaths_ListedComp2']","xpath"],
+                           ["list2['HalfBath']","//*[@id='HalfBaths_ListedComp2']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list2['FinishedBelowGrade']","//*[@id='Basement_ListedComp2']","xpath"]
+                        ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list2['PercentageBasementFinished']","//*[@id='PerFinBase_ListedComp2']","xpath"],
+                         ["list2['BasementArea']","//*[@id='BasementSqft_ListedComp2']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list2['GarCarType']","//*[@id='GarCarType_ListedComp2']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list2['GarCarType']","//*[@id='GarCarType_ListedComp2']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list2['HeatingType']","//*[@id='Heating_ListedComp2']","xpath"],
+                            ["list2['CoolingType']","//*[@id='Cooling_ListedComp2']","xpath"],
+                             ["list2['Fireplace']","//*[@id='Fireplace_ListedComp2']","xpath"],
+                             ["list2['Porches']","//*[@id='Porches_ListedComp2']","xpath"],
+                              ["list2['Patio']","//*[@id='Patio_ListedComp2']","xpath"],
+                          ["list2['Deck']","//*[@id='Deck_ListedComp2']","xpath"],
+                          ["list2['Pool']","//*[@id='Pool_ListedComp2']","xpath"],
+                           ["list2['SuperiorInferior']","//*[@id='Superior_ListedComp2']","xpath"],
+                          ["list2['SaleType']","//*[@id='MITSaleType_ListedComp2']","xpath"]
+
+                        ]
+                     },    
+                     
+                     {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list3['Address']","//*[@id='Address_ListedComp3']","xpath"],
+                         ["list3['City']","//*[@id='City_ListedComp3']","xpath"],   
+                         ["list3['Zipcode']","//*[@id='Zip_ListedComp3']","xpath"],
+                         ["list3['MLS']","//*[@id='MLS_ListedComp3']","xpath"],
+                          ["list3['Subdivision']","//*[@id='Subdivision_ListedComp3']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list3['DataSource']","//*[@id='MITDataSource_ListedComp3']","xpath"],
+                           ["list3['InformationSource']","//*[@id='InfoSource_ListedComp3']","xpath"]
+                        ]
+                     },
+                     
+                     {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['current_list3date']","//*[@id='CurListDate_ListedComp3']","xpath"]
+                     ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list3['CurrentListingPrice']","//*[@id='CurListPrice_ListedComp3']","xpath"]
+                        ]
+                      },
+                       {
+                        "filedtype":"date_fill_javascript",
+                        "values":[ 
+                         ["condition_data['orginal_list3_date']","//*[@id='ListDate_ListedComp3']","xpath"]
+                         
+                         ]
+                     },
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                      
+                         ["list3['OriginalListPriceListing']","//*[@id='ListPrice_ListedComp3']","xpath"],
+                         ["list3['LotAcrs']","//*[@id='LotSize_ListedComp3']","xpath"]
+       
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list3['PropertyType']","//*[@id='MITPropertyType_ListedComp3']","xpath"],
+                           ["list3['Style']","//*[@id='PropertyStyle_ListedComp3']","xpath"]
+                        ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list3['Quality']","//*[@id='Qualtiy_ListedComp3']","xpath"],
+                           ["list3['ConstructionType']","//*[@id='Construction_ListedComp3']","xpath"],
+                           ["list3['Condition']","//*[@id='Condition_ListedComp3']","xpath"],
+                           ["list3['View']","//*[@id='MITView_ListedComp3']","xpath"]
+                           
+                            ]
+                     },
+                     {
+                        "filedtype":"Textbox",
+                        "values":[
+                           ["list3['Units']","//*[@id='NumUnits_ListedComp3']","xpath"],
+                           ["list3['YearBuilt']","//*[@id='YearBuilt_ListedComp3']","xpath"],
+                           ["list3['Gla']","//*[@id='TotalSQ_ListedComp3']","xpath"],     
+                           ["list3['TotalRooms']","//*[@id='TotalRooms_ListedComp3']","xpath"],
+                           ["list3['Bed']","//*[@id='Bedrooms_ListedComp3']","xpath"],
+                           ["list3['FullBath']","//*[@id='FullBaths_ListedComp3']","xpath"],
+                           ["list3['HalfBath']","//*[@id='HalfBaths_ListedComp3']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list3['FinishedBelowGrade']","//*[@id='Basement_ListedComp3']","xpath"]
+                        ]
+                     },    
+                      {
+                        "filedtype":"Textbox",
+                        "values":[ 
+                         ["list3['PercentageBasementFinished']","//*[@id='PerFinBase_ListedComp3']","xpath"],
+                         ["list3['BasementArea']","//*[@id='BasementSqft_ListedComp3']","xpath"]
+                         ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list3['GarCarType']","//*[@id='GarCarType_ListedComp3']","xpath"]
+                            ]
+                     },
+                     {
+                        "filedtype":"select_data",
+                        "values":[
+                           ["list3['HeatingType']","//*[@id='Heating_ListedComp3']","xpath"],
+                            ["list3['CoolingType']","//*[@id='Cooling_ListedComp3']","xpath"],
+                             ["list3['Fireplace']","//*[@id='Fireplace_ListedComp3']","xpath"],
+                             ["list3['Porches']","//*[@id='Porches_ListedComp3']","xpath"],
+                              ["list3['Patio']","//*[@id='Patio_ListedComp3']","xpath"],
+                          ["list3['Deck']","//*[@id='Deck_ListedComp3']","xpath"],
+                          ["list3['Pool']","//*[@id='Pool_ListedComp3']","xpath"],
+                          ["list3['SuperiorInferior']","//*[@id='Superior_ListedComp3']","xpath"],
+                          ["list3['SaleType']","//*[@id='MITSaleType_ListedComp3']","xpath"]
+     
+                        ]
+                     }, 
+                     {
+                        "filedtype":"radiobutton_data",
+                        "values":[
+                            
+                            ["condition_data['BestSoldcomp']","//input[@name='MostComparableSale.Value']","xpath"],
+                            ["condition_data['BestActivecomp']","//input[@name='MostComparableListed.Value']","xpath"]
+                        ]
+                    }, 
+                      {
+                        "filedtype":"save_data",
+                        "values":[
+                           {
+                              "nextpage":"Neighborhood"
+                           }
+                                  
+                                ]
+                         } 
+                     
+                     ]
+                  },
+
+                  {
+                     "Repairs":[
+                        {
+                           "filedtype":"select_data",
+                           "values":[
+                              ["sub_data['RepairsRecommended']","//*[@id='RepairsRecommended_Value']","xpath"],
+                              ["sub_data['ResaleProblem']","//*[@id='ResaleProblem_Value']","xpath"],
+                              ["sub_data['EmergencyRepairsNeeded']","//*[@id='EmergRepairsNeeded_Value']","xpath"],
+                              ["sub_data['RepairsRequiredForFinancing']","//*[@id='RepairForFinance_Value']","xpath"],
+                              ["sub_data['RepairsNeededForFinancing']","//*[@id='RepairDegreeFin_Value']","xpath"],
+                              ["sub_data['WillMinorRepairsAllowFinancing']","//*[@id='MinorRepairForFin_Value']","xpath"],
+                              ["sub_data['IfRepairsAreCompleted']","//*[@id='RepairRecoup_Value']","xpath"],
+                              ["sub_data['ConditionRatingAfterRepairs']","//*[@id='CondRating_Value']","xpath"],
+                              ["sub_data['IfRepairsAreCompleted']","//*[@id='RepairRecoup_Value']","xpath"],
+                              ["sub_data['WillRepairsEnhanceMarketability']","//*[@id='RepairsEnhance_Value']","xpath"],
+                              ["sub_data['IsPropertyAverageMarketableCondition']","//*[@id='AvgMarketableCond_Value']","xpath"],
+                              ["sub_data['IsPropertyAverageMarketableCondition']","//*[@id='CondRating_Value']","xpath"]
+
+                           ]
+                        },
+                         {
+                        "filedtype":"Textbox",
+                              "values":[
+                                 ["sub_data['RepairStartDay']","//*[@id='EstRepairDaysFrom_Value']","xpath"],
+                                 ["sub_data['RepairEndDay']","//*[@id='EstRepairDaysTo_Value']","xpath"]
+
+                                  ]
+                           },
+                        {
+                        "filedtype": "repair_details_fill",
+                        "values": [
+                           ["sub_data['repair_details']['repairs']", "", "repairs"]
+                        ]
+                        },
+                                             
+                     {
+                              "filedtype":"save_data",
+                              "values":[
+                                 {
+                                    "nextpage":"Neighborhood"
+                                 }
+                                        
+                                      ]
+                               }                          
+                          ]
+                          },
+                       {
+                        "Comments":[
+                           {
+                              "filedtype":"Textbox",
+                              "values":[
+                                 ["sold1['ComparableComments']","//*[@id='Sale1Comment_Value']","xpath"],
+                                 ["sold2['ComparableComments']","//*[@id='Sale2Comment_Value']","xpath"],
+                                 ["sold3['ComparableComments']","//*[@id='Sale3Comment_Value']","xpath"],
+                                 ["list1['ComparableComments']","//*[@id='Listing1Comment_Value']","xpath"],
+                                 ["list2['ComparableComments']","//*[@id='Listing2Comment_Value']","xpath"],
+                                 ["list3['ComparableComments']","//*[@id='Listing3Comment_Value']","xpath"],
+                                 ["sub_data['SubjectComment']","//*[@id='SubjectComments_Value']","xpath"],
+                                 ["sub_data['SubjectNeighborhoodComments']","//*[@id='NeighborhoodComments_Value']","xpath"],
+                                 ["sub_data['SubjectNeighborhoodComments']","//*[@id='ConditionRepairComments_Value']","xpath"],
+                                 ["sub_data['UtitlitiesComments']","//*[@id='UtilitiesComments_Value']","xpath"]
+
+                                  ]
+                           },
+                              {
+                                 "filedtype":"save_data",
+                                 "values":[
+                                    {
+                                       "nextpage":"Neighborhood"
+                                    }
+                                           
+                                         ]
+                                  } 
+                             ]
+                           },
+                        {
+                           "Price Opinion":[
+                              {
+                                 "filedtype":"Textbox",
+                                 "values":[
+                                    ["sub_data['YearsOfExperience']","//*[@id='BPOExp_Value']","xpath"],
+                                    ["sub_data['LandValue']","//*[@id='LandValue_Value']","xpath"],
+                                    ["sub_data['ListingNeighborhoodValueLow']","//*[@id='ValueRangeMin_Value']","xpath"],
+                                    ["sub_data['ListingNeighborhoodValueHigh']","//*[@id='ValueRangeMax_Value']","xpath"]
+                                     ]
+                              },
+                              {
+                                 "filedtype":"select_data",
+                                 "values":[
+                                    ["sub_data['CurrentMarketStrategy']","//*[@id='CurrentMarketStrategy_Value']","xpath"],
+                                    ["sub_data['TypicalMarketTime']","//*[@id='TypicalMarketTime_Value']","xpath"]
+                                 ]
+                              },
+                              
+                              {
+                                 "filedtype":"Textbox",
+                                 "values":[
+                                    ["sub_data['QuickSalePrice']","//*[@id='QuickSale_Value']","xpath"],
+                                    ["sub_data['As-IsSalePrice']","//*[@id='AsIsValue_Value']","xpath"],
+                                    ["sub_data['As-IsListPrice']","//*[@id='AsIsList_Value']","xpath"],
+                                    ["sub_data['QuickSaleRepairedPrice']","//*[@id='QSRepValue_Value']","xpath"],
+                                    ["sub_data['RepairedSalePrice']","//*[@id='RepairValue_Value']","xpath"],
+                                    ["sub_data['RepairedListPrice']","//*[@id='RepairList_Value']","xpath"],
+                                     ["sub_data['RepairedListPrice']","//*[@id='RepairList_Value']","xpath"],
+                                    ["sub_data['Comments']","//*[@id='PricingStrategy_Value']","xpath"]
+                                     ]
+                              },
+                              {
+                                 "filedtype":"save_data",
+                                 "values":[
+                                    {
+                                       "nextpage":"Neighborhood"
+                                    }
+                                           
+                                         ]
+                                  } 
+                             ]
+                           }
+                    ]
+              }

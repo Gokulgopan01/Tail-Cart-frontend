@@ -26,11 +26,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 import logging
 
-from utils.helper import handle_login_status, setup_driver
+from utils.helper import handle_login_status, setup_driver, update_client_account_status
 # Load environment variables from the .env file
 load_dotenv()
 class AVM:
-    def __init__(self,username, password, portal_url, portal_name, proxy,session):
+    def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id):
         self.username = username
         self.password = password
         self.portal_url = portal_url
@@ -82,6 +82,7 @@ class AVM:
             logging.error("An error occurred during login: %s", str(e))
             logging.error("Error on line %s: %s", sys.exc_info()[-1].tb_lineno, type(e).__name__)
             handle_login_status(self.login_status, self.username, ["False"], portal_name)
+            #update_client_account_status(self.order_id)
             return "Login error", self.driver
 
     # def is_logged_in(self):

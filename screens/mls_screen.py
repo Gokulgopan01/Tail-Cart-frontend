@@ -11,7 +11,7 @@ from urllib.parse import urlparse, parse_qs
 
 class MlsScreen(tk.Frame):
 
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller,logo=None):
         super().__init__(parent)
         self.controller = controller
         self.hybridIntegration = HybridBPOApi()

@@ -1,47 +1,156 @@
+
+# # import sentry_sdk
+# # sentry_sdk.init(
+# #     dsn="https://f2e54459e6cc029fa6c1d4499a616e67@o4509790213898240.ingest.us.sentry.io/4509790220058625",
+# #     traces_sample_rate=1.0,
+# #     environment="production",
+# #     send_default_pii=True
+# # )
+
+# import os
+# import subprocess
+# import winreg as reg
+# from app import Application
+# from version import version_update
+
+# # --- Check if protocol is already registered ---
+# def is_protocol_registered(protocol_name):
+#     try:
+#         reg.OpenKey(reg.HKEY_CURRENT_USER, f"Software\\Classes\\{protocol_name}\\shell\\open\\command")
+#         print(f" Protocol '{protocol_name}' is already registered.")
+#         return True
+#     except FileNotFoundError:
+#         print(f" Protocol '{protocol_name}' not registered.")
+#         return False
+
+# # --- Register URL protocol in HKCU (no admin required) ---
+# def register_url_protocol(protocol_name, exe_path):
+#     base_path = f"Software\\Classes\\{protocol_name}"
+#     command = f'"{exe_path}" "%1"'
+
+#     try:
+#         print(f" Registering protocol: {protocol_name} -> {command}")
+#         # Create protocol root
+#         reg.CreateKey(reg.HKEY_CURRENT_USER, base_path)
+#         reg.SetValue(reg.HKEY_CURRENT_USER, base_path, reg.REG_SZ, "URL Protocol")
+
+#         with reg.OpenKey(reg.HKEY_CURRENT_USER, base_path, 0, reg.KEY_SET_VALUE) as key:
+#             reg.SetValueEx(key, "URL Protocol", 0, reg.REG_SZ, "")
+
+#         # Create command path
+#         reg.CreateKey(reg.HKEY_CURRENT_USER, f"{base_path}\\shell")
+#         reg.CreateKey(reg.HKEY_CURRENT_USER, f"{base_path}\\shell\\open")
+#         reg.CreateKey(reg.HKEY_CURRENT_USER, f"{base_path}\\shell\\open\\command")
+#         reg.SetValue(reg.HKEY_CURRENT_USER, f"{base_path}\\shell\\open\\command", reg.REG_SZ, command)
+
+#         print(f" Protocol '{protocol_name}' registered successfully (HKCU).")
+#     except Exception as e:
+#         print(f" Failed to register protocol: {e}")
+
+# # def launch_app():
+# #     # Step 2: Register protocol (if not already registered)
+# #     protocol_name = "hybridbpoautologinv1"
+# #     #exe_path = r"C:\HybridBPO\autologin\dist\main.exe"
+# #     desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+
+# #     exe_path = desktop_path + r"\main.exe"
+# #     print("exepath",exe_path)
+# #     if not is_protocol_registered(protocol_name):
+# #         register_url_protocol(protocol_name, exe_path)
+# #     # # Step 3: Start application
+# #     app = Application()
+# #     app.mainloop()
+
+# def launch_app():
+#     # Step 2: Register protocol (if not already registered)
+#     protocol_name = "hybridbpoautologinv1"
+#     exe_path = r"C:\HybridBPO\autologin\dist\main.exe"
+
+#     if not is_protocol_registered(protocol_name):
+#         register_url_protocol(protocol_name, exe_path)
+#     # # Step 3: Start application
+#     app = Application()
+#     app.mainloop()
+    
+
+# if __name__ == "__main__":
+#     # Step 1: Run version check first, then launch_app
+#     # version_update(lambda: Application().mainloop())
+#     # launch_app()
+#     version_update(launch_app) 
+
+from datetime import datetime
+import logging
+import sys, os
+import subprocess
 import winreg as reg
 from app import Application
 
+# from utils.glogger import send_log_sync
+from version import version_update
+  
+
+
+
+# --- Check if protocol is already registered ---
 def is_protocol_registered(protocol_name):
-    
     try:
-        reg.OpenKey(reg.HKEY_CLASSES_ROOT, f"{protocol_name}\\shell\\open\\command")
-        print("Already registered")
+        reg.OpenKey(reg.HKEY_CURRENT_USER, f"Software\\Classes\\{protocol_name}\\shell\\open\\command")
+        print(f" Protocol '{protocol_name}' is already registered.")
         return True
     except FileNotFoundError:
-        print("Not registered")
+        print(f" Protocol '{protocol_name}' not registered.")
         return False
 
+# --- Register URL protocol in HKCU (no admin required) ---
 def register_url_protocol(protocol_name, exe_path):
-    key_path = f"{protocol_name}\\shell\\open\\command"
-    full_command = f'"{exe_path}" "%1"'
+    base_path = f"Software\\Classes\\{protocol_name}"
+    command = f'"{exe_path}" "%1"'
 
     try:
-        print(f"Registering protocol: {protocol_name} with command: {full_command}")
-        reg.CreateKey(reg.HKEY_CLASSES_ROOT, protocol_name)
-        reg.SetValue(reg.HKEY_CLASSES_ROOT, protocol_name, reg.REG_SZ, "URL Protocol")
-        reg_key = reg.OpenKey(reg.HKEY_CLASSES_ROOT, protocol_name, 0, reg.KEY_SET_VALUE)
-        reg.SetValueEx(reg_key, "URL Protocol", 0, reg.REG_SZ, "")
-        reg_key.Close()
+        print(f" Registering protocol: {protocol_name} -> {command}")
+        # Create protocol root
+        reg.CreateKey(reg.HKEY_CURRENT_USER, base_path)
+        reg.SetValue(reg.HKEY_CURRENT_USER, base_path, reg.REG_SZ, "URL Protocol")
 
-        reg.CreateKey(reg.HKEY_CLASSES_ROOT, f"{protocol_name}\\shell")
-        reg.CreateKey(reg.HKEY_CLASSES_ROOT, f"{protocol_name}\\shell\\open")
-        reg.CreateKey(reg.HKEY_CLASSES_ROOT, key_path)
-        reg.SetValue(reg.HKEY_CLASSES_ROOT, key_path, reg.REG_SZ, full_command)
+        with reg.OpenKey(reg.HKEY_CURRENT_USER, base_path, 0, reg.KEY_SET_VALUE) as key:
+            reg.SetValueEx(key, "URL Protocol", 0, reg.REG_SZ, "")
 
-        print(f"Registered URL protocol: {protocol_name}")
+        # Create command path
+        reg.CreateKey(reg.HKEY_CURRENT_USER, f"{base_path}\\shell")
+        reg.CreateKey(reg.HKEY_CURRENT_USER, f"{base_path}\\shell\\open")
+        reg.CreateKey(reg.HKEY_CURRENT_USER, f"{base_path}\\shell\\open\\command")
+        reg.SetValue(reg.HKEY_CURRENT_USER, f"{base_path}\\shell\\open\\command", reg.REG_SZ, command)
+
+        print(f" Protocol '{protocol_name}' registered successfully (HKCU).")
     except Exception as e:
-        print(f"Failed to register protocol: {e}")
+        print(f" Failed to register protocol: {e}")
 
-if __name__ == "__main__":
-    protocol_name = "myapp"
-    exe_path = r"D:\Hybrid_autologin\dist\main.exe"
+def launch_app():
+    # Step 2: Register protocol (if not already registered)
+    protocol_name = "hybridbpoautologinv1"
+    # desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
 
-    if not is_protocol_registered(protocol_name):
-        register_url_protocol(protocol_name, exe_path)
-    else:
-        print(f"Protocol '{protocol_name}' is already registered.")
+    # exe_path = desktop_path + r"\main.exe"
 
+    exe_path = sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__)
+    print("exepath",exe_path)
+
+    
+    # if not is_protocol_registered(protocol_name):
+    #     register_url_protocol(protocol_name, exe_path)
+    register_url_protocol(protocol_name, exe_path)
+    # # Step 3: Start application
     app = Application()
     app.mainloop()
+
+    
+
+if __name__ == "__main__":
+    # Step 1: Run version check first, then launch_app
+    # version_update(lambda: Application().mainloop())
+    # launch_app()
+    version_update(launch_app) 
+
 
 
