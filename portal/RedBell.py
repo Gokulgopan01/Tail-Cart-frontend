@@ -15,10 +15,12 @@ from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
 
 from condtions.all_portal_conditions import generate_condition_data
-from form_filler.redbell_form_filler import RedBellFormFiller
+
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import clean_address, data_filling_text, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, tfs_statuschange, update_client_account_status, update_order_status
+from utils.glogger import GLogger
+from utils.helper import clean_address, data_filling_text, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, tfs_statuschange, update_client_account_status, update_order_status, update_portal_login_confirmation_status
 from config import env
+logger = GLogger()
 
 # Load variables from .env file
 load_dotenv()
@@ -26,9 +28,11 @@ load_dotenv()
 # Retrieve API URLs from environment variables
 ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")  
                    
-arg1, arg2,arg3 = params_check()
+process_type, hybrid_orderid,hybrid_token = params_check()
+logging.info(f"type,orderid,token,{process_type},{hybrid_orderid},{hybrid_token}")
+
 class RedBell:
-    def __init__(self, username, password, portal_url, portal_name, proxy, session):
+    def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id):
         self.username = username
         self.password = password
         self.portal_url = portal_url
@@ -38,6 +42,7 @@ class RedBell:
         self.driver = None
         self.order_details = None
         self.order_id = None
+        self.account_id=account_id
         logging.basicConfig(level=logging.INFO)
 
     def login_to_portal(self):
@@ -67,10 +72,10 @@ class RedBell:
                     session.cookies.set('.ASPXAUTH', redbell_cookie, domain="valuationops.homegenius.com")
                     self.session = session
 
-                    #arg1 = "SmartEntry"  # Manually set for testing
-                    #arg1="PortalLogin"
-                    #arg1="AutoLogin"
-                    if arg1 == "SmartEntry":
+                    #process_type = "SmartEntry"  # Manually set for testing
+                    #process_type="PortalLogin"
+                    #process_type="AutoLogin"
+                    if process_type == "SmartEntry":
                         orders, session = self.fetch_data(self.session)
                         self.redbell_formopen(
                             orders=orders,
@@ -84,29 +89,65 @@ class RedBell:
                         # redbell_formopen_fill(self, orders, session,  merged_json=None,
                         #     order_details=self.order_details,
                         #     order_id=self.order_id)
-                    # elif arg1 =="PortalLogin":
+                    # elif process_type =="PortalLogin":
                     #      handle_login_status(title, self.username, login_check_keyword, self.portal_name)   
                     else:    
-                        handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)    
+                        handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)
+                        update_portal_login_confirmation_status(hybrid_orderid)
                         logging.info("After handle_login_status call")
                     return self.driver, self.session
 
                 else:
-                    logging.error("Cookie '.ASPXAUTH' not found in API response.")
+                    #logging.error("Cookie '.ASPXAUTH' not found in API response.")
+                    logger.log(
+                    module="Redbell-login_to_portal",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Cookie '.ASPXAUTH' not found in API response.",
+                    severity="INFO"
+                )
             else:
-                logging.error(f"API call failed: {api_response.get('status')}")
+                #logging.error(f"API call failed: {api_response.get('status')}")
+                logger.log(
+                    module="Redbell-login_to_portal",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"API call failed: {api_response.get('status')}",
+                    severity="INFO"
+                )
 
         except requests.exceptions.RequestException as e:
-            logging.error(f"API request failed: {e}")
+            #logging.error(f"API request failed: {e}")
+            logger.log(
+            module="Redbell-login_to_portal",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"API request failed: {e}",
+            severity="INFO"
+        )
         except json.JSONDecodeError as e:
-            logging.error(f"Failed to decode JSON response: {e}")
+            #logging.error(f"Failed to decode JSON response: {e}")
+            logger.log(
+            module="Redbell-login_to_portal",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Failed to decode JSON response: {e}",
+            severity="INFO"
+        )
         except Exception as e:
-            logging.exception(f"An error occurred: {e}")
+            #logging.exception(f"An error occurred: {e}")
+            logger.log(
+            module="Redbell-login_to_portal",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"An error occurred: {e}",
+            severity="INFO"
+        )
 
         title = "MFA FAILED"
         login_check_keyword = ["False"]
-        update_order_status(self.order_id, "In Progress", "Entry", "Failed")
-        update_client_account_status(self.order_id)
+        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
+        update_client_account_status(self.account_id)
         handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)
         return None, None
 
@@ -115,7 +156,14 @@ class RedBell:
             url = "https://valuationops.homegenius.com/VendorPortal/InprogressOrder"
             response = session.get(url)
             if response.status_code != 200:
-                logging.error("Error fetching orders: Invalid response from server")
+                #logging.error("Error fetching orders: Invalid response from server")
+                logger.log(
+                    module="Redbell-fetch_data",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"Error fetching orders: Invalid response from server",
+                    severity="INFO"
+                )
                 return [], session
 
             cookies = session.cookies.get_dict()
@@ -142,10 +190,24 @@ class RedBell:
                 orders = order_response.json().get('dt', {}).get('it', [])
                 return orders, session
             else:
-                logging.error("Failed to fetch orders. Server returned error.")
+                #logging.error("Failed to fetch orders. Server returned error.")
+                logger.log(
+                    module="Redbell-fetch_data",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"Failed to fetch orders. Server returned error.",
+                    severity="INFO"
+                )
                 return [], session
         except Exception as e:
-            logging.error(f"Error fetching data: {e}")
+            #logging.error(f"Error fetching data: {e}")
+            logger.log(
+                    module="Redbell-fetch_data",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Error fetching data: {e}",
+                    severity="INFO"
+                )
             return [], session
 
     def get_headers(self, additional_headers={}):
@@ -166,11 +228,18 @@ class RedBell:
         return headers
 
     def redbell_formopen(self, orders, session, merged_json, order_details, order_id):
-        # arg2=163
-        # arg3="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NTI3NDg2NjgsImV4cCI6MTc1MzYxMjY2OH0.Itsc57tAJ08YEyCS-HaBYJqn-lpceWz3O3cGXezgHH8"
-        orders_from_api = HybridBPOApi.get_entry_order(arg2) 
+        # hybrid_orderid=163
+        # hybrid_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NTI3NDg2NjgsImV4cCI6MTc1MzYxMjY2OH0.Itsc57tAJ08YEyCS-HaBYJqn-lpceWz3O3cGXezgHH8"
+        orders_from_api = HybridBPOApi.get_entry_order(hybrid_orderid) 
         if not orders_from_api:  # Check if the order list is empty
-            print("No orders found.")
+            #print("No orders found.")
+            logger.log(
+                    module="Redbell-redbell_formopen",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"No orders found.",
+                    severity="INFO"
+                )
             return
         
         # Process each order
@@ -182,18 +251,37 @@ class RedBell:
             proxy = order_from_api.get("proxy", None)  # Optional proxy
             sessions=order_from_api.get("session",None)
             order_id=order_from_api.get("order_id","")
-            order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(order_id,arg3)
+            order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(order_id,hybrid_token)
             print("order_details_from_api:", order_details_from_api)
-            # if not order_details_from_api:
-            #     messagebox.showerror("Authentication Required", "Please log in again.")
-            #     self.controller.show_frame("EcesisLoginScreen")
-            #     return
-        logging.info("Starting form open process")
+            logger.log(
+                    module="Redbell-redbell_formopen",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"order_details_from_api: {order_details_from_api}",
+                    severity="INFO"
+                )
+        #logging.info("Starting form open process")
+        if not orders:
+            #logging.info("No orders in portal")
+            logger.log(
+                    module="Redbell-redbell_formopen",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"Starting form open process",
+                    severity="INFO"
+                )
         target_genorderid =order_details_from_api
         form_types = ["Interior Enhanced BPO",'Interior BPO - W Rentals','Exterior Enhanced BPO','Interior BPO','Exterior BPO','Exterior BPO - W Rentals','5 Day MIT ARBPO','5 Day Interior Appraiser Reconciled BPO','5 Day Exterior Appraiser Reconciled BPO','5 Day Exterior BPO - W Rentals','5 Day Exterior BPO','5 Day Interior BPO','5 Day Interior BPO - W Rentals',"3 Day Exterior BPO - W Rentals","Interior BPO"]
         if not orders:
-            logging.info("No orders in portal")
-            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            #logging.info("No orders in portal")
+            logger.log(
+                    module="Redbell-redbell_formopen",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"No orders in portal",
+                    severity="INFO"
+                )
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             tfs_statuschange(tfs_orderid, "27", "3", "14")
             return
 
@@ -201,14 +289,28 @@ class RedBell:
 
         if matched and status == "matched":
             order_url = f"https://valuationops.homegenius.com/VendorPortal/EditReport?ItemId={order['ItemId']}&EntityType=Vendor"
-            logging.info("Form matched. Opening in browser.")
+            #logging.info("Form matched. Opening in browser.")
+            logger.log(
+                    module="Redbell-redbell_formopen",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"Form matched. Opening in browser.",
+                    severity="INFO"
+                )
             
             self.redbell_launch_browser_and_open_form(order_url, session)
             redbell_formopen_fill(self, order, session, merged_json, order_details, order_id,tfs_orderid)
            
         elif not matched:
-            logging.info("No exact address match found.")
-            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            #logging.info("No exact address match found.")
+            logger.log(
+                    module="Redbell-redbell_formopen",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"No exact address match found.",
+                    severity="INFO"
+                )
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             tfs_statuschange(tfs_orderid, "27", "3", "14")
 
     def find_matching_order(self, orders, target_genorderid, form_types, order_id,tfs_orderid):
@@ -220,14 +322,24 @@ class RedBell:
             # cleaned_target = clean_address(target_genorderid)
             order_genid = order.get('OrderGenId', '')
             print(order.get('ProductDesc'))
-            #cleaned_target = clean_address(target_genorderid)
-            # order_genid="7101313945"
-            # target_genorderid="7101313945"
-            # Address matched
+            logger.log(
+                    module="Redbell-find_matching_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"Product Description{order.get('ProductDesc')}",
+                    severity="INFO"
+                )
             if target_genorderid == order_genid:
                 address_found = True
                 print(f"Address Found {order['PropAddress']}for geniid{order['OrderGenId']}")
-                logging.info(f"Address Found {order['PropAddress']} for geniid{order['OrderGenId']}")
+                #logging.info(f"Address Found {order['PropAddress']} for geniid{order['OrderGenId']}")
+                logger.log(
+                    module="Redbell-find_matching_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"Address Found {order['PropAddress']} for geniid{order['OrderGenId']}",
+                    severity="INFO"
+                )
 
                 # Form matched
                 if order.get('ProductDesc') in form_types:
@@ -235,23 +347,44 @@ class RedBell:
                     print(order.get('OrderId'), order.get('ItemId'))
                     order_url = f"https://valuationops.homegenius.com/VendorPortal/EditReport?ItemId={order['ItemId']}&EntityType=Vendor"
                     print(order_url)
-                    logging.info("Form Matched")
+                    #logging.info("Form Matched")
+                    logger.log(
+                    module="Redbell-find_matching_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"Form Matched",
+                    severity="INFO"
+                    )
                     return True, order, "matched"
 
                 # Form not matched
                 else:
                     print("Form not matched---New Type")
-                    logging.info(f"Form not Found --New Type {order.get('ProductDesc')}")
-                    update_order_status(order_id, "In Progress", "Entry", "Failed")
+                    #logging.info(f"Form not Found --New Type {order.get('ProductDesc')}")
+                    logger.log(
+                    module="Redbell-find_matching_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"Form not Found --New Type {order.get('ProductDesc')}",
+                    severity="INFO"
+                    )
+                    update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                     tfs_statuschange(tfs_orderid, "27", "3", "14")
                     return False, None, "form_not_matched"
                     
 
             else:
                 print(f"Address Not Found {order.get('PropAddress')}")
-                logging.info(f"Address Not Found {order.get('PropAddress')}")
+                #logging.info(f"Address Not Found {order.get('PropAddress')}")
+                logger.log(
+                    module="Redbell-find_matching_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"Address Not Found {order.get('PropAddress')}",
+                    severity="INFO"
+                    )
                 address_list.append(order_genid)
-        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         tfs_statuschange(tfs_orderid, "27", "3", "14")
         return False, None, "address_not_found"
         
@@ -327,7 +460,14 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
 
                 value_cache[expr] = value
                 if value is None:
-                    logging.warning(f"[extract_value_from_expr] Value for '{expr}' not found, defaulting to None")
+                    #logging.warning(f"[extract_value_from_expr] Value for '{expr}' not found, defaulting to None")
+                    logger.log(
+                    module="Redbell-fill_form_multi",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"[extract_value_from_expr] Value for '{expr}' not found, defaulting to None",
+                    severity="INFO"
+                    )
                 return value
 
         # If prefix not found, return None safely
@@ -348,8 +488,15 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
     try:
         sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3 ,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3= extract_data_sections(merged_json)
         if sub_data is None:
-            logging.error("'entry_data' missing or empty in merged_json")
-            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            #logging.error("'entry_data' missing or empty in merged_json")
+            logger.log(
+                    module="Redbell-fill_form_multi",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"'entry_data' missing or empty in merged_json",
+                    severity="INFO"
+                    )
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False
 
@@ -360,10 +507,24 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
             for section_name, controls in page.items():
                 page_url = page_urls.get(section_name)
                 if not page_url:
-                    logging.warning(f"URL not found for section: {section_name}")
+                    #logging.warning(f"URL not found for section: {section_name}")
+                    logger.log(
+                    module="Redbell-fill_form_multi",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"URL not found for section: {section_name}",
+                    severity="INFO"
+                    )
                     continue
 
-                logging.info(f"Navigating to section: {section_name} => {page_url}")
+                #logging.info(f"Navigating to section: {section_name} => {page_url}")
+                logger.log(
+                    module="Redbell-fill_form_multi",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"Navigating to section: {section_name} => {page_url}",
+                    severity="INFO"
+                    )
                 self.driver.get(page_url)
 
                 try:
@@ -371,7 +532,14 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                         EC.presence_of_element_located((By.TAG_NAME, "body"))
                     )
                 except Exception:
-                    logging.warning(f"Timeout waiting for page to load: {section_name}")
+                    #logging.warning(f"Timeout waiting for page to load: {section_name}")
+                    logger.log(
+                    module="Redbell-fill_form_multi",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Timeout waiting for page to load: {section_name}",
+                    severity="INFO"
+                    )
 
                 for control in controls:
                     field_type = control.get("filedtype")
@@ -380,7 +548,9 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                     if field_type == "save_data":
                         if not saved_form:
                             save_form(self.driver)
-                            logging.info("Form saved.")
+                            #logging.info("Form saved.")
+
+
                             # for cookie in self.driver.get_cookies():
                             #     session.cookies.set(cookie['name'], cookie['value'])
                             # time.sleep(5)
@@ -389,7 +559,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                     if field_type == "save_data_adj":
                         if not saved_form:
                             save_form_adj(self.driver)
-                            logging.info("Form saved.")
+                            #logging.info("Form saved.")
                             # for cookie in self.driver.get_cookies():
                             #     session.cookies.set(cookie['name'], cookie['value'])
                             # time.sleep(5)
@@ -398,22 +568,50 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                     if field_type == "checkbox_list":
                         for field in values:
                             if not (isinstance(field, list) and len(field) == 3):
-                                logging.warning(f"Invalid checkbox_list field: {field}")
+                                #logging.warning(f"Invalid checkbox_list field: {field}")
+                                logger.log(
+                                    module="Redbell-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Condition-check",
+                                    remarks=f"Invalid checkbox_list field: {field}",
+                                    severity="INFO"
+                                    )
                                 continue
                             key_expr, id_prefix, mode = field
                             try:
                                 value = extract_value_from_expr(key_expr)
                                 if value:
                                     select_checkboxes_from_list(self.driver, value, id_prefix)
-                                    logging.info(f"Checkboxes selected for {key_expr} with prefix {id_prefix}")
+                                    #logging.info(f"Checkboxes selected for {key_expr} with prefix {id_prefix}")
+                                    logger.log(
+                                    module="Redbell-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Condition-check",
+                                    remarks=f"Checkboxes selected for {key_expr} with prefix {id_prefix}",
+                                    severity="INFO"
+                                    )
                             except Exception as e:
-                                logging.error(f"Error selecting checkboxes for {key_expr}: {e}")
+                                #logging.error(f"Error selecting checkboxes for {key_expr}: {e}")
+                                logger.log(
+                                    module="Redbell-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Exception",
+                                    remarks=f"Error selecting checkboxes for {key_expr}: {e}",
+                                    severity="INFO"
+                                    )
                         continue
 
                     if field_type == "repair_details_fill":
                         for field in values:
                             if not (isinstance(field, list) and len(field) == 3):
-                                logging.warning(f"Invalid repair_details_fill field: {field}")
+                                #logging.warning(f"Invalid repair_details_fill field: {field}")
+                                logger.log(
+                                    module="Redbell-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Warning",
+                                    remarks=f"Invalid repair_details_fill field: {field}",
+                                    severity="INFO"
+                                    )
                                 continue
                             key_expr, _, _ = field
                             try:
@@ -426,7 +624,14 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
 
                     for field in values:
                         if not (isinstance(field, list) and len(field) == 3):
-                            logging.warning(f"Invalid field format: {field}")
+                            #logging.warning(f"Invalid field format: {field}")
+                            logger.log(
+                                    module="Redbell-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Warning",
+                                    remarks=f"Invalid field format: {field}",
+                                    severity="INFO"
+                                    )
                             continue
 
                         key_expr, xpath, mode = field
@@ -442,19 +647,54 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                             if action_func:
                                 action_func(self.driver, value, xpath, mode)
                             else:
-                                logging.warning(f"Unknown field type: {field_type}")
+                                #logging.warning(f"Unknown field type: {field_type}")
+                                logger.log(
+                                    module="Redbell-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Warning",
+                                    remarks=f"Unknown field type: {field_type}",
+                                    severity="INFO"
+                                    )
                         except Exception as e:
-                            logging.error(f"Exception filling field {key_expr}: {e}")
+                            logger.log(
+                            module="Redbell-fill_form_multi",
+                            order_id=hybrid_orderid,
+                            action_type="Exception",
+                            remarks=f"Exception filling field {key_expr}: {e}",
+                            severity="INFO"
+                            )
+                            #logging.error(f"Exception filling field {key_expr}: {e}")
 
         if saved_form:
             #update_order_status(order_id, "In Progress", "Entry", "Completed")
+            logger.log(
+                            module="Redbell-fill_form_multi",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"Form saved.",
+                            severity="INFO"
+                            )
             return True
         else:
             #update_order_status(order_id, "In Progress", "Entry", "Failed")
+            logger.log(
+                            module="Redbell-fill_form_multi",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"Form not saved.",
+                            severity="INFO"
+                            )
             return False
 
     except Exception as e:
         logging.error(f"Critical error in fill_form_multi: {e}")
+        logger.log(
+                            module="Redbell-fill_form_multi",
+                            order_id=hybrid_orderid,
+                            action_type="Exception",
+                            remarks=f"Critical error in fill_form_multi: {e}",
+                            severity="INFO"
+                            )
         #update_order_status(order_id, "In Progress", "Entry", "Failed")
         return False
 
@@ -521,18 +761,32 @@ def upload_file_js(driver, input_id, file_path):
             WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, download_id))
             )
-        print(f"[✓] Uploaded {file_path} to {input_id}")
+        #print(f"[✓] Uploaded {file_path} to {input_id}")
+        logger.log(
+        module="Redbell-upload_file_js",
+        order_id=hybrid_orderid,
+        action_type="Document-upload-success",
+        remarks=f"[✓] Uploaded {file_path} to {input_id}",
+        severity="INFO"
+        )
         return True
 
     except Exception as e:
-        print(f"[✗] Upload failed for {input_id}: {e}")
+        #print(f"[✗] Upload failed for {input_id}: {e}")
+        logger.log(
+        module="Redbell-upload_file_js",
+        order_id=hybrid_orderid,
+        action_type="Document-upload-failure",
+        remarks=f"[✗] Upload failed for {input_id}: {e}",
+        severity="INFO"
+        )
         return False
 
 
 def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderid: str) -> bool:
     data = fetch_upload_data(self, order_id)
     if not data:
-        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         tfs_statuschange(tfs_orderid, "27", "3", "14")
         
         return False
@@ -541,15 +795,7 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderi
     comparables_folder = data.get("comparables_folder", "")
 
     file_paths = {}
-
-    # Subject PDFs
-    for doc in documents:
-        doc_type = doc.get("type", "").lower()
-        doc_path = doc.get("path")
-        if doc_type == "mls":
-            file_paths["MLSPdfIdSubject"] = doc_path
-        elif doc_type == "tax":
-            file_paths["TaxPdfIdSubject"] = doc_path
+  
 
     # Comp PDFs (s1–s3, a1–a3)
     if os.path.exists(comparables_folder):
@@ -565,10 +811,26 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderi
             elif match := re.match(r"a([1-3])\.pdf", fname_lower):
                 file_paths[f"MLSPdfIdListedComp{match.group(1)}"] = full_path
     else:
-        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         tfs_statuschange(tfs_orderid, "27", "3", "14")
-        print("Comparables folder not found!")
+        #print("Comparables folder not found!")
+        logger.log(
+        module="Redbell-upload_files_for_order",
+        order_id=hybrid_orderid,
+        action_type="Condition-check",
+        remarks=f"Comparables folder not found!",
+        severity="INFO"
+        )
         return False
+    
+    # Subject PDFs
+    for doc in documents:
+        doc_type = doc.get("type", "").lower()
+        doc_path = doc.get("path")
+        if doc_type == "tax":
+            file_paths["TaxPdfIdSubject"] = doc_path
+        elif doc_type == "mls_tax":
+            file_paths["MLSPdfIdSubject"] = doc_path  
 
     # Navigate to upload page
     self.driver.get(upload_page_url)
@@ -577,14 +839,21 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderi
     # Upload PDFs and verify each upload
     for input_id, file_path in file_paths.items():
         if not os.path.exists(file_path):
-            print(f"File not found: {file_path}")
-            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            #print(f"File not found: {file_path}")
+            logger.log(
+            module="Redbell-upload_files_for_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"File not found: {file_path}",
+            severity="INFO"
+            )
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False
         
         success = upload_file_js(self.driver, input_id, file_path)
         if not success:
-            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False
         
@@ -607,7 +876,7 @@ def count_non_subject_photos(self):
 
     photo_elements = self.driver.find_elements(By.XPATH, "//div[contains(@class,'photo-thumbnail')]//img")
     count = 0
-    print("Checking uploaded photo labels:")
+    #print("Checking uploaded photo labels:")
     for img in photo_elements:
         alt = (img.get_attribute("alt") or "").strip().lower()
         aria = (img.get_attribute("aria-label") or "").strip().lower()
@@ -635,15 +904,63 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
     try:
         self.driver.get(photos_url)
         time.sleep(3)
-
+         # --- Step 0: Click "Location Map" button to load map ---
+        try:
+            location_map_btn = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//a[@title='Refresh location map']"))
+            )
+            self.driver.execute_script("arguments[0].click();", location_map_btn)
+            #print("Location Map button clicked.")
+            logger.log(
+            module="Redbell-upload_photos_to_order",
+            order_id=hybrid_orderid,
+            action_type="Try",
+            remarks=f"Location Map button clicked.",
+            severity="INFO"
+            )
+            # Optional: wait for the map div to appear
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((By.ID, "location-map"))
+            )
+            #print("Location Map loaded.")
+            logger.log(
+            module="Redbell-upload_photos_to_order",
+            order_id=hybrid_orderid,
+            action_type="Try",
+            remarks=f"Location Map loaded.",
+            severity="INFO"
+            )
+        except Exception as map_err:
+            #print("Location Map button not found or failed to load:", map_err)
+            logger.log(
+            module="Redbell-upload_photos_to_order",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Location Map button not found or failed to load: {map_err} ",
+            severity="INFO"
+            )
         # Step 0: Check if any non-subject photo is required
         required_non_subject_labels = get_required_non_subject_labels(self)
         if not required_non_subject_labels:
-            print(" No non-subject photos required for upload.")
+            #print(" No non-subject photos required for upload.")
+            logger.log(
+            module="Redbell-upload_photos_to_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"No non-subject photos required for upload. ",
+            severity="INFO"
+            )
             return False
 
         if not os.path.exists(comparables_folder):
-            print(" Comparables folder missing.")
+            #print(" Comparables folder missing.")
+            logger.log(
+            module="Redbell-upload_photos_to_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Comparables folder missing. ",
+            severity="INFO"
+            )
             return False
         if rental_folder and not os.path.exists(rental_folder):
             rental_folder = None
@@ -687,12 +1004,26 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
                     present_labels.add(lbl.lower())
 
         if all(lbl.lower() in present_labels for lbl in expected_labels):
-            print(" All non-subject photos already uploaded. Skipping upload.")
+            #print(" All non-subject photos already uploaded. Skipping upload.")
+            logger.log(
+            module="Redbell-upload_photos_to_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"All non-subject photos already uploaded. Skipping upload.",
+            severity="INFO"
+            )
             return False
 
         # Step 2: Count before upload
         photos_before = count_non_subject_photos(self)
-        print(f" Non-subject photos before upload: {photos_before}")
+        #print(f" Non-subject photos before upload: {photos_before}")
+        logger.log(
+            module="Redbell-upload_photos_to_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Non-subject photos before upload: {photos_before}",
+            severity="INFO"
+            )
 
         # Step 3: Upload only missing
         for label_key in labels_sorted:
@@ -730,10 +1061,24 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
             elif base_name in options_text:
                 photo_names_select.select_by_visible_text(base_name)
             else:
-                print(f" No matching option for label: {base_name}")
+                #print(f" No matching option for label: {base_name}")
+                logger.log(
+                module="Redbell-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f" No matching option for label: {base_name}",
+                severity="INFO"
+                )
                 return False
 
-            print(f" Uploaded: {base_name}")
+            #print(f" Uploaded: {base_name}")
+            logger.log(
+                module="Redbell-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f" Uploaded: {base_name}",
+                severity="INFO"
+                )
             time.sleep(1)
 
         # Step 4: Trigger upload
@@ -747,17 +1092,45 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
         )
 
         # Step 5: Wait and recheck UI
-        print(" Waiting for upload to reflect on UI...")
+        #print(" Waiting for upload to reflect on UI...")
+        logger.log(
+                module="Redbell-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f" Waiting for upload to reflect on UI...",
+                severity="INFO"
+                )
         time.sleep(5)
         photos_after = count_non_subject_photos(self)
 
         actual_uploaded = photos_after - photos_before
-        print(f" Non-subject photos after upload: {photos_after}")
-        print(f" Actually uploaded during this session: {actual_uploaded}")
+        #print(f" Non-subject photos after upload: {photos_after}")
+        #print(f" Actually uploaded during this session: {actual_uploaded}")
 
         # Step 6: Final verification using Required Photos section
         remaining_required = get_required_non_subject_labels(self)
-        print(" Remaining required non-subject labels:", remaining_required)
+        #print(" Remaining required non-subject labels:", remaining_required)
+        logger.log(
+                module="Redbell-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f" Non-subject photos after upload: {photos_after}",
+                severity="INFO"
+                )
+        logger.log(
+                module="Redbell-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"  Actually uploaded during this session: {actual_uploaded}",
+                severity="INFO"
+                )
+        logger.log(
+                module="Redbell-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f" Remaining required non-subject labels: {remaining_required}",
+                severity="INFO"
+                )
 
         missing = []
         for lbl in expected_labels:
@@ -765,18 +1138,56 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
                 missing.append(lbl)
 
         if not missing:
-            print("All non-subject photos uploaded successfully (verified via 'Required Photos' section).")
+            #print("All non-subject photos uploaded successfully (verified via 'Required Photos' section).")
+            logger.log(
+                module="Redbell-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f" All non-subject photos uploaded successfully (verified via 'Required Photos' section).",
+                severity="INFO"
+                )
+
             return True
         else:
-            print("Still missing the following non-subject photos:")
+            #print("Still missing the following non-subject photos:")
+            logger.log(
+                module="Redbell-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Still missing the following non-subject photos:",
+                severity="INFO"
+                )
             for m in missing:
-                print("   -", m)
+                #print("   -", m)
+                logger.log(
+                module="Redbell-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"   - {m}",
+                severity="INFO"
+                )
             return False
 
     except Exception as e:
         import traceback
-        print(" Upload failed with error:", e)
+        #print(" Upload failed with error:", e)
+        for m in missing:
+                #print("   -", m)
+                logger.log(
+                module="Redbell-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Upload failed with error: {e} ",
+                severity="INFO"
+                )
         traceback.print_exc()
+        logger.log(
+                module="Redbell-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"{traceback.print_exc()}",
+                severity="INFO"
+                )
         return False
 
 
@@ -842,8 +1253,16 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
         config_path = 'json/redbelljson/Redbell_Rental.json'
 
     else:
-        logging.warning(f"No matching config path for ProductDesc: {ProductDesc}")
-        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        logger.log(
+                module="Redbell-redbell_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"No matching config path for ProductDesc: {ProductDesc}",
+                severity="INFO"
+                )
+        #logging.warning(f"No matching config path for ProductDesc: {ProductDesc}")
+
+        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         tfs_statuschange(tfs_orderid, "27", "3", "14")
         return
     form_config, merged_json = load_form_config_and_data(
@@ -851,7 +1270,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
         config_path=config_path,
         researchpad_data_retrival_url=researchpad_data_retrival_url,
         session=session,
-        merged_json=merged_json
+        merged_json=merged_json,token=hybrid_token
     )
     # Optional: Check if loading was successful
     if not form_config or not merged_json:
@@ -862,7 +1281,14 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
     if "entry_data" in merged_json and merged_json["entry_data"]:
         merged_json["entry_data"][0]["condition_data"] = condition_data
 
-    print(merged_json)    
+    #print(merged_json)    
+    logger.log(
+                module="Redbell-redbell_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"merged_json: {merged_json}",
+                severity="INFO"
+                )
 
     try:
         for page_key, url in page_urls.items():
@@ -870,7 +1296,15 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
             # if page_key == "ComparablesAdj":
             #     continue
 
-            logging.info(f"Loading page: {page_key} -> {url}")
+            #logging.info(f"Loading page: {page_key} -> {url}")
+            logger.log(
+                module="Redbell-redbell_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Loading page: {page_key} -> {url}",
+                severity="INFO"
+                )
+            redbell_formopen_fill
             self.driver.get(url)
 
             # Explicit wait: waits until the body or a unique element is loaded
@@ -878,9 +1312,23 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 WebDriverWait(self.driver, 15).until(
                     EC.presence_of_element_located((By.TAG_NAME, "body"))  # Replace with unique tag if needed
                 )
-                logging.info(f"Page {page_key} loaded successfully.")
+                #logging.info(f"Page {page_key} loaded successfully.")
+                logger.log(
+                module="Redbell-redbell_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Try",
+                remarks=f"Page {page_key} loaded successfully.",
+                severity="INFO"
+                )
             except Exception as e:
-                logging.warning(f"Timeout waiting for page {page_key} to load: {e}")
+                #logging.warning(f"Timeout waiting for page {page_key} to load: {e}")
+                logger.log(
+                module="Redbell-redbell_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Timeout waiting for page {page_key} to load: {e}",
+                severity="INFO"
+                )
                 #update_order_status(order_id, "In Progress", "Entry", "Failed")
                 continue  # optionally skip to next page
 
@@ -889,7 +1337,14 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
             time.sleep(2)
 
     except Exception as e:
-        logging.exception(f"Error while navigating and filling forms: {e}")
+        #logging.exception(f"Error while navigating and filling forms: {e}")
+        logger.log(
+                module="Redbell-redbell_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Error while navigating and filling forms: {e}",
+                severity="INFO"
+                )
         #update_order_status(order_id, "In Progress", "Entry", "Failed")
         return
 
@@ -899,8 +1354,15 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
 
         data = fetch_upload_data(self, order_id)
         if not data:
-            logging.warning(f"No upload data found for order {order_id}")
-            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            #logging.warning(f"No upload data found for order {order_id}")
+            logger.log(
+                module="Redbell-redbell_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Try",
+                remarks=f"No upload data found for order {order_id}",
+                severity="INFO"
+                )
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             tfs_statuschange(tfs_orderid, "27", "3", "14")
             return
 
@@ -911,21 +1373,49 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
         if isinstance(comparables_folder, str) and comparables_folder.strip():
             upload_photos=upload_photos_to_order(self, comparables_folder, photos_url,ProductDesc, rental_folder)
         else:
-            logging.warning(f"Comparables folder is missing or invalid for order {order_id}: {comparables_folder!r}")
-            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            #logging.warning(f"Comparables folder is missing or invalid for order {order_id}: {comparables_folder!r}")
+            logger.log(
+                module="Redbell-redbell_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Comparables folder is missing or invalid for order {order_id}: {comparables_folder!r}",
+                severity="INFO"
+                )
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             tfs_statuschange(tfs_orderid, "27", "3", "14")
         # Check if all 3 are True
         if form_fill and uploda_files and upload_photos:
-            logging.info("All form filling and upload functions completed successfully.")
-            update_order_status(order_id, "In Progress", "Entry", "Completed")
+            #logging.info("All form filling and upload functions completed successfully.")
+            logger.log(
+                module="Redbell-redbell_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"All form filling and upload functions completed successfully.",
+                severity="INFO"
+                )
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
             tfs_statuschange(tfs_orderid, "26", "3", "14")
         else:
-            logging.warning(f"One or more functions failed: form_fill={form_fill}, uploda_files={uploda_files}, upload_photos={upload_photos}")
-            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            #logging.warning(f"One or more functions failed: form_fill={form_fill}, uploda_files={uploda_files}, upload_photos={upload_photos}")
+            logger.log(
+                module="Redbell-redbell_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"One or more functions failed: form_fill={form_fill}, uploda_files={uploda_files}, upload_photos={upload_photos}",
+                severity="INFO"
+                )
+            update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
             tfs_statuschange(tfs_orderid, "27", "3", "14")
     except Exception as e:
-        logging.exception(f"Error during photo upload steps: {e}")
-        update_order_status(order_id, "In Progress", "Entry", "Failed")
+        #logging.exception(f"Error during photo upload steps: {e}")
+        logger.log(
+                module="Redbell-redbell_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Error during photo upload steps: {e}",
+                severity="INFO"
+                )
+        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         tfs_statuschange(tfs_orderid, "27", "3", "14")
         return
 

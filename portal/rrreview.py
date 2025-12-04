@@ -34,7 +34,7 @@ print(arg1,arg2,arg3)
 # Load environment variables from the .env file
 load_dotenv()
 class rrreview:
-    def __init__(self, username, password, portal_url, portal_name, proxy, session):
+    def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id):
         self.username = username
         self.password = password
         self.portal_url = portal_url

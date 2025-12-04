@@ -18,7 +18,7 @@ from utils.helper import clean_address, handle_login_status, setup_driver, updat
 # Load environment variables from the .env file
 load_dotenv()
 class Proteck:
-    def __init__(self,username, password, portal_url, portal_name, proxy,session):
+    def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id):
 
         logging.basicConfig(level=logging.INFO)
         self.username = username

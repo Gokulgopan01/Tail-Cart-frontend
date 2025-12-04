@@ -266,6 +266,8 @@ class PortalInstructionScreen(tk.Frame):
             proxy = order.get("proxy")
             session = order.get("session")
             order_id = order.get("order_id", "")
+            account_id=None
+            
 
             self.update_loaded_screen("Order ID", f"Order ID: {order_id}")
 
@@ -282,7 +284,7 @@ class PortalInstructionScreen(tk.Frame):
                 portal_url,
                 portal_name,
                 proxy,
-                session
+                session,account_id
             )
             self.update_loaded_screen("Success", f"Successfully logged into {portal_name}")
 

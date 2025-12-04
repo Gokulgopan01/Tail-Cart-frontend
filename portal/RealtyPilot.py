@@ -30,7 +30,7 @@ from utils.helper import handle_login_status, setup_driver, update_client_accoun
 # Load environment variables from the .env file
 load_dotenv()
 class RealtyPilot:
-    def __init__(self,username, password, portal_url, portal_name, proxy,session):
+    def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id):
         self.username = username
         self.password = password
         self.portal_url = portal_url

@@ -116,6 +116,7 @@ class EntryScreen(tk.Frame):
                 proxy = order.get("proxy", None)
                 session = order.get("session", None)
                 order_id = order.get("order_id", "")
+                account_id=None
                 #order_details = get_order_address_from_assigned_order(order_id,arg3)
 
                 if not portal_name:
@@ -126,7 +127,7 @@ class EntryScreen(tk.Frame):
                 print("Entry")
                 portal_login_screen.PortalLoginScreen.login_to_portals(
                     self, username, password, portal_url,
-                    portal_name, proxy, session
+                    portal_name, proxy, session,account_id
                 )
 
         except Exception as e:

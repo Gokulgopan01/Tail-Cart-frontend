@@ -1,11 +1,11 @@
 
-# import sentry_sdk
-# sentry_sdk.init(
-#     dsn="https://f2e54459e6cc029fa6c1d4499a616e67@o4509790213898240.ingest.us.sentry.io/4509790220058625",
-#     traces_sample_rate=1.0,
-#     environment="production",
-#     send_default_pii=True
-# )
+# # import sentry_sdk
+# # sentry_sdk.init(
+# #     dsn="https://f2e54459e6cc029fa6c1d4499a616e67@o4509790213898240.ingest.us.sentry.io/4509790220058625",
+# #     traces_sample_rate=1.0,
+# #     environment="production",
+# #     send_default_pii=True
+# # )
 
 # import os
 # import subprocess
@@ -79,11 +79,18 @@
 #     # launch_app()
 #     version_update(launch_app) 
 
+from datetime import datetime
+import logging
 import sys, os
 import subprocess
 import winreg as reg
 from app import Application
+
+# from utils.glogger import send_log_sync
 from version import version_update
+  
+
+
 
 # --- Check if protocol is already registered ---
 def is_protocol_registered(protocol_name):
@@ -129,7 +136,7 @@ def launch_app():
     exe_path = sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__)
     print("exepath",exe_path)
 
-
+    
     # if not is_protocol_registered(protocol_name):
     #     register_url_protocol(protocol_name, exe_path)
     register_url_protocol(protocol_name, exe_path)
@@ -143,4 +150,11 @@ if __name__ == "__main__":
     # Step 1: Run version check first, then launch_app
     # version_update(lambda: Application().mainloop())
     # launch_app()
+<<<<<<< HEAD
     version_update(launch_app)
+=======
+    version_update(launch_app) 
+
+
+
+>>>>>>> 945ecb9f0c8f7faec289f1a6f2ea626908519d13
