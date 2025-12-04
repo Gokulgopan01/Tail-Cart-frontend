@@ -37,10 +37,13 @@ def params_check():
             arg3 = args.get('arg3', [None])[0]
             print(f"Args : {arg1}")   
             return arg1,arg2,arg3
+            #return "SmartEntry","1854","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NTI3NDg2NjgsImV4cCI6MTc1MzYxMjY2OH0.Itsc57tAJ08YEyCS-HaBYJqn-lpceWz3O3cGXezgHH8"
     else:
           #return None,None  
           # Returns auto for manualy opening Autologin  
-          return "AutoLogin",None,None   
+         return "AutoLogin",None,None   
+         #return "SmartEntry","1854","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NTI3NDg2NjgsImV4cCI6MTc1MzYxMjY2OH0.Itsc57tAJ08YEyCS-HaBYJqn-lpceWz3O3cGXezgHH8"
+   
 process_type, hybrid_orderid,hybrid_token = params_check()
 
 

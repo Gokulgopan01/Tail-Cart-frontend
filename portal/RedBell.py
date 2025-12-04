@@ -783,6 +783,8 @@ def upload_file_js(driver, input_id, file_path):
         return False
 
 
+
+
 def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderid: str) -> bool:
     data = fetch_upload_data(self, order_id)
     if not data:
@@ -898,13 +900,74 @@ def get_required_non_subject_labels(self):
                 labels.add(label.lower())
     return labels
 
+def delete_non_subject_photos(self):
+    """
+    Deletes all NON-SUBJECT photos using the 'trigger-delete' button.
+    Returns True if photos were deleted, False if nothing to delete.
+    """
+    try:
+        #  Collect all SUBJECT labels from Required Photos
+        # subject_labels = set()
+        # tables = self.driver.find_elements(
+        #     By.XPATH, "//div[@id='RequiedPhotosDetail']//table[@id='requiredphototable']"
+        # )
+        # for table in tables:
+        #     rows = table.find_elements(By.TAG_NAME, "tr")
+        #     for row in rows:
+        #         txt = row.text.strip().lower()
+        #         if txt:
+        #             subject_labels.add(txt)
+        required_non_subject_labels = get_required_non_subject_labels(self)
 
+        #  Scan all uploaded thumbnails
+        photo_blocks = self.driver.find_elements(
+            By.XPATH, "//div[contains(@class,'photo-thumbnail')]"
+        )
+
+        delete_needed = False
+
+        for block in photo_blocks:
+            img = block.find_element(By.TAG_NAME, "img")
+
+            alt = (img.get_attribute("alt") or "").strip().lower()
+            aria = (img.get_attribute("aria-label") or "").strip().lower()
+
+            label = alt or aria
+
+            #  NON-subject photo → select checkbox
+            if label not in required_non_subject_labels:
+                try:
+                    checkbox = block.find_element(By.XPATH, ".//input[@type='checkbox']")
+                    self.driver.execute_script("arguments[0].click();", checkbox)
+                    delete_needed = True
+                except:
+                    pass
+
+        #  Click delete button if needed
+        if delete_needed:
+            delete_btn = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "trigger-delete"))
+            )
+            self.driver.execute_script("arguments[0].click();", delete_btn)
+
+            time.sleep(3)
+            print(" Non-subject photos deleted")
+            return True
+
+        print("No non-subject photos to delete")
+        return False
+
+    except Exception as err:
+        print(" Error deleting photos:", err)
+        return False
 
 def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, rental_folder=None) -> bool:
     try:
         self.driver.get(photos_url)
         time.sleep(3)
-         # --- Step 0: Click "Location Map" button to load map ---
+        # --- Step 0: FIRST delete old non-subject photos ---
+        delete_non_subject_photos(self)
+         # --- Step 1: Click "Location Map" button to load map ---
         try:
             location_map_btn = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, "//a[@title='Refresh location map']"))
