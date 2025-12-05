@@ -12,7 +12,7 @@ from screens.Portal_Instruction_Screen import PortalInstructionScreen
 from screens.ecesis_login_screen import EcesisLoginScreen
 from screens.entry_screen import EntryScreen
 from screens.profile_screen import ProfileScreen
-#import pyi_splash
+import pyi_splash
 
 
 class Application(tk.Tk):
@@ -29,7 +29,7 @@ class Application(tk.Tk):
         #self.iconphoto(False, self.logo)
         self.after(200, self.set_icon)
         
-        #pyi_splash.close()
+        pyi_splash.close()
 
     
         # Bring to front briefly
