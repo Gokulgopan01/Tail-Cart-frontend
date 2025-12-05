@@ -12,6 +12,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from dotenv import load_dotenv
 
 from condtions.all_portal_conditions import generate_condition_data
@@ -900,73 +901,157 @@ def get_required_non_subject_labels(self):
                 labels.add(label.lower())
     return labels
 
+
 def delete_non_subject_photos(self):
-    """
-    Deletes all NON-SUBJECT photos using the 'trigger-delete' button.
-    Returns True if photos were deleted, False if nothing to delete.
-    """
+    wait = WebDriverWait(self.driver, 20)
+
     try:
-        #  Collect all SUBJECT labels from Required Photos
-        # subject_labels = set()
-        # tables = self.driver.find_elements(
-        #     By.XPATH, "//div[@id='RequiedPhotosDetail']//table[@id='requiredphototable']"
-        # )
-        # for table in tables:
-        #     rows = table.find_elements(By.TAG_NAME, "tr")
-        #     for row in rows:
-        #         txt = row.text.strip().lower()
-        #         if txt:
-        #             subject_labels.add(txt)
-        required_non_subject_labels = get_required_non_subject_labels(self)
-
-        #  Scan all uploaded thumbnails
-        photo_blocks = self.driver.find_elements(
-            By.XPATH, "//div[contains(@class,'photo-thumbnail')]"
-        )
-
-        delete_needed = False
-
-        for block in photo_blocks:
-            img = block.find_element(By.TAG_NAME, "img")
-
-            alt = (img.get_attribute("alt") or "").strip().lower()
-            aria = (img.get_attribute("aria-label") or "").strip().lower()
-
-            label = alt or aria
-
-            #  NON-subject photo → select checkbox
-            if label not in required_non_subject_labels:
-                try:
-                    checkbox = block.find_element(By.XPATH, ".//input[@type='checkbox']")
-                    self.driver.execute_script("arguments[0].click();", checkbox)
-                    delete_needed = True
-                except:
-                    pass
-
-        #  Click delete button if needed
-        if delete_needed:
-            delete_btn = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.ID, "trigger-delete"))
+        # Wait for at least one photo item
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "li.qq-upload-success")))
+    except TimeoutException:
+        #print("No photos found.")
+        logger.log(
+            module="Redbell-delete_non_subject_photos",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"No photos found.",
+            severity="INFO"
             )
-            self.driver.execute_script("arguments[0].click();", delete_btn)
-
-            time.sleep(3)
-            print(" Non-subject photos deleted")
-            return True
-
-        print("No non-subject photos to delete")
         return False
 
-    except Exception as err:
-        print(" Error deleting photos:", err)
+    #print("Scanning uploaded photos...")
+
+    photo_items = self.driver.find_elements(By.CSS_SELECTOR, "li.qq-upload-success")
+    non_subject_count = 0
+
+    for item in photo_items:
+        try:
+            # Each photo dropdown
+            dropdown_el = item.find_element(By.CSS_SELECTOR, "select.qq-edit-filetype")
+            dropdown = Select(dropdown_el)
+
+            selected_text = dropdown.first_selected_option.text.strip()
+            # print("Dropdown:", selected_text)
+
+            # If not Subject → tick checkbox
+            if "Subject" not in selected_text:
+                checkbox = item.find_element(By.CSS_SELECTOR, "input.qq-upload-checkbox")
+
+                if not checkbox.is_selected():
+                    checkbox.click()
+                    non_subject_count += 1
+                    #print(f"✔ Marked NON-Subject photo: {selected_text}")
+                    logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"✔ Marked NON-Subject photo: {selected_text}",
+                    severity="INFO"
+                    )
+
+        except NoSuchElementException:
+            logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"NoSuchElementException: {NoSuchElementException}",
+                    severity="INFO"
+                    )
+            continue
+
+    if non_subject_count == 0:
+        #print("No non-subject photos found.")
+        logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"No non-subject photos found.",
+                    severity="INFO"
+                    )
         return False
+
+    #print(f"Total photos to delete: {non_subject_count}")
+    logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Total photos to delete: {non_subject_count}",
+                    severity="INFO"
+                    )
+    # Click Delete Photos button
+    try:
+        delete_btn = wait.until(EC.element_to_be_clickable((By.ID, "trigger-delete")))
+        delete_btn.click()
+        #print("Delete button clicked.")
+        logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Confirmation",
+                    remarks=f"Delete button clicked.",
+                    severity="INFO"
+                    )
+    except TimeoutException:
+        #print(" Delete Photos button not found.")
+        logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f" Delete Photos button not found.",
+                    severity="INFO"
+                    )
+        return False
+
+    # Handle confirmation popup (if exists)
+    try:
+        confirm_btn = wait.until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, ".confirm, .btn-primary"))
+        )
+        confirm_btn.click()
+        #print("✔ Confirmed delete.")
+        logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Confirmation",
+                    remarks=f"Confirmed delete.",
+                    severity="INFO"
+                    )
+    except TimeoutException:
+        #print("⚠ No confirmation popup found (maybe auto-deleted).")
+        logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"No confirmation popup found (maybe auto-deleted).",
+                    severity="INFO"
+                    )
+
+    return True
 
 def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, rental_folder=None) -> bool:
     try:
         self.driver.get(photos_url)
         time.sleep(3)
         # --- Step 0: FIRST delete old non-subject photos ---
-        delete_non_subject_photos(self)
+        result = delete_non_subject_photos(self)
+
+        if result:
+            #print("Non-subject photos deleted successfully!")
+            logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Non-subject photos deleted successfully!",
+                    severity="INFO"
+                    )
+        else:
+            #print("No deletion performed.")
+            logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"No deletion performed.",
+                    severity="INFO"
+                    )
          # --- Step 1: Click "Location Map" button to load map ---
         try:
             location_map_btn = WebDriverWait(self.driver, 10).until(
