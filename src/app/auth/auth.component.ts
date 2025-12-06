@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import Swal from 'sweetalert2';
 
 interface LoginData {
   email_address: string;
@@ -40,6 +39,7 @@ export class AuthComponent {
   isLoading = signal(false);
   errorMessage = signal('');
   successMessage = signal('');
+  showPassword = false;
 
   // Separate form models for login and register
   loginData: LoginData = {
@@ -65,6 +65,14 @@ export class AuthComponent {
     this.registerData.password = '';
   }
 
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+    const passwordField = document.getElementById('password') as HTMLInputElement;
+    if (passwordField) {
+      passwordField.type = this.showPassword ? 'text' : 'password';
+    }
+  }
+
   onSubmit(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
@@ -80,18 +88,19 @@ export class AuthComponent {
               localStorage.setItem('user_id', response.user_id.toString());
               localStorage.setItem('username', response.username);
               
-              // Show success alert
-              Swal.fire('Success', 'Login successful!', 'success').then(() => {
-                // Navigate to home page after successful login
+              // Show inline success message
+              this.successMessage.set('Login successful! Redirecting...');
+              
+              // Navigate to home page after delay
+              setTimeout(() => {
                 this.router.navigate(['/home']);
-              });
+              }, 1500);
             }
           },
           error: (error) => {
             this.isLoading.set(false);
             const msg = error.error?.message || 'Login failed. Please check your credentials.';
             this.errorMessage.set(msg);
-            Swal.fire('Error', msg, 'error');
           }
         });
     } else {
@@ -100,21 +109,25 @@ export class AuthComponent {
           next: (response) => {
             this.isLoading.set(false);
             if (response.message && response.message.includes('successful')) {
-              // Switch to login mode after successful registration
-              this.isLoginMode.set(true);
-              this.successMessage.set('Registration successful! Please login with your credentials.');
-              Swal.fire('Success', 'Registration successful! Please login with your credentials.', 'success');
+              // Show success message and switch to login mode
+              this.successMessage.set('Registration successful! You can now login.');
+              
+              // Auto-switch to login mode after 3 seconds
+              setTimeout(() => {
+                if (!this.isLoginMode()) {
+                  this.isLoginMode.set(true);
+                  this.errorMessage.set('');
+                }
+              }, 3000);
             } else {
               const msg = response.message || 'Registration completed. Please login.';
               this.errorMessage.set(msg);
-              Swal.fire('Info', msg, 'info');
             }
           },
           error: (error) => {
             this.isLoading.set(false);
             const msg = error.error?.message || 'Registration failed. Please try again.';
             this.errorMessage.set(msg);
-            Swal.fire('Error', msg, 'error');
           }
         });
     }

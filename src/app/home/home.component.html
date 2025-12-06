@@ -1,6 +1,5 @@
-<!-- Home Section -->
 <div class="home-container">
-  <!-- Hero Section -->
+  <!-- Hero Section - KEEP EXISTING DESIGN -->
   <section class="hero-section">
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -30,16 +29,13 @@
           </div>
         </div>
       </div>
-      <!-- <div class="hero-image animate-float">
-        <img src="assets/images/dog_superhero.jpg" alt="Happy Dog with QR Keychain" class="hero-pet-img">
-      </div> -->
     </div>
     <div class="scroll-indicator">
       <div class="scroll-arrow"></div>
     </div>
   </section>
 
-  <!-- Features Grid -->
+  <!-- Features Grid - Add Bootstrap for mobile -->
   <section class="features-section" id="features">
     <div class="container">
       <div class="section-header">
@@ -48,7 +44,8 @@
         <div class="section-divider animate-on-scroll"></div>
       </div>
       
-      <div class="features-grid">
+      <!-- Use Bootstrap grid only on mobile -->
+      <div class="features-grid d-none d-md-flex">
         
         <!-- Health Documents -->
         <div class="feature-card animate-on-scroll">
@@ -90,14 +87,48 @@
             <div class="feature-content">
               <h3>Pet Community</h3>
               <p>Connect with other pet owners and share experiences.</p>
-              <button class="feature-btn">Comming Soon</button>
+              <button class="feature-btn">Coming Soon</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile grid using Bootstrap -->
+      <div class="row d-md-none g-3">
+        <div class="col-6 animate-on-scroll">
+          <div class="feature-card-mobile">
+            <img src="assets/images/Home-Catalog-Pet_Doc.jpg" alt="Pet Health Records" class="img-fluid rounded-3">
+            <button class="btn btn-primary w-100 mt-2" (click)="navigateTo('/document')">Manage Documents</button>
+          </div>
+        </div>
+        <div class="col-6 animate-on-scroll">
+          <div class="feature-card-mobile">
+            <img src="assets/images/Home-Catalog-Pet_cart.jpg" alt="Keychain Store" class="img-fluid rounded-3">
+            <button class="btn btn-primary w-100 mt-2" (click)="navigateTo('/shop')">Browse Products</button>
+          </div>
+        </div>
+        <div class="col-6 animate-on-scroll">
+          <div class="feature-card-mobile">
+            <img src="assets/images/Home-Catalog-Pet_Doctor.jpg" alt="Doctor AI" class="img-fluid rounded-3">
+            <button class="btn btn-primary w-100 mt-2" (click)="navigateTo('/training')">Ask Doctor</button>
+          </div>
+        </div>
+        <div class="col-6 animate-on-scroll">
+          <div class="feature-card-mobile">
+            <img src="assets/images/Home-Catalog-Pet_Profile.jpg" alt="Future Services" class="img-fluid rounded-3">
+            <button class="btn btn-primary w-100 mt-2" >Manage Pets</button>
+          </div>
+        </div>
+        <div class="col-12 animate-on-scroll">
+          <div class="feature-card-mobile">
+            <img src="assets/images/Home-Catalog-pet_community.jpg" alt="Pet Community" class="img-fluid rounded-3">
+            <button class="btn btn-primary w-100 mt-2">Coming Soon</button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Category Showcase -->
+  <!-- Category Showcase - Keep desktop design, add Bootstrap for mobile -->
   <section class="category-section">
     <div class="container">
       <div class="section-header">
@@ -105,7 +136,8 @@
         <p class="section-subtitle animate-on-scroll">Designed for every type of pet personality</p>
       </div>
       
-      <div class="category-grid">
+      <!-- Desktop grid -->
+      <div class="category-grid d-none d-md-grid">
         <div class="category-card dogs animate-on-scroll" (click)="navigateTo('/shop')">
           <div class="category-image">
             <img src="assets/images/Home-Card-Puppe.jpg" alt="Dog Keychains">
@@ -143,6 +175,41 @@
           </div>
         </div>
       </div>
+
+      <!-- Mobile grid using Bootstrap -->
+      <div class="row d-md-none g-3">
+        <div class="col-12 animate-on-scroll">
+          <div class="category-card-mobile dogs" (click)="navigateTo('/shop')">
+            <img src="assets/images/Home-Card-Puppe.jpg" alt="Dog Keychains" class="img-fluid rounded-3">
+            <div class="p-3">
+              <h4 class="fw-bold">Dog Keychains</h4>
+              <p class="mb-2">Durable tags designed for active dogs</p>
+              <button class="btn btn-primary w-100">Shop Now</button>
+              <span class="badge bg-danger mt-2">Most Popular</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 animate-on-scroll">
+          <div class="category-card-mobile cats" (click)="navigateTo('/shop')">
+            <img src="assets/images/Home-Card-cat.jpg" alt="Cat Keychains" class="img-fluid rounded-3">
+            <div class="p-3">
+              <h4 class="fw-bold">Cat Keychains</h4>
+              <p class="mb-2">Lightweight designs perfect for curious cats</p>
+              <button class="btn btn-primary w-100">Shop Now</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 animate-on-scroll">
+          <div class="category-card-mobile birds" (click)="navigateTo('/shop')">
+            <img src="assets/images/Home-Card-Other.jpg" alt="Other Pets" class="img-fluid rounded-3">
+            <div class="p-3">
+              <h4 class="fw-bold">Other Pets</h4>
+              <p class="mb-2">Custom keychains for birds, fish tanks, and more</p>
+              <button class="btn btn-primary w-100">Shop Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -154,7 +221,8 @@
         <p class="section-subtitle animate-on-scroll">See what our customers have to say</p>
       </div>
       
-      <div class="testimonials-grid">
+      <!-- Desktop grid -->
+      <div class="testimonials-grid d-none d-md-grid">
         <div class="testimonial-card animate-on-scroll">
           <div class="testimonial-image">
             <img src="assets/images/Home-review1.jpg" alt="Sarah Johnson">
@@ -194,9 +262,46 @@
           </div>
         </div>
       </div>
+
+      <!-- Mobile grid using Bootstrap -->
+      <div class="row d-md-none g-3">
+        <div class="col-12 animate-on-scroll">
+          <div class="testimonial-card-mobile">
+            <div class="d-flex align-items-center mb-3">
+              <img src="assets/images/Home-review1.jpg" alt="Sarah Johnson" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+              <div>
+                <h5 class="fw-bold mb-0">Sarah Johnson</h5>
+                <p class="text-muted mb-0 small">Dog Owner</p>
+              </div>
+            </div>
+            <p class="mb-0 fst-italic">"The QR keychain saved my dog Max when he got lost last month. Someone found him and contacted me within minutes!"</p>
+          </div>
+        </div>
+        <div class="col-12 animate-on-scroll">
+          <div class="testimonial-card-mobile">
+            <div class="d-flex align-items-center mb-3">
+              <img src="assets/images/Home-review3.jpg" alt="Michael Chen" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+              <div>
+                <h5 class="fw-bold mb-0">Michael Chen</h5>
+                <p class="text-muted mb-0 small">Cat Owner</p>
+              </div>
+            </div>
+            <p class="mb-0 fst-italic">"I love how I can store all my cat's medical records in one place. The vet appointments are so much easier now."</p>
+          </div>
+        </div>
+        <div class="col-12 animate-on-scroll">
+          <div class="testimonial-card-mobile">
+            <div class="d-flex align-items-center mb-3">
+              <img src="assets/images/Home-review2.jpg" alt="Emily Rodriguez" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+              <div>
+                <h5 class="fw-bold mb-0">Emily Rodriguez</h5>
+                <p class="text-muted mb-0 small">Multiple Pet Owner</p>
+              </div>
+            </div>
+            <p class="mb-0 fst-italic">"The peace of mind knowing my pets are protected is priceless. The keychains are stylish and durable too!"</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
-
-  <!-- CTA Section -->
-  
 </div>

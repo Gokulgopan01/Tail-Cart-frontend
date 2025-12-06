@@ -1,12 +1,12 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -60,15 +60,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
         if (entry.isIntersecting) {
           entry.target.classList.add('animated');
           entry.target.classList.add('visible');
-          
-          // Add slight delay for multiple elements in grid
-          if (entry.target.classList.contains('feature-card') || 
-              entry.target.classList.contains('category-card') ||
-              entry.target.classList.contains('testimonial-card')) {
-            setTimeout(() => {
-              entry.target.classList.add('animate-visible');
-            }, 100);
-          }
         }
       });
     }, { 

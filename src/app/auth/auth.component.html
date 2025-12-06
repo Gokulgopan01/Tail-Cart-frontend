@@ -1,153 +1,257 @@
-<div class="auth-container">
+<div class="auth-container min-vh-100 d-flex align-items-center justify-content-center py-5">
     <!-- Background Shapes -->
-    <div class="auth-shapes">
+    <div class="auth-shapes position-absolute w-100 h-100">
         <div class="shape shape-1"></div>
         <div class="shape shape-2"></div>
         <div class="shape shape-3"></div>
         <div class="shape shape-4"></div>
     </div>
 
-    <div class="auth-card">
-        <!-- Header with Icon -->
-        <div class="auth-header">
-            <div class="auth-icon">
-                <span class="icon">🐾</span>
-            </div>
-            <h2>{{ isLoginMode() ? 'Welcome Back!' : 'Join Tail Cart' }}</h2>
-            <p class="auth-subtitle">
-                {{ isLoginMode() ? 'Sign in to your account' : 'Create your account to get started' }}
-            </p>
+    <div class="auth-card shadow-lg rounded-4 border-0 overflow-hidden" style="max-width: 450px; width: 100%;">
+        <!-- Background Pattern -->
+        <div class="pattern position-absolute top-0 start-0 w-100 h-100" 
+             style="background: linear-gradient(45deg, rgba(58, 134, 255, 0.03) 0%, rgba(131, 56, 236, 0.03) 100%);">
         </div>
         
-        <form (ngSubmit)="onSubmit()" #authForm="ngForm" class="auth-form">
-            <!-- Username Field (only shown in register mode) -->
-            <div class="form-group" *ngIf="!isLoginMode()">
-                <div class="input-container">
-                    <span class="input-icon">👤</span>
-                    <input 
-                        type="text" 
-                        id="username" 
-                        name="username" 
-                        [(ngModel)]="registerData.username" 
-                        required
-                        #username="ngModel"
-                        [class.invalid]="username.invalid && username.touched"
-                        placeholder="Enter your username"
-                    >
+        <!-- Pet Image for Registration -->
+        <div class="position-absolute top-0 end-0 d-none d-lg-block" style="width: 150px; transform: translate(30px, -30px);">
+            <img src="assets/images/pet-pattern.svg" alt="Pet Pattern" class="img-fluid opacity-25">
+        </div>
+
+        <div class="position-relative p-4 p-md-5">
+            <!-- Header with Icon -->
+            <div class="auth-header text-center mb-4">
+                <div class="auth-icon mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" 
+                     style="width: 70px; height: 70px; background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                    <span class="fs-2">🐾</span>
                 </div>
-                <div class="error" *ngIf="username.invalid && username.touched">
-                    <span class="error-icon">⚠️</span>
-                    Username is required
-                </div>
+                <h2 class="fw-bold mb-2 gradient-text">
+                    {{ isLoginMode() ? 'Welcome Back!' : 'Join Tail Cart' }}
+                </h2>
+                <p class="text-muted mb-4">
+                    {{ isLoginMode() ? 'Sign in to your account' : 'Create your account to get started' }}
+                </p>
+            </div>
+            
+            <!-- Inline Notifications -->
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center mb-3 rounded-3" 
+                 *ngIf="errorMessage()" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <div class="flex-grow-1">{{ errorMessage() }}</div>
+                <button type="button" class="btn-close" (click)="errorMessage.set('')"></button>
             </div>
 
-            <!-- Email Field -->
-            <div class="form-group">
-                <div class="input-container">
-                    <span class="input-icon">📧</span>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email_address" 
-                        [ngModel]="isLoginMode() ? loginData.email_address : registerData.email_address"
-                        (ngModelChange)="isLoginMode() ? loginData.email_address = $event : registerData.email_address = $event"
-                        required
-                        email
-                        #email="ngModel"
-                        [class.invalid]="email.invalid && email.touched"
-                        placeholder="Enter your email"
-                    >
-                </div>
-                <div class="error" *ngIf="email.invalid && email.touched">
-                    <span class="error-icon">⚠️</span>
-                    Valid email is required
-                </div>
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center mb-3 rounded-3" 
+                 *ngIf="successMessage()" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <div class="flex-grow-1">{{ successMessage() }}</div>
+                <button type="button" class="btn-close" (click)="successMessage.set('')"></button>
             </div>
-
-            <!-- Password Field -->
-            <div class="form-group">
-                <div class="input-container">
-                    <span class="input-icon">🔒</span>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        [ngModel]="isLoginMode() ? loginData.password : registerData.password"
-                        (ngModelChange)="isLoginMode() ? loginData.password = $event : registerData.password = $event"
-                        required
-                        minlength="6"
-                        #password="ngModel"
-                        [class.invalid]="password.invalid && password.touched"
-                        placeholder="Enter your password"
-                    >
+            
+            <form (ngSubmit)="onSubmit()" #authForm="ngForm">
+                <!-- Username Field (only shown in register mode) -->
+                <div class="mb-3" *ngIf="!isLoginMode()">
+                    <label for="username" class="form-label small text-muted fw-medium">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0">
+                            <i class="fas fa-user text-primary"></i>
+                        </span>
+                        <input 
+                            type="text" 
+                            class="form-control border-start-0" 
+                            id="username" 
+                            name="username" 
+                            [(ngModel)]="registerData.username" 
+                            required
+                            #username="ngModel"
+                            [class.is-invalid]="username.invalid && username.touched"
+                            placeholder="Choose a username"
+                        >
+                    </div>
+                    <div class="invalid-feedback d-flex align-items-center" *ngIf="username.invalid && username.touched">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        Username is required
+                    </div>
                 </div>
-                <div class="error" *ngIf="password.invalid && password.touched">
-                    <span class="error-icon">⚠️</span>
-                    Password must be at least 6 characters
+
+                <!-- Email Field -->
+                <div class="mb-3">
+                    <label for="email" class="form-label small text-muted fw-medium">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0">
+                            <i class="fas fa-envelope text-primary"></i>
+                        </span>
+                        <input 
+                            type="email" 
+                            class="form-control border-start-0" 
+                            id="email" 
+                            name="email_address" 
+                            [ngModel]="isLoginMode() ? loginData.email_address : registerData.email_address"
+                            (ngModelChange)="isLoginMode() ? loginData.email_address = $event : registerData.email_address = $event"
+                            required
+                            email
+                            #email="ngModel"
+                            [class.is-invalid]="email.invalid && email.touched"
+                            placeholder="you@example.com"
+                        >
+                    </div>
+                    <div class="invalid-feedback d-flex align-items-center" *ngIf="email.invalid && email.touched">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        Please enter a valid email address
+                    </div>
                 </div>
-            </div>
 
-            <!-- Error Message -->
-            <div class="error-message" *ngIf="errorMessage()">
-                <span class="message-icon">❌</span>
-                {{ errorMessage() }}
-            </div>
+                <!-- Password Field -->
+                <div class="mb-4">
+                    <label for="password" class="form-label small text-muted fw-medium">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0">
+                            <i class="fas fa-lock text-primary"></i>
+                        </span>
+                        <input 
+                            type="password" 
+                            class="form-control border-start-0" 
+                            id="password" 
+                            name="password" 
+                            [ngModel]="isLoginMode() ? loginData.password : registerData.password"
+                            (ngModelChange)="isLoginMode() ? loginData.password = $event : registerData.password = $event"
+                            required
+                            minlength="6"
+                            #password="ngModel"
+                            [class.is-invalid]="password.invalid && password.touched"
+                            placeholder="••••••••"
+                        >
+                        <button class="btn btn-outline-secondary border-start-0" type="button" 
+                                (click)="togglePasswordVisibility()">
+                            <i class="fas fa-eye" *ngIf="!showPassword"></i>
+                            <i class="fas fa-eye-slash" *ngIf="showPassword"></i>
+                        </button>
+                    </div>
+                    <div class="invalid-feedback d-flex align-items-center" *ngIf="password.invalid && password.touched">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        Password must be at least 6 characters
+                    </div>
+                </div>
 
-            <!-- Success Message -->
-            <div class="success-message" *ngIf="successMessage()">
-                <span class="message-icon">✅</span>
-                {{ successMessage() }}
-            </div>
+                <!-- Remember Me & Forgot Password (Login Mode) -->
+                <div class="d-flex justify-content-between align-items-center mb-4" *ngIf="isLoginMode()">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                        <label class="form-check-label small text-muted" for="rememberMe">
+                            Remember me
+                        </label>
+                    </div>
+                    <a href="#" class="small text-decoration-none text-primary">Forgot password?</a>
+                </div>
 
-            <!-- Submit Button -->
-            <button 
-                type="submit" 
-                class="submit-btn" 
-                [disabled]="authForm.invalid || isLoading()"
-                [class.loading]="isLoading()"
-            >
-                <span class="btn-content">
-                    <span class="btn-icon" *ngIf="!isLoading()">
-                        {{ isLoginMode() ? '🔑' : '🚀' }}
-                    </span>
-                    <span class="btn-text">
+                <!-- Submit Button -->
+                <button 
+                    type="submit" 
+                    class="btn btn-primary w-100 py-3 mb-3 fw-semibold rounded-3 border-0 shadow-sm"
+                    [disabled]="authForm.invalid || isLoading()"
+                    [class.disabled]="isLoading()"
+                    style="background: linear-gradient(135deg, var(--primary), var(--secondary));"
+                >
+                    <span class="d-flex align-items-center justify-content-center gap-2">
+                        <span *ngIf="!isLoading()">
+                            <i class="fas" [class.fa-sign-in-alt]="isLoginMode()" [class.fa-rocket]="!isLoginMode()"></i>
+                        </span>
+                        <span *ngIf="isLoading()" class="spinner-border spinner-border-sm me-2" role="status"></span>
                         {{ isLoading() ? 'Processing...' : (isLoginMode() ? 'Sign In' : 'Create Account') }}
                     </span>
-                    <span class="btn-spinner" *ngIf="isLoading()">
-                        <div class="spinner"></div>
-                    </span>
-                </span>
-            </button>
-        </form>
-
-        <!-- Divider -->
-        <div class="divider">
-            <span class="divider-text">or</span>
-        </div>
-
-        <!-- Switch Mode -->
-        <div class="switch-mode">
-            <p class="switch-text">
-                {{ isLoginMode() ? "Don't have an account?" : "Already have an account?" }}
-                <button type="button" (click)="onSwitchMode()" class="mode-switch-btn">
-                    {{ isLoginMode() ? 'Create one now' : 'Sign in here' }}
                 </button>
-            </p>
-        </div>
 
-        <!-- Features List for Register Mode -->
-        <div class="features-list" *ngIf="!isLoginMode()">
-            <div class="feature-item">
-                <span class="feature-icon">🐕</span>
-                <span>QR Pet Protection</span>
+                <!-- Divider -->
+                <div class="divider position-relative text-center my-4">
+                    <span class="px-3 bg-white position-relative text-muted small">
+                        or continue with
+                    </span>
+                    <hr class="position-absolute top-50 start-0 w-100" style="z-index: -1;">
+                </div>
+
+                <!-- Social Login Buttons -->
+                <div class="row g-2 mb-4">
+                    <div class="col">
+                        <button type="button" class="btn btn-outline-secondary w-100 py-2 rounded-3">
+                            <i class="fab fa-google text-danger me-2"></i>
+                            Google
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-outline-secondary w-100 py-2 rounded-3">
+                            <i class="fab fa-facebook text-primary me-2"></i>
+                            Facebook
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Switch Mode -->
+            <div class="text-center pt-3 border-top">
+                <p class="text-muted mb-0 small">
+                    {{ isLoginMode() ? "Don't have an account?" : "Already have an account?" }}
+                    <button type="button" (click)="onSwitchMode()" class="btn btn-link text-decoration-none p-0 ms-1">
+                        <strong>{{ isLoginMode() ? 'Sign up' : 'Sign in' }}</strong>
+                    </button>
+                </p>
             </div>
-            <div class="feature-item">
-                <span class="feature-icon">📄</span>
-                <span>Digital Health Records</span>
+
+            <!-- Features List for Register Mode -->
+            <div class="mt-4 pt-4 border-top" *ngIf="!isLoginMode()">
+                <h6 class="small text-uppercase text-muted mb-3">What you'll get:</h6>
+                <div class="row g-2">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center gap-3 p-2 rounded-3" style="background: rgba(58, 134, 255, 0.05);">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                                 style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                                <i class="fas fa-qrcode text-white"></i>
+                            </div>
+                            <div>
+                                <div class="fw-semibold small">QR Pet Protection</div>
+                                <div class="text-muted x-small">Smart tracking & safety</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-center gap-3 p-2 rounded-3" style="background: rgba(56, 178, 172, 0.05);">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                                 style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--teal), var(--teal-light));">
+                                <i class="fas fa-file-medical text-white"></i>
+                            </div>
+                            <div>
+                                <div class="fw-semibold small">Digital Health Records</div>
+                                <div class="text-muted x-small">All documents in one place</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-center gap-3 p-2 rounded-3" style="background: rgba(131, 56, 236, 0.05);">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                                 style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--secondary), var(--purple));">
+                                <i class="fas fa-robot text-white"></i>
+                            </div>
+                            <div>
+                                <div class="fw-semibold small">AI Vet Assistant</div>
+                                <div class="text-muted x-small">24/7 health support</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="feature-item">
-                <span class="feature-icon">🤖</span>
-                <span>AI Vet Assistant</span>
+
+            <!-- App Download Links (Mobile View) -->
+            <div class="mt-4 d-block d-lg-none">
+                <div class="text-center small text-muted mb-2">Get our mobile app</div>
+                <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-dark btn-sm rounded-3 px-3">
+                        <i class="fab fa-apple me-1"></i>
+                        App Store
+                    </button>
+                    <button class="btn btn-dark btn-sm rounded-3 px-3">
+                        <i class="fab fa-google-play me-1"></i>
+                        Play Store
+                    </button>
+                </div>
             </div>
         </div>
     </div>
