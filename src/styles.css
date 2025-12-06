@@ -1,3 +1,6 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
 :root {
   --primary: #6366F1;        /* Indigo */
   --primary-dark: #4F46E5;
