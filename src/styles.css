@@ -1,6 +1,5 @@
 
-
-
+@import "bootstrap/dist/css/bootstrap.min.css";
 :root {
   --primary: #6366F1;        /* Indigo */
   --primary-dark: #4F46E5;
