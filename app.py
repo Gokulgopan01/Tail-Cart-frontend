@@ -28,12 +28,9 @@ class Application(tk.Tk):
         self.logo = ImageTk.PhotoImage(image)
         #self.iconphoto(False, self.logo)
         self.after(200, self.set_icon)
-<<<<<<< HEAD
+
         # pyi_splash.close()
-=======
-        
-        pyi_splash.close()
->>>>>>> 945ecb9f0c8f7faec289f1a6f2ea626908519d13
+
 
     
         # Bring to front briefly

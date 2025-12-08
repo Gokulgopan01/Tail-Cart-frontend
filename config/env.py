@@ -19,7 +19,7 @@ VERSION_FILE = "1.5"
 
 REMOTE_VERSION_URL = "http://192.168.2.51:8000/hybrid/api/v1/autologin/autologin-version"
 PORTAL_LOGIN_CONFIRMATION="http://192.168.2.51:8000/hybrid/api/v1/autologin/update-autologin-check?order_id="
-
+MAIN_EXE = exe_path
 RABBIT_URL = "amqp://glogger:123@192.168.2.41/"
 QUEUE_NAME = "autologin-tool"
 

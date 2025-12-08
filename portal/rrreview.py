@@ -27,10 +27,13 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from config import env
 load_dotenv()
 from condtions.all_portal_conditions import generate_condition_data
-from utils.helper import data_filling_text, extract_data_sections, fill_repair_details, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_repair_details, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, tfs_statuschange, update_client_account_status, update_order_status
+from utils.helper import data_filling_text, extract_data_sections, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_repair_details, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, tfs_statuschange, update_client_account_status, update_order_status
 from integrations.hybrid_bpo_api import HybridBPOApi
-arg1, arg2,arg3 = params_check()
-print(arg1,arg2,arg3)
+# arg1, arg2,arg3 = params_check()
+# print(arg1,arg2,arg3)
+
+process_type, hybrid_orderid,hybrid_token = params_check()
+logging.info(f"type,orderid,token,{process_type},{hybrid_orderid},{hybrid_token}")
 # Load environment variables from the .env file
 load_dotenv()
 class rrreview:
@@ -107,7 +110,7 @@ class rrreview:
         
     def rrreview_formopen(self):
         try:
-            orders_from_api = HybridBPOApi.get_entry_order(arg2)
+            orders_from_api = HybridBPOApi.get_entry_order(hybrid_orderid)
             if not orders_from_api:  # Check if the order list is empty
                 print("No orders found.")
                 return
@@ -122,7 +125,7 @@ class rrreview:
                 session=order_from_api.get("session",None)
                 hyorder_id=order_from_api.get("order_id","")
                 portal_order_id=order_from_api.get("portal_orderid","")
-                order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(hyorder_id,arg3)
+                order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(hyorder_id,hybrid_token)
                 print("order_details_from_api:", order_details_from_api)
                 print("tfs",tfs_orderid)
                 print("ID:",portal_order_id)
@@ -267,7 +270,7 @@ class rrreview:
                 config_path = 'json/rrreviewjson/RRReview_Exterior_BPO.json'
             else:
                 logging.warning(f"No matching config path found for form type: {formtype_value}")
-                update_order_status(order_id, "In Progress", "Entry", "Failed")
+                update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
                 return
             
             form_config, merged_json = load_form_config_and_data(
@@ -463,25 +466,25 @@ class rrreview:
                         field_type = control.get("filedtype")
                         values = control.get("values", [])
 
-                        if field_type == "save_data":
-                          if not saved_form:
-                            save_form(self.driver)
-                            logging.info("Form saved.")
-                            # for cookie in self.driver.get_cookies():
-                            #     session.cookies.set(cookie['name'], cookie['value'])
-                            # time.sleep(5)
-                            saved_form = True
-                            continue
+                        # if field_type == "save_data":
+                        #   if not saved_form:
+                        #     save_form(self.driver)
+                        #     logging.info("Form saved.")
+                        #     # for cookie in self.driver.get_cookies():
+                        #     #     session.cookies.set(cookie['name'], cookie['value'])
+                        #     # time.sleep(5)
+                        #     saved_form = True
+                        #     continue
 
-                        if field_type == "save_data_adj":
-                            if not saved_form:
-                                save_form_adj(self.driver)
-                                logging.info("Form saved.")
-                                # for cookie in self.driver.get_cookies():
-                                #     session.cookies.set(cookie['name'], cookie['value'])
-                                # time.sleep(5)
-                                saved_form = True
-                            continue
+                        # if field_type == "save_data_adj":
+                        #     if not saved_form:
+                        #         save_form_adj(self.driver)
+                        #         logging.info("Form saved.")
+                        #         # for cookie in self.driver.get_cookies():
+                        #         #     session.cookies.set(cookie['name'], cookie['value'])
+                        #         # time.sleep(5)
+                        #         saved_form = True
+                        #     continue
 
                         if field_type == "checkbox_list":
                              for field in values:
@@ -531,12 +534,12 @@ class rrreview:
                                 logging.error(f"Exception filling field {key_expr}: {e}")
 
             # --- Final Status Update ---
-            update_order_status(order_id, "In Progress", "Entry", "Completed")
+            update_order_status(order_id, "In Progress", "Entry", "Completed",hybrid_token)
             return saved_form
 
         except Exception as e:
             logging.error(f"Critical error in fill_form_multi: {e}")
-            update_order_status(order_id, "In Progress", "Entry", "Failed")
+            update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
             return False
         
 

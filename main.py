@@ -150,11 +150,6 @@ if __name__ == "__main__":
     # Step 1: Run version check first, then launch_app
     # version_update(lambda: Application().mainloop())
     # launch_app()
-<<<<<<< HEAD
+
     version_update(launch_app)
-=======
-    version_update(launch_app) 
 
-
-
->>>>>>> 945ecb9f0c8f7faec289f1a6f2ea626908519d13
