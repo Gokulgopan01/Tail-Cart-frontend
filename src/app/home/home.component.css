@@ -427,12 +427,19 @@
 /* Category Section - ENHANCED */
 .category-section {
   position: relative;
-  background: url('/assets/images/Home-Dog_loyality.jpg') center/cover no-repeat;
+  background: url('/assets/images/Home-happy-dog.jpg')center/cover no-repeat;
   padding: 80px 20px;
   color: #333;
   overflow: hidden;
 }
 
+.category-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8); /* white overlay with 80% opacity */
+  z-index: 1;
+}
 
 .category-section .container {
   position: relative;
@@ -561,7 +568,7 @@
 /* Testimonials Section - NEW */
 .testimonials-section {
   position: relative;
-  background: url('/assets/images/Home-happy-dog.jpg')center/cover no-repeat;
+  
   padding: 80px 20px;
   color: #333;
   overflow: hidden;
