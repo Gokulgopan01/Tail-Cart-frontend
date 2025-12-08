@@ -1,47 +1,115 @@
 <!-- DESKTOP NAVBAR -->
-<nav class="navbar">
+<nav class="navbar" [class.scrolled]="isScrolled">
   <div class="nav-brand">
     <img src="assets/images/Tail_cart_logo.jpg" alt="Tail Cart Logo" class="nav-logo" />
+    <div class="brand-text">
+      <h1>TAIL CART</h1>
+      <p>Your Pet's Digital Companion</p>
+    </div>
   </div>
 
   <div class="nav-links-container">
     <div class="nav-links">
-      <button class="nav-link" routerLink="/home" routerLinkActive="active">HOME</button>
-      <button class="nav-link" routerLink="/shop" routerLinkActive="active">KEYCHAINS</button>
-      <button class="nav-link" routerLink="/document" routerLinkActive="active">DOCUMENTS</button>
-      <button class="nav-link" routerLink="/doctor-ai" routerLinkActive="active">Doctor AI</button>
-      <button class="nav-link" routerLink="/contact" routerLinkActive="active">Reach Us</button>
+      <a class="nav-link" routerLink="/home" routerLinkActive="active">HOME</a>
+      <a class="nav-link" routerLink="/shop" routerLinkActive="active">KEYCHAINS</a>
+      <a class="nav-link" routerLink="/document" routerLinkActive="active">DOCUMENTS</a>
+      <a class="nav-link" routerLink="/doctor-ai" routerLinkActive="active">DOCTOR AI</a>
+      <a class="nav-link" routerLink="/contact" routerLinkActive="active">REACH US</a>
     </div>
 
     <div class="nav-user">
-      <button class="nav-icon-btn" (click)="navigateToProfile()">👤 My Account</button>
-      <button class="nav-icon-btn cart-btn" routerLink="/cart">
-        🛒 Orders
-        <span class="cart-badge">{{ cartItems }}</span>
+      <button class="nav-icon-btn" (click)="navigateToProfile()">
+        <i class="fas fa-user"></i>
+        <span>My Account</span>
       </button>
-      <button class="nav-icon-btn logout-btn" (click)="logout()">🚪 Logout</button>
+      <button class="nav-icon-btn cart-btn" routerLink="/cart">
+        <i class="fas fa-shopping-bag"></i>
+        <span>Orders</span>
+        <span class="cart-badge" *ngIf="cartItems > 0">{{ cartItems }}</span>
+      </button>
+      <button class="nav-icon-btn logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </button>
     </div>
   </div>
 </nav>
 
 <!-- MOBILE NAVBAR -->
-<nav class="mobile-navbar">
-  <button class="menu-toggle" [class.mobile-active]="isMobileMenuOpen" (click)="toggleMobileMenu()">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-
-  <div class="nav-links-container" [class.mobile-active]="isMobileMenuOpen">
-    <div class="nav-links">
-      <button class="nav-link" routerLink="/home" routerLinkActive="active" (click)="onNavLinkClick()">HOME</button>
-      <button class="nav-link" routerLink="/shop" routerLinkActive="active" (click)="onNavLinkClick()">KEYCHAINS</button>
-      <button class="nav-link" routerLink="/document" routerLinkActive="active" (click)="onNavLinkClick()">DOCUMENTS</button>
-      <button class="nav-link" routerLink="/doctor-ai" routerLinkActive="active" (click)="onNavLinkClick()">DOCTOR AI</button>
-      <button class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="onNavLinkClick()">REACH US</button>
-      <button class="nav-link" routerLink="/profile" routerLinkActive="active" (click)="onNavLinkClick()">My Profile</button>
-      <button class="nav-link" routerLink="/cart" routerLinkActive="active" (click)="onNavLinkClick()">Cart</button>
-        <button class="nav-link" (click)="logout()"> Logout</button>
+<nav class="mobile-navbar" [class.scrolled]="isScrolled">
+  <div class="mobile-nav-header">
+    <div class="mobile-brand">
+      <img src="assets/images/Tail_cart_logo.jpg" alt="Tail Cart Logo" class="nav-logo" />
+      <div class="brand-text">
+        <h1>TAIL CART</h1>
       </div>
     </div>
+    
+    <button class="menu-toggle" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()">
+      <div class="hamburger-icon">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </button>
+  </div>
+
+  <div class="mobile-menu-overlay" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()"></div>
+  
+  <div class="mobile-nav-content" [class.active]="isMobileMenuOpen">
+    <div class="mobile-user-info">
+      <div class="user-avatar">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="user-details">
+        <h3>{{ username || 'Guest User' }}</h3>
+        <p>{{ userId ? 'ID: ' + userId : 'Please login' }}</p>
+      </div>
+    </div>
+
+    <div class="mobile-nav-links">
+      <a class="mobile-nav-link" routerLink="/home" routerLinkActive="active" (click)="onNavLinkClick()">
+        <i class="fas fa-home"></i>
+        <span>HOME</span>
+      </a>
+      <a class="mobile-nav-link" routerLink="/shop" routerLinkActive="active" (click)="onNavLinkClick()">
+        <i class="fas fa-key"></i>
+        <span>KEYCHAINS</span>
+      </a>
+      <a class="mobile-nav-link" routerLink="/document" routerLinkActive="active" (click)="onNavLinkClick()">
+        <i class="fas fa-file-medical"></i>
+        <span>DOCUMENTS</span>
+      </a>
+      <a class="mobile-nav-link" routerLink="/doctor-ai" routerLinkActive="active" (click)="onNavLinkClick()">
+        <i class="fas fa-stethoscope"></i>
+        <span>DOCTOR AI</span>
+      </a>
+      <a class="mobile-nav-link" routerLink="/contact" routerLinkActive="active" (click)="onNavLinkClick()">
+        <i class="fas fa-phone-alt"></i>
+        <span>REACH US</span>
+      </a>
+      
+      <div class="mobile-nav-divider"></div>
+      
+      <a class="mobile-nav-link" routerLink="/profile" routerLinkActive="active" (click)="onNavLinkClick()">
+        <i class="fas fa-user-cog"></i>
+        <span>MY PROFILE</span>
+      </a>
+      <a class="mobile-nav-link" routerLink="/cart" routerLinkActive="active" (click)="onNavLinkClick()">
+        <i class="fas fa-shopping-bag"></i>
+        <span>ORDERS</span>
+        <span class="mobile-cart-badge" *ngIf="cartItems > 0">{{ cartItems }}</span>
+      </a>
+      <a class="mobile-nav-link logout-mobile" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>LOGOUT</span>
+      </a>
+    </div>
+    
+    <div class="mobile-footer">
+      <p>Tail Cart &copy; {{ currentYear }}. All rights reserved.</p>
+    </div>
+  </div>
 </nav>
+
+<div class="nav-spacer"></div>
