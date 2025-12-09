@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import Swal from 'sweetalert2';
+import { RouterModule } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarConfig } from '@angular/material/snack-bar';
 
 interface CartItem {
   cart_id: number;
@@ -17,13 +19,12 @@ interface CartItem {
   owner: number;
   pet: number;
   product: number;
-  
 }
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule, RouterModule, MatSnackBarModule],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
@@ -33,21 +34,34 @@ export class CartComponent implements OnInit {
   userId: string | null = '';
   totalAmount = 0;
   readonly TAX_RATE = 0.18;
-  errorMessage = '';
-  successMessage = '';
+  
+  private snackBar = inject(MatSnackBar);
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.userId = localStorage.getItem('user_id');
     if (!this.userId) {
-      Swal.fire('Login Required', 'Please log in to view your cart.', 'warning');
+      this.showSnackBar('Please log in to view your cart', 'error');
       return;
     }
     this.loadCart();
   }
 
-  /** 🛒 Load all cart items for user */
+  /** Show snackbar notification */
+  private showSnackBar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
+    const config: MatSnackBarConfig = {
+      duration: type === 'error' || type === 'warning' ? 5000 : 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: [`snackbar-${type}`],
+      politeness: 'polite'
+    };
+    
+    this.snackBar.open(message, 'Close', config);
+  }
+
+  /** Load cart items */
   loadCart(): void {
     this.loading = true;
     this.http.get<CartItem[]>(`https://tailcart.duckdns.org/api/user/cart/?user_id=${this.userId}`)
@@ -61,23 +75,27 @@ export class CartComponent implements OnInit {
           }));
           this.calculateTotal();
           this.loading = false;
+          if (res.length === 0) {
+            this.showSnackBar('Your cart is empty. Start shopping!', 'info');
+          }
         },
-        error: () => {
+        error: (error) => {
           this.loading = false;
-          Swal.fire('Error', 'Failed to load cart items.', 'error');
+          console.error('Failed to load cart:', error);
+          this.showSnackBar('Failed to load cart items. Please try again.', 'error');
         }
       });
   }
 
-  /** 🔄 Update quantity via buttons */
+  /** Update item quantity */
   updateQuantity(item: CartItem, newQuantity: number): void {
     if (newQuantity < 1 || newQuantity > 10) {
-      Swal.fire('Invalid Quantity', 'Quantity must be between 1 and 10.', 'warning');
+      this.showSnackBar('Quantity must be between 1 and 10', 'warning');
       return;
     }
 
     const oldQuantity = item.quantity;
-    item.quantity = newQuantity; // Update instantly on UI
+    item.quantity = newQuantity;
 
     this.http.put(`https://tailcart.duckdns.org/api/user/cart/`, {
       user_id: this.userId,
@@ -86,70 +104,74 @@ export class CartComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.calculateTotal();
+        this.showSnackBar(`Quantity updated to ${newQuantity}`, 'success');
       },
       error: (err) => {
         item.quantity = oldQuantity;
         console.error('Update quantity error:', err);
-        Swal.fire('Error', 'Failed to update quantity. Please try again.', 'error');
+        this.showSnackBar('Failed to update quantity. Please try again.', 'error');
       }
     });
   }
 
-  /** 🗑️ Remove item from cart */
+  /** Remove item from cart */
   removeItem(item: CartItem): void {
-    Swal.fire({
-      title: `Remove ${item.product_name}?`,
-      text: 'This will delete the item from your cart.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, remove it'
-    }).then(result => {
-      if (!result.isConfirmed) return;
+    const snackBarRef = this.snackBar.open(
+      `Remove "${item.product_name}" from cart?`,
+      'Confirm',
+      {
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        duration: 5000,
+        panelClass: ['snackbar-warning']
+      }
+    );
 
+    snackBarRef.onAction().subscribe(() => {
       this.http.delete(`https://tailcart.duckdns.org/api/user/cart/?cart_id=${item.cart_id}`)
         .subscribe({
           next: () => {
             this.cartItems = this.cartItems.filter(i => i.cart_id !== item.cart_id);
             this.calculateTotal();
-            Swal.fire('Deleted!', `${item.product_name} removed from cart.`, 'success');
+            this.showSnackBar(`"${item.product_name}" removed from cart`, 'success');
           },
           error: (err) => {
             console.error('Failed to delete item:', err);
-            Swal.fire('Error', 'Failed to remove item from cart.', 'error');
+            this.showSnackBar('Failed to remove item. Please try again.', 'error');
           }
         });
     });
   }
 
-  /** 💰 Checkout */
+  /** Checkout process */
   checkout(): void {
     if (this.cartItems.length === 0) {
-      Swal.fire('Empty Cart', 'Your cart is empty!', 'info');
+      this.showSnackBar('Your cart is empty! Add items to checkout.', 'info');
       return;
     }
 
     const unavailableItems = this.cartItems.filter(
       item => item.status !== 'available' && item.status !== 'pending'
     );
+    
     if (unavailableItems.length > 0) {
-      Swal.fire('Unavailable Items', 'Some items are currently unavailable.', 'warning');
+      this.showSnackBar('Some items are currently unavailable. Please remove them to proceed.', 'warning');
       return;
     }
 
-    Swal.fire({
-      title: 'Proceed to Checkout?',
-      text: `Total: ₹${this.totalAmount.toLocaleString('en-IN')}`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Checkout',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33'
-    }).then(result => {
-      if (!result.isConfirmed) return;
+    const formattedTotal = this.formatCurrency(this.totalAmount);
+    const snackBarRef = this.snackBar.open(
+      `Proceed to checkout? Total: ${formattedTotal}`,
+      'Confirm',
+      {
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        duration: 5000,
+        panelClass: ['snackbar-info']
+      }
+    );
 
+    snackBarRef.onAction().subscribe(() => {
       this.loading = true;
       this.http.post(`https://tailcart.duckdns.org/api/checkout/`, {
         user_id: this.userId,
@@ -158,20 +180,20 @@ export class CartComponent implements OnInit {
       }).subscribe({
         next: (res: any) => {
           this.loading = false;
-          Swal.fire('Order Placed!', res.message || 'Order placed successfully!', 'success');
+          this.showSnackBar(res.message || 'Order placed successfully! Thank you for your purchase.', 'success');
           this.cartItems = [];
           this.totalAmount = 0;
         },
         error: (error) => {
           this.loading = false;
           console.error('Checkout error:', error);
-          Swal.fire('Checkout Failed', 'Something went wrong. Please try again.', 'error');
+          this.showSnackBar('Checkout failed. Please try again.', 'error');
         }
       });
     });
   }
 
-  /** 🧮 Totals & Helpers */
+  /** Calculate totals */
   getSubtotal(): number {
     return this.cartItems.reduce((sum, item) => sum + (item.product_price * item.quantity), 0);
   }
