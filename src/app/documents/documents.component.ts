@@ -83,9 +83,9 @@ export class DocumentsComponent implements OnInit {
   today = new Date().toISOString().split('T')[0];
   criticalAlerts: Alert[] = [];
   
-  private documentsApi = 'http://127.0.0.1:8000/api/user/documents/';
-  private alertsApi = 'http://127.0.0.1:8000/api/user/pet-alerts/';
-  private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
+  private documentsApi = 'https://tailcart.duckdns.org/api/user/documents/';
+  private alertsApi = 'https://tailcart.duckdns.org/api/user/pet-alerts/';
+  private petsApi = 'https://tailcart.duckdns.org/api/user/pets/';
   private userId: string = '';
 
   constructor(
