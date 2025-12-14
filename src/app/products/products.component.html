@@ -1,381 +1,383 @@
 <div class="shop-page">
-    <!-- Hero Section -->
-    <section class="shop-hero">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <div class="hero-badge">Premium Collection</div>
-        <h1>Pet Accessories</h1>
-        <p>Discover premium products for your beloved pets</p>
-        <div class="hero-stats">
-          <div class="stat">
-            <div class="stat-number">1000+</div>
-            <div class="stat-label">Happy Pets</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">4.9★</div>
-            <div class="stat-label">Customer Rating</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">24/7</div>
-            <div class="stat-label">Support</div>
-          </div>
+  <!-- Hero Section -->
+  <section class="shop-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Premium Collection</div>
+      <h1>Pet Accessories</h1>
+      <p>Discover premium products for your beloved pets</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-number">1000+</div>
+          <div class="stat-label">Happy Pets</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">4.9★</div>
+          <div class="stat-label">Customer Rating</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Support</div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Main Content -->
-    <section class="shop-main-section">
-      <div class="container">
-        <div class="shop-layout">
-          <!-- Sidebar Filters -->
-          <aside class="filter-sidebar">
-            <div class="filter-card">
-              <div class="filter-header">
-                <h3>Filters</h3>
-                <button class="clear-filters" (click)="clearFilters()">Clear All</button>
-              </div>
-              
-              <div class="filter-section">
-                <h4>Price Range</h4>
-                <div class="price-range">
-                  <div class="range-slider">
-                    <input type="range" min="0" max="1000" step="50" 
-                          [(ngModel)]="filters.priceRange" 
-                          (input)="applyFilters()"
-                          class="slider">
-                    <div class="price-display">$0 - ${{filters.priceRange}}</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="filter-section">
-                <h4>Pet Type</h4>
-                <div class="category-filters">
-                  <label class="filter-checkbox">
-                    <input type="checkbox" [(ngModel)]="filters.breeds.dog" (change)="applyFilters()">
-                    <span class="checkmark"></span>
-                    <span class="filter-label">Dogs</span>
-                    <span class="product-count">({{getProductCountByBreed('Dog')}})</span>
-                  </label>
-                  <label class="filter-checkbox">
-                    <input type="checkbox" [(ngModel)]="filters.breeds.cat" (change)="applyFilters()">
-                    <span class="checkmark"></span>
-                    <span class="filter-label">Cats</span>
-                    <span class="product-count">({{getProductCountByBreed('Cat')}})</span>
-                  </label>
-                </div>
-              </div>
-
-              <div class="filter-section">
-                <h4>Deals & Offers</h4>
-                <div class="category-filters">
-                  <label class="filter-checkbox">
-                    <input type="checkbox" [(ngModel)]="filters.deals.hotSale" (change)="applyFilters()">
-                    <span class="checkmark"></span>
-                    <span class="filter-label">Hot Sale</span>
-                  </label>
-                  <label class="filter-checkbox">
-                    <input type="checkbox" [(ngModel)]="filters.deals.bestseller" (change)="applyFilters()">
-                    <span class="checkmark"></span>
-                    <span class="filter-label">Bestseller</span>
-                  </label>
-                </div>
-              </div>
-
-              <div class="filter-section">
-                <h4>Material</h4>
-                <div class="category-filters">
-                  <label class="filter-checkbox">
-                    <input type="checkbox" [(ngModel)]="filters.materials.glass" (change)="applyFilters()">
-                    <span class="checkmark"></span>
-                    <span class="filter-label">Glass</span>
-                  </label>
-                  <label class="filter-checkbox">
-                    <input type="checkbox" [(ngModel)]="filters.materials.wood" (change)="applyFilters()">
-                    <span class="checkmark"></span>
-                    <span class="filter-label">Wood</span>
-                  </label>
-                  <label class="filter-checkbox">
-                    <input type="checkbox" [(ngModel)]="filters.materials.plastic" (change)="applyFilters()">
-                    <span class="checkmark"></span>
-                    <span class="filter-label">Plastic</span>
-                  </label>
-                </div>
-              </div>
-
-              <div class="filter-section">
-                <h4>Rating</h4>
-                <div class="rating-filters">
-                  <label class="rating-option">
-                    <input type="radio" name="rating" value="5" [(ngModel)]="filters.minRating" (change)="applyFilters()">
-                    <span class="stars">★★★★★</span>
-                    <span class="rating-count">(128)</span>
-                  </label>
-                  <label class="rating-option">
-                    <input type="radio" name="rating" value="4" [(ngModel)]="filters.minRating" (change)="applyFilters()">
-                    <span class="stars">★★★★☆</span>
-                    <span class="rating-count">(64)</span>
-                  </label>
-                  <label class="rating-option">
-                    <input type="radio" name="rating" value="0" [(ngModel)]="filters.minRating" (change)="applyFilters()">
-                    <span class="stars">Any Rating</span>
-                  </label>
+  <!-- Main Content -->
+  <section class="shop-main-section">
+    <div class="container">
+      <div class="shop-layout">
+        <!-- Sidebar Filters -->
+        <aside class="filter-sidebar">
+          <div class="filter-card">
+            <div class="filter-header">
+              <h3>Filters</h3>
+              <button class="clear-filters" (click)="clearFilters()">Clear All</button>
+            </div>
+            
+            <div class="filter-section">
+              <h4>Price Range</h4>
+              <div class="price-range">
+                <div class="range-slider">
+                  <input type="range" min="0" max="1000" step="50" 
+                        [(ngModel)]="filters.priceRange" 
+                        (input)="applyFilters()"
+                        class="slider">
+                  <div class="price-display">$0 - ${{filters.priceRange}}</div>
                 </div>
               </div>
             </div>
-          </aside>
 
-          <!-- Products Grid -->
-          <main class="products-main">
-            <div class="products-header">
-              <div class="header-top">
-                <div class="header-content">
-                  <h2>Our Products</h2>
-                  <p>{{filteredProducts.length}} premium products for your furry companions</p>
-                </div>
+            <div class="filter-section">
+              <h4>Pet Type</h4>
+              <div class="category-filters">
+                <label class="filter-checkbox">
+                  <input type="checkbox" [(ngModel)]="filters.breeds.dog" (change)="applyFilters()">
+                  <span class="checkmark"></span>
+                  <span class="filter-label">Dogs</span>
+                  <span class="product-count">({{getProductCountByBreed('Dog')}})</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" [(ngModel)]="filters.breeds.cat" (change)="applyFilters()">
+                  <span class="checkmark"></span>
+                  <span class="filter-label">Cats</span>
+                  <span class="product-count">({{getProductCountByBreed('Cat')}})</span>
+                </label>
               </div>
-              
-              <div class="header-actions">
-                <div class="mobile-actions-row">
-                  <!-- Mobile Filter Button -->
-                  <button class="mobile-filter-toggle" (click)="toggleMobileFilters()">
-                    <i class="fas fa-filter"></i>
-                    Filters
-                  </button>
-                  
-                  <!-- Mobile Sort Button -->
-                  <button class="mobile-sort-toggle" (click)="toggleMobileSort()">
-                    <i class="fas fa-sort"></i>
-                    Sort
-                  </button>
-                </div>
+            </div>
+
+            <div class="filter-section">
+              <h4>Deals & Offers</h4>
+              <div class="category-filters">
+                <label class="filter-checkbox">
+                  <input type="checkbox" [(ngModel)]="filters.deals.hotSale" (change)="applyFilters()">
+                  <span class="checkmark"></span>
+                  <span class="filter-label">Hot Sale</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" [(ngModel)]="filters.deals.bestseller" (change)="applyFilters()">
+                  <span class="checkmark"></span>
+                  <span class="filter-label">Bestseller</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="filter-section">
+              <h4>Material</h4>
+              <div class="category-filters">
+                <label class="filter-checkbox">
+                  <input type="checkbox" [(ngModel)]="filters.materials.glass" (change)="applyFilters()">
+                  <span class="checkmark"></span>
+                  <span class="filter-label">Glass</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" [(ngModel)]="filters.materials.wood" (change)="applyFilters()">
+                  <span class="checkmark"></span>
+                  <span class="filter-label">Wood</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" [(ngModel)]="filters.materials.plastic" (change)="applyFilters()">
+                  <span class="checkmark"></span>
+                  <span class="filter-label">Plastic</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="filter-section">
+              <h4>Rating</h4>
+              <div class="rating-filters">
+                <label class="rating-option">
+                  <input type="radio" name="rating" value="5" [(ngModel)]="filters.minRating" (change)="applyFilters()">
+                  <span class="stars">★★★★★</span>
+                  <span class="rating-count">(128)</span>
+                </label>
+                <label class="rating-option">
+                  <input type="radio" name="rating" value="4" [(ngModel)]="filters.minRating" (change)="applyFilters()">
+                  <span class="stars">★★★★☆</span>
+                  <span class="rating-count">(64)</span>
+                </label>
+                <label class="rating-option">
+                  <input type="radio" name="rating" value="0" [(ngModel)]="filters.minRating" (change)="applyFilters()">
+                  <span class="stars">Any Rating</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Products Grid -->
+        <main class="products-main">
+          <div class="products-header">
+            <div class="header-top">
+              <div class="header-content">
+                <h2>Our Products</h2>
+                <p>{{filteredProducts.length}} premium products for your furry companions</p>
+              </div>
+            </div>
+            
+            <div class="header-actions">
+              <div class="mobile-actions-row">
+                <!-- Mobile Filter Button -->
+                <button class="mobile-filter-toggle" (click)="toggleMobileFilters()">
+                  <i class="fas fa-filter"></i>
+                  Filters
+                </button>
                 
-                <!-- Desktop Sort Options (hidden on mobile) -->
-                <div class="sort-options">
-                  <select class="sort-select" [(ngModel)]="sortOption" (change)="applySorting()">
-                    <option value="featured">Sort by: Featured</option>
-                    <option value="priceLow">Price: Low to High</option>
-                    <option value="priceHigh">Price: High to Low</option>
-                    <option value="name">Name: A to Z</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="products-grid">
-              <div class="product-card" *ngFor="let product of paginatedProducts" (click)="openProductModal(product)">
-                <div class="product-image">
-                  <img [src]="product.image" [alt]="product.model">
-                  <div class="product-tags">
-                    <span class="tag hot-sale" *ngIf="product.deals === 'Hot Sale'">Hot Sale</span>
-                    <span class="tag bestseller" *ngIf="product.deals === 'Bestseller'">Bestseller</span>
-                  </div>
-                  <div class="product-overlay">
-                    <button class="quick-view-btn">Quick View</button>
-                  </div>
-                </div>
-                <div class="product-info">
-                  <h3 class="product-model">{{ product.model }}</h3>
-                  <p class="product-description">{{ product.product_info }}</p>
-                  <div class="product-meta">
-                    <div class="product-price">${{ product.price }}</div>
-                    <div class="product-reviews">
-                      <span class="stars">★★★★★</span>
-                      <span class="review-count">({{ product.reviews || '50' }})</span>
-                    </div>
-                  </div>
-                  <div class="product-breed">
-                    <i class="fas fa-paw"></i>
-                    {{ product.breed }}
-                  </div>
-                  <button class="add-to-cart-mini">
-                    <i class="fas fa-shopping-cart"></i>
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- No Results Message -->
-            <div class="no-results" *ngIf="filteredProducts.length === 0">
-              <i class="fas fa-search"></i>
-              <h3>No products found</h3>
-              <p>Try adjusting your filters to see more results</p>
-              <button class="clear-filters-btn" (click)="clearFilters()">Clear All Filters</button>
-            </div>
-
-            <!-- Pagination -->
-            <div class="pagination" *ngIf="filteredProducts.length > 0">
-              <button 
-                class="pagination-btn prev" 
-                [disabled]="currentPage === 1"
-                (click)="previousPage()">
-                <i class="fas fa-chevron-left"></i>
-                Previous
-              </button>
-              
-              <div class="page-numbers">
-                <span class="current-page">{{ currentPage }}</span>
-                <span class="total-pages">of {{ totalPages }}</span>
+                <!-- Mobile Sort Button -->
+                <button class="mobile-sort-toggle" (click)="toggleMobileSort()">
+                  <i class="fas fa-sort"></i>
+                  Sort
+                </button>
               </div>
               
-              <button 
-                class="pagination-btn next" 
-                [disabled]="currentPage === totalPages"
-                (click)="nextPage()">
-                Next
-                <i class="fas fa-chevron-right"></i>
-              </button>
+              <!-- Desktop Sort Options (hidden on mobile) -->
+              <div class="sort-options">
+                <select class="sort-select" [(ngModel)]="sortOption" (change)="applySorting()">
+                  <option value="featured">Sort by: Featured</option>
+                  <option value="priceLow">Price: Low to High</option>
+                  <option value="priceHigh">Price: High to Low</option>
+                  <option value="name">Name: A to Z</option>
+                  <option value="rating">Highest Rating</option>
+                </select>
+              </div>
             </div>
-          </main>
-        </div>
+          </div>
+
+          <div class="products-grid">
+            <div class="product-card" *ngFor="let product of paginatedProducts" (click)="openProductModal(product)">
+              <div class="product-image">
+                <img [src]="product.image" [alt]="product.model" (load)="onImageLoad($event)" (error)="onImageError($event)">
+                <div class="product-tags">
+                  <span class="tag hot-sale" *ngIf="product.deals === 'Hot Sale'">Hot Sale</span>
+                  <span class="tag bestseller" *ngIf="product.deals === 'Bestseller'">Bestseller</span>
+                </div>
+                <div class="product-overlay">
+                  <button class="quick-view-btn">Quick View</button>
+                </div>
+              </div>
+              <div class="product-info">
+                <h3 class="product-model">{{ product.model }}</h3>
+                <p class="product-description">{{ product.product_info }}</p>
+                <div class="product-meta">
+                  <div class="product-price">${{ product.price }}</div>
+                  <div class="product-reviews">
+                    <span class="stars" [innerHTML]="generateStars(product.reviews)"></span>
+                    <span class="review-count">({{ getRatingNumber(product.reviews) }})</span>
+                  </div>
+                </div>
+                <div class="product-breed">
+                  <i class="fas fa-paw"></i>
+                  {{ product.breed }}
+                </div>
+                <button class="add-to-cart-mini" (click)="$event.stopPropagation(); addToCart(product)">
+                  <i class="fas fa-shopping-cart"></i>
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- No Results Message -->
+          <div class="no-results" *ngIf="filteredProducts.length === 0">
+            <i class="fas fa-search"></i>
+            <h3>No products found</h3>
+            <p>Try adjusting your filters to see more results</p>
+            <button class="clear-filters-btn" (click)="clearFilters()">Clear All Filters</button>
+          </div>
+
+          <!-- Pagination (Show on desktop, hide on mobile for infinite scroll) -->
+          <div class="pagination" *ngIf="filteredProducts.length > 0 && !isMobileView">
+            <button 
+              class="pagination-btn prev" 
+              [disabled]="currentPage === 1"
+              (click)="previousPage()">
+              <i class="fas fa-chevron-left"></i>
+              Previous
+            </button>
+            
+            <div class="page-numbers">
+              <span class="current-page">{{ currentPage }}</span>
+              <span class="total-pages">of {{ totalPages }}</span>
+            </div>
+            
+            <button 
+              class="pagination-btn next" 
+              [disabled]="currentPage === totalPages"
+              (click)="nextPage()">
+              Next
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </main>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Mobile Filter Sidebar -->
-    <div class="filter-overlay" (click)="closeMobileFilters()"></div>
-    <div class="filter-sidebar-mobile">
-      <div class="filter-card">
-        <div class="filter-header">
-          <h3>Filters</h3>
-          <button class="close-filters" (click)="closeMobileFilters()">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        
-        <!-- Price Range -->
-        <div class="filter-section">
-          <h4><i class="fas fa-tag"></i> Price Range</h4>
-          <div class="price-range">
-            <div class="range-slider">
-              <input type="range" min="0" max="1000" step="50" 
-                    [(ngModel)]="filters.priceRange" 
-                    (input)="applyFilters()"
-                    class="slider">
-              <div class="price-display">$0 - ${{filters.priceRange}}</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Pet Type -->
-        <div class="filter-section">
-          <h4><i class="fas fa-paw"></i> Pet Type</h4>
-          <div class="category-filters">
-            <label class="filter-checkbox">
-              <input type="checkbox" [(ngModel)]="filters.breeds.dog" (change)="applyFilters()">
-              <span class="checkmark"></span>
-              <span class="filter-label">Dogs</span>
-              <span class="product-count">({{getProductCountByBreed('Dog')}})</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" [(ngModel)]="filters.breeds.cat" (change)="applyFilters()">
-              <span class="checkmark"></span>
-              <span class="filter-label">Cats</span>
-              <span class="product-count">({{getProductCountByBreed('Cat')}})</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Deals & Offers -->
-        <div class="filter-section">
-          <h4><i class="fas fa-bolt"></i> Deals & Offers</h4>
-          <div class="category-filters">
-            <label class="filter-checkbox">
-              <input type="checkbox" [(ngModel)]="filters.deals.hotSale" (change)="applyFilters()">
-              <span class="checkmark"></span>
-              <span class="filter-label">Hot Sale</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" [(ngModel)]="filters.deals.bestseller" (change)="applyFilters()">
-              <span class="checkmark"></span>
-              <span class="filter-label">Bestseller</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Material -->
-        <div class="filter-section">
-          <h4><i class="fas fa-cube"></i> Material</h4>
-          <div class="category-filters">
-            <label class="filter-checkbox">
-              <input type="checkbox" [(ngModel)]="filters.materials.glass" (change)="applyFilters()">
-              <span class="checkmark"></span>
-              <span class="filter-label">Glass</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" [(ngModel)]="filters.materials.wood" (change)="applyFilters()">
-              <span class="checkmark"></span>
-              <span class="filter-label">Wood</span>
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" [(ngModel)]="filters.materials.plastic" (change)="applyFilters()">
-              <span class="checkmark"></span>
-              <span class="filter-label">Plastic</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Rating -->
-        <div class="filter-section">
-          <h4><i class="fas fa-star"></i> Rating</h4>
-          <div class="rating-filters">
-            <label class="rating-option">
-              <input type="radio" name="rating" value="5" [(ngModel)]="filters.minRating" (change)="applyFilters()">
-              <span class="stars">★★★★★</span>
-              <span class="rating-count">(128)</span>
-            </label>
-            <label class="rating-option">
-              <input type="radio" name="rating" value="4" [(ngModel)]="filters.minRating" (change)="applyFilters()">
-              <span class="stars">★★★★☆</span>
-              <span class="rating-count">(64)</span>
-            </label>
-            <label class="rating-option">
-              <input type="radio" name="rating" value="0" [(ngModel)]="filters.minRating" (change)="applyFilters()">
-              <span class="stars">Any Rating</span>
-            </label>
+  <!-- Mobile Filter Sidebar -->
+  <div class="filter-overlay" [class.active]="isMobileFiltersOpen" (click)="closeMobileFilters()"></div>
+  <div class="filter-sidebar-mobile" [class.active]="isMobileFiltersOpen">
+    <div class="filter-card">
+      <div class="filter-header">
+        <h3>Filters</h3>
+        <button class="close-filters" (click)="closeMobileFilters()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <!-- Price Range -->
+      <div class="filter-section">
+        <h4><i class="fas fa-tag"></i> Price Range</h4>
+        <div class="price-range">
+          <div class="range-slider">
+            <input type="range" min="0" max="1000" step="50" 
+                  [(ngModel)]="filters.priceRange" 
+                  (input)="applyFilters()"
+                  class="slider">
+            <div class="price-display">$0 - ${{filters.priceRange}}</div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Mobile Sort Modal -->
-<div class="sort-overlay" (click)="closeMobileSort()"></div>
-<div class="sort-sidebar-mobile">
-  <div class="sort-card">
-    <div class="sort-header">
-      <h3>Sort By</h3>
-      <button class="close-sort" (click)="closeMobileSort()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    
-    <div class="sort-options-mobile">
-      <label class="sort-option">
-        <input type="radio" name="mobileSort" value="featured" [(ngModel)]="sortOption" (change)="applySorting(); closeMobileSort()">
-        <span class="sort-checkmark"></span>
-        <span class="sort-label">Featured</span>
-      </label>
-      
-      <label class="sort-option">
-        <input type="radio" name="mobileSort" value="priceLow" [(ngModel)]="sortOption" (change)="applySorting(); closeMobileSort()">
-        <span class="sort-checkmark"></span>
-        <span class="sort-label">Price: Low to High</span>
-      </label>
-      
-      <label class="sort-option">
-        <input type="radio" name="mobileSort" value="priceHigh" [(ngModel)]="sortOption" (change)="applySorting(); closeMobileSort()">
-        <span class="sort-checkmark"></span>
-        <span class="sort-label">Price: High to Low</span>
-      </label>
-      
-      <label class="sort-option">
-        <input type="radio" name="mobileSort" value="name" [(ngModel)]="sortOption" (change)="applySorting(); closeMobileSort()">
-        <span class="sort-checkmark"></span>
-        <span class="sort-label">Name: A to Z</span>
-      </label>
+      <!-- Pet Type -->
+      <div class="filter-section">
+        <h4><i class="fas fa-paw"></i> Pet Type</h4>
+        <div class="category-filters">
+          <label class="filter-checkbox">
+            <input type="checkbox" [(ngModel)]="filters.breeds.dog" (change)="applyFilters()">
+            <span class="checkmark"></span>
+            <span class="filter-label">Dogs</span>
+            <span class="product-count">({{getProductCountByBreed('Dog')}})</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" [(ngModel)]="filters.breeds.cat" (change)="applyFilters()">
+            <span class="checkmark"></span>
+            <span class="filter-label">Cats</span>
+            <span class="product-count">({{getProductCountByBreed('Cat')}})</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Deals & Offers -->
+      <div class="filter-section">
+        <h4><i class="fas fa-bolt"></i> Deals & Offers</h4>
+        <div class="category-filters">
+          <label class="filter-checkbox">
+            <input type="checkbox" [(ngModel)]="filters.deals.hotSale" (change)="applyFilters()">
+            <span class="checkmark"></span>
+            <span class="filter-label">Hot Sale</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" [(ngModel)]="filters.deals.bestseller" (change)="applyFilters()">
+            <span class="checkmark"></span>
+            <span class="filter-label">Bestseller</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Material -->
+      <div class="filter-section">
+        <h4><i class="fas fa-cube"></i> Material</h4>
+        <div class="category-filters">
+          <label class="filter-checkbox">
+            <input type="checkbox" [(ngModel)]="filters.materials.glass" (change)="applyFilters()">
+            <span class="checkmark"></span>
+            <span class="filter-label">Glass</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" [(ngModel)]="filters.materials.wood" (change)="applyFilters()">
+            <span class="checkmark"></span>
+            <span class="filter-label">Wood</span>
+          </label>
+          <label class="filter-checkbox">
+            <input type="checkbox" [(ngModel)]="filters.materials.plastic" (change)="applyFilters()">
+            <span class="checkmark"></span>
+            <span class="filter-label">Plastic</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Rating -->
+      <div class="filter-section">
+        <h4><i class="fas fa-star"></i> Rating</h4>
+        <div class="rating-filters">
+          <label class="rating-option">
+            <input type="radio" name="rating" value="5" [(ngModel)]="filters.minRating" (change)="applyFilters()">
+            <span class="stars">★★★★★</span>
+            <span class="rating-count">(128)</span>
+          </label>
+          <label class="rating-option">
+            <input type="radio" name="rating" value="4" [(ngModel)]="filters.minRating" (change)="applyFilters()">
+            <span class="stars">★★★★☆</span>
+            <span class="rating-count">(64)</span>
+          </label>
+          <label class="rating-option">
+            <input type="radio" name="rating" value="0" [(ngModel)]="filters.minRating" (change)="applyFilters()">
+            <span class="stars">Any Rating</span>
+          </label>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- Mobile Sort Modal -->
+  <div class="sort-overlay" [class.active]="isMobileSortOpen" (click)="closeMobileSort()"></div>
+  
+  <div class="sort-sidebar-mobile" [class.active]="isMobileSortOpen">
+    <div class="sort-card">
+      <div class="sort-header">
+        <h3>Sort By</h3>
+        <button class="close-sort" (click)="closeMobileSort()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="sort-options-mobile">
+        <label class="sort-option">
+          <input type="radio" name="mobileSort" value="featured" [(ngModel)]="sortOption" (change)="applySorting(); closeMobileSort()">
+          <span class="sort-checkmark"></span>
+          <span class="sort-label">Featured</span>
+        </label>
+        
+        <label class="sort-option">
+          <input type="radio" name="mobileSort" value="priceLow" [(ngModel)]="sortOption" (change)="applySorting(); closeMobileSort()">
+          <span class="sort-checkmark"></span>
+          <span class="sort-label">Price: Low to High</span>
+        </label>
+        
+        <label class="sort-option">
+          <input type="radio" name="mobileSort" value="priceHigh" [(ngModel)]="sortOption" (change)="applySorting(); closeMobileSort()">
+          <span class="sort-checkmark"></span>
+          <span class="sort-label">Price: High to Low</span>
+        </label>
+        
+        <label class="sort-option">
+          <input type="radio" name="mobileSort" value="name" [(ngModel)]="sortOption" (change)="applySorting(); closeMobileSort()">
+          <span class="sort-checkmark"></span>
+          <span class="sort-label">Name: A to Z</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
   <!-- Product Modal -->
   <div class="modal-overlay" *ngIf="selectedProduct" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
@@ -432,11 +434,43 @@
             <div class="rating-text">Excellent based on customer reviews</div>
           </div>
           
-          <div class="modal-actions">
+          <!-- Pet ID Input Section (Shown when adding to cart) -->
+          <div class="cart-input-section" *ngIf="showPetIdInput">
+            <h4>Enter Pet ID</h4>
+            <div class="input-group">
+              <input 
+                type="number" 
+                [(ngModel)]="petId" 
+                placeholder="Enter your pet ID"
+                class="form-control"
+                min="1">
+            </div>
+            <div class="input-actions">
+              <button class="btn-cancel" (click)="cancelCartProcess()">Cancel</button>
+              <button class="btn-submit" (click)="submitPetId()">Next</button>
+            </div>
+          </div>
+          
+          <!-- Quantity Input Section -->
+          <div class="cart-input-section" *ngIf="showQuantityInput">
+            <h4>Select Quantity</h4>
+            <div class="quantity-selector-large">
+              <button class="quantity-btn minus" (click)="decrementQuantity()">-</button>
+              <span class="quantity">{{ quantity }}</span>
+              <button class="quantity-btn plus" (click)="incrementQuantity()">+</button>
+            </div>
+            <div class="input-actions">
+              <button class="btn-cancel" (click)="cancelCartProcess()">Cancel</button>
+              <button class="btn-submit" (click)="submitQuantity()">Add to Cart</button>
+            </div>
+          </div>
+          
+          <!-- Regular Modal Actions (Shown when not in cart flow) -->
+          <div class="modal-actions" *ngIf="!showPetIdInput && !showQuantityInput">
             <div class="quantity-selector">
-              <button class="quantity-btn minus">-</button>
-              <span class="quantity">1</span>
-              <button class="quantity-btn plus">+</button>
+              <button class="quantity-btn minus" (click)="decrementQuantity()">-</button>
+              <span class="quantity">{{ quantity }}</span>
+              <button class="quantity-btn plus" (click)="incrementQuantity()">+</button>
             </div>
             <button class="add-to-cart-btn" (click)="addToCart(selectedProduct)">
               <i class="fas fa-shopping-cart"></i>
@@ -444,7 +478,7 @@
             </button>
           </div>
           
-          <div class="product-features">
+          <div class="product-features" *ngIf="!showPetIdInput && !showQuantityInput">
             <div class="feature">
               <i class="fas fa-shield-alt"></i>
               <span>1 Year Warranty</span>
@@ -462,3 +496,4 @@
       </div>
     </div>
   </div>
+</div>

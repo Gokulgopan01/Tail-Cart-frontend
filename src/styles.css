@@ -239,8 +239,7 @@ html, body {
   color: inherit !important;
 }
 
-
-::-webkit-scrollbar {
+body::-webkit-scrollbar {
   width: 10px;
 }
 

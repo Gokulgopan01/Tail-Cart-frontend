@@ -60,7 +60,6 @@ html {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(223, 230, 233, 0.5);
@@ -75,7 +74,6 @@ html {
 }
 
 .navbar.scrolled {
-  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(30px);
   box-shadow: var(--shadow-dark);
   padding: 10px 5%;
@@ -284,7 +282,6 @@ html {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   z-index: 1000;
@@ -295,7 +292,6 @@ html {
 }
 
 .mobile-navbar.scrolled {
-  background: rgba(255, 255, 255, 0.98);
   animation: slideDown 0.3s ease-out;
 }
 

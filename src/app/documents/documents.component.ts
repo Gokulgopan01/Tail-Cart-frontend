@@ -7,6 +7,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarConfig } from '@angular/material/snack-bar';
 
 interface Document {
   document_id: number;
@@ -198,13 +199,15 @@ export class DocumentsComponent implements OnInit {
     }
   }
 
-  showSnackbar(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info'): void {
-    const panelClass = `snackbar-${type}`;
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      horizontalPosition: 'right',
-      verticalPosition: 'bottom',
-      panelClass: [panelClass]
-    });
-  }
+  showSnackbar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
+  const config: MatSnackBarConfig = {
+    duration: type === 'error' || type === 'warning' ? 5000 : 3000,
+    horizontalPosition: 'right',
+    verticalPosition: 'top',  // Change from bottom to top
+    panelClass: [`snackbar-${type}`],
+    politeness: 'polite'
+  };
+  
+  this.snackBar.open(message, 'Close', config);
+}
 }

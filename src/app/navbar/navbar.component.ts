@@ -1,13 +1,15 @@
-import { Component, OnInit, HostListener, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy, Inject, PLATFORM_ID,inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { filter, Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule,MatSnackBarModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
@@ -286,14 +288,28 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.smoothScrollToTop();
   }
 
+  private snackBar = inject(MatSnackBar);
+
+  private showSnackBar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
+    const config: MatSnackBarConfig = {
+      duration: type === 'error' || type === 'warning' ? 5000 : 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: [`snackbar-${type}`],
+      politeness: 'polite'
+    };
+    
+    this.snackBar.open(message, 'Close', config);
+  }
+
+
   logout(): void {
     if (this.isBrowser) {
       localStorage.clear();
       sessionStorage.clear();
       
       // Show logout message
-      alert('You have been logged out successfully.');
-      
+      this.showSnackBar('Loged Out.! Please login to continue', 'success');
       // Navigate to auth page
       this.router.navigate(['/auth']);
       
