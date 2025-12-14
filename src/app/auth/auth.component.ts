@@ -79,7 +79,7 @@ export class AuthComponent {
     this.successMessage.set('');
 
     if (this.isLoginMode()) {
-      this.http.post<LoginResponse>('https://tailcart.duckdns.org/api/user/login/', this.loginData)
+      this.http.post<LoginResponse>('http://127.0.0.1:8000/api/user/login/', this.loginData)
         .subscribe({
           next: (response) => {
             this.isLoading.set(false);
@@ -104,7 +104,7 @@ export class AuthComponent {
           }
         });
     } else {
-      this.http.post<RegisterResponse>('https://tailcart.duckdns.org/api/user/register/', this.registerData)
+      this.http.post<RegisterResponse>('http://127.0.0.1:8000/api/user/register/', this.registerData)
         .subscribe({
           next: (response) => {
             this.isLoading.set(false);

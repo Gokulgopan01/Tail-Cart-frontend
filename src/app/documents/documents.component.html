@@ -1,10 +1,64 @@
 <div class="documents-container">
-  <!-- Hero Section -->
-  <section class="documents-hero">
+  <!-- Critical Alerts Banner -->
+  <div *ngIf="criticalAlerts.length > 0" class="critical-alerts-banner">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span class="fw-bold">
+            ⚠️ You have {{criticalAlerts.length}} critical alert{{criticalAlerts.length > 1 ? 's' : ''}}!
+          </span>
+        </div>
+        <button class="btn btn-sm btn-outline-light" (click)="toggleAlertsModal()">
+          View All
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Section with Alert Bell -->
+  <section class="documents-hero position-relative">
     <div class="hero-content text-center text-white py-5">
-      <div class="container">
+      <div class="container position-relative">
+        <!-- Alert Bell Button -->
+        <div class="alert-bell-container position-absolute end-0 top-0 me-4 mt-4">
+          <button class="alert-bell-btn position-relative border-0 bg-transparent p-0" 
+                  (click)="toggleAlertsModal()"
+                  aria-label="View alerts">
+            <i class="fas fa-bell fa-2x text-white"></i>
+            <!-- Badge for active alerts -->
+            <span *ngIf="alerts.length > 0" 
+                  class="alert-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ getUpcomingAlertsCount() }}
+              <span class="visually-hidden">active alerts</span>
+            </span>
+          </button>
+        </div>
+        
         <h1 class="display-4 fw-bold mb-3">My Documents</h1>
         <p class="lead mb-4 opacity-85">Manage and upload your pet's important documents</p>
+        
+        <!-- Quick Stats Row -->
+        <div class="row justify-content-center g-3 mt-4">
+          <div class="col-auto">
+            <div class="stat-badge d-flex align-items-center gap-2 bg-white bg-opacity-20 px-3 py-2 rounded-pill">
+              <i class="fas fa-file"></i>
+              <span>{{ documents.length }} Documents</span>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="stat-badge d-flex align-items-center gap-2 bg-white bg-opacity-20 px-3 py-2 rounded-pill">
+              <i class="fas fa-bell"></i>
+              <span>{{ getUpcomingAlertsCount() }} Upcoming Alerts</span>
+            </div>
+          </div>
+          <div *ngIf="criticalAlerts.length > 0" class="col-auto">
+            <div class="stat-badge d-flex align-items-center gap-2 bg-danger bg-opacity-80 text-white px-3 py-2 rounded-pill">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span>{{ criticalAlerts.length }} Critical</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -15,44 +69,64 @@
       <div class="row g-4">
         <!-- Documents List -->
         <main class="col-lg-8 col-12">
-          <div class="section-header text-center mb-5">
-            <h2 class="display-6 fw-bold text-gradient mb-3">Existing Documents</h2>
-            <p class="text-muted fs-5">All your uploaded pet documents</p>
+          <div class="section-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-5">
+            <div class="mb-3 mb-md-0">
+              <h2 class="display-6 fw-bold text-gradient mb-2">Existing Documents</h2>
+              <p class="text-muted fs-5 mb-0">All your uploaded pet documents</p>
+            </div>
+            
+            <!-- Mobile Alert Button (Visible only on mobile) -->
+            <button class="btn btn-outline-primary d-md-none d-flex align-items-center gap-2"
+                    (click)="toggleAlertsModal()">
+              <i class="fas fa-bell"></i>
+              <span>Alerts ({{ getUpcomingAlertsCount() }})</span>
+            </button>
           </div>
 
           <div *ngIf="documents.length > 0; else noDocuments" class="documents-grid">
             <div class="row g-4">
               <div class="col-12" *ngFor="let doc of documents">
                 <div class="document-card card border-0 shadow-sm h-100">
-                  <div class="card-body">
+                  <div class="card-body p-4">
                     <div class="row align-items-center">
                       <div class="col-md-8">
                         <div class="d-flex align-items-start">
                           <div class="document-icon me-3">
                             <i class="fas fa-file-medical"></i>
                           </div>
-                          <div class="document-info">
+                          <div class="document-info flex-grow-1">
                             <h5 class="fw-bold mb-2 text-dark">{{ doc.document_title }}</h5>
                             <div class="d-flex flex-wrap gap-2 align-items-center">
                               <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
-                                <i class="fas fa-paw me-2"></i>Pet ID: {{ doc.pet }}
+                                <i class="fas fa-paw me-2"></i>
+                                <span *ngIf="getPetNameById(doc.pet)">{{ getPetNameById(doc.pet) }}</span>
+                                <span *ngIf="!getPetNameById(doc.pet)">Pet ID: {{ doc.pet }}</span>
                               </span>
                               <span class="text-muted">
                                 <i class="far fa-calendar-alt me-2"></i>{{ doc.upload_date | date:'mediumDate' }}
                               </span>
+                            </div>
+                            
+                            <!-- Add Alert Button for Document -->
+                            <div class="mt-3">
+                              <button class="btn btn-sm btn-outline-primary d-flex align-items-center gap-2"
+                                      (click)="openAlertFormForDocument(doc)">
+                                <i class="fas fa-bell"></i>
+                                Set Alert
+                              </button>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="document-actions d-flex gap-2 justify-content-md-end mt-3 mt-md-0">
-                          <button class="btn btn-primary btn-download d-flex align-items-center gap-2 px-4"
+                          <button class="btn btn-primary btn-download d-flex align-items-center justify-content-center gap-2 px-4 py-2"
                                   (click)="downloadDocument(doc)"
                                   matTooltip="Download document">
                             <i class="fas fa-download"></i>
                             <span class="d-none d-md-inline">Download</span>
                           </button>
-                          <button class="btn btn-outline-danger btn-delete"
+                          <button class="btn btn-outline-danger btn-delete d-flex align-items-center justify-content-center px-3 py-2"
                                   (click)="deleteDocument(doc.document_id)"
                                   matTooltip="Delete document">
                             <i class="fas fa-trash"></i>
@@ -82,9 +156,137 @@
           </ng-template>
         </main>
 
-        <!-- Upload Sidebar - Fixed the sticky positioning -->
+        <!-- Upload Sidebar with Create Alert Card -->
         <aside #uploadSection class="col-lg-4 col-12">
           <div class="sidebar-sticky-wrapper">
+            <!-- Create Alert Card -->
+            <div class="alert-create-card card border-0 shadow-sm mb-4">
+              <div class="card-body p-4">
+                <div class="alert-header text-center mb-4">
+                  <h3 class="fw-bold text-dark mb-2">
+                    <i class="fas fa-bell text-primary me-2"></i>
+                    Create Alert
+                  </h3>
+                  <p class="text-muted">Set reminders for vet appointments</p>
+                </div>
+
+                <form [formGroup]="alertForm" (ngSubmit)="createAlert()" class="alert-form">
+                  <div class="form-group mb-3">
+                    <label for="alertTitle" class="form-label fw-semibold">
+                      Alert Title <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="alertTitle"
+                      formControlName="title"
+                      placeholder="e.g., Annual Vaccination Due"
+                      class="form-control"
+                      [class.is-invalid]="alertForm.get('title')?.invalid && alertForm.get('title')?.touched">
+                    <div *ngIf="alertForm.get('title')?.invalid && alertForm.get('title')?.touched" 
+                         class="invalid-feedback">
+                      Alert title is required
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-4">
+                    <label for="alertPetSelect" class="form-label fw-semibold">
+                      Pet <span class="text-danger">*</span>
+                    </label>
+
+                    <div *ngIf="loadingPets" class="text-muted small">
+                      <i class="fas fa-spinner fa-spin me-2"></i> Loading pets...
+                    </div>
+
+                    <select
+                      id="alertPetSelect"
+                      formControlName="pet"
+                      class="form-select form-select-lg"
+                      [class.is-invalid]="alertForm.get('pet')?.invalid && alertForm.get('pet')?.touched">
+                      
+                      <option value="">Select pet for reminder</option>
+                      <option *ngFor="let pet of userPets" [value]="pet.pet_id">
+                        {{ pet.pet_name }} ({{ pet.species }})
+                      </option>
+                      
+                      <option *ngIf="!loadingPets && userPets.length === 0" value="" disabled>
+                        No pets found
+                      </option>
+                    </select>
+
+                    <div *ngIf="alertForm.get('pet')?.invalid && alertForm.get('pet')?.touched" 
+                        class="invalid-feedback">
+                      Please select a pet
+                    </div>
+                  </div>
+
+                  <div class="row g-2 mb-3">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="alertType" class="form-label fw-semibold">
+                          Type <span class="text-danger">*</span>
+                        </label>
+                        <select
+                          id="alertType"
+                          formControlName="alert_type"
+                          class="form-select"
+                          [class.is-invalid]="alertForm.get('alert_type')?.invalid && alertForm.get('alert_type')?.touched">
+                          <option value="">Select Type</option>
+                          <option value="Vaccination">Vaccination</option>
+                          <option value="Medication">Medication</option>
+                          <option value="Appointment">Appointment</option>
+                          <option value="Checkup">Checkup</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="frequency" class="form-label fw-semibold">
+                          Frequency
+                        </label>
+                        <select
+                          id="frequency"
+                          formControlName="frequency"
+                          class="form-select">
+                          <option value="One-time">One-time</option>
+                          <option value="Weekly">Weekly</option>
+                          <option value="Monthly">Monthly</option>
+                          <option value="Quarterly">Quarterly</option>
+                          <option value="Yearly">Yearly</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-4">
+                    <label for="dueDate" class="form-label fw-semibold">
+                      Due Date <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      id="dueDate"
+                      formControlName="due_date"
+                      class="form-control"
+                      [class.is-invalid]="alertForm.get('due_date')?.invalid && alertForm.get('due_date')?.touched"
+                      [min]="today">
+                    <div *ngIf="alertForm.get('due_date')?.invalid && alertForm.get('due_date')?.touched" 
+                         class="invalid-feedback">
+                      Please select a valid future date
+                    </div>
+                  </div>
+
+                  <button 
+                    type="submit" 
+                    class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+                    [disabled]="alertForm.invalid || isCreatingAlert">
+                    <span *ngIf="isCreatingAlert" class="spinner-border spinner-border-sm" role="status"></span>
+                    <i class="fas fa-bell" *ngIf="!isCreatingAlert"></i>
+                    {{ isCreatingAlert ? 'Creating...' : 'Create Alert' }}
+                  </button>
+                </form>
+              </div>
+            </div>
+
             <!-- Upload Card -->
             <div class="upload-card card border-0 shadow-sm mb-4">
               <div class="card-body p-4">
@@ -94,7 +296,7 @@
                 </div>
 
                 <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" class="upload-form">
-                  <div class="form-group mb-4">
+                  <div class="form-group mb-3">
                     <label for="documentTitle" class="form-label fw-semibold">
                       Document Title <span class="text-danger">*</span>
                     </label>
@@ -102,31 +304,44 @@
                       type="text"
                       id="documentTitle"
                       formControlName="document_title"
-                      placeholder="e.g., Vet Report, Vaccination Record"
-                      class="form-control form-control-lg"
-                      [class.is-invalid]="uploadForm.get('document_title')?.invalid && uploadForm.get('document_title')?.touched"
-                    >
+                      placeholder="e.g., Vaccination Record, Vet Report"
+                      class="form-control form-control-lg">
+                  </div>
                     <div *ngIf="uploadForm.get('document_title')?.invalid && uploadForm.get('document_title')?.touched" 
                          class="invalid-feedback">
                       Document title is required
                     </div>
-                  </div>
 
-                  <div class="form-group mb-4">
-                    <label for="petId" class="form-label fw-semibold">
-                      Pet ID <span class="text-danger">*</span>
+                  <div class="form-group mb-3">
+                    <label for="documentPetSelect" class="form-label fw-semibold">
+                      Pet <span class="text-danger">*</span>
                     </label>
-                    <input
-                      type="number"
-                      id="petId"
+
+                    <!-- Loading state -->
+                    <div *ngIf="loadingPets" class="text-muted small">
+                      <i class="fas fa-spinner fa-spin me-2"></i> Loading pets...
+                    </div>
+
+                    <!-- Pet dropdown for documents -->
+                    <select
+                      id="documentPetSelect"
                       formControlName="pet"
-                      placeholder="Enter your pet ID"
-                      class="form-control form-control-lg"
-                      [class.is-invalid]="uploadForm.get('pet')?.invalid && uploadForm.get('pet')?.touched"
-                    >
+                      class="form-select"
+                      [class.is-invalid]="uploadForm.get('pet')?.invalid && uploadForm.get('pet')?.touched">
+                      
+                      <option value="">Select which pet this document belongs to</option>
+                      <option *ngFor="let pet of userPets" [value]="pet.pet_id">
+                        {{ pet.pet_name }} ({{ pet.species }})
+                      </option>
+                      
+                      <option *ngIf="!loadingPets && userPets.length === 0" value="" disabled>
+                        No pets found. Add pets in your profile first.
+                      </option>
+                    </select>
+
                     <div *ngIf="uploadForm.get('pet')?.invalid && uploadForm.get('pet')?.touched" 
-                         class="invalid-feedback">
-                      Please enter a valid Pet ID
+                        class="invalid-feedback">
+                      Please select a pet
                     </div>
                   </div>
 
@@ -135,43 +350,38 @@
                       Document File <span class="text-danger">*</span>
                     </label>
                     
-                    <!-- File Input Container -->
                     <div class="file-upload-container">
-                      <!-- Hidden file input that actually handles file selection -->
                       <input
                         type="file"
                         id="documentFile"
                         #fileInput
                         (change)="onFileSelected($event)"
                         accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
-                        class="d-none"
-                      >
+                        class="d-none">
                       
-                      <!-- Custom styled file upload area -->
-                      <div class="file-upload-area border-2 border-dashed rounded-3 p-5 text-center"
+                      <div class="file-upload-area border-2 border-dashed rounded-3 p-4 text-center"
                            [class.border-primary]="selectedFile"
                            [class.bg-light]="!selectedFile"
                            (click)="fileInput.click()">
                         <div class="file-upload-content cursor-pointer">
-                          <i class="fas fa-cloud-upload-alt fs-1 text-primary mb-3"></i>
+                          <i class="fas fa-cloud-upload-alt fs-1 text-primary mb-2"></i>
                           <div class="file-upload-text fw-semibold mb-1">
                             Click to choose a file
                           </div>
-                          <div class="file-hint text-muted">
+                          <div class="file-hint text-muted small">
                             Max 10MB - PDF, DOC, Images
                           </div>
                         </div>
                       </div>
                     </div>
                     
-                    <!-- Selected file display -->
-                    <div *ngIf="selectedFile" class="file-selected alert alert-success mt-3 d-flex align-items-center gap-3">
-                      <i class="fas fa-file-check fs-4"></i>
+                    <div *ngIf="selectedFile" class="file-selected alert alert-success mt-3 d-flex align-items-center gap-2 p-2">
+                      <i class="fas fa-file-check"></i>
                       <div class="flex-grow-1">
-                        <strong>{{ selectedFile.name }}</strong>
-                        <div class="text-muted small">
+                        <strong class="d-block">{{ selectedFile.name }}</strong>
+                        <small class="text-muted">
                           {{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB
-                        </div>
+                        </small>
                       </div>
                       <button type="button" class="btn-close" (click)="clearFile()"></button>
                     </div>
@@ -184,9 +394,8 @@
 
                   <button 
                     type="submit" 
-                    class="btn btn-primary btn-lg w-100 d-flex align-items-center justify-content-center gap-2"
-                    [disabled]="uploadForm.invalid || isUploading"
-                  >
+                    class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+                    [disabled]="uploadForm.invalid || isUploading">
                     <span *ngIf="isUploading" class="spinner-border spinner-border-sm" role="status"></span>
                     <i class="fas fa-upload" *ngIf="!isUploading"></i>
                     {{ isUploading ? 'Uploading...' : 'Upload Document' }}
@@ -198,27 +407,27 @@
             <!-- Stats Card -->
             <div class="stats-card card border-0 shadow-sm">
               <div class="card-body p-4">
-                <h4 class="fw-bold text-dark text-center mb-4">Document Stats</h4>
+                <h4 class="fw-bold text-dark text-center mb-4">Quick Stats</h4>
                 <div class="row g-3">
                   <div class="col-6">
                     <div class="stat-item text-center p-3 rounded-3 bg-light">
                       <div class="stat-icon mb-2">
-                        <i class="fas fa-file text-primary fs-3"></i>
+                        <i class="fas fa-file text-primary fs-4"></i>
                       </div>
                       <div class="stat-content">
-                        <div class="stat-number fw-bold fs-4 text-dark">{{ documents.length }}</div>
-                        <div class="stat-label text-muted">Total Documents</div>
+                        <div class="stat-number fw-bold fs-5 text-dark">{{ documents.length }}</div>
+                        <div class="stat-label text-muted small">Documents</div>
                       </div>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="stat-item text-center p-3 rounded-3 bg-light">
                       <div class="stat-icon mb-2">
-                        <i class="fas fa-hdd text-primary fs-3"></i>
+                        <i class="fas fa-bell text-primary fs-4"></i>
                       </div>
                       <div class="stat-content">
-                        <div class="stat-number fw-bold fs-4 text-dark">{{ getTotalSize() }}</div>
-                        <div class="stat-label text-muted">Total Size</div>
+                        <div class="stat-number fw-bold fs-5 text-dark">{{ getUpcomingAlertsCount() }}</div>
+                        <div class="stat-label text-muted small">Upcoming</div>
                       </div>
                     </div>
                   </div>
@@ -231,3 +440,132 @@
     </div>
   </section>
 </div>
+
+<!-- Alerts Modal -->
+<div class="modal" [class.show]="showAlertsModal" tabindex="-1" role="dialog" 
+     [attr.aria-hidden]="!showAlertsModal" [style.display]="showAlertsModal ? 'block' : 'none'">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+      <!-- Modal Header -->
+      <div class="modal-header border-0 pb-0 p-4 position-relative">
+        <div class="w-100">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="modal-title h3 fw-bold text-dark mb-0" id="alertsModalLabel">
+              <i class="fas fa-bell text-primary me-2"></i>
+              Your Alerts
+            </h2>
+            <button type="button" class="btn-close" (click)="toggleAlertsModal()" 
+                    aria-label="Close"></button>
+          </div>
+          <p class="text-muted mb-0">Manage your pet's vaccination and appointment reminders</p>
+        </div>
+      </div>
+
+
+      <!-- Modal Body -->
+      <div class="modal-body p-4 pt-0">
+        <!-- Loading State -->
+        <div *ngIf="loadingAlerts" class="text-center py-5">
+          <div class="spinner-border text-primary mb-3" role="status">
+            <span class="visually-hidden">Loading alerts...</span>
+          </div>
+          <p class="text-muted">Loading your alerts...</p>
+        </div>
+
+        <!-- No Alerts State -->
+         <div *ngIf="!loadingAlerts && alerts.length === 0" class="text-center py-5">
+          <div class="mb-4">
+            <i class="fas fa-bell-slash fa-4x text-muted opacity-25"></i>
+          </div>
+          <h4 class="fw-bold text-dark mb-2">No alerts yet</h4>
+          <p class="text-muted mb-4">Create your first alert to get reminders for vet appointments</p>
+          <button class="btn btn-primary" (click)="scrollToAlertForm()">
+            <i class="fas fa-plus me-2"></i>Create First Alert
+          </button>
+        </div>
+
+<<div *ngIf="!loadingAlerts && alerts.length > 0" class="alerts-list">
+          <div class="row g-3">
+            <div class="col-12" *ngFor="let alert of alerts">
+              <div class="alert-card card border-0 shadow-sm hover-lift"
+                   [class.border-warning]="isAlertDueSoon(alert)"
+                   [class.border-danger]="isAlertOverdue(alert)">
+                <div class="card-body p-3 p-sm-4">
+                  <div class="row align-items-center">
+                    <div class="col-12 col-sm-9">
+                      <div class="d-flex align-items-start gap-3">
+                        <div class="alert-icon" [ngClass]="getAlertIconClass(alert.alert_type)">
+                          <i [class]="getAlertIcon(alert.alert_type)"></i>
+                        </div>
+                        <div class="alert-info flex-grow-1">
+                          <h5 class="fw-bold mb-1 text-dark">{{ alert.title }}</h5>
+                          <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                            <span class="badge" [ngClass]="getAlertBadgeClass(alert.alert_type)">
+                              {{ alert.alert_type }}
+                            </span>
+                            <span class="text-muted small">
+                              <i class="fas fa-paw me-1"></i>
+                              <span *ngIf="getPetNameById(alert.pet)">{{ getPetNameById(alert.pet) }}</span>
+                              <span *ngIf="!getPetNameById(alert.pet)">Pet ID: {{ alert.pet }}</span>
+                            </span>
+                            <span class="text-muted small">
+                              <i class="fas fa-redo me-1"></i>{{ alert.frequency }}
+                            </span>
+                          </div>
+                          
+                          <!-- Due Date with Days Remaining -->
+                          <div class="d-flex align-items-center flex-wrap gap-2">
+                            <span class="fw-semibold" [ngClass]="getDueDateTextClass(alert)">
+                              <i class="far fa-calendar-alt me-1"></i>
+                              Due: {{ alert.due_date | date:'mediumDate' }}
+                            </span>
+                            <span class="badge" [ngClass]="getDaysRemainingClass(alert)">
+                              {{ getDaysRemaining(alert) }}
+                            </span>
+                            <span *ngIf="isAlertActive(alert)" class="badge bg-success">
+                              Active
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-3 mt-3 mt-sm-0">
+                      <div class="alert-actions d-flex flex-row flex-sm-column gap-2">
+                        <button class="btn btn-sm btn-outline-primary flex-fill d-flex align-items-center justify-content-center gap-1 py-2"
+                                (click)="editAlert(alert); $event.stopPropagation()">
+                          <i class="fas fa-edit"></i>
+                          <span class="d-none d-sm-inline">Edit</span>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger flex-fill d-flex align-items-center justify-content-center gap-1 py-2"
+                                (click)="deleteAlert(alert.alert_id); $event.stopPropagation()">
+                          <i class="fas fa-trash"></i>
+                          <span class="d-none d-sm-inline">Delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 p-4 pt-0">
+        <button type="button" class="btn btn-outline-secondary flex-fill" 
+                (click)="toggleAlertsModal()">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary flex-fill" 
+                (click)="scrollToAlertForm()">
+          <i class="fas fa-plus me-2"></i>Create New Alert
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade" [class.show]="showAlertsModal" 
+     (click)="toggleAlertsModal()" 
+     [style.display]="showAlertsModal ? 'block' : 'none'"></div>

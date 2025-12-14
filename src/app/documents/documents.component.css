@@ -52,6 +52,54 @@
   z-index: 2;
 }
 
+/* Alert Bell Button */
+.alert-bell-container {
+  z-index: 100;
+}
+
+.alert-bell-btn {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alert-bell-btn:hover {
+  transform: scale(1.1) rotate(15deg);
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.alert-badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.1); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Stat Badges */
+.stat-badge {
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.stat-badge:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px);
+}
+
 /* Text Gradient */
 .text-gradient {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -87,6 +135,65 @@
   flex-shrink: 0;
 }
 
+/* Alert Cards */
+.alert-create-card, .upload-card, .stats-card {
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+}
+
+.alert-card {
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.alert-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.alert-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.alert-icon.vaccination {
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+}
+
+.alert-icon.medication {
+  background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.alert-icon.appointment {
+  background: linear-gradient(135deg, #fd7e14, #ffc107);
+}
+
+.alert-icon.checkup {
+  background: linear-gradient(135deg, #0dcaf0, #0d6efd);
+}
+
+.alert-icon.other {
+  background: linear-gradient(135deg, #6f42c1, #d63384);
+}
+
+/* Hover Lift Effect */
+.hover-lift {
+  transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
 /* File Upload Area */
 .file-upload-area {
   transition: all 0.3s ease;
@@ -109,10 +216,9 @@
 
 /* Button Styles */
 .btn {
-  border-radius: 12px;
+  border-radius: 10px;
   font-weight: 600;
   transition: all 0.3s ease;
-  padding: 0.75rem 1.5rem;
 }
 
 .btn-primary {
@@ -131,14 +237,14 @@
 }
 
 /* Form Controls */
-.form-control-lg {
-  padding: 0.875rem 1rem;
-  border-radius: 12px;
+.form-control, .form-select {
+  border-radius: 10px;
   border: 2px solid var(--gray-light);
-  font-size: 1rem;
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
 }
 
-.form-control-lg:focus {
+.form-control:focus, .form-select:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 0.25rem rgba(78, 84, 200, 0.25);
 }
@@ -151,7 +257,7 @@
 
 .stat-item:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   border-color: var(--primary);
 }
 
@@ -167,14 +273,74 @@
 
 /* Badge Customization */
 .badge {
-  border-radius: 10px;
-  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
   font-weight: 500;
+  font-size: 0.8rem;
 }
 
 /* Border Dashed */
 .border-dashed {
   border-style: dashed !important;
+}
+.modal {
+  z-index: 1050;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+}
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 0.5rem;
+  pointer-events: none;
+}
+
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 1rem);
+}
+
+.modal.show {
+  display: block;
+}
+/* Modal Styles */
+modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.2);
+  border-radius: 0.3rem;
+  outline: 0;
+}
+
+
+.critical-alerts-banner {
+  background: linear-gradient(135deg, #dc3545, #bd2130);
+  color: white;
+  padding: 12px 0;
+  animation: pulse-banner 2s infinite;
+}
+.modal-backdrop {
+  z-index: 1040;
+}
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
 }
 
 /* Snackbar Customization */
@@ -209,56 +375,326 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Responsive Design */
+/* Days Remaining Badges */
+.days-overdue {
+  background-color: #dc3545 !important;
+  color: white !important;
+  animation: blink-overdue 1s infinite;
+}
+
+.days-today {
+  background-color: #fd7e14 !important;
+  color: white !important;
+  animation: pulse-today 2s infinite;
+}
+
+.days-tomorrow {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.days-soon {
+  background-color: #ffd166 !important;
+  color: #000 !important;
+}
+
+.days-normal {
+  background-color: #6c757d !important;
+  color: white !important;
+}
+
+@keyframes blink-overdue {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes pulse-today {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Alert Cards Critical State */
+.alert-card.border-danger {
+  border-left: 4px solid #dc3545 !important;
+  background-color: rgba(220, 53, 69, 0.05);
+}
+
+.alert-card.border-warning {
+  border-left: 4px solid #ffc107 !important;
+  background-color: rgba(255, 193, 7, 0.05);
+}
+
+/* Mobile-First Responsive Design */
 @media (max-width: 768px) {
+
+  critical-alerts-banner {
+    padding: 10px 0;
+    font-size: 0.9rem;
+  }
+  
+  .alert-badge {
+    font-size: 0.7rem;
+    padding: 0.25em 0.5em;
+  }
+  .modal.show {
+  display: block !important;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+
+/* Alert Icon Colors */
+.alert-icon.vaccination {
+  color: #0d6efd;
+}
+
+.alert-icon.medication {
+  color: #198754;
+}
+
+.alert-icon.appointment {
+  color: #fd7e14;
+}
+
+.alert-icon.checkup {
+  color: #0dcaf0;
+}
+
+.alert-icon.other {
+  color: #6c757d;
+}
+
+/* Hover Effects */
+.alert-card:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+.alert-bell-btn:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Stat Badges */
+.stat-badge {
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-badge.bg-danger {
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Loading Spinner */
+.spinner-border.text-primary {
+  --bs-spinner-width: 3rem;
+  --bs-spinner-height: 3rem;
+  --bs-spinner-border-width: 0.25em;
+}
+  
+  .days-overdue,
+  .days-today {
+    animation: none; /* Reduce motion on mobile */
+  }
+
+  /* Hero Section */
   .documents-hero {
-    padding: 3rem 1rem !important;
+    padding: 2rem 1rem !important;
   }
   
   .hero-content h1 {
-    font-size: 2.5rem !important;
+    font-size: 2rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .hero-content p {
+    font-size: 1rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .alert-bell-container {
+    position: relative !important;
+    margin: 0 auto 1.5rem !important;
+    top: auto !important;
+    right: auto !important;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .alert-bell-btn {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .alert-bell-btn i {
+    font-size: 1.5rem !important;
+  }
+  
+  /* Stats Row */
+  .stat-badge {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  /* Section Header */
+  .section-header {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 2rem !important;
   }
   
   .section-header h2 {
-    font-size: 2rem !important;
+    font-size: 1.75rem !important;
   }
   
+  .section-header p {
+    font-size: 1rem !important;
+  }
+  
+  /* Document Cards */
   .document-card .row > div {
     padding: 0.5rem !important;
   }
   
-  .file-upload-area {
-    padding: 2rem 1rem !important;
+  .document-card .card-body {
+    padding: 1.25rem !important;
   }
   
-  .stat-item {
-    padding: 1.5rem 1rem !important;
-  }
-}
-
-@media (max-width: 576px) {
-  .documents-hero h1 {
-    font-size: 2rem !important;
-  }
-  
-  .hero-content p {
-    font-size: 1.1rem !important;
-  }
-  
-  .btn-download span {
-    display: none !important;
+  .document-info h5 {
+    font-size: 1rem;
   }
   
   .document-actions {
-    justify-content: space-between !important;
+    flex-direction: column;
+    gap: 0.5rem;
   }
   
   .btn-download, .btn-delete {
-    flex: 1;
+    width: 100%;
     justify-content: center;
+  }
+  
+  /* Sidebar Cards */
+  .alert-create-card, .upload-card, .stats-card {
+    margin-bottom: 1rem;
+  }
+  
+  .card-body {
+    padding: 1.25rem !important;
+  }
+  
+  /* Modal on Mobile */
+  .modal-dialog {
+    margin: 0.5rem !important;
+    max-height: 90vh;
+  }
+  
+  .modal-content {
+    border-radius: 16px !important;
+  }
+  
+  .modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 1rem !important;
+  }
+  
+  .alert-card .row {
+    flex-direction: column;
+  }
+  
+  .alert-card .col-3, .alert-card .col-9 {
+    width: 100% !important;
+  }
+  
+  .alert-actions {
+    flex-direction: row !important;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+  
+  .alert-actions .btn {
+    flex: 1;
+  }
+  
+  /* File Upload Area */
+  .file-upload-area {
+    padding: 1.5rem !important;
+  }
+  
+  /* Form Controls */
+  .form-control, .form-select {
+    font-size: 16px !important; /* Prevents iOS zoom */
+    padding: 0.875rem !important;
+  }
+  
+  /* Buttons - Touch Friendly */
+  .btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem !important;
+  }
+  
+  /* Mobile Menu Spacing */
+  .documents-main-section {
+    padding: 1.5rem 0 !important;
+  }
+  
+  .row.g-4 {
+    gap: 1rem !important;
   }
 }
 
+/* Small Mobile Devices */
+@media (max-width: 576px) {
+  .documents-hero h1 {
+    font-size: 1.75rem !important;
+  }
+  
+  .hero-content p {
+    font-size: 0.95rem !important;
+  }
+  
+  .stat-badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .document-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1rem;
+  }
+  
+  .btn-download span, .btn-delete span {
+    display: none !important;
+  }
+  
+  .btn-download, .btn-delete {
+    width: 44px;
+    height: 44px;
+    border-radius: 50% !important;
+    padding: 0 !important;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .modal-footer .btn {
+    width: 100%;
+  }
+}
+
+@keyframes pulse-banner {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
 /* Animation for card entry */
 @keyframes fadeInUp {
   from {
@@ -271,13 +707,13 @@ html {
   }
 }
 
-.document-card, .upload-card, .stats-card {
+.document-card, .upload-card, .stats-card, .alert-card, .alert-create-card {
   animation: fadeInUp 0.5s ease-out;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -292,4 +728,54 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, var(--secondary), var(--primary));
+}
+
+/* Date Input Styling */
+input[type="date"] {
+  cursor: pointer;
+}
+
+/* Alert Status Colors */
+.text-danger {
+  color: var(--danger) !important;
+}
+
+.text-warning {
+  color: var(--warning) !important;
+}
+
+.text-success {
+  color: var(--success) !important;
+}
+
+/* Mobile Touch Improvements */
+@media (hover: none) and (pointer: coarse) {
+  .btn, .alert-bell-btn, .file-upload-area {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .document-card, .alert-card {
+    cursor: pointer;
+  }
+  
+  /* Increase touch targets */
+  .badge {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .alert-actions .btn {
+    padding: 0.5rem !important;
+  }
+}
+
+/* Landscape Mobile Optimization */
+@media (max-height: 600px) and (orientation: landscape) {
+  .documents-hero {
+    min-height: 40vh;
+  }
+  
+  .modal-body {
+    max-height: 50vh;
+  }
 }
