@@ -9,6 +9,31 @@
     position: relative;
     overflow: hidden;
 }
+.lottie-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+
+  /* hidden by default */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.lottie-overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.lottie-box {
+  width: 220px;
+  height: 220px;
+}
+
 
 /* Background Shapes */
 .auth-shapes {

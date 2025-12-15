@@ -15,7 +15,6 @@
         
         <!-- Pet Image for Registration -->
         <div class="position-absolute top-0 end-0 d-none d-lg-block" style="width: 150px; transform: translate(30px, -30px);">
-            <img src="assets/images/pet-pattern.svg" alt="Pet Pattern" class="img-fluid opacity-25">
         </div>
 
         <div class="position-relative p-4 p-md-5">
@@ -160,6 +159,7 @@
                         {{ isLoading() ? 'Processing...' : (isLoginMode() ? 'Sign In' : 'Create Account') }}
                     </span>
                 </button>
+                
 
                 <!-- Divider -->
                 <div class="divider position-relative text-center my-4">
@@ -184,6 +184,7 @@
                         </button>
                     </div>
                 </div>
+                
             </form>
 
             <!-- Switch Mode -->
@@ -255,4 +256,7 @@
             </div>
         </div>
     </div>
+    <div class="lottie-overlay" [class.show]="isLoading()">
+  <div #lottieContainer class="lottie-box"></div>
+</div>
 </div>

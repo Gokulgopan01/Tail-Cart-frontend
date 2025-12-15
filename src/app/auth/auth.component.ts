@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import lottie, { AnimationItem } from 'lottie-web';
 
 interface LoginData {
   email_address: string;
@@ -23,8 +24,6 @@ interface LoginResponse {
 
 interface RegisterResponse {
   message?: string;
-  user_id?: number;
-  username?: string;
 }
 
 @Component({
@@ -34,33 +33,52 @@ interface RegisterResponse {
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
-export class AuthComponent {
+export class AuthComponent implements AfterViewInit, OnDestroy {
+
   isLoginMode = signal(true);
   isLoading = signal(false);
   errorMessage = signal('');
   successMessage = signal('');
   showPassword = false;
 
-  // Separate form models for login and register
-  loginData: LoginData = {
-    email_address: '',
-    password: ''
-  };
+  loginData: LoginData = { email_address: '', password: '' };
+  registerData: RegisterData = { username: '', email_address: '', password: '' };
 
-  registerData: RegisterData = {
-    username: '',
-    email_address: '',
-    password: ''
-  };
+  @ViewChild('lottieContainer', { static: true })
+  lottieContainer!: ElementRef<HTMLDivElement>;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  private animation: AnimationItem | null = null;
+
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
+
+  ngAfterViewInit(): void {
+    this.animation = lottie.loadAnimation({
+      container: this.lottieContainer.nativeElement,
+      renderer: 'svg',
+      loop: true,
+      autoplay: false,
+      path: 'assets/Running_Cat.json'
+    });
+  }
+
+  private startLoader(): void {
+    console.log('START LOADER');
+    this.isLoading.set(true);
+    this.animation?.goToAndPlay(0, true);
+  }
+
+  private stopLoader(): void {
+    this.animation?.stop();
+    this.isLoading.set(false);
+  }
 
   onSwitchMode(): void {
     this.isLoginMode.set(!this.isLoginMode());
     this.errorMessage.set('');
     this.successMessage.set('');
-    
-    // Clear password when switching modes
     this.loginData.password = '';
     this.registerData.password = '';
   }
@@ -74,62 +92,63 @@ export class AuthComponent {
   }
 
   onSubmit(): void {
-    this.isLoading.set(true);
+    this.startLoader();
     this.errorMessage.set('');
     this.successMessage.set('');
 
     if (this.isLoginMode()) {
-      this.http.post<LoginResponse>('https://tailcart.duckdns.org/api/user/login/', this.loginData)
+      this.http
+        .post<LoginResponse>('http://127.0.0.1:8000/api/user/login/', this.loginData)
         .subscribe({
           next: (response) => {
-            this.isLoading.set(false);
-            if (response.message === "Login successful") {
-              // Store user data in localStorage
+            if (response.message === 'Login successful') {
               localStorage.setItem('user_id', response.user_id.toString());
               localStorage.setItem('username', response.username);
-              
-              // Show inline success message
+
               this.successMessage.set('Login successful! Redirecting...');
-              
-              // Navigate to home page after delay
+
+              // ✅ FORCE loader for 10 seconds
               setTimeout(() => {
+                this.stopLoader();
                 this.router.navigate(['/home']);
-              }, 1500);
+              }, 3000);
+            } else {
+              this.stopLoader();
+              this.errorMessage.set('Login failed');
             }
           },
           error: (error) => {
-            this.isLoading.set(false);
-            const msg = error.error?.message || 'Login failed. Please check your credentials.';
-            this.errorMessage.set(msg);
+            this.stopLoader();
+            this.errorMessage.set(
+              error.error?.message || 'Login failed. Please check your credentials.'
+            );
           }
         });
     } else {
-      this.http.post<RegisterResponse>('https://tailcart.duckdns.org/api/user/register/', this.registerData)
+      this.http
+        .post<RegisterResponse>('http://127.0.0.1:8000/api/user/register/', this.registerData)
         .subscribe({
           next: (response) => {
-            this.isLoading.set(false);
-            if (response.message && response.message.includes('successful')) {
-              // Show success message and switch to login mode
+            this.stopLoader();
+            if (response.message?.includes('successful')) {
               this.successMessage.set('Registration successful! You can now login.');
-              
-              // Auto-switch to login mode after 3 seconds
-              setTimeout(() => {
-                if (!this.isLoginMode()) {
-                  this.isLoginMode.set(true);
-                  this.errorMessage.set('');
-                }
-              }, 3000);
+              setTimeout(() => this.isLoginMode.set(true), 3000);
             } else {
-              const msg = response.message || 'Registration completed. Please login.';
-              this.errorMessage.set(msg);
+              this.errorMessage.set(response.message || 'Registration completed.');
             }
           },
           error: (error) => {
-            this.isLoading.set(false);
-            const msg = error.error?.message || 'Registration failed. Please try again.';
-            this.errorMessage.set(msg);
+            this.stopLoader();
+            this.errorMessage.set(
+              error.error?.message || 'Registration failed. Please try again.'
+            );
           }
         });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.animation?.destroy();
+    this.animation = null;
   }
 }

@@ -34,133 +34,146 @@
 
   <!-- Features Section -->
   <section class="features-section" id="features">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">What We Offer</h2>
-        <p class="section-subtitle">Safety, convenience, and care for your beloved pets</p>
-        <div class="section-divider"></div>
-      </div>
-      
-      <!-- Desktop Features Grid -->
-      <div class="features-grid d-none d-md-grid">
-        <div class="feature-card">
-          <img src="assets/images/Home-Catalog-Pet_Doc.jpg" alt="Pet Health Records" class="feature-img">
-          <div class="feature-content">
-            <button class="feature-btn" (click)="navigateTo('/document')">Manage Documents</button>
-          </div>
-        </div>
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">What We Offer</h2>
+      <p class="section-subtitle">Safety, convenience, and care for your beloved pets</p>
+      <div class="section-divider"></div>
+    </div>
 
-        <div class="feature-card">
-          <img src="assets/images/Home-Catalog-Pet_cart.jpg" alt="Keychain Store" class="feature-img">
-          <div class="feature-content">
-            <button class="feature-btn" (click)="navigateTo('/shop')">Browse Products</button>
-          </div>
-        </div>
-
-        <div class="feature-card">
-          <img src="assets/images/Home-Catalog-Pet_Doctor.jpg" alt="Doctor AI" class="feature-img">
-          <div class="feature-content">
-            <button class="feature-btn" (click)="navigateTo('/training')">Ask Doctor</button>
-          </div>
-        </div>
-
-        <div class="feature-card">
-          <img src="assets/images/Home-Catalog-Pet_Profile.jpg" alt="Future Services" class="feature-img">
-          <div class="feature-content">
-            <button class="feature-btn">Manage Pets</button>
-          </div>
-        </div>
-
-        <div class="feature-card">
-          <img src="assets/images/Home-Catalog-pet_community.jpg" alt="Pet Community" class="feature-img">
-          <div class="feature-content">
-            <h3>Pet Community</h3>
-            <p>Connect with other pet owners and share experiences.</p>
-            <button class="feature-btn">Coming Soon</button>
-          </div>
+    <!-- Desktop Features Grid -->
+    <div class="features-grid d-none d-md-grid">
+      <div class="feature-card reveal">
+        <div #lottieDoc class="lottie-wrapper"></div>
+        <div class="feature-content">
+          <h3>Health Docuement</h3>
+          <p>Store you pets Health Documents and set Alert.</p>
+          <button class="feature-btn" (click)="navigateTo('/document')">Manage Documents</button>
         </div>
       </div>
-      
-      <!-- Mobile Carousel -->
-      <div class="features-carousel-wrapper d-md-none">
-        <div id="featuresCarousel" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <div class="feature-card-mobile">
-                <img src="assets/images/Home-Catalog-Pet_Doc.jpg" alt="Pet Health Records" class="img-fluid rounded-3">
-                <div class="feature-content-mobile">
-                  <h4>Health Documents</h4>
-                  <p>Store and manage all your pet's medical records in one place</p>
-                  <button class="btn btn-primary w-100" (click)="navigateTo('/document')">Manage Documents</button>
-                </div>
-              </div>
-            </div>
-            
-            <div class="carousel-item">
-              <div class="feature-card-mobile">
-                <img src="assets/images/Home-Catalog-Pet_cart.jpg" alt="Keychain Store" class="img-fluid rounded-3">
-                <div class="feature-content-mobile">
-                  <h4>Pet Supplies</h4>
-                  <p>Browse our premium QR keychains and accessories</p>
-                  <button class="btn btn-primary w-100" (click)="navigateTo('/shop')">Browse Products</button>
-                </div>
-              </div>
-            </div>
-            
-            <div class="carousel-item">
-              <div class="feature-card-mobile">
-                <img src="assets/images/Home-Catalog-Pet_Doctor.jpg" alt="Doctor AI" class="img-fluid rounded-3">
-                <div class="feature-content-mobile">
-                  <h4>AI Vet Assistant</h4>
-                  <p>Get instant advice for your pet's health concerns</p>
-                  <button class="btn btn-primary w-100" (click)="navigateTo('/training')">Ask Doctor</button>
-                </div>
-              </div>
-            </div>
-            
-            <div class="carousel-item">
-              <div class="feature-card-mobile">
-                <img src="assets/images/Home-Catalog-Pet_Profile.jpg" alt="Future Services" class="img-fluid rounded-3">
-                <div class="feature-content-mobile">
-                  <h4>Pet Profiles</h4>
-                  <p>Create and manage detailed profiles for all your pets</p>
-                  <button class="btn btn-primary w-100">Manage Pets</button>
-                </div>
-              </div>
-            </div>
-            
-            <div class="carousel-item">
-              <div class="feature-card-mobile">
-                <img src="assets/images/Home-Catalog-pet_community.jpg" alt="Pet Community" class="img-fluid rounded-3">
-                <div class="feature-content-mobile">
-                  <h4>Pet Community</h4>
-                  <p>Connect with other pet owners and share experiences</p>
-                  <button class="btn btn-primary w-100">Coming Soon</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <button class="carousel-control-prev" type="button" data-bs-target="#featuresCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#featuresCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-          
-          <div class="carousel-indicators">
-            <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-            <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
-          </div>
+
+      <div class="feature-card reveal">
+        <div #lottieCart class="lottie-wrapper"></div>
+        <div class="feature-content">
+          <h3>Browse Product</h3>
+          <p>Browse to get your pet keychains.</p>
+          <button class="feature-btn" (click)="navigateTo('/shop')">Browse Products</button>
+        </div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div #lottieDoctor class="lottie-wrapper"></div>
+        <div class="feature-content">
+          <h3>Doctor Ai</h3>
+          <p>Ask any of your concerns to 24/7 available Ai Doctor.</p>
+          <button class="feature-btn" (click)="navigateTo('/training')">Ask Doctor</button>
+        </div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div #lottieProfile class="lottie-wrapper"></div>
+        <div class="feature-content">
+          <h3>Manage Profile</h3>
+          <p>Manage your pets profile.</p>
+          <button class="feature-btn">Manage Pets</button>
+        </div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div #lottieCommunity class="lottie-wrapper"></div>
+        <div class="feature-content">
+          <h3>Pet Community</h3>
+          <p>Connect with other pet owners and share experiences.</p>
+          <button class="feature-btn">Coming Soon</button>
         </div>
       </div>
     </div>
-  </section>
+
+    <!-- Mobile Carousel -->
+    <div class="features-carousel-wrapper d-md-none">
+      <div id="featuresCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+
+          <div class="carousel-item active reveal">
+            <div class="feature-card-mobile">
+              <div #lottieDocMob class="lottie-wrapper"></div>
+              <div class="feature-content-mobile">
+                <h4>Health Documents</h4>
+                <p>Store and manage all your pet's medical records in one place</p>
+                <button class="btn btn-primary w-100" (click)="navigateTo('/document')">Manage Documents</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item reveal">
+            <div class="feature-card-mobile">
+              <div #lottieCartMob class="lottie-wrapper"></div>
+              <div class="feature-content-mobile">
+                <h4>Pet Supplies</h4>
+                <p>Browse our premium QR keychains and accessories</p>
+                <button class="btn btn-primary w-100" (click)="navigateTo('/shop')">Browse Products</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item reveal">
+            <div class="feature-card-mobile">
+              <div #lottieDoctorMob class="lottie-wrapper"></div>
+              <div class="feature-content-mobile">
+                <h4>AI Vet Assistant</h4>
+                <p>Get instant advice for your pet's health concerns</p>
+                <button class="btn btn-primary w-100" (click)="navigateTo('/training')">Ask Doctor</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item reveal">
+            <div class="feature-card-mobile">
+              <div #lottieProfileMob class="lottie-wrapper"></div>
+              <div class="feature-content-mobile">
+                <h4>Pet Profiles</h4>
+                <p>Create and manage detailed profiles for all your pets</p>
+                <button class="btn btn-primary w-100">Manage Pets</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item reveal">
+            <div class="feature-card-mobile">
+              <div #lottieCommunityMob class="lottie-wrapper"></div>
+              <div class="feature-content-mobile">
+                <h4>Pet Community</h4>
+                <p>Connect with other pet owners and share experiences</p>
+                <button class="btn btn-primary w-100">Coming Soon</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#featuresCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#featuresCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+          <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="1"></button>
+          <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="2"></button>
+          <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="3"></button>
+          <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="4"></button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
 
   <!-- Category Section -->
   <section class="category-section">
