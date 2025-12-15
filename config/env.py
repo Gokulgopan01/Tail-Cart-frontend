@@ -1,4 +1,4 @@
-# API Endpoints
+# # API Endpoints
 
 # import os
 # desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
@@ -44,7 +44,7 @@ MAIN_EXE = exe_path
 REMOTE_VERSION_URL = "https://api.hybridbpo.ecesistech.com/hybrid/api/v1/autologin/autologin-version"
 PORTAL_LOGIN_CONFIRMATION="https://api.hybridbpo.ecesistech.com/hybrid/api/v1/autologin/update-autologin-check?order_id="
 
-RABBIT_URL = "https://api.hybridbpo-msgbroker.ecesistech.com"
+RABBIT_URL = "amqp://guest:guest@api.hybridbpo-msgbroker.ecesistech.com:5672/"
 QUEUE_NAME = "autologin-tool"
 
 

@@ -1028,6 +1028,7 @@ def delete_non_subject_photos(self):
     return True
 
 def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, rental_folder=None) -> bool:
+    missing = []
     try:
         self.driver.get(photos_url)
         time.sleep(3)
@@ -1054,7 +1055,7 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
                     )
          # --- Step 1: Click "Location Map" button to load map ---
         try:
-            location_map_btn = WebDriverWait(self.driver, 10).until(
+            location_map_btn = WebDriverWait(self.driver, 20).until(
                 EC.element_to_be_clickable((By.XPATH, "//a[@title='Refresh location map']"))
             )
             self.driver.execute_script("arguments[0].click();", location_map_btn)
@@ -1067,7 +1068,7 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
             severity="INFO"
             )
             # Optional: wait for the map div to appear
-            WebDriverWait(self.driver, 10).until(
+            WebDriverWait(self.driver, 20).until(
                 EC.visibility_of_element_located((By.ID, "location-map"))
             )
             #print("Location Map loaded.")
@@ -1280,7 +1281,7 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
                 severity="INFO"
                 )
 
-        missing = []
+        #missing = []
         for lbl in expected_labels:
             if lbl.lower() in remaining_required:
                 missing.append(lbl)
