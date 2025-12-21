@@ -1,36 +1,4 @@
 <div class="ai-doctor-container">
-  <!-- Hero Section -->
-  <section class="doctor-hero bg-primary bg-gradient position-relative text-white py-5 py-lg-6">
-    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"></div>
-    <div class="container position-relative z-2 py-4">
-      <div class="row justify-content-center text-center">
-        <div class="col-12 col-lg-8">
-          <span class="badge bg-white bg-opacity-25 text-white d-inline-flex align-items-center gap-2 mb-4 px-4 py-2 rounded-pill border border-white border-opacity-25">
-            <i class="fas fa-stethoscope"></i>
-            AI-Powered Veterinary Assistant
-          </span>
-          <h1 class="display-4 fw-bold mb-3">Pet AI Doctor</h1>
-          <p class="lead mb-4 opacity-90">Get instant guidance for your pet's health concerns. Remember, this is for informational purposes only.</p>
-          
-          <div class="d-flex flex-wrap justify-content-center gap-3">
-            <div class="feature-badge d-flex align-items-center gap-2 px-3 py-2 bg-white bg-opacity-10 rounded-pill">
-              <i class="fas fa-bolt text-warning"></i>
-              <span>Instant Responses</span>
-            </div>
-            <div class="feature-badge d-flex align-items-center gap-2 px-3 py-2 bg-white bg-opacity-10 rounded-pill">
-              <i class="fas fa-shield-alt text-success"></i>
-              <span>Safe & Reliable</span>
-            </div>
-            <div class="feature-badge d-flex align-items-center gap-2 px-3 py-2 bg-white bg-opacity-10 rounded-pill">
-              <i class="fas fa-clock text-info"></i>
-              <span>24/7 Available</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Main Chat Section -->
   <section class="chat-section py-5">
     <div class="container">
@@ -39,7 +7,7 @@
           <!-- Chat Container -->
           <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
             <!-- Chat Header -->
-            <div class="card-header bg-primary bg-gradient text-white py-4 px-4 px-lg-5">
+            <div class="card-header bg-dark text-white py-4 px-4 px-lg-5">
               <div class="d-flex align-items-center gap-3">
                 <div class="doctor-avatar bg-white bg-opacity-20 rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                   <i class="fas fa-stethoscope fs-4"></i>
@@ -62,14 +30,13 @@
                 <div class="message mb-4 animate__animated animate__fadeIn">
                   <div class="d-flex gap-3">
                     <div class="flex-shrink-0">
-                      <div class="message-avatar bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                      <div class="message-avatar bg-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                         <i class="fas fa-stethoscope text-white"></i>
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <div class="message-bubble bg-primary bg-gradient text-white p-4 rounded-4 mb-2">
-                        <p class="fw-bold mb-2">Hello! I'm Dr. PetAI 👋</p>
-                        <p class="mb-3">I'm here to help with your pet's health questions. Please describe your pet's symptoms or ask any questions about their well-being.</p>
+                      <div class="message-bubble bg-dark text-white p-4 rounded-4 mb-2">
+                        <p class="mb-3">Please describe your pet's symptoms or ask any questions about their well-being.</p>
                         <div class="quick-questions">
                           <small class="d-block mb-2 opacity-90">Try asking:</small>
                           <div class="d-flex flex-wrap gap-2">
@@ -97,7 +64,7 @@
                 <div *ngIf="userInput && !loading" class="message mb-4 animate__animated animate__fadeIn">
                   <div class="d-flex gap-3 justify-content-end">
                     <div class="flex-grow-1 text-end">
-                      <div class="message-bubble bg-dark text-white p-4 rounded-4 mb-2">
+                      <div class="message-bubble bg-secondary text-white p-4 rounded-4 mb-2">
                         <p class="mb-0">{{ userInput }}</p>
                       </div>
                       <small class="text-muted">Now</small>
@@ -114,17 +81,17 @@
                 <div *ngIf="loading" class="message mb-4 animate__animated animate__fadeIn">
                   <div class="d-flex gap-3">
                     <div class="flex-shrink-0">
-                      <div class="message-avatar bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                      <div class="message-avatar bg-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                         <i class="fas fa-stethoscope text-white"></i>
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <div class="message-bubble bg-white p-4 rounded-4 mb-2">
+                      <div class="message-bubble bg-white border border-dark p-4 rounded-4 mb-2">
                         <div class="d-flex align-items-center gap-3">
                           <div class="typing-indicator d-flex gap-1">
-                            <span class="bg-primary rounded-circle" style="width: 8px; height: 8px;"></span>
-                            <span class="bg-primary rounded-circle" style="width: 8px; height: 8px;"></span>
-                            <span class="bg-primary rounded-circle" style="width: 8px; height: 8px;"></span>
+                            <span class="bg-dark rounded-circle" style="width: 8px; height: 8px;"></span>
+                            <span class="bg-dark rounded-circle" style="width: 8px; height: 8px;"></span>
+                            <span class="bg-dark rounded-circle" style="width: 8px; height: 8px;"></span>
                           </div>
                           <span class="text-muted">Dr. PetAI is thinking...</span>
                         </div>
@@ -137,13 +104,13 @@
                 <div *ngIf="response && !loading" class="message mb-4 animate__animated animate__fadeIn">
                   <div class="d-flex gap-3">
                     <div class="flex-shrink-0">
-                      <div class="message-avatar bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                      <div class="message-avatar bg-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                         <i class="fas fa-stethoscope text-white"></i>
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <div class="message-bubble bg-white border border-primary border-opacity-25 p-4 rounded-4 mb-2">
-                        <h6 class="fw-bold text-primary mb-2">Dr. PetAI Analysis:</h6>
+                      <div class="message-bubble bg-white border border-dark p-4 rounded-4 mb-2">
+                        <h6 class="fw-bold text-dark mb-2">Dr. PetAI Analysis:</h6>
                         <p class="mb-0">{{ response }}</p>
                         <div class="alert alert-warning mt-3 mb-0 py-2 px-3">
                           <i class="fas fa-exclamation-triangle me-2"></i>
@@ -185,18 +152,18 @@
                     placeholder="Describe your pet's symptoms or ask a health question..."
                     rows="3"
                     class="form-control form-control-lg border-2 rounded-3"
-                    [class.border-primary]="userInput"
+                    [class.border-dark]="userInput"
                     [disabled]="loading"
                     (keydown.enter)="$event.preventDefault(); askDoctor()"
                   ></textarea>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
-                  <button class="btn btn-outline-danger px-3" (click)="clearChat()" [disabled]="loading">
+                  <button class="btn btn-outline-secondary px-3" (click)="clearChat()" [disabled]="loading">
                     <i class="fas fa-trash me-1"></i>
                     Clear Chat
                   </button>
                   <button 
-                    class="btn btn-primary btn-lg px-4" 
+                    class="btn btn-dark btn-lg px-4" 
                     (click)="askDoctor()" 
                     [disabled]="loading || !userInput.trim()"
                   >
@@ -220,8 +187,8 @@
             <div class="col-12 col-md-6 col-lg-4">
               <div class="card border-0 shadow-sm h-100 hover-lift rounded-4">
                 <div class="card-body p-4 text-center">
-                  <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
-                    <i class="fas fa-first-aid fs-3 text-primary"></i>
+                  <div class="feature-icon bg-dark bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
+                    <i class="fas fa-first-aid fs-3 text-dark"></i>
                   </div>
                   <h4 class="h5 fw-bold mb-2">Symptom Checker</h4>
                   <p class="text-muted mb-0">Get instant guidance on common pet symptoms and when to seek veterinary care.</p>
@@ -231,8 +198,8 @@
             <div class="col-12 col-md-6 col-lg-4">
               <div class="card border-0 shadow-sm h-100 hover-lift rounded-4">
                 <div class="card-body p-4 text-center">
-                  <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
-                    <i class="fas fa-paw fs-3 text-primary"></i>
+                  <div class="feature-icon bg-dark bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
+                    <i class="fas fa-paw fs-3 text-dark"></i>
                   </div>
                   <h4 class="h5 fw-bold mb-2">Breed Specific</h4>
                   <p class="text-muted mb-0">Tailored advice for different pet breeds and their specific health considerations.</p>
@@ -242,8 +209,8 @@
             <div class="col-12 col-md-6 col-lg-4">
               <div class="card border-0 shadow-sm h-100 hover-lift rounded-4">
                 <div class="card-body p-4 text-center">
-                  <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
-                    <i class="fas fa-pills fs-3 text-primary"></i>
+                  <div class="feature-icon bg-dark bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
+                    <i class="fas fa-pills fs-3 text-dark"></i>
                   </div>
                   <h4 class="h5 fw-bold mb-2">Medication Info</h4>
                   <p class="text-muted mb-0">Learn about common medications, dosages, and potential side effects.</p>

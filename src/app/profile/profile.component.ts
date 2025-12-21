@@ -141,8 +141,8 @@ export class ProfileComponent implements OnInit {
   currentPet: Pet = { pet_id: null, pet_name: '', species: '', breed: '' };
 
   // API URLs - Update these with your actual endpoints
-  private profileApi = 'https://tailcart.duckdns.org/api/user/profile/';
-  private petsApi = 'https://tailcart.duckdns.org/api/user/pets/';
+  private profileApi = 'http://127.0.0.1:8000/api/user/profile/';
+  private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
 
   constructor(
     private http: HttpClient, 

@@ -1,5 +1,5 @@
 <div class="home-container">
-  <!-- Hero Section - Simplified -->
+  <!-- Hero Section -->
   <section class="hero-section">
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -34,146 +34,111 @@
 
   <!-- Features Section -->
   <section class="features-section" id="features">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">What We Offer</h2>
-      <p class="section-subtitle">Safety, convenience, and care for your beloved pets</p>
-      <div class="section-divider"></div>
-    </div>
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">What We Offer</h2>
+        <p class="section-subtitle">Safety, convenience, and care for your beloved pets</p>
+        <div class="section-divider"></div>
+      </div>
 
-    <!-- Desktop Features Grid -->
-    <div class="features-grid d-none d-md-grid">
-      <div class="feature-card reveal">
-        <div #lottieDoc class="lottie-wrapper"></div>
-        <div class="feature-content">
-          <h3>Health Docuement</h3>
-          <p>Store you pets Health Documents and set Alert.</p>
-          <button class="feature-btn" (click)="navigateTo('/document')">Manage Documents</button>
+      <!-- Desktop Features Grid -->
+      <div class="features-grid d-none d-md-grid">
+        <div class="feature-card reveal">
+          <div #lottieDoc class="lottie-wrapper"></div>
+          <div class="feature-content">
+            <h3>Health Document</h3>
+            <p>Store your pet's Health Documents and set alerts</p>
+            <button class="feature-btn" (click)="navigateTo('/document')">Manage Documents</button>
+          </div>
+        </div>
+
+        <div class="feature-card reveal">
+          <div #lottieCart class="lottie-wrapper"></div>
+          <div class="feature-content">
+            <h3>Browse Products</h3>
+            <p>Browse to get your pet keychains</p>
+            <button class="feature-btn" (click)="navigateTo('/shop')">Browse Products</button>
+          </div>
+        </div>
+
+        <div class="feature-card reveal">
+          <div #lottieDoctor class="lottie-wrapper"></div>
+          <div class="feature-content">
+            <h3>AI Vet Assistant</h3>
+            <p>Ask any of your concerns to our 24/7 AI Doctor</p>
+            <button class="feature-btn" (click)="navigateTo('/training')">Ask Doctor</button>
+          </div>
+        </div>
+
+        <div class="feature-card reveal">
+          <div #lottieProfile class="lottie-wrapper"></div>
+          <div class="feature-content">
+            <h3>Manage Profile</h3>
+            <p>Manage your pet's profile</p>
+            <button class="feature-btn" (click)="navigateTo('/profile')">Manage Pets</button>
+          </div>
+        </div>
+
+        <div class="feature-card reveal">
+          <div #lottieCommunity class="lottie-wrapper"></div>
+          <div class="feature-content">
+            <h3>Pet Community</h3>
+            <p>Connect with other pet owners and share experiences</p>
+            <button class="feature-btn">Coming Soon</button>
+          </div>
         </div>
       </div>
 
-      <div class="feature-card reveal">
-        <div #lottieCart class="lottie-wrapper"></div>
-        <div class="feature-content">
-          <h3>Browse Product</h3>
-          <p>Browse to get your pet keychains.</p>
-          <button class="feature-btn" (click)="navigateTo('/shop')">Browse Products</button>
-        </div>
-      </div>
-
-      <div class="feature-card reveal">
-        <div #lottieDoctor class="lottie-wrapper"></div>
-        <div class="feature-content">
-          <h3>Doctor Ai</h3>
-          <p>Ask any of your concerns to 24/7 available Ai Doctor.</p>
-          <button class="feature-btn" (click)="navigateTo('/training')">Ask Doctor</button>
-        </div>
-      </div>
-
-      <div class="feature-card reveal">
-        <div #lottieProfile class="lottie-wrapper"></div>
-        <div class="feature-content">
-          <h3>Manage Profile</h3>
-          <p>Manage your pets profile.</p>
-          <button class="feature-btn">Manage Pets</button>
-        </div>
-      </div>
-
-      <div class="feature-card reveal">
-        <div #lottieCommunity class="lottie-wrapper"></div>
-        <div class="feature-content">
-          <h3>Pet Community</h3>
-          <p>Connect with other pet owners and share experiences.</p>
-          <button class="feature-btn">Coming Soon</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mobile Carousel -->
-    <div class="features-carousel-wrapper d-md-none">
-      <div id="featuresCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-
-          <div class="carousel-item active reveal">
-            <div class="feature-card-mobile">
-              <div #lottieDocMob class="lottie-wrapper"></div>
-              <div class="feature-content-mobile">
-                <h4>Health Documents</h4>
-                <p>Store and manage all your pet's medical records in one place</p>
-                <button class="btn btn-primary w-100" (click)="navigateTo('/document')">Manage Documents</button>
-              </div>
-            </div>
+      <!-- Modern Mobile Carousel -->
+      <div class="features-carousel-wrapper d-md-none">
+        <div class="features-carousel" id="featuresCarousel">
+          <!-- Slide 1 -->
+          <div class="carousel-slide">
+            <div #lottieDocMob class="lottie-wrapper"></div>
+            <h4>Health Documents</h4>
+            <p>Store and manage all your pet's medical records in one place</p>
+            <button class="btn" (click)="navigateTo('/document')">Manage Documents</button>
           </div>
-
-          <div class="carousel-item reveal">
-            <div class="feature-card-mobile">
-              <div #lottieCartMob class="lottie-wrapper"></div>
-              <div class="feature-content-mobile">
-                <h4>Pet Supplies</h4>
-                <p>Browse our premium QR keychains and accessories</p>
-                <button class="btn btn-primary w-100" (click)="navigateTo('/shop')">Browse Products</button>
-              </div>
-            </div>
+          <!-- Slide 2 -->
+          <div class="carousel-slide">
+            <div #lottieCartMob class="lottie-wrapper"></div>
+            <h4>Pet Supplies</h4>
+            <p>Browse our premium QR keychains and accessories</p>
+            <button class="btn" (click)="navigateTo('/shop')">Browse Products</button>
           </div>
-
-          <div class="carousel-item reveal">
-            <div class="feature-card-mobile">
-              <div #lottieDoctorMob class="lottie-wrapper"></div>
-              <div class="feature-content-mobile">
-                <h4>AI Vet Assistant</h4>
-                <p>Get instant advice for your pet's health concerns</p>
-                <button class="btn btn-primary w-100" (click)="navigateTo('/training')">Ask Doctor</button>
-              </div>
-            </div>
+          <!-- Slide 3 -->
+          <div class="carousel-slide">
+            <div #lottieDoctorMob class="lottie-wrapper"></div>
+            <h4>AI Vet Assistant</h4>
+            <p>Get instant advice for your pet's health concerns</p>
+            <button class="btn" (click)="navigateTo('/training')">Ask Doctor</button>
           </div>
-
-          <div class="carousel-item reveal">
-            <div class="feature-card-mobile">
-              <div #lottieProfileMob class="lottie-wrapper"></div>
-              <div class="feature-content-mobile">
-                <h4>Pet Profiles</h4>
-                <p>Create and manage detailed profiles for all your pets</p>
-                <button class="btn btn-primary w-100">Manage Pets</button>
-              </div>
-            </div>
+          <!-- Slide 4 -->
+          <div class="carousel-slide">
+            <div #lottieProfileMob class="lottie-wrapper"></div>
+            <h4>Pet Profiles</h4>
+            <p>Create and manage detailed profiles for all your pets</p>
+            <button class="btn" (click)="navigateTo('/profile')">Manage Pets</button>
           </div>
-
-          <div class="carousel-item reveal">
-            <div class="feature-card-mobile">
-              <div #lottieCommunityMob class="lottie-wrapper"></div>
-              <div class="feature-content-mobile">
-                <h4>Pet Community</h4>
-                <p>Connect with other pet owners and share experiences</p>
-                <button class="btn btn-primary w-100">Coming Soon</button>
-              </div>
-            </div>
+          <!-- Slide 5 -->
+          <div class="carousel-slide">
+            <div #lottieCommunityMob class="lottie-wrapper"></div>
+            <h4>Pet Community</h4>
+            <p>Connect with other pet owners and share experiences</p>
+            <button class="btn">Coming Soon</button>
           </div>
-
         </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#featuresCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#featuresCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
-          <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="1"></button>
-          <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="2"></button>
-          <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="3"></button>
-          <button type="button" data-bs-target="#featuresCarousel" data-bs-slide-to="4"></button>
+        <!-- Carousel Navigation Dots -->
+        <div class="carousel-nav">
+          <button class="carousel-dot active" data-slide="0"></button>
+          <button class="carousel-dot" data-slide="1"></button>
+          <button class="carousel-dot" data-slide="2"></button>
+          <button class="carousel-dot" data-slide="3"></button>
+          <button class="carousel-dot" data-slide="4"></button>
         </div>
-
       </div>
     </div>
-  </div>
-</section>
-
-
+  </section>
 
   <!-- Category Section -->
   <section class="category-section">
@@ -186,7 +151,9 @@
       <!-- Desktop grid -->
       <div class="category-grid d-none d-md-grid">
         <div class="category-card dogs" (click)="navigateTo('/shop')">
-          <img src="assets/images/Home-Card-Puppe.jpg" alt="Dog Keychains" class="category-image">
+          <div class="category-image">
+            <img src="assets/images/Home-Card-Puppe.jpg" alt="Dog Keychains">
+          </div>
           <div class="category-content">
             <h3>Dog Keychains</h3>
             <p>Durable tags designed for active dogs</p>
@@ -196,7 +163,9 @@
         </div>
 
         <div class="category-card cats" (click)="navigateTo('/shop')">
-          <img src="assets/images/Home-Card-cat.jpg" alt="Cat Keychains" class="category-image">
+          <div class="category-image">
+            <img src="assets/images/Home-Card-cat.jpg" alt="Cat Keychains">
+          </div>
           <div class="category-content">
             <h3>Cat Keychains</h3>
             <p>Lightweight designs perfect for curious cats</p>
@@ -205,7 +174,9 @@
         </div>
 
         <div class="category-card birds" (click)="navigateTo('/shop')">
-          <img src="assets/images/Home-Card-Other.jpg" alt="Other Pets" class="category-image">
+          <div class="category-image">
+            <img src="assets/images/Home-Card-Other.jpg" alt="Other Pets">
+          </div>
           <div class="category-content">
             <h3>Other Pets</h3>
             <p>Custom keychains for birds, fish tanks, and more</p>
@@ -306,7 +277,7 @@
         <div class="col-12">
           <div class="testimonial-card-mobile">
             <div class="d-flex align-items-center mb-3">
-              <img src="assets/images/Home-review1.jpg" alt="Sarah Johnson" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+              <img src="assets/images/Home-review1.jpg" alt="Sarah Johnson" class="rounded-circle me-3">
               <div>
                 <h5 class="fw-bold mb-0">Sarah Johnson</h5>
                 <p class="text-muted mb-0 small">Dog Owner</p>
@@ -318,7 +289,7 @@
         <div class="col-12">
           <div class="testimonial-card-mobile">
             <div class="d-flex align-items-center mb-3">
-              <img src="assets/images/Home-review3.jpg" alt="Michael Chen" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+              <img src="assets/images/Home-review3.jpg" alt="Michael Chen" class="rounded-circle me-3">
               <div>
                 <h5 class="fw-bold mb-0">Michael Chen</h5>
                 <p class="text-muted mb-0 small">Cat Owner</p>
@@ -330,7 +301,7 @@
         <div class="col-12">
           <div class="testimonial-card-mobile">
             <div class="d-flex align-items-center mb-3">
-              <img src="assets/images/Home-review2.jpg" alt="Emily Rodriguez" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+              <img src="assets/images/Home-review2.jpg" alt="Emily Rodriguez" class="rounded-circle me-3">
               <div>
                 <h5 class="fw-bold mb-0">Emily Rodriguez</h5>
                 <p class="text-muted mb-0 small">Multiple Pet Owner</p>

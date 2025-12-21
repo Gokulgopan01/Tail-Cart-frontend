@@ -1,15 +1,33 @@
-import { Component, OnInit, HostListener, OnDestroy, Inject, PLATFORM_ID,inject } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy, Inject, PLATFORM_ID, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { filter, Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBarConfig } from '@angular/material/snack-bar';
+import { RouterOutlet } from '@angular/router';
+
+// Declare Lottie
+declare global {
+  interface Window {
+    lottie: any;
+  }
+}
+
+// Page data interface
+interface PageData {
+  lottieUrl: string;
+  title: string;
+  subtitle: string;
+  showLottie?: boolean;
+  lottieHeight?: string;
+  titleSize?: string;
+}
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule,MatSnackBarModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule, MatSnackBarModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
@@ -17,36 +35,114 @@ export class NavbarComponent implements OnInit, OnDestroy {
   username: string | null = '';
   userId: string | null = '';
   hasProfile = false;
-  cartItems = 3; // Default value for demo
+  cartItems = 3;
   isMobileMenuOpen = false;
   isScrolled = false;
   currentYear: number = new Date().getFullYear();
   showBackToTop = false;
+  
+  // Page-specific data
+  currentPageData: PageData | null = null;
+  private lottieAnimation: any = null;
+  private mobileLottieAnimation: any = null;
+  private isLottieLoaded = false;
+  
+  // Page data configuration
+  private pageDataMap: { [key: string]: PageData } = {
+    
+    '/auth': {
+      lottieUrl: 'assets/Login_banner.json', // This should work
+      title: 'Let\'s Go',
+      subtitle: 'Your Pet\'s Ultimate Digital Companion',
+      showLottie: true,
+      lottieHeight: '200px',
+      titleSize: '3rem'
+    },
+
+    '/home': {
+      lottieUrl: 'https://assets10.lottiefiles.com/packages/lf20_gn0tojcq.json',
+      title: 'Pet\'s Digital Home',
+      subtitle: 'Manage care, shop smarter, and stay organized.',
+      showLottie: true,
+      lottieHeight: '200px',
+      titleSize: '3rem'
+    },
+
+    '/shop': {
+      lottieUrl: 'assets/shop_page_banner.json',
+      title: 'Pet Accessories',
+      subtitle: 'Thoughtfully designed items for your pet.',
+      showLottie: true,
+      lottieHeight: '180px',
+      titleSize: '2.5rem'
+    },
+    
+    '/document': {
+      lottieUrl: 'assets/document_banner.json',
+      title: 'Records & Reminders',
+      subtitle: 'Manage documents, track vaccinations, and set reminders.',
+      showLottie: true,
+      lottieHeight: '160px'
+    },
+
+    '/doctor-ai': {
+      lottieUrl: 'assets/Doctor_AI.json',
+      title: 'Pet Care Assistant',
+      subtitle: 'Ask questions. Get instant pet health insights.',
+      showLottie: true,
+      lottieHeight: '180px'
+    },
+    
+    '/contact': {
+      lottieUrl: 'assets/Contact_Us.json',
+      title: 'Talk to Us!',
+      subtitle: 'Let’s make your pet’s day paw-some 🐾',
+      showLottie: true,
+      lottieHeight: '170px'
+    },
+
+    '/cart': {
+      lottieUrl: 'https://assets10.lottiefiles.com/packages/lf20_57TxAX.json',
+      title: 'Cart-tastic!',
+      subtitle: 'Stay on top of your pet shopping adventures',
+      showLottie: true,
+      lottieHeight: '150px'
+    },
+
+    '/profile': {
+      lottieUrl: 'https://assets10.lottiefiles.com/packages/lf20_6xfqjauq.json',
+      title: 'Me & My Pet',
+      subtitle: 'Update your info and pamper your furry companion',
+      showLottie: true,
+      lottieHeight: '160px'
+    }
+  };
+
   private routerSubscription!: Subscription;
   private isBrowser: boolean;
-  private scrollThreshold = 300; // When to show back-to-top button
+  private scrollThreshold = 300;
   private lastScrollTop = 0;
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    if (!this.isBrowser) return;
-    
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    this.isScrolled = scrollTop > 20;
-    
-    // Show/hide back to top button
-    this.showBackToTop = scrollTop > this.scrollThreshold;
-    
-    // Add animation based on scroll direction
-    this.handleScrollDirection(scrollTop);
-    this.lastScrollTop = scrollTop;
+  if (this.isMobileMenuOpen) return;
+
+  const currentScroll =
+    window.pageYOffset || document.documentElement.scrollTop;
+
+  if (currentScroll > this.lastScrollTop && currentScroll > 80) {
+    this.isScrolled = true;
+  } else {
+    this.isScrolled = false;
   }
+
+  this.lastScrollTop = Math.max(currentScroll, 0);
+}
 
   @HostListener('window:resize', [])
   onWindowResize() {
     if (!this.isBrowser) return;
     
-    // Close menu on resize to desktop
     if (window.innerWidth > 768 && this.isMobileMenuOpen) {
       this.closeMobileMenu();
     }
@@ -64,7 +160,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.loadUserData();
     this.setupRouterEvents();
     this.setupSmoothScrolling();
-    this.initializeAnimations();
+    this.loadLottieScript();
+    this.setCurrentPageData(this.router.url);
   }
 
   ngOnDestroy() {
@@ -73,6 +170,112 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
     this.removeMenuOpenClass();
     this.removeScrollRestoration();
+    
+    if (this.lottieAnimation) {
+      this.lottieAnimation.destroy();
+    }
+    if (this.mobileLottieAnimation) {
+      this.mobileLottieAnimation.destroy();
+    }
+  }
+
+  private loadLottieScript(): void {
+    if (this.isBrowser && !this.isLottieLoaded) {
+      const script = this.document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js';
+      script.onload = () => {
+        this.isLottieLoaded = true;
+        // Load animation after script is loaded
+        if (this.currentPageData) {
+          this.loadLottieAnimation(this.currentPageData.lottieUrl);
+          this.loadMobileLottieAnimation(this.currentPageData.lottieUrl);
+        }
+      };
+      this.document.head.appendChild(script);
+    }
+  }
+
+  private setCurrentPageData(url: string): void {
+    const basePath = url.split('?')[0].split('#')[0];
+    const pageData = this.pageDataMap[basePath];
+    
+    if (pageData) {
+      this.currentPageData = pageData;
+      if (this.isLottieLoaded) {
+        this.loadLottieAnimation(pageData.lottieUrl);
+        this.loadMobileLottieAnimation(pageData.lottieUrl);
+      }
+    } else {
+      this.currentPageData = {
+        lottieUrl: 'https://assets10.lottiefiles.com/packages/lf20_gn0tojcq.json',
+        title: 'Tail Cart',
+        subtitle: 'Your Pet\'s Digital Companion',
+        showLottie: true,
+        lottieHeight: '180px'
+      };
+      if (this.isLottieLoaded) {
+        this.loadLottieAnimation(this.currentPageData.lottieUrl);
+        this.loadMobileLottieAnimation(this.currentPageData.lottieUrl);
+      }
+    }
+  }
+
+  private loadLottieAnimation(url: string): void {
+    if (!this.isBrowser || !window.lottie) return;
+
+    if (this.lottieAnimation) {
+      this.lottieAnimation.destroy();
+    }
+
+    const container = this.document.querySelector('.lottie-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    try {
+      this.lottieAnimation = window.lottie.loadAnimation({
+        container: container,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: url,
+        rendererSettings: {
+          progressiveLoad: true,
+          hideOnTransparent: true
+        }
+      });
+    } catch (error) {
+      console.error('Error loading desktop Lottie:', error);
+    }
+  }
+
+  private loadMobileLottieAnimation(url: string): void {
+    if (!this.isBrowser || !window.lottie) return;
+
+    if (this.mobileLottieAnimation) {
+      this.mobileLottieAnimation.destroy();
+    }
+
+    const container = this.document.querySelector('.mobile-lottie-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    try {
+      this.mobileLottieAnimation = window.lottie.loadAnimation({
+        container: container,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: url,
+        rendererSettings: {
+          progressiveLoad: true,
+          hideOnTransparent: true
+        }
+      });
+    } catch (error) {
+      console.error('Error loading mobile Lottie:', error);
+    }
   }
 
   private loadUserData() {
@@ -81,7 +284,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.username = localStorage.getItem('username') || 'Guest User';
       this.hasProfile = !!localStorage.getItem('has_profile');
       
-      // Load cart items count
       const cartData = localStorage.getItem('cart_items');
       if (cartData) {
         try {
@@ -94,14 +296,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   private setupRouterEvents() {
-    // Handle scroll to top on route changes
     this.routerSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
+      .subscribe((event: any) => {
         this.smoothScrollToTop();
         this.closeMobileMenu();
+        this.setCurrentPageData(event.urlAfterRedirects || event.url);
         
-        // Reset scroll position for the new route
         if (this.isBrowser) {
           this.saveScrollPosition();
         }
@@ -110,7 +311,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   private setupSmoothScrolling() {
     if (this.isBrowser) {
-      // Add smooth scrolling to anchor links
       this.document.addEventListener('click', (event) => {
         const target = event.target as HTMLElement;
         const link = target.closest('a[href^="#"]');
@@ -127,49 +327,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
         }
       });
 
-      // Prevent default touch behavior that might cause bounce
-      this.document.addEventListener('touchmove', (e) => {
-        if (e.target instanceof Element && e.target.closest('.mobile-nav-content')) {
-          e.preventDefault();
-        }
-      }, { passive: false });
+      
     }
   }
 
-  private initializeAnimations() {
-    if (this.isBrowser) {
-      // Add scroll animation to navbar
-      window.addEventListener('scroll', () => {
-        const navbar = this.document.querySelector('.navbar');
-        const mobileNavbar = this.document.querySelector('.mobile-navbar');
-        
-        if (window.scrollY > 20) {
-          navbar?.classList.add('scrolled');
-          mobileNavbar?.classList.add('scrolled');
-        } else {
-          navbar?.classList.remove('scrolled');
-          mobileNavbar?.classList.remove('scrolled');
-        }
-      });
-    }
-  }
-
-  private handleScrollDirection(currentScrollTop: number) {
-    if (!this.isBrowser) return;
-    
-    const navbar = this.document.querySelector('.navbar');
-    const mobileNavbar = this.document.querySelector('.mobile-navbar');
-    
-    if (currentScrollTop > this.lastScrollTop && currentScrollTop > 100) {
-      // Scrolling down
-      navbar?.classList.add('hide');
-      mobileNavbar?.classList.add('hide');
-    } else {
-      // Scrolling up
-      navbar?.classList.remove('hide');
-      mobileNavbar?.classList.remove('hide');
-    }
-  }
 
   smoothScrollToTop(instant: boolean = false) {
     if (!this.isBrowser) return;
@@ -181,8 +342,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return;
     }
     
-    // Smooth scroll with easing
-    const duration = 800; // ms
+    const duration = 800;
     const start = window.pageYOffset;
     const startTime = performance.now();
     
@@ -200,7 +360,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
       } else {
-        // Ensure we're at the very top
         this.document.documentElement.scrollTop = 0;
         this.document.body.scrollTop = 0;
       }
@@ -215,7 +374,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     const elementPosition = element.getBoundingClientRect().top;
     const offsetPosition = elementPosition + window.pageYOffset - offset;
     
-    const duration = 600; // ms
+    const duration = 600;
     const start = window.pageYOffset;
     const distance = offsetPosition - start;
     const startTime = performance.now();
@@ -253,18 +412,23 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  
+  if (this.isMobileMenuOpen) {
+    // Prevent body scroll when menu is open
+    this.document.body.classList.add('menu-open');
     
-    if (this.isMobileMenuOpen) {
-      if (this.isBrowser) {
-        this.document.body.classList.add('menu-open');
-        // Prevent background scrolling when menu is open
-        this.document.body.style.overflow = 'hidden';
+    // Add a slight delay for smooth animation
+    setTimeout(() => {
+      const bottomSheet = this.document.querySelector('.mobile-bottom-sheet');
+      if (bottomSheet) {
+        bottomSheet.classList.add('active');
       }
-    } else {
-      this.closeMobileMenu();
-    }
+    }, 10);
+  } else {
+    this.closeMobileMenu();
   }
+}
 
   onNavLinkClick() {
     this.smoothScrollToTop();
@@ -272,16 +436,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   closeMobileMenu() {
-    this.isMobileMenuOpen = false;
-    this.removeMenuOpenClass();
+  this.isMobileMenuOpen = false;
+  
+  // Remove active class with animation
+  const bottomSheet = this.document.querySelector('.mobile-bottom-sheet');
+  if (bottomSheet) {
+    bottomSheet.classList.remove('active');
   }
+  
+  // Remove menu-open class after animation completes
+  setTimeout(() => {
+    this.removeMenuOpenClass();
+  }, 400); // Match this with CSS transition duration
+}
 
   private removeMenuOpenClass() {
-    if (this.isBrowser) {
-      this.document.body.classList.remove('menu-open');
-      this.document.body.style.overflow = '';
-    }
-  }
+  this.document.body.classList.remove('menu-open');
+}
+
   
   navigateToProfile(): void {
     this.router.navigate(['/profile']);
@@ -302,36 +474,30 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.snackBar.open(message, 'Close', config);
   }
 
-
   logout(): void {
     if (this.isBrowser) {
       localStorage.clear();
       sessionStorage.clear();
       
-      // Show logout message
-      this.showSnackBar('Loged Out.! Please login to continue', 'success');
-      // Navigate to auth page
+      this.showSnackBar('Logged Out! Please login to continue', 'success');
       this.router.navigate(['/auth']);
       
-      // Close mobile menu if open
       this.closeMobileMenu();
     }
   }
 
-  // Add touch device support
   @HostListener('document:touchstart', ['$event'])
-  handleTouchStart(event: TouchEvent) {
-    if (!this.isBrowser) return;
-    
-    // Close menu when touching outside on mobile
-    if (this.isMobileMenuOpen && 
-        !(event.target as Element).closest('.mobile-nav-content') &&
-        !(event.target as Element).closest('.menu-toggle')) {
-      this.closeMobileMenu();
-    }
+handleTouchStart(event: TouchEvent) {
+  if (!this.isBrowser) return;
+  
+  if (this.isMobileMenuOpen && 
+      !(event.target as Element).closest('.mobile-bottom-sheet') &&
+      !(event.target as Element).closest('.menu-toggle') &&
+      !(event.target as Element).closest('.sheet-handle')) {
+    this.closeMobileMenu();
   }
+}
 
-  // Handle navigation with animations
   handleNavigation(route: string, anchor?: string) {
     this.router.navigate([route]).then(() => {
       if (anchor) {

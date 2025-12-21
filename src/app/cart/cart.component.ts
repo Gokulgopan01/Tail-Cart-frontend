@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject,AfterViewInit  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -28,7 +28,7 @@ interface CartItem {
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, AfterViewInit  {
   cartItems: CartItem[] = [];
   loading = false;
   userId: string | null = '';
@@ -40,13 +40,40 @@ export class CartComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+    console.log('🎬 CartComponent ngOnInit() called');
+    console.log('📍 Current URL:', window.location.href);
+    
+    // Check all localStorage
+    console.log('📦 localStorage contents:');
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      const value = localStorage.getItem(key!);
+      console.log(`${key}: ${value}`);
+    }
+    
     this.userId = localStorage.getItem('user_id');
+    console.log('👤 User ID from localStorage:', this.userId);
+    
     if (!this.userId) {
+      console.warn('⚠️ No user ID found in localStorage');
       this.showSnackBar('Please log in to view your cart', 'error');
+      // Try to redirect to login
+      window.location.href = '/auth';
       return;
     }
-    this.loadCart();
+    
+    console.log('🔄 Starting to load cart...');
+    
+    // Test if component is actually rendered
+    setTimeout(() => {
+      console.log('⏰ Component should be rendered by now');
+      this.loadCart();
+    }, 100);
   }
+  ngAfterViewInit(): void {
+    console.log('🖼️ CartComponent ngAfterViewInit() called');
+  }
+
 
   /** Show snackbar notification */
   private showSnackBar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
@@ -62,30 +89,42 @@ export class CartComponent implements OnInit {
   }
 
   /** Load cart items */
-  loadCart(): void {
-    this.loading = true;
-    this.http.get<CartItem[]>(`https://tailcart.duckdns.org/api/user/cart/?user_id=${this.userId}`)
-      .subscribe({
-        next: (res) => {
-          this.cartItems = res.map(item => ({
-            ...item,
-            product_image: item.product_image?.startsWith('http')
-              ? item.product_image
-              : 'https://tailcart.duckdns.org' + item.product_image
-          }));
-          this.calculateTotal();
-          this.loading = false;
-          if (res.length === 0) {
-            this.showSnackBar('Your cart is empty. Start shopping!', 'info');
-          }
-        },
-        error: (error) => {
-          this.loading = false;
-          console.error('Failed to load cart:', error);
-          this.showSnackBar('Failed to load cart items. Please try again.', 'error');
+loadCart(): void {
+  this.loading = true;
+  
+  // Add debug logs
+  console.log('🎯 loadCart() called');
+  console.log('📋 User ID:', this.userId);
+  
+  const url = `http://127.0.0.1:8000/api/user/cart/?user_id=${this.userId}`;
+  console.log('🌐 API URL:', url);
+  
+  this.http.get<CartItem[]>(url)
+    .subscribe({
+      next: (res) => {
+        console.log('✅ API Response received:', res);
+        this.cartItems = res.map(item => ({
+          ...item,
+          product_image: item.product_image?.startsWith('http')
+            ? item.product_image
+            : 'http://127.0.0.1:8000/' + item.product_image
+        }));
+        this.calculateTotal();
+        this.loading = false;
+        console.log('🛒 Cart items after processing:', this.cartItems);
+        if (res.length === 0) {
+          this.showSnackBar('Your cart is empty. Start shopping!', 'info');
         }
-      });
-  }
+      },
+      error: (error) => {
+        console.error('❌ API Error:', error);
+        console.error('❌ Error status:', error.status);
+        console.error('❌ Error message:', error.message);
+        this.loading = false;
+        this.showSnackBar('Failed to load cart items. Please try again.', 'error');
+      }
+    });
+}
 
   /** Update item quantity */
   updateQuantity(item: CartItem, newQuantity: number): void {
@@ -97,7 +136,7 @@ export class CartComponent implements OnInit {
     const oldQuantity = item.quantity;
     item.quantity = newQuantity;
 
-    this.http.put(`https://tailcart.duckdns.org/api/user/cart/`, {
+    this.http.put(`http://127.0.0.1:8000/api/user/cart/`, {
       user_id: this.userId,
       cart_id: item.cart_id,
       quantity: newQuantity
@@ -128,7 +167,7 @@ export class CartComponent implements OnInit {
     );
 
     snackBarRef.onAction().subscribe(() => {
-      this.http.delete(`https://tailcart.duckdns.org/api/user/cart/?cart_id=${item.cart_id}`)
+      this.http.delete(`http://127.0.0.1:8000/api/user/cart/?cart_id=${item.cart_id}`)
         .subscribe({
           next: () => {
             this.cartItems = this.cartItems.filter(i => i.cart_id !== item.cart_id);
@@ -173,7 +212,7 @@ export class CartComponent implements OnInit {
 
     snackBarRef.onAction().subscribe(() => {
       this.loading = true;
-      this.http.post(`https://tailcart.duckdns.org/api/checkout/`, {
+      this.http.post(`http://127.0.0.1:8000/api/checkout/`, {
         user_id: this.userId,
         items: this.cartItems,
         total_amount: this.totalAmount

@@ -147,7 +147,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
 
   fetchProducts() {
-    this.http.get<Product[]>('https://tailcart.duckdns.org/api/admin/products/').subscribe({
+    this.http.get<Product[]>('http://127.0.0.1:8000/api/admin/products/').subscribe({
       next: (products) => {
         this.products = products;
         this.applyFilters();
@@ -443,7 +443,7 @@ onImageError(event: Event) {
       quantity: this.quantity 
     };
 
-    this.http.post('https://tailcart.duckdns.org/api/user/cart/', payload).subscribe({
+    this.http.post('http://127.0.0.1:8000/api/user/cart/', payload).subscribe({
       next: (res: any) => {
         this.showSnackbar(`${this.selectedProductForCart!.model} added to your cart!`, 'success');
         

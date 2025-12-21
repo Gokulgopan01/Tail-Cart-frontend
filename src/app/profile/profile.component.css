@@ -10,23 +10,52 @@
   --white: #FFFFFF;
   --gray: #6B7280;
   --gray-light: #E5E7EB;
+  --gray-lighter: #F3F4F6;
+}
+
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Profile Container */
 .profile-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding-bottom: 2rem;
 }
 
-/* Hero Section with Background Image */
+/* Hero Section */
 .profile-hero {
-  min-height: 50vh;
+  min-height: 300px;
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(139, 92, 246, 0.9));
+  position: relative;
+  padding: 2rem 0;
+}
+
+.hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 2;
 }
 
 .hero-bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: url('/assets/images/profile-banner.jpg') center/cover no-repeat;
+  opacity: 0.3;
   animation: gentleZoom 20s ease-in-out infinite alternate;
 }
 
@@ -35,10 +64,22 @@
   100% { transform: scale(1.05); }
 }
 
-/* Profile Card Animation */
+/* Main Content Layout */
+.profile-main-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Profile Card - FIXED */
 .profile-card {
+  background: var(--white);
   border-radius: 20px;
-  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  margin-top: -80px;
+  position: relative;
+  z-index: 10;
+  padding: 2.5rem;
   animation: slideUp 0.5s ease-out;
 }
 
@@ -58,120 +99,379 @@
   }
 }
 
-/* Pet Card Animations */
-.pet-card {
+/* Profile Header */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.avatar-container {
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--white);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-info h1 {
+  font-size: 1.75rem;
+  color: var(--dark);
+  margin-bottom: 0.5rem;
+}
+
+.profile-info p {
+  color: var(--gray);
+  margin-bottom: 1rem;
+}
+
+/* Profile Details Grid - FIXED LAYOUT */
+.profile-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.detail-group {
+  background: var(--gray-lighter);
+  border-radius: 12px;
+  padding: 1.25rem;
   transition: all 0.3s ease;
+}
+
+.detail-group:hover {
+  background: var(--light);
+  transform: translateY(-2px);
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.detail-value {
+  font-size: 1rem;
+  color: var(--dark);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Pet Cards Grid */
+.pets-section {
+  margin-top: 3rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  color: var(--dark);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Pet Card */
+.pet-card {
+  background: var(--white);
   border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid var(--gray-light);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .pet-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary);
 }
 
+.pet-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  object-fit: cover;
+  border: 3px solid var(--white);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pet-name {
+  font-size: 1.25rem;
+  color: var(--dark);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.pet-info {
+  flex: 1;
+}
+
+.pet-species, .pet-breed {
+  color: var(--gray);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Add Pet Card */
 .add-pet-card {
-  border-style: dashed !important;
-  transition: all 0.3s ease;
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+  border: 2px dashed var(--gray-light) !important;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 200px;
+  height: 100%;
 }
 
 .add-pet-card:hover {
-  transform: translateY(-5px);
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
   border-color: var(--secondary) !important;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* Pet Avatar Gradient */
-.bg-gradient-pet {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-}
-
-/* Custom Border */
-.border-dashed {
-  border-style: dashed !important;
-}
-
-/* Hover Lift Effect */
-.hover-lift {
+.add-pet-icon {
+  width: 60px;
+  height: 60px;
+  background: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
   transition: all 0.3s ease;
 }
 
-.hover-lift:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+.add-pet-card:hover .add-pet-icon {
+  background: var(--secondary);
+  transform: scale(1.1);
 }
 
-/* Blur Effect */
-.backdrop-blur {
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+.add-pet-text {
+  color: var(--gray);
+  font-weight: 500;
+  text-align: center;
 }
 
-/* Cursor Pointer */
-.cursor-pointer {
-  cursor: pointer;
-}
-
-/* Pet Form Modal */
+/* Modal Styles - COMPLETELY FIXED */
 .pet-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 1050;
+  padding: 1rem;
   animation: fadeIn 0.3s ease-out;
+  backdrop-filter: blur(5px);
+}
+
+.pet-form-modal .modal-dialog {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.pet-form-modal .modal-content {
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: modalSlideIn 0.3s ease-out;
 }
 
 @keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: translateY(-20px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0) scale(1);
   }
 }
 
-/* Pet Status Animation */
-.avatar-status {
-  animation: pulse 2s infinite;
+.modal-header {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  padding: 1.5rem;
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
-  }
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
 }
 
-/* Mobile First Styling */
+.modal-body {
+  padding: 1.5rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* Form Styles - FIXED */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-control, .form-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--gray-light);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: var(--white);
+}
+
+.form-control:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-control::placeholder {
+  color: var(--gray);
+  opacity: 0.7;
+}
+
+.modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--gray-light);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+}
+
+.btn-secondary {
+  background: var(--gray-light);
+  color: var(--dark);
+}
+
+.btn-secondary:hover {
+  background: var(--gray);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+}
+
+/* Edit Profile Button */
+.edit-profile-btn {
+  background: var(--accent);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-profile-btn:hover {
+  background: #d97706;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  /* Hero Section Mobile Optimizations */
   .profile-hero {
-    min-height: 40vh;
-    padding-top: calc(70px + 1rem); /* Account for navbar */
+    min-height: 250px;
   }
   
-  .hero-content {
-    padding: 2rem 1rem;
-  }
-  
-  .hero-content h1 {
-    font-size: 2rem !important;
-    line-height: 1.2;
-  }
-  
-  .hero-badge {
-    font-size: 0.875rem !important;
-    padding: 0.5rem 1rem !important;
-  }
-  
-  /* Profile Card Mobile */
   .profile-card {
-    margin-top: -40px;
-    border-radius: 20px 20px 0 0;
+    margin-top: -60px;
+    padding: 1.5rem;
+    border-radius: 15px;
   }
   
   .profile-header {
@@ -180,169 +480,147 @@
     gap: 1rem;
   }
   
-  .avatar-container {
-    margin: 0 auto;
+  .avatar-img {
+    width: 100px;
+    height: 100px;
   }
   
-  /* Mobile Form Improvements */
-  .form-control-lg, .form-select-lg {
-    font-size: 16px !important; /* Prevents iOS zoom on focus */
-    padding: 0.875rem 1rem !important;
+  .profile-details {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
   
-  .btn-lg {
-    padding: 0.875rem 1.5rem !important;
-    font-size: 1rem !important;
-    min-height: 48px; /* Better touch target */
-  }
-  
-  /* Pets Grid Mobile */
-  .pets-grid .row {
-    --bs-gutter-x: 0.75rem;
-  }
-  
-  .pet-card {
-    margin-bottom: 0.75rem;
-  }
-  
-  /* Modal Mobile Optimization */
-  .pet-form-modal {
-    padding: 1rem !important;
-    align-items: flex-end !important;
+  .pets-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
   }
   
   .modal-content {
-    max-height: 85vh !important;
-    border-radius: 20px 20px 0 0 !important;
-    animation: slideUp 0.3s ease-out !important;
+    max-height: 85vh;
+    overflow: hidden;
   }
   
-  @keyframes slideUp {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
+  .modal-body {
+    max-height: 50vh;
   }
   
-  /* Mobile Touch Improvements */
-  .btn, .btn-action {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  .modal-footer {
+    flex-direction: column;
   }
   
-  /* Better spacing for mobile */
-  .profile-main-section {
-    padding: 1.5rem 0 !important;
-  }
-  
-  /* Mobile Swipe Indicators */
-  .pet-card::after {
-    content: '💫';
-    position: absolute;
-    right: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.3;
-    animation: float 3s ease-in-out infinite;
-  }
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(-50%) translateX(0); }
-    50% { transform: translateY(-50%) translateX(5px); }
-  }
-  
-  /* Mobile-Only Fun Elements */
-  .mobile-fun-badge {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: var(--accent);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-weight: bold;
-    z-index: 100;
-    animation: bounce 2s infinite;
-  }
-  
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+  .modal-footer .btn {
+    width: 100%;
   }
 }
 
-/* Small Mobile Devices */
 @media (max-width: 480px) {
-  .profile-hero {
-    min-height: 35vh;
+  .profile-main-section {
+    padding: 0 1rem;
   }
   
-  .hero-content h1 {
-    font-size: 1.75rem !important;
+  .hero-content {
+    padding: 0 1rem;
   }
   
   .profile-card {
-    border-radius: 15px !important;
+    padding: 1.25rem;
+    margin-top: -50px;
   }
   
-  .btn-lg {
-    width: 100%;
-    justify-content: center;
+  .pets-grid {
+    grid-template-columns: 1fr;
   }
   
-  /* Fun emoji indicators for pets */
-  .pet-card:nth-child(odd)::before {
-    content: '🐶';
-    position: absolute;
-    left: -15px;
-    top: -15px;
-    font-size: 1.5rem;
-    opacity: 0.2;
+  .pet-form-modal {
+    padding: 0.5rem;
   }
   
-  .pet-card:nth-child(even)::before {
-    content: '🐱';
-    position: absolute;
-    left: -15px;
-    top: -15px;
-    font-size: 1.5rem;
-    opacity: 0.2;
+  .modal-content {
+    border-radius: 15px;
   }
 }
 
-/* Loading Animation */
-.spinner-border {
+/* Loading States */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gray-light);
+  border-top-color: var(--primary);
+  border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
-/* Success/Error States with Fun Animations */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Success/Error States */
+.alert {
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  animation: slideIn 0.3s ease-out;
+}
+
 .alert-success {
-  animation: slideInRight 0.5s ease-out;
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
 }
 
-.alert-danger {
-  animation: shake 0.5s ease-in-out;
+.alert-error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-
-@keyframes slideInRight {
+@keyframes slideIn {
   from {
-    transform: translateX(100%);
     opacity: 0;
+    transform: translateY(-10px);
   }
   to {
-    transform: translateX(0);
     opacity: 1;
+    transform: translateY(0);
   }
+}
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+.w-100 { width: 100%; }
+.d-flex { display: flex; }
+.align-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 1rem; }
+.gap-4 { gap: 1.5rem; }
+
+/* Status Indicators */
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.status-active {
+  background: #10b981;
+}
+
+.status-inactive {
+  background: #ef4444;
 }
 
 /* Scrollbar Styling */

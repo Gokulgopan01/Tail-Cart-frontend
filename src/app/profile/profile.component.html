@@ -1,27 +1,4 @@
 <div class="profile-container">
-  <!-- Hero Section with background image -->
-  <section class="profile-hero position-relative overflow-hidden">
-    <!-- Image as background -->
-    <div class="hero-bg-image position-absolute top-0 start-0 w-100 h-100"></div>
-    <div class="hero-overlay position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
-    
-    <div class="hero-content position-relative z-2 py-5">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-12 col-md-10 col-lg-8 text-center">
-            <span class="hero-badge badge bg-white bg-opacity-20 px-4 py-2 rounded-pill border border-white border-opacity-30 d-inline-flex align-items-center gap-2 mb-4">
-              <i class="fas fa-user-shield"></i>
-              Pet Owner Profile
-            </span>
-            <h1 class="display-4 fw-bold text-white mb-3">{{ hasProfile ? 'Welcome Back!' : 'Create Your Profile' }}</h1>
-            <p class="lead text-white opacity-85 mb-0">
-              {{ hasProfile ? 'Manage your personal information and pets' : 'Get started by setting up your profile' }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- Main Content -->
   <section class="profile-main-section py-5">
@@ -30,12 +7,12 @@
         <!-- Profile Card -->
         <div class="col-lg-6">
           <div class="profile-card card border-0 shadow-lg h-100" [class.edit-mode]="isEditMode">
-            <div class="profile-header card-header bg-primary text-white border-0 rounded-top-4 p-4">
+            <div class="profile-header card-header bg-dark text-white border-0 rounded-top-4 p-4">
               <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
                 <div class="d-flex align-items-center gap-3">
                   <div class="avatar-container position-relative">
                     <div class="avatar-img rounded-circle bg-white bg-opacity-20 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
-                      <i class="fas fa-user-circle fa-3x"></i>
+                      <i class="fas fa-user-circle fa-3x text-white"></i>
                     </div>
                     <div class="avatar-status position-absolute bottom-0 end-0 rounded-circle border border-3 border-white"
                          [class.bg-success]="hasProfile" [class.bg-secondary]="!hasProfile"
@@ -57,7 +34,7 @@
             </div>
 
             <div *ngIf="isLoading" class="loading-state p-5 text-center">
-              <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
+              <div class="spinner-border text-black mb-3" style="width: 3rem; height: 3rem;" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
               <p class="text-muted fs-5">Loading your profile...</p>
@@ -68,14 +45,14 @@
               <div *ngIf="hasProfile && !isEditMode" class="profile-view">
                 <div class="row g-3">
                   <div class="col-12 col-md-6" *ngFor="let field of profileFields">
-                    <div class="info-item bg-light rounded-3 p-3 h-100 d-flex align-items-start gap-3 border border-opacity-10">
-                      <div class="info-icon text-primary fs-4">
+                    <div class="info-item bg-light rounded-3 p-3 h-100 d-flex align-items-start gap-3 border border-dark border-opacity-10">
+                      <div class="info-icon text-black fs-4">
                         <i [class]="field.icon"></i>
                       </div>
                       <div class="info-content flex-grow-1">
                         <label class="d-block text-uppercase text-muted small fw-semibold mb-1">{{ field.label }}</label>
                         <!-- Use helper method -->
-                        <span class="d-block fs-5 fw-semibold">{{ getProfileValue(field.key) }}</span>
+                        <span class="d-block fs-5 fw-semibold text-black">{{ getProfileValue(field.key) }}</span>
                       </div>
                     </div>
                   </div>
@@ -88,7 +65,7 @@
                   <div class="col-12 col-md-6" *ngFor="let field of formFields">
                     <div class="form-group">
                       <label [for]="field.key" class="form-label fw-semibold d-flex align-items-center gap-2">
-                        <i [class]="field.icon + ' text-primary'"></i>
+                        <i [class]="field.icon + ' text-black'"></i>
                         {{ field.label }} <span class="text-danger">*</span>
                       </label>
                       <div class="input-with-icon position-relative">
@@ -100,7 +77,7 @@
                           (ngModelChange)="profile[field.key] = $event"
                           [required]="field.required"
                           [placeholder]="field.placeholder"
-                          class="form-control form-control-lg border-2"
+                          class="form-control form-control-lg border-2 border-dark"
                           [class.is-invalid]="profileForm.controls[field.key].invalid && profileForm.controls[field.key].touched">
                           [class.is-valid]="profileForm.controls[field.key].valid && profileForm.controls[field.key].touched">
                         <i class="fas fa-check valid-icon position-absolute end-0 top-50 translate-middle-y text-success me-3"
@@ -117,27 +94,27 @@
 
                 <!-- Messages -->
                 <div class="message-container mt-4">
-                  <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center gap-3">
-                    <i class="fas fa-exclamation-circle fs-4"></i>
+                  <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center gap-3 border border-danger">
+                    <i class="fas fa-exclamation-circle fs-4 text-danger"></i>
                     <div class="flex-grow-1">{{ errorMessage }}</div>
                     <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
                   </div>
 
-                  <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center gap-3">
-                    <i class="fas fa-check-circle fs-4"></i>
+                  <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center gap-3 border border-success">
+                    <i class="fas fa-check-circle fs-4 text-success"></i>
                     <div class="flex-grow-1">{{ successMessage }}</div>
                     <button type="button" class="btn-close" (click)="successMessage = ''"></button>
                   </div>
                 </div>
 
-                <div class="form-actions border-top pt-4 mt-3">
+                <div class="form-actions border-top border-dark pt-4 mt-3">
                   <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-                    <button type="submit" class="btn btn-primary btn-lg px-5 py-3 d-flex align-items-center justify-content-center gap-2"
+                    <button type="submit" class="btn btn-dark btn-lg px-5 py-3 d-flex align-items-center justify-content-center gap-2 text-white"
                             [disabled]="profileForm.invalid || isLoading">
                       <i class="fas" [class.fa-spinner]="isLoading" [class.fa-save]="!isLoading"></i>
                       {{ isLoading ? 'Saving...' : (hasProfile ? 'Update Profile' : 'Create Profile') }}
                     </button>
-                    <button type="button" class="btn btn-outline-primary btn-lg px-5 py-3 d-flex align-items-center justify-content-center gap-2"
+                    <button type="button" class="btn btn-outline-dark btn-lg px-5 py-3 d-flex align-items-center justify-content-center gap-2"
                             (click)="cancelEdit()"
                             [disabled]="isLoading">
                       <i class="fas fa-times"></i>
@@ -153,7 +130,7 @@
         <!-- Pets Section -->
         <div class="col-lg-6">
           <div class="pets-section card border-0 shadow-lg h-100">
-            <div class="card-header bg-gradient-pet border-0 rounded-top-4 p-4">
+            <div class="card-header bg-dark border-0 rounded-top-4 p-4">
               <h2 class="h3 mb-2 fw-bold text-white">🐾 Your Pets</h2>
               <p class="text-white text-opacity-85 mb-0">Manage your furry family members</p>
             </div>
@@ -161,7 +138,7 @@
             <div class="card-body p-4">
               <!-- Loading pets -->
               <div *ngIf="loadingPets" class="loading-state p-5 text-center">
-                <div class="spinner-border text-primary mb-3" style="width: 2.5rem; height: 2.5rem;" role="status">
+                <div class="spinner-border text-black mb-3" style="width: 2.5rem; height: 2.5rem;" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
                 <p class="text-muted">Loading your pets...</p>
@@ -170,11 +147,11 @@
               <!-- No pets -->
               <div *ngIf="!loadingPets && pets.length === 0" class="empty-state text-center p-5">
                 <div class="empty-icon mb-4">
-                  <i class="fas fa-paw fa-5x text-primary opacity-25"></i>
+                  <i class="fas fa-paw fa-5x text-black opacity-25"></i>
                 </div>
-                <h3 class="h4 fw-bold mb-2">No Pets Added Yet</h3>
+                <h3 class="h4 fw-bold mb-2 text-black">No Pets Added Yet</h3>
                 <p class="text-muted mb-4">Start by adding your first furry friend to your profile</p>
-                <button class="btn btn-primary btn-lg px-5 py-3 d-flex align-items-center justify-content-center gap-2 mx-auto"
+                <button class="btn btn-dark btn-lg px-5 py-3 d-flex align-items-center justify-content-center gap-2 mx-auto text-white"
                         (click)="startAddPet()">
                   <i class="fas fa-plus"></i>
                   Add Your First Pet
@@ -185,32 +162,32 @@
               <div *ngIf="!loadingPets && pets.length > 0" class="pets-grid">
                 <div class="row g-3">
                   <div class="col-12 col-sm-6" *ngFor="let pet of pets">
-                    <div class="pet-card card border-0 shadow-sm h-100 hover-lift">
+                    <div class="pet-card card border-0 shadow-sm h-100 hover-lift border border-dark">
                       <div class="card-body p-4">
                         <div class="pet-header d-flex align-items-center gap-3 mb-3">
-                          <div class="pet-avatar rounded-circle bg-gradient-pet d-flex align-items-center justify-content-center"
+                          <div class="pet-avatar rounded-circle bg-dark d-flex align-items-center justify-content-center"
                                style="width: 60px; height: 60px;">
                             <i class="fas fa-paw fa-2x text-white"></i>
                           </div>
                           <div class="pet-info flex-grow-1">
-                            <h3 class="h5 mb-1 fw-bold">{{ pet.pet_name }}</h3>
-                            <span class="badge bg-primary bg-opacity-20 text-primary px-3 py-2 rounded-pill">
+                            <h3 class="h5 mb-1 fw-bold text-black">{{ pet.pet_name }}</h3>
+                            <span class="badge bg-black bg-opacity-20 text-black px-3 py-2 rounded-pill border border-dark">
                               {{ pet.species }}
                             </span>
                           </div>
                         </div>
                         <div class="pet-details mb-4">
                           <div class="detail-item d-flex align-items-center gap-2 mb-2">
-                            <i class="fas fa-dna text-primary"></i>
+                            <i class="fas fa-dna text-black"></i>
                             <span class="text-muted">{{ pet.breed || 'Unknown breed' }}</span>
                           </div>
                           <div class="detail-item d-flex align-items-center gap-2">
-                            <i class="fas fa-id-card text-primary"></i>
+                            <i class="fas fa-id-card text-black"></i>
                             <span class="text-muted">ID: {{ pet.pet_id || 'N/A' }}</span>
                           </div>
                         </div>
                         <div class="pet-actions d-flex gap-2">
-                          <button class="btn btn-outline-primary btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-2"
+                          <button class="btn btn-outline-dark btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-2"
                                   (click)="editPet(pet)">
                             <i class="fas fa-edit"></i>
                             Edit
@@ -227,12 +204,12 @@
 
                   <!-- Add More Card -->
                   <div class="col-12 col-sm-6">
-                    <div class="pet-card add-pet-card card border-dashed border-2 border-primary h-100 d-flex align-items-center justify-content-center hover-lift cursor-pointer"
+                    <div class="pet-card add-pet-card card border-dashed border-2 border-dark h-100 d-flex align-items-center justify-content-center hover-lift cursor-pointer"
                          (click)="startAddPet()">
                       <div class="card-body p-4 text-center">
                         <div class="add-pet-content">
-                          <i class="fas fa-plus-circle fa-3x text-primary mb-3"></i>
-                          <h3 class="h5 fw-bold mb-2">Add New Pet</h3>
+                          <i class="fas fa-plus-circle fa-3x text-black mb-3"></i>
+                          <h3 class="h5 fw-bold mb-2 text-black">Add New Pet</h3>
                           <p class="text-muted mb-0">Register another furry friend</p>
                         </div>
                       </div>
@@ -247,12 +224,12 @@
     </div>
   </section>
 
-  <!-- Add/Edit Pet Modal -->
-  <div *ngIf="isPetFormVisible" class="pet-form-modal position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center z-3 p-3">
+  <!-- Add/Edit Pet Modal - CENTERED -->
+  <div *ngIf="isPetFormVisible" class="pet-form-modal modal-centered position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center z-3 p-3">
     <div class="modal-overlay position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 backdrop-blur" (click)="cancelPetForm()"></div>
-    <div class="modal-content bg-white rounded-4 shadow-lg position-relative z-1 w-100" style="max-width: 500px; max-height: 90vh;">
-      <div class="modal-header border-0 p-4">
-        <h3 class="modal-title h4 fw-bold mb-0">{{ editingPet ? 'Edit Pet' : 'Add New Pet' }}</h3>
+    <div class="modal-content bg-white rounded-4 shadow-lg position-relative z-1 w-100" style="max-width: 500px; max-height: 90vh; transform: translateY(0);">
+      <div class="modal-header border-bottom border-dark p-4">
+        <h3 class="modal-title h4 fw-bold mb-0 text-black">{{ editingPet ? 'Edit Pet' : 'Add New Pet' }}</h3>
         <button type="button" class="btn-close" (click)="cancelPetForm()"></button>
       </div>
       
@@ -260,23 +237,23 @@
         <div class="row g-3">
           <div class="col-12">
             <div class="form-group">
-              <label for="pet_name" class="form-label fw-semibold d-flex align-items-center gap-2">
-                <i class="fas fa-signature text-primary"></i>
+              <label for="pet_name" class="form-label fw-semibold d-flex align-items-center gap-2 text-black">
+                <i class="fas fa-signature text-black"></i>
                 Pet Name <span class="text-danger">*</span>
               </label>
               <input type="text" id="pet_name" name="pet_name" [(ngModel)]="currentPet.pet_name" required
-                     placeholder="Enter pet name" class="form-control form-control-lg">
+                     placeholder="Enter pet name" class="form-control form-control-lg border border-dark">
             </div>
           </div>
 
           <div class="col-12 col-md-6">
             <div class="form-group">
-              <label for="species" class="form-label fw-semibold d-flex align-items-center gap-2">
-                <i class="fas fa-dog text-primary"></i>
+              <label for="species" class="form-label fw-semibold d-flex align-items-center gap-2 text-black">
+                <i class="fas fa-dog text-black"></i>
                 Species <span class="text-danger">*</span>
               </label>
               <select id="species" name="species" [(ngModel)]="currentPet.species" required
-                      class="form-select form-select-lg">
+                      class="form-select form-select-lg border border-dark">
                 <option value="">Select Species</option>
                 <option value="Dog">Dog</option>
                 <option value="Cat">Cat</option>
@@ -289,24 +266,24 @@
 
           <div class="col-12 col-md-6">
             <div class="form-group">
-              <label for="breed" class="form-label fw-semibold d-flex align-items-center gap-2">
-                <i class="fas fa-dna text-primary"></i>
+              <label for="breed" class="form-label fw-semibold d-flex align-items-center gap-2 text-black">
+                <i class="fas fa-dna text-black"></i>
                 Breed <span class="text-danger">*</span>
               </label>
               <input type="text" id="breed" name="breed" [(ngModel)]="currentPet.breed" required
-                     placeholder="Enter breed" class="form-control form-control-lg">
+                     placeholder="Enter breed" class="form-control form-control-lg border border-dark">
             </div>
           </div>
         </div>
 
-        <div class="form-actions border-top pt-4 mt-4">
+        <div class="form-actions border-top border-dark pt-4 mt-4">
           <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-            <button type="submit" class="btn btn-primary btn-lg px-5 py-3 d-flex align-items-center justify-content-center gap-2"
+            <button type="submit" class="btn btn-dark btn-lg px-5 py-3 d-flex align-items-center justify-content-center gap-2 text-white"
                     [disabled]="petForm.invalid || loadingPets">
               <i class="fas" [class.fa-spinner]="loadingPets" [class.fa-save]="!loadingPets"></i>
               {{ loadingPets ? 'Saving...' : (editingPet ? 'Update Pet' : 'Add Pet') }}
             </button>
-            <button type="button" class="btn btn-outline-primary btn-lg px-5 py-3 d-flex align-items-center justify-content-center gap-2"
+            <button type="button" class="btn btn-outline-dark btn-lg px-5 py-3 d-flex align-items-center justify-content-center gap-2"
                     (click)="cancelPetForm()">
               <i class="fas fa-times"></i>
               Cancel

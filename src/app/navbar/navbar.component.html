@@ -1,48 +1,64 @@
 <!-- DESKTOP NAVBAR -->
 <nav class="navbar" [class.scrolled]="isScrolled">
-  <div class="nav-brand">
-    <img src="assets/images/Tail_cart_logo.jpg" alt="Tail Cart Logo" class="nav-logo" />
-    <div class="brand-text">
-      <h1>TAIL CART</h1>
-      <p>Your Pet's Digital Companion</p>
+  <!-- Top row with logo and navigation -->
+  <div class="navbar-top">
+    <div class="nav-brand">
+      <img src="assets/images/Tail_cart_logo.jpg" alt="Tail Cart Logo" class="nav-logo" />
+      
+    </div>
+
+    <div class="nav-links-container">
+      <div class="nav-links">
+        <a class="nav-link" routerLink="/home" routerLinkActive="active">HOME</a>
+        <a class="nav-link" routerLink="/shop" routerLinkActive="active">KEYCHAINS</a>
+        <a class="nav-link" routerLink="/document" routerLinkActive="active">DOCUMENTS</a>
+        <a class="nav-link" routerLink="/doctor-ai" routerLinkActive="active">DOCTOR AI</a>
+        <a class="nav-link" routerLink="/contact" routerLinkActive="active">REACH US</a>
+      </div>
+
+      <div class="nav-user">
+        <button class="nav-icon-btn" (click)="navigateToProfile()">
+          <i class="fas fa-user"></i>
+          <span>My Account</span>
+        </button>
+        <button class="nav-icon-btn cart-btn" routerLink="/cart">
+          <i class="fas fa-shopping-bag"></i>
+          <span>Orders</span>
+          <span class="cart-badge" *ngIf="cartItems > 0">{{ cartItems }}</span>
+        </button>
+        <button class="nav-icon-btn logout-btn" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </button>
+      </div>
     </div>
   </div>
-
-  <div class="nav-links-container">
-    <div class="nav-links">
-      <a class="nav-link" routerLink="/home" routerLinkActive="active">HOME</a>
-      <a class="nav-link" routerLink="/shop" routerLinkActive="active">KEYCHAINS</a>
-      <a class="nav-link" routerLink="/document" routerLinkActive="active">DOCUMENTS</a>
-      <a class="nav-link" routerLink="/doctor-ai" routerLinkActive="active">DOCTOR AI</a>
-      <a class="nav-link" routerLink="/contact" routerLinkActive="active">REACH US</a>
+  
+  <!-- Page-specific header content (Lottie + Title) - Always visible -->
+  <div class="page-header-content" *ngIf="currentPageData">
+    <div class="lottie-container" 
+        *ngIf="currentPageData.showLottie !== false"
+        [style.height]="currentPageData.lottieHeight || '180px'">
+      <!-- Lottie will be loaded here -->
     </div>
-
-    <div class="nav-user">
-      <button class="nav-icon-btn" (click)="navigateToProfile()">
-        <i class="fas fa-user"></i>
-        <span>My Account</span>
-      </button>
-      <button class="nav-icon-btn cart-btn" routerLink="/cart">
-        <i class="fas fa-shopping-bag"></i>
-        <span>Orders</span>
-        <span class="cart-badge" *ngIf="cartItems > 0">{{ cartItems }}</span>
-      </button>
-      <button class="nav-icon-btn logout-btn" (click)="logout()">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>Logout</span>
-      </button>
+    
+    <div class="page-title-section">
+      <h1 class="page-title" [style.fontSize]="currentPageData.titleSize || '2.5rem'">
+        {{ currentPageData.title }}
+      </h1>
+      <p class="page-subtitle">
+        {{ currentPageData.subtitle }}
+      </p>
     </div>
   </div>
 </nav>
 
 <!-- MOBILE NAVBAR -->
-<nav class="mobile-navbar" [class.scrolled]="isScrolled">
+<nav class="mobile-navbar">
   <div class="mobile-nav-header">
     <div class="mobile-brand">
       <img src="assets/images/Tail_cart_logo.jpg" alt="Tail Cart Logo" class="nav-logo" />
-      <div class="brand-text">
-        <h1>TAIL CART</h1>
-      </div>
+      
     </div>
     
     <button class="menu-toggle" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()">
@@ -54,62 +70,110 @@
     </button>
   </div>
 
-  <div class="mobile-menu-overlay" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()"></div>
-  
-  <div class="mobile-nav-content" [class.active]="isMobileMenuOpen">
-    <div class="mobile-user-info">
-      <div class="user-avatar">
-        <i class="fas fa-user-circle"></i>
-      </div>
-      <div class="user-details">
-        <h3>{{ username || 'Guest User' }}</h3>
-        <p>{{ userId ? 'ID: ' + userId : 'Please login' }}</p>
-      </div>
-    </div>
-
-    <div class="mobile-nav-links">
-      <a class="mobile-nav-link" routerLink="/home" routerLinkActive="active" (click)="onNavLinkClick()">
-        <i class="fas fa-home"></i>
-        <span>HOME</span>
-      </a>
-      <a class="mobile-nav-link" routerLink="/shop" routerLinkActive="active" (click)="onNavLinkClick()">
-        <i class="fas fa-key"></i>
-        <span>KEYCHAINS</span>
-      </a>
-      <a class="mobile-nav-link" routerLink="/document" routerLinkActive="active" (click)="onNavLinkClick()">
-        <i class="fas fa-file-medical"></i>
-        <span>DOCUMENTS</span>
-      </a>
-      <a class="mobile-nav-link" routerLink="/doctor-ai" routerLinkActive="active" (click)="onNavLinkClick()">
-        <i class="fas fa-stethoscope"></i>
-        <span>DOCTOR AI</span>
-      </a>
-      <a class="mobile-nav-link" routerLink="/contact" routerLinkActive="active" (click)="onNavLinkClick()">
-        <i class="fas fa-phone-alt"></i>
-        <span>REACH US</span>
-      </a>
-      
-      <div class="mobile-nav-divider"></div>
-      
-      <a class="mobile-nav-link" routerLink="/profile" routerLinkActive="active" (click)="onNavLinkClick()">
-        <i class="fas fa-user-cog"></i>
-        <span>MY PROFILE</span>
-      </a>
-      <a class="mobile-nav-link" routerLink="/cart" routerLinkActive="active" (click)="onNavLinkClick()">
-        <i class="fas fa-shopping-bag"></i>
-        <span>ORDERS</span>
-        <span class="mobile-cart-badge" *ngIf="cartItems > 0">{{ cartItems }}</span>
-      </a>
-      <a class="mobile-nav-link logout-mobile" (click)="logout()">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>LOGOUT</span>
-      </a>
+  <!-- Mobile header content (Lottie + Title) - Always visible -->
+  <div class="mobile-page-header-content" *ngIf="currentPageData">
+    <div class="mobile-lottie-container" 
+         *ngIf="currentPageData.showLottie !== false"
+         [style.height]="currentPageData.lottieHeight || '150px'">
+      <!-- Lottie will be loaded here -->
     </div>
     
-    <div class="mobile-footer">
-      <p>Tail Cart &copy; {{ currentYear }}. All rights reserved.</p>
+    <div class="mobile-title-section">
+      <h1 class="mobile-page-title" [style.fontSize]="currentPageData.titleSize || '1.8rem'">
+        {{ currentPageData.title }}
+      </h1>
+      <p class="mobile-page-subtitle">
+        {{ currentPageData.subtitle }}
+      </p>
     </div>
   </div>
+
+  <!-- Mobile navigation menu -->
+   <!-- Modern Slide-Up Menu Overlay -->
+<div class="mobile-menu-overlay" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()"></div>
+
+<!-- Modern Bottom Sheet Menu -->
+<div class="mobile-bottom-sheet" [class.active]="isMobileMenuOpen">
+  <!-- Sheet Handle -->
+  <div class="sheet-handle" (click)="toggleMobileMenu()">
+    <div class="handle-bar"></div>
+  </div>
+  
+  <!-- User Info -->
+  <div class="mobile-user-info">
+    <div class="user-avatar">
+      <i class="fas fa-user-circle"></i>
+    </div>
+    <div class="user-details">
+      <h3>{{ username || 'Guest User' }}</h3>
+      <p>{{ userId ? 'ID: ' + userId : 'Please login' }}</p>
+    </div>
+  </div>
+
+  <!-- Modern Grid Layout -->
+  <div class="mobile-nav-grid">
+    <a class="nav-grid-item" routerLink="/home" routerLinkActive="active" (click)="onNavLinkClick()">
+      <div class="grid-icon">
+        <i class="fas fa-home"></i>
+      </div>
+      <span class="grid-label">HOME</span>
+    </a>
+    
+    <a class="nav-grid-item" routerLink="/shop" routerLinkActive="active" (click)="onNavLinkClick()">
+      <div class="grid-icon">
+        <i class="fas fa-key"></i>
+      </div>
+      <span class="grid-label">KEYCHAINS</span>
+    </a>
+    
+    <a class="nav-grid-item" routerLink="/document" routerLinkActive="active" (click)="onNavLinkClick()">
+      <div class="grid-icon">
+        <i class="fas fa-file-medical"></i>
+      </div>
+      <span class="grid-label">DOCUMENTS</span>
+    </a>
+    
+    <a class="nav-grid-item" routerLink="/doctor-ai" routerLinkActive="active" (click)="onNavLinkClick()">
+      <div class="grid-icon">
+        <i class="fas fa-stethoscope"></i>
+      </div>
+      <span class="grid-label">DOCTOR AI</span>
+    </a>
+    
+    <a class="nav-grid-item" routerLink="/contact" routerLinkActive="active" (click)="onNavLinkClick()">
+      <div class="grid-icon">
+        <i class="fas fa-phone-alt"></i>
+      </div>
+      <span class="grid-label">REACH US</span>
+    </a>
+    
+    <a class="nav-grid-item" routerLink="/profile" routerLinkActive="active" (click)="onNavLinkClick()">
+      <div class="grid-icon">
+        <i class="fas fa-user-cog"></i>
+      </div>
+      <span class="grid-label">PROFILE</span>
+    </a>
+    
+    <a class="nav-grid-item" routerLink="/cart" routerLinkActive="active" (click)="onNavLinkClick()">
+      <div class="grid-icon">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="grid-badge" *ngIf="cartItems > 0">{{ cartItems }}</span>
+      </div>
+      <span class="grid-label">ORDERS</span>
+    </a>
+    
+    <a class="nav-grid-item logout-grid" (click)="logout()">
+      <div class="grid-icon">
+        <i class="fas fa-sign-out-alt"></i>
+      </div>
+      <span class="grid-label">LOGOUT</span>
+    </a>
+  </div>
+  
+  <div class="mobile-footer">
+    <p>Tail Cart &copy; {{ currentYear }}. All rights reserved.</p>
+  </div>
+</div>  
+  
 </nav>
 
-<div class="nav-spacer"></div>

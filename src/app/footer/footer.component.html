@@ -1,29 +1,40 @@
-<footer class="footer bg-dark text-white position-relative overflow-hidden">
-  <!-- Background overlay -->
-  <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-75"></div>
+<footer class="footer bg-black text-white position-relative overflow-hidden">
+  <!-- Lottie Background -->
+  <div id="footerLottie" class="position-absolute top-0 start-0 w-100 h-100"></div>
+  
+  <!-- Dark Overlay -->
+  <div class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-80"></div>
   
   <div class="container position-relative" style="z-index: 2;">
+    <!-- Logo Section -->
+    <div class="row py-4 py-md-5">
+      <div class="col-12 text-center mb-4">
+        <h1 class="display-2 fw-bold mb-2 text-gradient">
+          TAILCART
+        </h1>
+        <p class="lead mb-0 opacity-75">
+          Smart Pet Safety & Protection
+        </p>
+      </div>
+    </div>
+
     <!-- Main Content -->
-    <div class="row g-4 py-4 py-md-5">
+    <div class="row g-4 py-4 border-top border-bottom border-secondary">
       <!-- Brand Section -->
       <div class="col-12 col-lg-4 mb-4 mb-lg-0">
         <div class="brand-section">
-          <img src="assets/images/Tail_cart_logo.jpg" 
-               alt="Tail Cart Logo" 
-               class="img-fluid mb-3" 
-               style="max-height: 80px; max-width: 200px;">
-          <p class="text-light mb-3 small">
+          <p class="text-light mb-3 opacity-75">
             Revolutionizing pet safety with smart QR technology and AI-powered solutions to keep your furry friends protected.
           </p>
           <div class="newsletter">
-            <h6 class="fw-bold mb-2">Stay Updated</h6>
-            <div class="input-group input-group-sm">
+            <h6 class="fw-bold mb-2 text-white">Stay Updated</h6>
+            <div class="input-group">
               <input type="email" 
-                     class="form-control form-control-sm" 
+                     class="form-control" 
                      placeholder="Your email"
                      aria-label="Subscribe email">
-              <button class="btn btn-primary btn-sm" type="button">
-                <i class="fas fa-paper-plane"></i>
+              <button class="btn btn-primary" type="button">
+                Subscribe
               </button>
             </div>
           </div>
@@ -35,52 +46,60 @@
         <div class="row g-3">
           <!-- Products -->
           <div class="col-6 col-md-3">
-            <h6 class="fw-bold mb-2">
+            <h6 class="fw-bold mb-2 text-white">
               <i class="fas fa-shopping-bag me-1"></i>
               Products
             </h6>
-            <ul class="list-unstyled small">
-              <li class="mb-1"(click)="navigateTo('/shop')" style="cursor:pointer;">
-                <i class="fas fa-chevron-right text-primary me-1"></i>
-                QR Keychains
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <a (click)="navigateTo('/shop')" class="text-decoration-none text-light opacity-75 hover-opacity-100 cursor-pointer">
+                  <i class="fas fa-chevron-right text-primary me-1 small"></i>
+                  QR Keychains
+                </a>
               </li>
-              <li class="mb-1"(click)="navigateTo('/shop')" style="cursor:pointer;">
-                <i class="fas fa-chevron-right text-primary me-1"></i>
-                Safety Belts
+              <li class="mb-2">
+                <a (click)="navigateTo('/shop')" class="text-decoration-none text-light opacity-75 hover-opacity-100 cursor-pointer">
+                  <i class="fas fa-chevron-right text-primary me-1 small"></i>
+                  Safety Belts
+                </a>
               </li>
-              <li class="mb-1"(click)="navigateTo('/document')" style="cursor:pointer;">
-                <i class="fas fa-chevron-right text-primary me-1"></i>
-                Health Docs
+              <li class="mb-2">
+                <a (click)="navigateTo('/document')" class="text-decoration-none text-light opacity-75 hover-opacity-100 cursor-pointer">
+                  <i class="fas fa-chevron-right text-primary me-1 small"></i>
+                  Health Docs
+                </a>
               </li>
-              <li class="mb-1"(click)="navigateTo('/doctor-ai')" style="cursor:pointer;">
-                <i class="fas fa-chevron-right text-primary me-1"></i>
-                AI Assistant
+              <li class="mb-2">
+                <a (click)="navigateTo('/doctor-ai')" class="text-decoration-none text-light opacity-75 hover-opacity-100 cursor-pointer">
+                  <i class="fas fa-chevron-right text-primary me-1 small"></i>
+                  AI Assistant
+                </a>
               </li>
             </ul>
           </div>
 
           <!-- Support -->
           <div class="col-6 col-md-3">
-            <h6 class="fw-bold mb-2">
+            <h6 class="fw-bold mb-2 text-white">
               <i class="fas fa-life-ring me-1"></i>
               Support
             </h6>
-            <ul class="list-unstyled small">
-              <li class="mb-1">
-                <a href="#" class="text-decoration-none text-light">
-                  <i class="fas fa-chevron-right text-primary me-1"></i>
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-light opacity-75 hover-opacity-100">
+                  <i class="fas fa-chevron-right text-primary me-1 small"></i>
                   Contact Us
                 </a>
               </li>
-              <li class="mb-1">
-                <a href="#" class="text-decoration-none text-light">
-                  <i class="fas fa-chevron-right text-primary me-1"></i>
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-light opacity-75 hover-opacity-100">
+                  <i class="fas fa-chevron-right text-primary me-1 small"></i>
                   Shipping Info
                 </a>
               </li>
-              <li class="mb-1">
-                <a href="#" class="text-decoration-none text-light">
-                  <i class="fas fa-chevron-right text-primary me-1"></i>
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-light opacity-75 hover-opacity-100">
+                  <i class="fas fa-chevron-right text-primary me-1 small"></i>
                   FAQ
                 </a>
               </li>
@@ -89,24 +108,26 @@
 
           <!-- Company -->
           <div class="col-6 col-md-3">
-            <h6 class="fw-bold mb-2">
+            <h6 class="fw-bold mb-2 text-white">
               <i class="fas fa-building me-1"></i>
               Company
             </h6>
-            <ul class="list-unstyled small">
-              <li class="mb-1"(click)="navigateTo('/about')" style="cursor:pointer;">
-                <i class="fas fa-chevron-right text-primary me-1"></i>
-                About Us
+            <ul class="list-unstyled">
+              <li class="mb-2">
+                <a (click)="navigateTo('/about')" class="text-decoration-none text-light opacity-75 hover-opacity-100 cursor-pointer">
+                  <i class="fas fa-chevron-right text-primary me-1 small"></i>
+                  About Us
+                </a>
               </li>
-              <li class="mb-1">
-                <a href="#" class="text-decoration-none text-light">
-                  <i class="fas fa-chevron-right text-primary me-1"></i>
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-light opacity-75 hover-opacity-100">
+                  <i class="fas fa-chevron-right text-primary me-1 small"></i>
                   Blog
                 </a>
               </li>
-              <li class="mb-1">
-                <a href="#" class="text-decoration-none text-light">
-                  <i class="fas fa-chevron-right text-primary me-1"></i>
+              <li class="mb-2">
+                <a href="#" class="text-decoration-none text-light opacity-75 hover-opacity-100">
+                  <i class="fas fa-chevron-right text-primary me-1 small"></i>
                   Careers
                 </a>
               </li>
@@ -115,29 +136,29 @@
 
           <!-- Contact -->
           <div class="col-6 col-md-3">
-            <h6 class="fw-bold mb-2">
+            <h6 class="fw-bold mb-2 text-white">
               <i class="fas fa-phone me-1"></i>
               Contact
             </h6>
-            <div class="contact-info small">
-              <div class="d-flex mb-2">
-                <i class="fas fa-phone text-primary me-2 mt-1"></i>
+            <div class="contact-info">
+              <div class="d-flex mb-3">
+                <i class="fas fa-phone text-primary me-3 mt-1"></i>
                 <div>
-                  <span class="text-muted d-block">Phone</span>
+                  <span class="opacity-75 d-block small">Phone</span>
                   <span class="text-light">+91 9072-239-489</span>
                 </div>
               </div>
-              <div class="d-flex mb-2">
-                <i class="fas fa-envelope text-primary me-2 mt-1"></i>
+              <div class="d-flex mb-3">
+                <i class="fas fa-envelope text-primary me-3 mt-1"></i>
                 <div>
-                  <span class="text-muted d-block">Email</span>
+                  <span class="opacity-75 d-block small">Email</span>
                   <span class="text-light">petsafenetwork.com</span>
                 </div>
               </div>
               <div class="d-flex">
-                <i class="fas fa-map-marker-alt text-primary me-2 mt-1"></i>
+                <i class="fas fa-map-marker-alt text-primary me-3 mt-1"></i>
                 <div>
-                  <span class="text-muted d-block">Location</span>
+                  <span class="opacity-75 d-block small">Location</span>
                   <span class="text-light">Trivandrum, Kerala</span>
                 </div>
               </div>
@@ -148,39 +169,66 @@
     </div>
 
     <!-- Footer Bottom -->
-    <div class="border-top border-secondary pt-3 mt-3">
-      <div class="row align-items-center g-2">
-        <div class="col-12 col-md-4 order-3 order-md-1 text-center text-md-start">
-          <p class="mb-0 text-muted small">
-            &copy; 2025 <span class="text-primary fw-bold">Tail Cart</span>. All rights reserved.
-          </p>
+    <div class="row align-items-center py-4">
+      <div class="col-12 col-md-6 mb-3 mb-md-0">
+        <p class="mb-0 opacity-75 small">
+          &copy; 2025 <span class="text-primary fw-bold">TAILCART</span>. All rights reserved.
+        </p>
+      </div>
+      
+      <div class="col-12 col-md-6 text-md-end">
+        <div class="d-flex flex-wrap justify-content-center justify-content-md-end gap-4">
+          <a href="#" class="text-decoration-none opacity-75 hover-opacity-100 small">Privacy Policy</a>
+          <a href="#" class="text-decoration-none opacity-75 hover-opacity-100 small">Terms of Service</a>
+          <a href="#" class="text-decoration-none opacity-75 hover-opacity-100 small">Cookie Policy</a>
         </div>
-        
-        <div class="col-12 col-md-4 order-1 order-md-2">
-          <div class="d-flex flex-wrap justify-content-center gap-3">
-            <a href="#" class="text-decoration-none text-muted small">Privacy Policy</a>
-            <a href="#" class="text-decoration-none text-muted small">Terms of Service</a>
-            <a href="#" class="text-decoration-none text-muted small">Cookie Policy</a>
-          </div>
-        </div>
-        
-        <div class="col-12 col-md-4 order-2 order-md-3">
-          <div class="d-flex justify-content-center justify-content-md-end gap-3">
-            <a href="#" class="text-decoration-none text-light" aria-label="Facebook">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="#" class="text-decoration-none text-light" aria-label="Instagram">
-              <i class="fab fa-instagram"></i>
-            </a>
-            <a href="#" class="text-decoration-none text-light" aria-label="Twitter">
-              <i class="fab fa-twitter"></i>
-            </a>
-            <a href="#" class="text-decoration-none text-light" aria-label="LinkedIn">
-              <i class="fab fa-linkedin-in"></i>
-            </a>
-          </div>
+      </div>
+    </div>
+
+    <!-- Social Links -->
+    <div class="row pt-3 border-top border-secondary">
+      <div class="col-12 text-center">
+        <div class="social-links d-flex justify-content-center gap-3">
+          <a href="#" class="social-icon" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" class="social-icon" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" class="social-icon" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="social-icon" aria-label="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
         </div>
       </div>
     </div>
   </div>
 </footer>
+
+<!-- Add this script for Lottie animation -->
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<script>
+  // Load Lottie animation
+  const loadLottie = () => {
+    const container = document.getElementById('footerLottie');
+    container.innerHTML = `
+      <lottie-player
+        src="https://assets10.lottiefiles.com/packages/lf20_x17ybolp.json"
+        background="transparent"
+        speed="1"
+        style="width: 100%; height: 100%;"
+        loop
+        autoplay
+      ></lottie-player>
+    `;
+  };
+  
+  // Load Lottie when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadLottie);
+  } else {
+    loadLottie();
+  }
+</script>

@@ -1,31 +1,87 @@
 /* Doctor AI Component Styles */
 .ai-doctor-container {
   min-height: 100vh;
-  background: var(--light);
+  background: var(--white);
 }
 
-/* Hero Section */
-.doctor-hero {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  position: relative;
-  overflow: hidden;
+.card-header.bg-dark {
+  background: var(--black) !important;
+  color: var(--white) !important;
+}
+/* Update message bubbles */
+.message-bubble.bg-dark {
+  background: var(--black) !important;
+  color: var(--white) !important;
 }
 
-.doctor-hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('/assets/images/Doctor-Banner.jpg') center/cover;
-  opacity: 0.5;
-  z-index: 1;
+
+/* Update buttons */
+.btn-dark {
+  background: var(--black) !important;
+  border-color: var(--black) !important;
+  color: var(--white) !important;
 }
 
-.doctor-hero .position-relative.z-2 {
-  z-index: 2;
+.btn-dark:hover {
+  background: var(--gray-dark) !important;
+  border-color: var(--gray-dark) !important;
 }
+
+.btn-outline-secondary {
+  border-color: var(--gray-dark) !important;
+  color: var(--black) !important;
+}
+
+.btn-outline-secondary:hover {
+  background: var(--black) !important;
+  color: var(--white) !important;
+}
+
+/* Update borders */
+.border-dark {
+  border-color: var(--black) !important;
+}
+
+.text-dark {
+  color: var(--black) !important;
+}
+
+/* Update typing indicator */
+.typing-indicator span.bg-dark {
+  background: var(--black) !important;
+}
+
+/* Update feature icons */
+.feature-icon.bg-dark {
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+.feature-icon i.text-dark {
+  color: var(--black) !important;
+}
+
+
+/* Update textarea focus */
+.form-control:focus.border-dark {
+  border-color: var(--black) !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Update scrollbar for black theme */
+.chat-messages::-webkit-scrollbar-thumb {
+  background: var(--black) !important;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-dark) !important;
+}
+
+
+/* Update hover effects for black theme */
+.hover-lift:hover {
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.15) !important;
+}
+
 
 /* Feature badges */
 .feature-badge {
@@ -125,12 +181,12 @@
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-  background: var(--primary);
+  background: var(--black);
   border-radius: 3px;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dark);
+  background: var(--black);
 }
 
 /* Quick questions buttons */
@@ -151,7 +207,7 @@
 }
 
 .card:hover .feature-icon {
-  background: var(--primary) !important;
+  background: var(--black) !important;
   transform: rotate(15deg) scale(1.1);
 }
 
@@ -247,8 +303,8 @@
 
 /* Text area focus state */
 .form-control:focus {
-  border-color: var(--primary) !important;
-  box-shadow: 0 0 0 0.25rem rgba(var(--primary-rgb), 0.25) !important;
+  border-color: var(--black) !important;
+  box-shadow: 0 0 0 0.25rem rgba(var(--black), 0.25) !important;
 }
 
 /* Smooth transitions */

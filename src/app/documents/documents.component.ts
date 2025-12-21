@@ -37,15 +37,6 @@ interface Pet {
   owner: number;
 }
 
-interface UserProfile {
-  owner_name: string;
-  owner_address: string;
-  owner_phone: string;
-  owner_city: string;
-  owner_state: string;
-  pets: Pet[];
-}
-
 @Component({
   selector: 'app-documents',
   standalone: true,
@@ -61,12 +52,10 @@ interface UserProfile {
   styleUrls: ['./documents.component.css']
 })
 export class DocumentsComponent implements OnInit {
-  @ViewChild('uploadSection') uploadSection!: ElementRef;
   @ViewChild('fileInput') fileInput!: ElementRef;
   
   documents: Document[] = [];
   alerts: Alert[] = [];
-  userProfile: UserProfile | null = null;
   userPets: Pet[] = [];
   loadingPets = false;
   
@@ -77,15 +66,19 @@ export class DocumentsComponent implements OnInit {
   isUploading = false;
   isCreatingAlert = false;
   loadingAlerts = false;
+  
+  showUploadModal = false;
+  showCreateAlertModal = false;
   showAlertsModal = false;
+  
   editingAlert: Alert | null = null;
   
   today = new Date().toISOString().split('T')[0];
   criticalAlerts: Alert[] = [];
   
-  private documentsApi = 'https://tailcart.duckdns.org/api/user/documents/';
-  private alertsApi = 'https://tailcart.duckdns.org/api/user/pet-alerts/';
-  private petsApi = 'https://tailcart.duckdns.org/api/user/pets/';
+  private documentsApi = ' http://127.0.0.1:8000/api/user/documents/';
+  private alertsApi = ' http://127.0.0.1:8000/api/user/pet-alerts/';
+  private petsApi = ' http://127.0.0.1:8000/api/user/pets/';
   private userId: string = '';
 
   constructor(
@@ -94,21 +87,17 @@ export class DocumentsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {
-    // Upload Form
     this.uploadForm = this.fb.group({
-      document_title: ['', [Validators.required, Validators.minLength(1)]],
-      pet: ['', [Validators.required, Validators.min(1)]],
-      document_file: [null, [Validators.required]],
+      document_title: ['', [Validators.required]],
+      pet: ['', [Validators.required]]
     });
 
-    // Alert Form
     this.alertForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
+      title: ['', [Validators.required]],
       pet: ['', [Validators.required]],
       alert_type: ['', [Validators.required]],
       due_date: ['', [Validators.required]],
-      frequency: ['One-time'],
-      is_active: [true]
+      frequency: ['One-time']
     });
   }
 
@@ -120,18 +109,14 @@ export class DocumentsComponent implements OnInit {
       this.loadUserPets();
       this.startAlertMonitoring();
     } else {
-      console.error('User ID not found in localStorage');
       this.showSnackbar('Please log in to access documents.', 'error');
     }
   }
 
   startAlertMonitoring(): void {
-    // Check alerts every 30 seconds
     setInterval(() => {
       this.checkCriticalAlerts();
     }, 30000);
-    
-    // Initial check
     this.checkCriticalAlerts();
   }
 
@@ -146,11 +131,9 @@ export class DocumentsComponent implements OnInit {
       const diffTime = dueDate.getTime() - today.getTime();
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       
-      // If overdue or due today/tomorrow
       if (diffDays <= 2) {
         critical.push(alert);
         
-        // Show snackbar for urgent alerts
         if (diffDays === 0) {
           this.showSnackbar(`CRUCIAL: ${alert.title} is due TODAY!`, 'error');
         } else if (diffDays === 1) {
@@ -164,36 +147,39 @@ export class DocumentsComponent implements OnInit {
     this.criticalAlerts = critical;
   }
 
-  getDaysRemaining(alert: Alert): string {
-    const today = new Date();
-    const dueDate = new Date(alert.due_date);
-    const diffTime = dueDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays < 0) {
-      return `Overdue by ${Math.abs(diffDays)} days`;
-    } else if (diffDays === 0) {
-      return 'Due today!';
-    } else if (diffDays === 1) {
-      return 'Due tomorrow';
-    } else {
-      return `${diffDays} days left`;
-    }
+  // Modal Methods
+  openUploadModal(): void {
+    this.showUploadModal = true;
+    document.body.style.overflow = 'hidden';
   }
 
-  getDaysRemainingClass(alert: Alert): string {
-    const today = new Date();
-    const dueDate = new Date(alert.due_date);
-    const diffTime = dueDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays < 0) return 'days-overdue';
-    if (diffDays === 0) return 'days-today';
-    if (diffDays <= 2) return 'days-tomorrow';
-    if (diffDays <= 7) return 'days-soon';
-    return 'days-normal';
+  closeUploadModal(): void {
+    this.showUploadModal = false;
+    this.uploadForm.reset();
+    this.selectedFile = null;
+    document.body.style.overflow = 'auto';
   }
 
+  openCreateAlertModal(): void {
+    this.showCreateAlertModal = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeCreateAlertModal(): void {
+    this.showCreateAlertModal = false;
+    this.alertForm.reset({ frequency: 'One-time' });
+    this.editingAlert = null;
+    document.body.style.overflow = 'auto';
+  }
+
+  closeAllModals(): void {
+    this.closeUploadModal();
+    this.closeCreateAlertModal();
+    this.showAlertsModal = false;
+    document.body.style.overflow = 'auto';
+  }
+
+  // Document Methods
   loadDocuments(): void {
     this.http.get<Document[]>(`${this.documentsApi}?user_id=${this.userId}`)
       .subscribe({
@@ -202,7 +188,7 @@ export class DocumentsComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error loading documents:', error);
-          this.showSnackbar('Error loading documents. Please try again.', 'error');
+          this.showSnackbar('Error loading documents.', 'error');
         }
       });
   }
@@ -218,7 +204,7 @@ export class DocumentsComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error loading alerts:', error);
-          this.showSnackbar('Error loading alerts. Please try again.', 'error');
+          this.showSnackbar('Error loading alerts.', 'error');
           this.loadingAlerts = false;
         }
       });
@@ -226,42 +212,19 @@ export class DocumentsComponent implements OnInit {
 
   loadUserPets(): void {
     this.loadingPets = true;
-    
     this.http.get<Pet[]>(`${this.petsApi}?user_id=${this.userId}`)
       .subscribe({
         next: (response) => {
-          console.log('Pets API response:', response);
           this.userPets = response;
           this.loadingPets = false;
-          
-          if (response.length > 0 && !this.userProfile) {
-            this.userProfile = {
-              owner_name: '',
-              owner_address: '',
-              owner_phone: '',
-              owner_city: '',
-              owner_state: '',
-              pets: response
-            };
-          }
         },
         error: (error) => {
           console.error('Error loading pets:', error);
           this.loadingPets = false;
-          this.showSnackbar('Failed to load pet information', 'error');
         }
       });
   }
 
-  getPetNameById(petId: number): string {
-    if (!this.userPets || this.userPets.length === 0) {
-      return '';
-    }
-    const pet = this.userPets.find(p => p.pet_id === petId);
-    return pet ? pet.pet_name : '';
-  }
-
-  // Document Methods
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -271,21 +234,12 @@ export class DocumentsComponent implements OnInit {
       }
       
       this.selectedFile = file;
-      this.uploadForm.patchValue({
-        document_file: file
-      });
-      this.uploadForm.get('document_file')?.markAsTouched();
       this.showSnackbar(`Selected: ${file.name}`, 'success');
     }
   }
 
   clearFile(): void {
     this.selectedFile = null;
-    this.uploadForm.patchValue({
-      document_file: null
-    });
-    this.uploadForm.get('document_file')?.markAsUntouched();
-    
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
     }
@@ -296,49 +250,37 @@ export class DocumentsComponent implements OnInit {
       this.isUploading = true;
       
       const formData = new FormData();
-      formData.append('user', this.userId.toString());
+      formData.append('user', this.userId);
       formData.append('pet', this.uploadForm.get('pet')?.value);
       formData.append('document_title', this.uploadForm.get('document_title')?.value);
       formData.append('document_file', this.selectedFile);
 
       this.http.post(this.documentsApi, formData)
         .subscribe({
-          next: (response: any) => {
+          next: () => {
             this.isUploading = false;
-            this.uploadForm.reset();
-            this.selectedFile = null;
+            this.closeUploadModal();
             this.loadDocuments();
             this.showSnackbar('Document uploaded successfully!', 'success');
           },
           error: (error) => {
             this.isUploading = false;
             console.error('Error uploading document:', error);
-
-            let errorMessage = 'Error uploading document. Please try again';
-            if (error.error) {
-              if (typeof error.error === 'string') {
-                errorMessage += `: ${error.error}`;
-              } else if (error.error.detail) {
-                errorMessage = error.error.detail;
-              } else {
-                errorMessage = Object.entries(error.error)
-                  .map(([field, messages]) => `${field}: ${(Array.isArray(messages) ? messages.join(', ') : messages)}`)
-                  .join('\n');
-              }
-            }
-            this.showSnackbar(errorMessage, 'error');
+            this.showSnackbar('Error uploading document.', 'error');
           }
         });
     } else {
       Object.keys(this.uploadForm.controls).forEach(key => {
         this.uploadForm.get(key)?.markAsTouched();
       });
-      this.showSnackbar('Please fill in all required fields', 'error');
+      if (!this.selectedFile) {
+        this.showSnackbar('Please select a file', 'error');
+      }
     }
   }
 
   downloadDocument(doc: Document): void {
-    const fileUrl = `https://tailcart.duckdns.org${doc.document_file}`;
+    const fileUrl = ` http://127.0.0.1:8000${doc.document_file}`;
     const link = document.createElement('a');
     link.href = fileUrl;
     link.download = doc.document_title;
@@ -349,17 +291,22 @@ export class DocumentsComponent implements OnInit {
     this.showSnackbar(`Downloading ${doc.document_title}`, 'info');
   }
 
+  previewDocument(doc: Document): void {
+    const fileUrl = ` http://127.0.0.1:8000${doc.document_file}`;
+    window.open(fileUrl, '_blank');
+  }
+
   deleteDocument(documentId: number): void {
-    if (confirm('Are you sure you want to delete this document? This action cannot be undone.')) {
-      this.http.delete(`${this.documentsApi}/${documentId}/`)
+    if (confirm('Are you sure you want to delete this document?')) {
+      this.http.delete(`${this.documentsApi}${documentId}/`)
         .subscribe({
           next: () => {
             this.documents = this.documents.filter(doc => doc.document_id !== documentId);
-            this.showSnackbar('Document deleted successfully!', 'success');
+            this.showSnackbar('Document deleted!', 'success');
           },
           error: (error) => {
             console.error('Error deleting document:', error);
-            this.showSnackbar('Error deleting document. Please try again.', 'error');
+            this.showSnackbar('Error deleting document.', 'error');
           }
         });
     }
@@ -372,32 +319,23 @@ export class DocumentsComponent implements OnInit {
       
       const alertData = {
         user: this.userId,
-        ...this.alertForm.value
+        ...this.alertForm.value,
+        is_active: true
       };
 
-      const url = this.editingAlert 
-        ? `${this.alertsApi}?user_id=${this.userId}&alert_id=${this.editingAlert.alert_id}`
-        : this.alertsApi;
-
-      const request$ = this.editingAlert
-        ? this.http.put(url, alertData)
-        : this.http.post(url, alertData);
+      const request$ = this.http.post(this.alertsApi, alertData);
 
       request$.subscribe({
-        next: (response: any) => {
+        next: () => {
           this.isCreatingAlert = false;
-          this.alertForm.reset({ frequency: 'One-time', is_active: true });
-          this.editingAlert = null;
+          this.closeCreateAlertModal();
           this.loadAlerts();
-          this.showSnackbar(
-            this.editingAlert ? 'Alert updated successfully!' : 'Alert created successfully!',
-            'success'
-          );
+          this.showSnackbar('Alert created successfully!', 'success');
         },
         error: (error) => {
           this.isCreatingAlert = false;
           console.error('Error saving alert:', error);
-          this.showSnackbar('Error saving alert. Please try again.', 'error');
+          this.showSnackbar('Error saving alert.', 'error');
         }
       });
     } else {
@@ -414,13 +352,9 @@ export class DocumentsComponent implements OnInit {
       pet: alert.pet.toString(),
       alert_type: alert.alert_type,
       due_date: alert.due_date,
-      frequency: alert.frequency,
-      is_active: alert.is_active
+      frequency: alert.frequency
     });
-    
-    // Scroll to alert form
-    this.scrollToAlertForm();
-    this.showSnackbar('Editing alert: ' + alert.title, 'info');
+    this.openCreateAlertModal();
   }
 
   deleteAlert(alertId: number): void {
@@ -429,11 +363,11 @@ export class DocumentsComponent implements OnInit {
         .subscribe({
           next: () => {
             this.alerts = this.alerts.filter(alert => alert.alert_id !== alertId);
-            this.showSnackbar('Alert deleted successfully!', 'success');
+            this.showSnackbar('Alert deleted!', 'success');
           },
           error: (error) => {
             console.error('Error deleting alert:', error);
-            this.showSnackbar('Error deleting alert. Please try again.', 'error');
+            this.showSnackbar('Error deleting alert.', 'error');
           }
         });
     }
@@ -443,21 +377,49 @@ export class DocumentsComponent implements OnInit {
     this.alertForm.patchValue({
       title: `Reminder for ${doc.document_title}`,
       pet: doc.pet.toString(),
-      alert_type: 'Vaccination', // Default for documents
+      alert_type: 'Vaccination',
       due_date: this.today
     });
-    
-    this.scrollToAlertForm();
-    this.showSnackbar('Set an alert for this document', 'info');
+    this.openCreateAlertModal();
   }
 
   // Helper Methods
+  getPetNameById(petId: number): string {
+    const pet = this.userPets.find(p => p.pet_id === petId);
+    return pet ? pet.pet_name : '';
+  }
+
   getUpcomingAlertsCount(): number {
     const today = new Date();
     return this.alerts.filter(alert => {
       const dueDate = new Date(alert.due_date);
       return dueDate >= today && alert.is_active;
     }).length;
+  }
+
+  getDaysRemaining(alert: Alert): string {
+    const today = new Date();
+    const dueDate = new Date(alert.due_date);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 0) return `Overdue`;
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Tomorrow';
+    return `${diffDays}d`;
+  }
+
+  getDaysRemainingClass(alert: Alert): string {
+    const today = new Date();
+    const dueDate = new Date(alert.due_date);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 0) return 'bg-danger';
+    if (diffDays === 0) return 'bg-warning text-dark';
+    if (diffDays <= 2) return 'bg-warning';
+    if (diffDays <= 7) return 'bg-info';
+    return 'bg-secondary';
   }
 
   isAlertDueSoon(alert: Alert): boolean {
@@ -472,10 +434,6 @@ export class DocumentsComponent implements OnInit {
     const today = new Date();
     const dueDate = new Date(alert.due_date);
     return dueDate < today && alert.is_active;
-  }
-
-  isAlertActive(alert: Alert): boolean {
-    return alert.is_active;
   }
 
   getAlertIcon(alertType: string): string {
@@ -495,27 +453,15 @@ export class DocumentsComponent implements OnInit {
 
   getAlertBadgeClass(alertType: string): string {
     const classes: { [key: string]: string } = {
-      'Vaccination': 'bg-primary bg-opacity-20 text-primary',
-      'Medication': 'bg-success bg-opacity-20 text-success',
-      'Appointment': 'bg-warning bg-opacity-20 text-warning',
-      'Checkup': 'bg-info bg-opacity-20 text-info',
-      'Other': 'bg-secondary bg-opacity-20 text-secondary'
+      'Vaccination': 'bg-primary',
+      'Medication': 'bg-success',
+      'Appointment': 'bg-warning text-dark',
+      'Checkup': 'bg-info',
+      'Other': 'bg-secondary'
     };
-    return classes[alertType] || 'bg-secondary bg-opacity-20 text-secondary';
+    return classes[alertType] || 'bg-secondary';
   }
 
-  getDueDateTextClass(alert: Alert): string {
-    if (this.isAlertOverdue(alert)) return 'text-danger';
-    if (this.isAlertDueSoon(alert)) return 'text-warning';
-    return 'text-muted';
-  }
-
-  getTotalSize(): string {
-    const totalSize = this.documents.length * 0.5;
-    return totalSize < 1 ? `${(totalSize * 1024).toFixed(0)} KB` : `${totalSize.toFixed(1)} MB`;
-  }
-
-  // UI Methods
   toggleAlertsModal(): void {
     this.showAlertsModal = !this.showAlertsModal;
     if (this.showAlertsModal) {
@@ -526,44 +472,14 @@ export class DocumentsComponent implements OnInit {
     }
   }
 
-  scrollToUpload(): void {
-    if (this.uploadSection) {
-      this.uploadSection.nativeElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  }
-
-  scrollToAlertForm(): void {
-    this.toggleAlertsModal(); // Close modal first
-    setTimeout(() => {
-      const alertCard = document.querySelector('.alert-create-card');
-      if (alertCard) {
-        alertCard.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-    }, 300);
-  }
-
-  showSnackbar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration?: number): void {
+  showSnackbar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
     const config: MatSnackBarConfig = {
-      duration: duration || (type === 'error' || type === 'warning' ? 5000 : 3000),
+      duration: type === 'error' || type === 'warning' ? 5000 : 3000,
       horizontalPosition: 'right',
       verticalPosition: 'top',
-      panelClass: [`snackbar-${type}`],
-      politeness: 'polite'
+      panelClass: [`snackbar-${type}`]
     };
     
     this.snackBar.open(message, 'Close', config);
-  }
-  showCriticalNotification(): void {
-    if (this.criticalAlerts.length > 0) {
-      const criticalAlert = this.criticalAlerts[0];
-      const message = `⚠️ CRITICAL: ${criticalAlert.title} - ${this.getDaysRemaining(criticalAlert)}`;
-      this.showSnackbar(message, 'error', 10000); // Show for 10 seconds
-    }
   }
 }

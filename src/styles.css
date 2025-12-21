@@ -1,5 +1,6 @@
 @import 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
 @import "bootstrap/dist/css/bootstrap.min.css";
+
 :root {
   --primary: #6366F1;        /* Indigo */
   --primary-dark: #4F46E5;
@@ -300,3 +301,14 @@ html {
 .shake {
   animation: shake 0.5s ease-in-out;
 }
+
+
+
+
+.main-content {
+
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
