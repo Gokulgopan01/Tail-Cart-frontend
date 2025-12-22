@@ -41,10 +41,7 @@ export class DoctorComponent implements OnInit, AfterViewChecked {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    // Show welcome snackbar
-    setTimeout(() => {
-      this.showSnackBar('Welcome to Dr. PetAI! Ask any pet health questions.', 'info');
-    }, 1000);
+  
   }
 
   ngAfterViewChecked() {
@@ -86,7 +83,7 @@ export class DoctorComponent implements OnInit, AfterViewChecked {
     this.error = '';
     this.showSnackBar('Analyzing your pet\'s symptoms...', 'info');
 
-    this.http.post<{response: string}>('https://tailcart.duckdns.org/api/ai-doctor/', {
+    this.http.post<{response: string}>('http://127.0.0.1:8000/api/ai-doctor/', {
       question: this.userInput
     }).subscribe({
       next: (res) => {

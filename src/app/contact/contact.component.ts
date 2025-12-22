@@ -51,10 +51,7 @@ export class ContactComponent implements OnInit, AfterViewInit {
   ];
 
   ngOnInit(): void {
-    // Show welcome message
-    setTimeout(() => {
-      this.showSnackBar('Welcome to Tail Cart - Your pet\'s safety is our priority!', 'info');
-    }, 1000);
+    
   }
 
   ngAfterViewInit(): void {

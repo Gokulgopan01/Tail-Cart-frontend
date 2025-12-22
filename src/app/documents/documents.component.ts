@@ -76,9 +76,9 @@ export class DocumentsComponent implements OnInit {
   today = new Date().toISOString().split('T')[0];
   criticalAlerts: Alert[] = [];
   
-  private documentsApi = ' http://127.0.0.1:8000/api/user/documents/';
-  private alertsApi = ' http://127.0.0.1:8000/api/user/pet-alerts/';
-  private petsApi = ' http://127.0.0.1:8000/api/user/pets/';
+  private documentsApi = 'http://127.0.0.1:8000/api/user/documents/';
+  private alertsApi = 'http://127.0.0.1:8000/api/user/pet-alerts/';
+  private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
   private userId: string = '';
 
   constructor(
@@ -297,20 +297,35 @@ export class DocumentsComponent implements OnInit {
   }
 
   deleteDocument(documentId: number): void {
-    if (confirm('Are you sure you want to delete this document?')) {
-      this.http.delete(`${this.documentsApi}${documentId}/`)
-        .subscribe({
-          next: () => {
-            this.documents = this.documents.filter(doc => doc.document_id !== documentId);
-            this.showSnackbar('Document deleted!', 'success');
-          },
-          error: (error) => {
-            console.error('Error deleting document:', error);
-            this.showSnackbar('Error deleting document.', 'error');
-          }
-        });
+  const snackRef = this.snackBar.open(
+    'Are you sure you want to delete this document?',
+    'DELETE',
+    {
+      duration: 8000,
+      panelClass: ['snackbar-warning'],
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
     }
-  }
+  );
+
+  snackRef.onAction().subscribe(() => {
+    const params = { document_id: documentId.toString() };
+
+    this.http.delete(this.documentsApi, { params })
+      .subscribe({
+        next: () => {
+          this.documents = this.documents.filter(
+            doc => doc.document_id !== documentId
+          );
+          this.showSnackbar('Document deleted successfully', 'success');
+        },
+        error: (error) => {
+          console.error('Error deleting document:', error);
+          this.showSnackbar('Failed to delete document', 'error');
+        }
+      });
+  });
+}
 
   // Alert Methods
   createAlert(): void {
@@ -358,20 +373,36 @@ export class DocumentsComponent implements OnInit {
   }
 
   deleteAlert(alertId: number): void {
-    if (confirm('Are you sure you want to delete this alert?')) {
-      this.http.delete(`${this.alertsApi}?alert_id=${alertId}`)
-        .subscribe({
-          next: () => {
-            this.alerts = this.alerts.filter(alert => alert.alert_id !== alertId);
-            this.showSnackbar('Alert deleted!', 'success');
-          },
-          error: (error) => {
-            console.error('Error deleting alert:', error);
-            this.showSnackbar('Error deleting alert.', 'error');
-          }
-        });
+  const snackRef = this.snackBar.open(
+    'Are you sure you want to delete this alert?',
+    'DELETE',
+    {
+      duration: 8000,
+      panelClass: ['snackbar-warning'],
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
     }
-  }
+  );
+
+  snackRef.onAction().subscribe(() => {
+    const params = { alert_id: alertId.toString() };
+
+    this.http.delete(this.alertsApi, { params })
+      .subscribe({
+        next: () => {
+          this.alerts = this.alerts.filter(
+            alert => alert.alert_id !== alertId
+          );
+          this.showSnackbar('Alert deleted successfully', 'success');
+        },
+        error: (error) => {
+          console.error('Error deleting alert:', error);
+          this.showSnackbar('Failed to delete alert', 'error');
+        }
+      });
+  });
+}
+
 
   openAlertFormForDocument(doc: Document): void {
     this.alertForm.patchValue({

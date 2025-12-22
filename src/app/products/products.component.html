@@ -166,10 +166,10 @@
                   <i class="fas fa-paw"></i>
                   {{ product.breed }}
                 </div>
-                <button class="add-to-cart-mini" (click)="$event.stopPropagation(); addToCart(product)">
-                  <i class="fas fa-shopping-cart"></i>
-                  Add to Cart
-                </button>
+                <button class="add-to-cart-mini" (click)="onAddToCartClick(product, $event)">
+                    <i class="fas fa-shopping-cart"></i>
+                    Add to Cart
+                  </button>
               </div>
             </div>
           </div>
@@ -413,15 +413,26 @@
           
           <!-- Pet ID Input Section (Shown when adding to cart) -->
           <div class="cart-input-section" *ngIf="showPetIdInput">
-            <h4>Enter Pet ID</h4>
+            <h4>Select Pet</h4>
+
             <div class="input-group">
-              <input 
-                type="number" 
-                [(ngModel)]="petId" 
-                placeholder="Enter your pet ID"
+              <select
                 class="form-control"
-                min="1">
+                [(ngModel)]="petId"
+              >
+                <option value="" disabled selected>
+                  -- Select your pet --
+                </option>
+
+                <option
+                  *ngFor="let pet of userPets"
+                  [value]="pet.pet_id"
+                >
+                  {{ pet.pet_name }} ({{ pet.species }} - {{ pet.breed }})
+                </option>
+              </select>
             </div>
+
             <div class="input-actions">
               <button class="btn-cancel" (click)="cancelCartProcess()">Cancel</button>
               <button class="btn-submit" (click)="submitPetId()">Next</button>

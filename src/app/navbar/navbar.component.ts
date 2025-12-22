@@ -59,8 +59,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
       titleSize: '3rem'
     },
 
+      '/': {
+      lottieUrl: 'assets/Login_banner.json',
+      title: "Let\'s Go",
+      subtitle: "Your Pet\'s Ultimate Digital Companion",
+      showLottie: true,
+      lottieHeight: '200px',
+      titleSize: '3rem'
+    },
+
     '/home': {
-      lottieUrl: 'https://assets10.lottiefiles.com/packages/lf20_gn0tojcq.json',
+      lottieUrl: 'assets/home_banner.json',
       title: 'Pet\'s Digital Home',
       subtitle: 'Manage care, shop smarter, and stay organized.',
       showLottie: true,
@@ -125,18 +134,22 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-  if (this.isMobileMenuOpen) return;
+  // if (this.isMobileMenuOpen) return;
 
-  const currentScroll =
-    window.pageYOffset || document.documentElement.scrollTop;
+  // const currentScroll =
+  //   window.pageYOffset || document.documentElement.scrollTop;
 
-  if (currentScroll > this.lastScrollTop && currentScroll > 80) {
-    this.isScrolled = true;
-  } else {
-    this.isScrolled = false;
-  }
+  // if (currentScroll > this.lastScrollTop && currentScroll > 80) {
+  //   this.isScrolled = true;
+  // } else {
+  //   this.isScrolled = false;
+  // }
 
-  this.lastScrollTop = Math.max(currentScroll, 0);
+  // this.lastScrollTop = Math.max(currentScroll, 0);
+  const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+  this.showBackToTop = scrollPosition > 300;
+  this.lastScrollTop = scrollPosition;
+
 }
 
   @HostListener('window:resize', [])
@@ -296,18 +309,21 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   private setupRouterEvents() {
-    this.routerSubscription = this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: any) => {
-        this.smoothScrollToTop();
-        this.closeMobileMenu();
-        this.setCurrentPageData(event.urlAfterRedirects || event.url);
-        
-        if (this.isBrowser) {
-          this.saveScrollPosition();
-        }
-      });
-  }
+  this.routerSubscription = this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe((event: any) => {
+      // Reset scroll state
+      this.isScrolled = false;  // ADD THIS LINE
+      
+      this.smoothScrollToTop();
+      this.closeMobileMenu();
+      this.setCurrentPageData(event.urlAfterRedirects || event.url);
+      
+      if (this.isBrowser) {
+        this.saveScrollPosition();
+      }
+    });
+}
 
   private setupSmoothScrolling() {
     if (this.isBrowser) {

@@ -1,36 +1,5 @@
 <div class="home-container">
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="hero-text">
-        <div class="badge">Premium Pet Safety</div>
-        <h2 class="hero-subtitle">Protect Your Pets With</h2>
-        <h1 class="hero-title">QR <span class="gradient-text">Keychains</span></h1>
-        <p class="hero-description">If someone finds your pet, scanning the QR on their keychain will show your contact details instantly.</p>
-        <div class="hero-buttons">
-          <button class="btn btn-primary" (click)="navigateToProfile()">
-            {{ hasProfile ? 'My Profile' : 'Create Owner Profile' }}
-          </button>
-          <button class="btn btn-secondary" (click)="navigateTo('/shop')">Shop Now</button>
-        </div>
-        <div class="hero-stats">
-          <div class="stat">
-            <div class="stat-number">5000+</div>
-            <div class="stat-label">Pets Protected</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">98%</div>
-            <div class="stat-label">Recovery Rate</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">24/7</div>
-            <div class="stat-label">Support</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  
 
   <!-- Features Section -->
   <section class="features-section" id="features">
@@ -38,7 +7,6 @@
       <div class="section-header">
         <h2 class="section-title">What We Offer</h2>
         <p class="section-subtitle">Safety, convenience, and care for your beloved pets</p>
-        <div class="section-divider"></div>
       </div>
 
       <!-- Desktop Features Grid -->
@@ -139,7 +107,35 @@
       </div>
     </div>
   </section>
-
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="badge">Premium Pet Safety</div>
+        <h2 class="hero-subtitle">Protect Your Pets With</h2>
+        <h1 class="hero-title">QR <span class="gradient-text">Keychains</span></h1>
+        <p class="hero-description">If someone finds your pet, scanning the QR on their keychain will show your contact details instantly.</p>
+        <div class="hero-buttons">
+          <button class="btn btn-secondary" (click)="navigateTo('/shop')">Shop Now</button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-number">5000+</div>
+            <div class="stat-label">Pets Protected</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Recovery Rate</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Support</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- Category Section -->
   <section class="category-section">
     <div class="container">
@@ -159,7 +155,6 @@
             <p>Durable tags designed for active dogs</p>
             <button class="btn-category">Shop Now</button>
           </div>
-          <div class="category-badge">Most Popular</div>
         </div>
 
         <div class="category-card cats" (click)="navigateTo('/shop')">
@@ -194,7 +189,6 @@
               <h4 class="fw-bold">Dog Keychains</h4>
               <p class="mb-2">Durable tags designed for active dogs</p>
               <button class="btn btn-primary w-100">Shop Now</button>
-              <span class="badge bg-danger mt-2">Most Popular</span>
             </div>
           </div>
         </div>

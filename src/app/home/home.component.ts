@@ -12,6 +12,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   hasProfile = false;
   private observer!: IntersectionObserver;
+  private carouselInterval!: number;
   private animations: AnimationItem[] = [];
 
   // Desktop Lottie refs
@@ -38,33 +39,43 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   // Initialize modern carousel
   initCarousel(): void {
-    const carousel = document.getElementById('featuresCarousel');
-    const dots = document.querySelectorAll('.carousel-dot');
-    
-    if (!carousel) return;
-    
-    // Update active dot on scroll
-    carousel.addEventListener('scroll', () => {
-      const slideIndex = Math.round(carousel.scrollLeft / carousel.offsetWidth);
-      this.updateActiveDot(slideIndex);
-      this.playMobileAnimation(slideIndex);
-    });
-    
-    // Dot click navigation
-    dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
-        this.goToSlide(index);
-      });
-    });
-    
-    // Auto scroll every 5 seconds
-    setInterval(() => {
-      this.autoScrollCarousel();
-    }, 5000);
-    
-    // Play first slide animation
-    if (this.animations[5]) this.animations[5].play();
+  const carousel = document.getElementById('featuresCarousel');
+  const dots = document.querySelectorAll('.carousel-dot');
+
+  if (!carousel) return;
+
+  // ❌ Prevent multiple intervals
+  if (this.carouselInterval) {
+    clearInterval(this.carouselInterval);
   }
+
+  // Scroll listener (ONLY update dots, NOT auto logic)
+  carousel.addEventListener('scroll', () => {
+    const slideIndex = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+    this.updateActiveDot(slideIndex);
+  });
+
+  // Dot click navigation
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      this.goToSlide(index);
+      this.resetCarouselTimer();
+    });
+  });
+
+  this.carouselInterval = window.setInterval(() => {
+    this.autoScrollCarousel();
+  }, 10000);
+
+  // Play first mobile animation
+  this.playMobileAnimation(0);
+}
+  resetCarouselTimer(): void {
+  clearInterval(this.carouselInterval);
+  this.carouselInterval = window.setInterval(() => {
+    this.autoScrollCarousel();
+  }, 10000);
+}
   
   // Auto scroll carousel
   autoScrollCarousel(): void {

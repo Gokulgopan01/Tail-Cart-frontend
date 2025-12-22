@@ -47,14 +47,14 @@ html, body {
   &.snackbar-success {
     --mdc-snackbar-container-color: #10b981;
     --mdc-snackbar-supporting-text-color: white;
-    --mat-snack-bar-button-color: white;
+    --mat-snack-bar-button-color: #97d7c2;
     
     .mdc-snackbar__surface {
       background: linear-gradient(135deg, #10b981, #059669) !important;
     }
     
     .mat-mdc-button.mat-mdc-snack-bar-action {
-      color: white !important;
+      color: #97d7c2!important;
       background: transparent !important;
       border: 1px solid rgba(255, 255, 255, 0.4) !important;
       border-radius: 4px;
@@ -63,8 +63,8 @@ html, body {
     }
     
     .mat-mdc-button.mat-mdc-snack-bar-action:hover {
-      background: rgba(255, 255, 255, 0.15) !important;
-      border-color: rgba(255, 255, 255, 0.8) !important;
+      background: #97d7c2 !important;
+      border-color: #97d7c2 !important;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
     
@@ -76,14 +76,14 @@ html, body {
   &.snackbar-error {
     --mdc-snackbar-container-color: #ef4444;
     --mdc-snackbar-supporting-text-color: white;
-    --mat-snack-bar-button-color: white;
+    --mat-snack-bar-button-color: #e8b8b8;
     
     .mdc-snackbar__surface {
       background: linear-gradient(135deg, #ef4444, #dc2626) !important;
     }
     
     .mat-mdc-button.mat-mdc-snack-bar-action {
-      color: white !important;
+      color: #f4b7b7!important;
       background: transparent !important;
       border: 1px solid rgba(255, 255, 255, 0.4) !important;
       border-radius: 4px;
@@ -112,7 +112,7 @@ html, body {
     }
     
     .mat-mdc-button.mat-mdc-snack-bar-action {
-      color: white !important;
+      color: #ffd182!important;
       background: transparent !important;
       border: 1px solid rgba(255, 255, 255, 0.4) !important;
       border-radius: 4px;
@@ -141,7 +141,7 @@ html, body {
     }
     
     .mat-mdc-button.mat-mdc-snack-bar-action {
-      color: white !important;
+      color: #8eb7f9 !important;
       background: transparent !important;
       border: 1px solid rgba(255, 255, 255, 0.4) !important;
       border-radius: 4px;

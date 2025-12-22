@@ -73,13 +73,13 @@ html {
   font-family: var(--font-primary);
   display: none;
   background-color: #000000; /* BLACK */
+  position: sticky !important;
+  top: 0 !important;
+  left: 0 !important;
+
 }
 
-.navbar.scrolled {
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
-}
+
 
 /* Navbar top row */
 .navbar-top {
@@ -303,6 +303,7 @@ html {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   line-height: 1.2;
+  justify-content: center;
 }
 
 .page-subtitle {
@@ -310,14 +311,33 @@ html {
   color: #cccccc; /* LIGHT GRAY */
   line-height: 1.5;
   opacity: 0.9;
+  justify-content: center;
+}
+/* SIMPLE FIX: DISABLE ALL NAVBAR HIDING */
+.navbar,
+.mobile-navbar,
+.navbar-top,
+.mobile-nav-header,
+.page-header-content,
+.mobile-page-header-content {
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
+.navbar.scrolled,
+.mobile-navbar.scrolled {
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
 /* =========================================================
    MOBILE NAVBAR STYLES - COMPLETELY FIXED
    ========================================================= */
 .mobile-navbar {
   display: none;
-  width: 100%;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   z-index: 1000;
@@ -325,12 +345,25 @@ html {
   box-shadow: 0 2px 20px rgba(255, 255, 255, 0.05);
   font-family: var(--font-primary);
   background-color: #000000; /* BLACK */
+  position: sticky !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
 }
 
-.mobile-navbar.scrolled {
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
+.navbar,
+.mobile-navbar {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+}
+
+.navbar,
+.mobile-navbar,
+.navbar-top,
+.mobile-nav-header {
+  transition: none !important;
 }
 
 .mobile-nav-header {
@@ -400,6 +433,7 @@ html {
   color: #cccccc; /* LIGHT GRAY */
   line-height: 1.4;
   opacity: 0.9;
+  justify-content: center;
 }
 
 /* Hamburger Menu Toggle */
@@ -836,7 +870,7 @@ body.menu-open {
   background: #000000; /* BLACK BACKGROUND */
   border-radius: 25px 25px 0 0;
   box-shadow: 0 -10px 40px rgba(255, 255, 255, 0.15);
-  z-index: 9999;
+  z-index: 10000;
   transition: bottom 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   max-height: 85vh;
   display: flex;
@@ -844,7 +878,11 @@ body.menu-open {
 }
 
 .mobile-bottom-sheet.active {
-  bottom: 0;
+  display: flex !important;
+}
+
+.mobile-bottom-sheet.active .mobile-user-info {
+  display: flex !important;
 }
 
 /* Sheet Handle */
@@ -1036,6 +1074,22 @@ body.menu-open {
   }
 }
 
+.mobile-navbar .mobile-bottom-sheet .mobile-user-info {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.mobile-bottom-sheet.active * {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+[class*="page-"] .mobile-bottom-sheet .mobile-user-info,
+[class*="contact"] .mobile-bottom-sheet .mobile-user-info,
+[class*="reach"] .mobile-bottom-sheet .mobile-user-info,
+[class*="home"] .mobile-bottom-sheet .mobile-user-info {
+  display: flex !important;
+}
 /* =========================================================
    FIX: HIDE OLD MOBILE MENU ELEMENTS WHEN NOT ACTIVE
    ========================================================= */
@@ -1107,54 +1161,72 @@ body.menu-open {
 .mobile-nav-content.active {
   display: none !important;
 }
-
-/* Hide elements that should only appear in bottom sheet */
-.mobile-nav-header ~ .mobile-user-info,
-.mobile-nav-header ~ .mobile-nav-links,
-.mobile-nav-header ~ .mobile-footer {
+.mobile-navbar > .mobile-user-info:not(.mobile-bottom-sheet .mobile-user-info) {
   display: none !important;
 }
 
+
 /* Only show user info in bottom sheet */
 .mobile-bottom-sheet .mobile-user-info {
-  padding: 20px 25px;
-  background: #111111;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  flex-shrink: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  margin: 0;
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  min-height: 80px !important;
+  padding: 20px 25px !important;
+  background: #111111 !important;
+  color: #ffffff !important;
+  align-items: center !important;
+  gap: 15px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  margin: 0 !important;
 }
+
+.mobile-bottom-sheet .user-avatar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 .mobile-bottom-sheet .user-avatar i {
-  font-size: 2.2rem;
-  opacity: 0.9;
-  color: #ffffff;
+  font-size: 2.2rem !important;
+  opacity: 0.9 !important;
+  color: #ffffff !important;
 }
+
 .mobile-bottom-sheet .user-details h3 {
-  font-family: var(--font-heading);
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 3px;
-  color: #ffffff;
-  line-height: 1.3;
-  white-space: normal;
-  word-wrap: break-word;
+  font-family: var(--font-heading) !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 3px !important;
+  color: #ffffff !important;
+  line-height: 1.3 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  width: 100% !important;
+  display: block !important;
 }
+
 .mobile-bottom-sheet .user-details p {
-  font-size: 0.8rem;
-  opacity: 0.9;
-  color: #cccccc;
-  line-height: 1.2;
-  white-space: normal;
-  word-wrap: break-word;
-  margin: 0;
+  font-size: 0.8rem !important;
+  opacity: 0.9 !important;
+  color: #cccccc !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  width: 100% !important;
+  display: block !important;
+  margin: 0 !important;
 }
+
 .mobile-bottom-sheet .user-details {
-  flex: 1;
-  min-width: 0; /* Important for text truncation */
-  overflow: hidden;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
 }
 
 .mobile-bottom-sheet .user-details h3,

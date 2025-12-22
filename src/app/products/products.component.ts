@@ -18,6 +18,14 @@ interface Product {
   deals: string;
 }
 
+interface Pet {
+  pet_id: number;
+  pet_name: string;
+  species: string;
+  breed: string;
+}
+
+
 interface Filters {
   breeds: {
     dog: boolean;
@@ -48,6 +56,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   filteredProducts: Product[] = [];
   paginatedProducts: Product[] = [];
   selectedProduct: Product | null = null;
+  userPets: Pet[] = [];
+  loadingPets = false;
   
   // Pagination
   currentPage: number = 1;
@@ -81,14 +91,14 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   petId: string = '';
   quantity: number = 1;
 
-  constructor(
-    private http: HttpClient,
-    private snackBar: MatSnackBar
-  ) {}
+  constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
+
+    private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
 
   ngOnInit() {
     this.checkMobileView();
     this.fetchProducts();
+    this.loadUserPets();
   }
   
   ngAfterViewInit() {
@@ -96,6 +106,26 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       this.initScrollAnimations();
     }, 100);
   }
+
+  loadUserPets(): void {
+  const userId = localStorage.getItem('user_id');
+  if (!userId) return;
+
+  this.loadingPets = true;
+
+  this.http.get<Pet[]>(`${this.petsApi}?user_id=${userId}`)
+    .subscribe({
+      next: (pets) => {
+        this.userPets = pets;
+        this.loadingPets = false;
+      },
+      error: () => {
+        this.loadingPets = false;
+        this.showSnackbar('Failed to load pets', 'error');
+      }
+    });
+}
+
   
   @HostListener('window:resize')
   onResize() {
@@ -384,6 +414,12 @@ onImageError(event: Event) {
     this.quantity = 1;
   }
 
+  onAddToCartClick(product: any, event: Event): void {
+    event.stopPropagation();          // prevent card click bubbling
+    this.openProductModal(product);   // same behavior as card click
+    this.addToCart(product);          // existing add-to-cart logic
+    }
+
   // New method to handle add to cart flow for mobile
   async addToCart(product: Product) {
     const userId = localStorage.getItem('user_id');
@@ -409,11 +445,11 @@ onImageError(event: Event) {
 
   // Method to handle pet ID submission
   submitPetId() {
-    if (!this.petId || isNaN(Number(this.petId)) || Number(this.petId) <= 0) {
-      this.showSnackbar('Please enter a valid numeric Pet ID!', 'error');
+    if (!this.petId) {
+      this.showSnackbar('Please select a pet!', 'error');
       return;
     }
-    
+
     this.showPetIdInput = false;
     this.showQuantityInput = true;
   }
