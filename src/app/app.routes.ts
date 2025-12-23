@@ -9,6 +9,7 @@ import { DoctorComponent } from './doctor/doctor.component';
 import { ContactComponent } from './contact/contact.component';
 import { AboutComponent } from './about/about.component';
 import { CartComponent } from './cart/cart.component';
+import { adminGuard } from './guards/admin.guard';
 
 
 export const routes: Routes = [
@@ -23,7 +24,12 @@ export const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: '', component: AuthComponent },
   { path: 'cart', component: CartComponent },
-  { path: '**', component: AuthComponent }
+  { path: '**', component: AuthComponent },
+  {
+  path: 'admin/products',
+  component: ProductsComponent,
+  canActivate: [adminGuard]
+}
 ];
 
 

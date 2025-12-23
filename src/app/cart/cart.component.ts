@@ -33,9 +33,22 @@ export class CartComponent implements OnInit, AfterViewInit  {
   loading = false;
   userId: string | null = '';
   totalAmount = 0;
+  readonly API_BASE_URL = 'http://127.0.0.1:8000/api';
   readonly TAX_RATE = 0.18;
+
   
   private snackBar = inject(MatSnackBar);
+  private getHeaders() {
+  const token = localStorage.getItem('access_token');
+
+
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    }
+  };
+}
 
   constructor(private http: HttpClient) {}
 
@@ -89,42 +102,30 @@ export class CartComponent implements OnInit, AfterViewInit  {
   }
 
   /** Load cart items */
-loadCart(): void {
-  this.loading = true;
-  
-  // Add debug logs
-  console.log('🎯 loadCart() called');
-  console.log('📋 User ID:', this.userId);
-  
-  const url = `http://127.0.0.1:8000/api/user/cart/?user_id=${this.userId}`;
-  console.log('🌐 API URL:', url);
-  
-  this.http.get<CartItem[]>(url)
-    .subscribe({
-      next: (res) => {
-        console.log('✅ API Response received:', res);
-        this.cartItems = res.map(item => ({
-          ...item,
-          product_image: item.product_image?.startsWith('http')
-            ? item.product_image
-            : 'http://127.0.0.1:8000/' + item.product_image
-        }));
-        this.calculateTotal();
-        this.loading = false;
-        console.log('🛒 Cart items after processing:', this.cartItems);
-        if (res.length === 0) {
-          this.showSnackBar('Your cart is empty. Start shopping!', 'info');
-        }
-      },
-      error: (error) => {
-        console.error('❌ API Error:', error);
-        console.error('❌ Error status:', error.status);
-        console.error('❌ Error message:', error.message);
-        this.loading = false;
-        this.showSnackBar('Failed to load cart items. Please try again.', 'error');
-      }
-    });
-}
+    loadCart(): void {
+      this.loading = true;
+
+      const url = `${this.API_BASE_URL}/user/cart/?user_id=${this.userId}`;
+
+      this.http.get<CartItem[]>(url, this.getHeaders())
+        .subscribe({
+          next: (res) => {
+            this.cartItems = res.map(item => ({
+              ...item,
+              product_image: item.product_image?.startsWith('http')
+                ? item.product_image
+                : `http://127.0.0.1:8000/${item.product_image}`
+            }));
+            this.calculateTotal();
+            this.loading = false;
+          },
+          error: () => {
+            this.loading = false;
+            this.showSnackBar('Failed to load cart items.', 'error');
+          }
+        });
+    }
+
 
   /** Update item quantity */
   updateQuantity(item: CartItem, newQuantity: number): void {
@@ -136,11 +137,15 @@ loadCart(): void {
     const oldQuantity = item.quantity;
     item.quantity = newQuantity;
 
-    this.http.put(`http://127.0.0.1:8000/api/user/cart/`, {
-      user_id: this.userId,
-      cart_id: item.cart_id,
-      quantity: newQuantity
-    }).subscribe({
+    this.http.put(
+  `${this.API_BASE_URL}/user/cart/`,
+  {
+    user_id: this.userId,
+    cart_id: item.cart_id,
+    quantity: newQuantity
+  },
+  this.getHeaders()
+).subscribe({
       next: () => {
         this.calculateTotal();
         this.showSnackBar(`Quantity updated to ${newQuantity}`, 'success');
@@ -167,7 +172,10 @@ loadCart(): void {
     );
 
     snackBarRef.onAction().subscribe(() => {
-      this.http.delete(`http://127.0.0.1:8000/api/user/cart/?cart_id=${item.cart_id}`)
+      this.http.delete(
+        `${this.API_BASE_URL}/user/cart/?cart_id=${item.cart_id}`,
+        this.getHeaders()
+      )
         .subscribe({
           next: () => {
             this.cartItems = this.cartItems.filter(i => i.cart_id !== item.cart_id);
@@ -212,11 +220,15 @@ loadCart(): void {
 
     snackBarRef.onAction().subscribe(() => {
       this.loading = true;
-      this.http.post(`http://127.0.0.1:8000/api/checkout/`, {
-        user_id: this.userId,
-        items: this.cartItems,
-        total_amount: this.totalAmount
-      }).subscribe({
+      this.http.post(
+  `${this.API_BASE_URL}/checkout/`,
+  {
+    user_id: this.userId,
+    items: this.cartItems,
+    total_amount: this.totalAmount
+  },
+  this.getHeaders()
+).subscribe({
         next: (res: any) => {
           this.loading = false;
           this.showSnackBar(res.message || 'Order placed successfully! Thank you for your purchase.', 'success');

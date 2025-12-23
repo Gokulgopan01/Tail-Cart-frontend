@@ -20,10 +20,17 @@ interface LoginResponse {
   message: string;
   user_id: number;
   username: string;
+  access: string;   
+  refresh: string;  
+  role: string;
 }
 
 interface RegisterResponse {
   message?: string;
+  user_id?: number;
+  username?: string;
+  access?: string;
+  refresh?: string;
 }
 
 @Component({
@@ -102,16 +109,20 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
         .subscribe({
           next: (response) => {
             if (response.message === 'Login successful') {
+
               localStorage.setItem('user_id', response.user_id.toString());
               localStorage.setItem('username', response.username);
+              localStorage.setItem('access_token', response.access);
+              localStorage.setItem('refresh_token', response.refresh);
+              localStorage.setItem('access_role', response.role.toLowerCase());
 
               this.successMessage.set('Login successful! Redirecting...');
 
-              // ✅ FORCE loader for 10 seconds
               setTimeout(() => {
                 this.stopLoader();
                 this.router.navigate(['/home']);
-              }, 3000);
+              }, 1500);
+
             } else {
               this.stopLoader();
               this.errorMessage.set('Login failed');
@@ -124,6 +135,7 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
             );
           }
         });
+
     } else {
       this.http
         .post<RegisterResponse>('http://127.0.0.1:8000/api/user/register/', this.registerData)
@@ -131,8 +143,15 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
           next: (response) => {
             this.stopLoader();
             if (response.message?.includes('successful')) {
+              if (response.access && response.refresh) {
+                localStorage.setItem('user_id', response.user_id!.toString());
+                localStorage.setItem('username', response.username!);
+                localStorage.setItem('access_token', response.access);
+                localStorage.setItem('refresh_token', response.refresh);
+              }
+
               this.successMessage.set('Registration successful! You can now login.');
-              setTimeout(() => this.isLoginMode.set(true), 3000);
+              setTimeout(() => this.isLoginMode.set(true), 2000);
             } else {
               this.errorMessage.set(response.message || 'Registration completed.');
             }

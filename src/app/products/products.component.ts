@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, AfterViewInit, HostListener } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
+import { ViewChild, ElementRef } from '@angular/core';
 
 interface Product {
   id: number;
@@ -24,7 +24,6 @@ interface Pet {
   species: string;
   breed: string;
 }
-
 
 interface Filters {
   breeds: {
@@ -52,6 +51,7 @@ interface Filters {
   styleUrls: ['./products.component.css']
 })
 export class ProductsComponent implements OnInit, AfterViewInit {
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   products: Product[] = [];
   filteredProducts: Product[] = [];
   paginatedProducts: Product[] = [];
@@ -59,9 +59,29 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   userPets: Pet[] = [];
   loadingPets = false;
   
+  // Admin variables
+  showAddProductModal = false;
+  isCreatingProduct = false;
+  editingProduct: Product | null = null;
+  showDeleteModal = false;
+  productToDelete: Product | null = null;
+  isDeleting = false;
+  isDraggingOver = false;
+  
+  newProduct = {
+    model: '',
+    product_info: '',
+    price: 0,
+    breed: '',
+    quantity: 0,
+    reviews: '',
+    deals: '',
+    image: null as File | null
+  };
+  
   // Pagination
   currentPage: number = 1;
-  productsPerPage: number = 12; // Increased for better mobile experience
+  productsPerPage: number = 12;
   totalPages: number = 1;
   
   // Infinite Scroll
@@ -91,14 +111,39 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   petId: string = '';
   quantity: number = 1;
 
+  private getHeaders(useFormData: boolean = false) {
+    const token = localStorage.getItem('access_token');
+    
+    if (useFormData) {
+      return {
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+      };
+    }
+    
+    // For JSON requests
+    return {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      }
+    };
+  }
+
   constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
 
-    private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
+  private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
+  private productsApi = 'http://127.0.0.1:8000/api/admin/products/';
 
   ngOnInit() {
     this.checkMobileView();
     this.fetchProducts();
     this.loadUserPets();
+
+    console.log('LocalStorage role:', localStorage.getItem('access_role'));
+    console.log('Is Admin?', this.isAdmin());
+    console.log('Full localStorage:', localStorage);
   }
   
   ngAfterViewInit() {
@@ -107,25 +152,28 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
+  triggerFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
   loadUserPets(): void {
-  const userId = localStorage.getItem('user_id');
-  if (!userId) return;
+    const userId = localStorage.getItem('user_id');
+    if (!userId) return;
 
-  this.loadingPets = true;
+    this.loadingPets = true;
 
-  this.http.get<Pet[]>(`${this.petsApi}?user_id=${userId}`)
-    .subscribe({
-      next: (pets) => {
-        this.userPets = pets;
-        this.loadingPets = false;
-      },
-      error: () => {
-        this.loadingPets = false;
-        this.showSnackbar('Failed to load pets', 'error');
-      }
-    });
-}
-
+    this.http.get<Pet[]>(`${this.petsApi}?user_id=${userId}`,this.getHeaders())
+      .subscribe({
+        next: (pets) => {
+          this.userPets = pets;
+          this.loadingPets = false;
+        },
+        error: () => {
+          this.loadingPets = false;
+          this.showSnackbar('Failed to load pets', 'error');
+        }
+      });
+  }
   
   @HostListener('window:resize')
   onResize() {
@@ -137,30 +185,11 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
 
   initScrollAnimations() {
-    // Trigger hero animations immediately
-    const heroElements = document.querySelectorAll('.hero-badge, .hero-content h1, .hero-content p, .hero-stats');
-    heroElements.forEach((el, index) => {
-      setTimeout(() => {
-        el.classList.add('animated');
-      }, index * 200);
-    });
-
-    // Scroll animations for product cards and other elements
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('animated');
           entry.target.classList.add('animate');
-          
-          // Add staggered animation for product cards
-          if (entry.target.classList.contains('product-card')) {
-            const cards = document.querySelectorAll('.product-card');
-            cards.forEach((card, index) => {
-              setTimeout(() => {
-                card.classList.add('animated');
-              }, index * 100);
-            });
-          }
         }
       });
     }, { 
@@ -168,7 +197,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       rootMargin: '0px 0px -10% 0px'
     });
 
-    // Observe all elements that need scroll animations
     const scrollElements = document.querySelectorAll(
       '.scroll-animate, .scroll-animate-left, .scroll-animate-right, .product-card, .filter-card, .products-header'
     );
@@ -177,18 +205,268 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
 
   fetchProducts() {
-    this.http.get<Product[]>('http://127.0.0.1:8000/api/admin/products/').subscribe({
+  this.http
+    .get<Product[]>(this.productsApi, this.getHeaders())
+    .subscribe({
       next: (products) => {
         this.products = products;
         this.applyFilters();
       },
-      error: (error) => {
-        console.error('Error fetching products:', error);
+      error: () => {
         this.showSnackbar('Failed to load products', 'error');
       }
     });
+}
+
+  // Admin Methods
+  isAdmin(): boolean {
+    return localStorage.getItem('access_role') === 'admin';
   }
 
+  openAddProductModal() {
+    this.resetNewProduct();
+    this.showAddProductModal = true;
+    this.editingProduct = null;
+  }
+
+  openEditProductModal(product: Product) {
+    this.newProduct = {
+      model: product.model,
+      product_info: product.product_info,
+      price: product.price,
+      breed: product.breed,
+      quantity: product.quantity,
+      reviews: product.reviews,
+      deals: product.deals,
+      image: null
+    };
+    this.editingProduct = product;
+    this.showAddProductModal = true;
+  }
+
+  closeAddProductModal() {
+    this.showAddProductModal = false;
+    this.editingProduct = null;
+    this.resetNewProduct();
+  }
+
+  resetNewProduct() {
+    this.newProduct = {
+      model: '',
+      product_info: '',
+      price: 0,
+      breed: '',
+      quantity: 0,
+      reviews: '',
+      deals: '',
+      image: null
+    };
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.validateAndSetImage(file);
+    }
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDraggingOver = true;
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDraggingOver = false;
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDraggingOver = false;
+    
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      this.validateAndSetImage(file);
+    }
+  }
+
+  validateAndSetImage(file: File) {
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      this.showSnackbar('Please select an image file', 'error');
+      return;
+    }
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      this.showSnackbar('Image size should be less than 5MB', 'error');
+      return;
+    }
+
+    this.newProduct.image = file;
+  }
+
+  saveProduct() {
+  if (!this.validateProductData()) return;
+
+  this.isCreatingProduct = true;
+
+  const formData = new FormData();
+  formData.append('model', this.newProduct.model);
+  formData.append('product_info', this.newProduct.product_info);
+  formData.append('price', this.newProduct.price.toString());
+  formData.append('breed', this.newProduct.breed);
+  formData.append('quantity', this.newProduct.quantity.toString());
+  
+  if (this.newProduct.reviews) {
+    formData.append('reviews', this.newProduct.reviews);
+  }
+  
+  if (this.newProduct.deals) {
+    formData.append('deals', this.newProduct.deals);
+  }
+  
+  if (this.newProduct.image) {
+    formData.append('image', this.newProduct.image, this.newProduct.image.name);
+  }
+
+  // For FormData, use the second parameter as true
+  const headers = this.getHeaders(true);
+
+  if (this.editingProduct) {
+    this.http.put(`${this.productsApi}${this.editingProduct.id}/`, formData, headers)
+      .subscribe({
+        next: (response: any) => {
+          this.showSnackbar('Product updated successfully!', 'success');
+          this.fetchProducts();
+          this.closeAddProductModal();
+          this.isCreatingProduct = false;
+        },
+        error: (error) => {
+          this.handleProductError(error);
+          this.isCreatingProduct = false;
+        }
+      });
+  } else {
+    this.http.post(this.productsApi, formData, headers)
+      .subscribe({
+        next: (res: any) => {
+          this.showSnackbar('Product added successfully!', 'success');
+          this.fetchProducts();
+          this.closeAddProductModal();
+          this.isCreatingProduct = false;
+        },
+        error: (err) => {
+          this.handleProductError(err);
+          this.isCreatingProduct = false;
+        }
+      });
+  }
+}
+
+  validateProductData(): boolean {
+  if (!this.newProduct.model.trim()) {
+    this.showSnackbar('Product model is required', 'error');
+    return false;
+  }
+  
+  if (!this.newProduct.product_info.trim()) {
+    this.showSnackbar('Product description is required', 'error');
+    return false;
+  }
+  
+  if (this.newProduct.price <= 0) {
+    this.showSnackbar('Price must be greater than 0', 'error');
+    return false;
+  }
+  
+  if (!this.newProduct.breed) {
+    this.showSnackbar('Please select a pet type', 'error');
+    return false;
+  }
+  
+  // Check if quantity is at least 0 (or 1 if required)
+  if (this.newProduct.quantity < 0) {
+    this.showSnackbar('Quantity cannot be negative', 'error');
+    return false;
+  }
+  
+  // Optional: require at least 1 in stock
+  if (this.newProduct.quantity < 1) {
+    this.showSnackbar('Quantity must be at least 1', 'error');
+    return false;
+  }
+  
+  if (this.newProduct.reviews && (parseFloat(this.newProduct.reviews) < 1 || parseFloat(this.newProduct.reviews) > 5)) {
+    this.showSnackbar('Rating must be between 1 and 5', 'error');
+    return false;
+  }
+
+  return true;
+}
+
+  handleProductError(error: any) {
+    let errorMessage = 'Error saving product. Please try again';
+    if (error.error) {
+      if (typeof error.error === 'string') {
+        errorMessage += `: ${error.error}`;
+      } else if (error.error.detail) {
+        errorMessage = error.error.detail;
+      } else {
+        errorMessage = Object.entries(error.error)
+          .map(([field, messages]) => `${field}: ${(Array.isArray(messages) ? messages.join(', ') : messages)}`)
+          .join('\n');
+      }
+    }
+    this.showSnackbar(errorMessage, 'error');
+  }
+
+  editProduct(product: Product, event: Event) {
+    event.stopPropagation();
+    this.openEditProductModal(product);
+  }
+
+  deleteProduct(productId: number, event: Event) {
+    event.stopPropagation();
+    const product = this.products.find(p => p.id === productId);
+    if (product) {
+      this.productToDelete = product;
+      this.showDeleteModal = true;
+    }
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+    this.productToDelete = null;
+    this.isDeleting = false;
+  }
+
+  confirmDelete() {
+    if (!this.productToDelete) return;
+
+    this.isDeleting = true;
+    
+    this.http.delete(`${this.productsApi}${this.productToDelete.id}/`, this.getHeaders())
+
+      .subscribe({
+        next: () => {
+          this.showSnackbar('Product deleted successfully!', 'success');
+          this.fetchProducts();
+          this.closeDeleteModal();
+          this.isDeleting = false;
+        },
+        error: (error) => {
+          this.showSnackbar('Failed to delete product', 'error');
+          this.isDeleting = false;
+        }
+      });
+  }
+
+  // Existing methods (unchanged)
   applyFilters() {
     this.filteredProducts = this.products.filter(product => {
       if (product.price > this.filters.priceRange) return false;
@@ -210,7 +488,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         if (!materialMatch) return false;
       }
 
-      // Rating filter
       if (this.filters.minRating > 0) {
         const rating = parseFloat(product.reviews) || 0;
         if (rating < this.filters.minRating) return false;
@@ -292,7 +569,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         });
         break;
       default: 
-        // For 'featured', sort by ID or keep original order
         this.filteredProducts.sort((a,b) => a.id - b.id);
         break;
     }
@@ -308,7 +584,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.allProductsLoaded = endIndex >= this.filteredProducts.length;
   }
 
-  // Generate star rating based on review number
   generateStars(reviewCount: string): string {
     const rating = parseFloat(reviewCount) || 0;
     const fullStars = Math.floor(rating);
@@ -318,7 +593,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     return '★'.repeat(fullStars) + (halfStar ? '½' : '') + '☆'.repeat(emptyStars);
   }
 
-  // Get rating number for display
   getRatingNumber(reviewCount: string): number {
     return parseFloat(reviewCount) || 0;
   }
@@ -353,7 +627,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // Load more products for infinite scroll
   loadMoreProducts() {
     if (this.isLoadingMore || this.allProductsLoaded) return;
     
@@ -370,26 +643,26 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       this.isLoadingMore = false;
     }, 500);
   }
-onImageLoad(event: Event) {
-  const img = event.target as HTMLImageElement;
-  img.classList.add('loaded');
-}
-onImageError(event: Event) {
-  const img = event.target as HTMLImageElement;
-  img.src = 'assets/images/default-product.jpg';
-  img.classList.add('loaded');
-}
-  // Handle scroll for infinite loading
+  
+  onImageLoad(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.classList.add('loaded');
+  }
+  
+  onImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/images/default-product.jpg';
+    img.classList.add('loaded');
+  }
+  
   @HostListener('window:scroll')
   onWindowScroll() {
-    // Only enable infinite scroll on mobile
     if (!this.isMobileView || this.isLoadingMore || this.allProductsLoaded) return;
     
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     
-    // Load more when user reaches 80% of the page
     if (scrollTop + windowHeight >= documentHeight * 0.8) {
       this.loadMoreProducts();
     }
@@ -397,7 +670,6 @@ onImageError(event: Event) {
 
   openProductModal(product: Product) {
     this.selectedProduct = product;
-    // Reset cart input states when opening modal
     this.showPetIdInput = false;
     this.showQuantityInput = false;
     this.selectedProductForCart = null;
@@ -415,12 +687,11 @@ onImageError(event: Event) {
   }
 
   onAddToCartClick(product: any, event: Event): void {
-    event.stopPropagation();          // prevent card click bubbling
-    this.openProductModal(product);   // same behavior as card click
-    this.addToCart(product);          // existing add-to-cart logic
-    }
+    event.stopPropagation();
+    this.openProductModal(product);
+    this.addToCart(product);
+  }
 
-  // New method to handle add to cart flow for mobile
   async addToCart(product: Product) {
     const userId = localStorage.getItem('user_id');
     if (!userId) {
@@ -428,22 +699,17 @@ onImageError(event: Event) {
       return;
     }
 
-    // Store the product for the cart process
     this.selectedProductForCart = product;
     
-    // For mobile view, show inputs inside the modal
     if (this.isMobileView) {
-      // Start the flow by showing pet ID input
       this.showPetIdInput = true;
       this.showQuantityInput = false;
     } else {
-      // For desktop, use the original flow
       this.showPetIdInput = true;
       this.showQuantityInput = false;
     }
   }
 
-  // Method to handle pet ID submission
   submitPetId() {
     if (!this.petId) {
       this.showSnackbar('Please select a pet!', 'error');
@@ -454,7 +720,6 @@ onImageError(event: Event) {
     this.showQuantityInput = true;
   }
 
-  // Method to handle quantity submission
   submitQuantity() {
     if (!this.quantity || this.quantity <= 0) {
       this.showSnackbar('Please enter a valid quantity!', 'error');
@@ -464,13 +729,12 @@ onImageError(event: Event) {
     this.confirmAddToCart();
   }
 
-  // Final method to confirm and add to cart
   confirmAddToCart() {
     if (!this.selectedProductForCart || !this.petId || !this.quantity) {
       this.showSnackbar('Missing required information', 'error');
       return;
     }
-
+    const headers = this.getHeaders(true);
     const userId = localStorage.getItem('user_id');
     const payload = { 
       owner: userId, 
@@ -479,11 +743,9 @@ onImageError(event: Event) {
       quantity: this.quantity 
     };
 
-    this.http.post('http://127.0.0.1:8000/api/user/cart/', payload).subscribe({
+    this.http.post('http://127.0.0.1:8000/api/user/cart/', payload, headers).subscribe({
       next: (res: any) => {
         this.showSnackbar(`${this.selectedProductForCart!.model} added to your cart!`, 'success');
-        
-        // Reset all states
         this.closeModal();
         this.selectedProductForCart = null;
         this.petId = '';
@@ -506,7 +768,6 @@ onImageError(event: Event) {
     });
   }
 
-  // Helper method to show snackbar notifications
   showSnackbar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info') {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
@@ -516,7 +777,6 @@ onImageError(event: Event) {
     });
   }
 
-  // Quantity control methods
   incrementQuantity() {
     this.quantity++;
   }
@@ -527,7 +787,6 @@ onImageError(event: Event) {
     }
   }
 
-  // Cancel cart process
   cancelCartProcess() {
     this.showPetIdInput = false;
     this.showQuantityInput = false;

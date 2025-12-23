@@ -76,11 +76,11 @@
                           [required]="field.required"
                           [placeholder]="field.placeholder"
                           class="form-control form-control-lg border-2 border-dark px-3"
-                          [class.is-invalid]="profileForm.controls[field.key]?.invalid && profileForm.controls[field.key]?.touched">
+                          [class.is-invalid]="profileForm.controls[field.key].invalid && profileForm.controls[field.key].touched">
                         <i class="fas fa-check valid-icon position-absolute end-0 top-50 translate-middle-y text-success"
                            *ngIf="profileForm.controls[field.key]?.valid && profileForm.controls[field.key]?.touched"></i>
                       </div>
-                      <div *ngIf="profileForm.controls[field.key]?.invalid && profileForm.controls[field.key]?.touched" 
+                      <div *ngIf="profileForm.controls[field.key].invalid && profileForm.controls[field.key].touched" 
                            class="invalid-feedback d-flex align-items-center gap-2 mt-2">
                         <i class="fas fa-exclamation-circle"></i>
                         <span>{{ field.error }}</span>

@@ -2136,3 +2136,384 @@
   font-size: 1.2rem;
   color: #ffc107;
 }
+
+
+
+
+/*Admin Interface*/
+/* Admin Controls */
+.admin-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  display: flex;
+  gap: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover .admin-controls {
+  opacity: 1;
+}
+
+.admin-btn {
+  background: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.admin-btn.edit-btn {
+  color: #4CAF50;
+}
+
+.admin-btn.delete-btn {
+  color: #f44336;
+}
+
+.admin-btn:hover {
+  transform: scale(1.1);
+}
+
+.admin-btn.edit-btn:hover {
+  background: #4CAF50;
+  color: white;
+}
+
+.admin-btn.delete-btn:hover {
+  background: #f44336;
+  color: white;
+}
+
+/* Add Product Button */
+.add-product-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.add-product-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.add-product-btn i {
+  font-size: 14px;
+}
+
+/* Product Stock Info */
+.product-stock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.product-stock i {
+  color: #4CAF50;
+}
+
+/* Product Form Modal */
+.product-form-modal {
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* File Upload Area */
+.file-upload-area {
+  position: relative;
+  margin-top: 10px;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-placeholder {
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #f9f9f9;
+}
+
+.upload-placeholder.dragover,
+.upload-placeholder:hover {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.upload-placeholder i {
+  font-size: 48px;
+  color: #667eea;
+  margin-bottom: 16px;
+}
+
+.upload-placeholder p {
+  color: #666;
+  margin: 8px 0;
+}
+
+.file-info {
+  color: #4CAF50 !important;
+  font-weight: 600;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.btn-submit,
+.btn-delete {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-submit:hover:not(:disabled),
+.btn-delete:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-submit:disabled,
+.btn-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  background: #f5f5f5;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background: #eee;
+}
+
+/* Delete Modal */
+.delete-modal {
+  max-width: 500px;
+}
+
+.warning-icon {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.warning-icon i {
+  font-size: 64px;
+  color: #ff9800;
+}
+
+.delete-preview {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  align-items: center;
+}
+
+.delete-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.delete-info h4 {
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.delete-info p {
+  margin: 0 0 12px 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.delete-details {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #888;
+}
+
+.delete-details span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.delete-details i {
+  font-size: 12px;
+}
+
+.delete-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+}
+
+.btn-delete:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+}
+
+/* Loading Spinner */
+.fa-spin {
+  margin-right: 8px;
+}
+
+/* Mobile Responsiveness for Admin Features */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .admin-controls {
+    opacity: 1;
+  }
+  
+  .delete-preview {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .delete-details {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .form-actions,
+  .delete-actions {
+    flex-direction: column;
+  }
+  
+  .add-product-btn {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+/* Snackbar Styles */
+::ng-deep .snackbar-success {
+  background: #4CAF50 !important;
+  color: white !important;
+}
+
+::ng-deep .snackbar-error {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+::ng-deep .snackbar-warning {
+  background: #ff9800 !important;
+  color: white !important;
+}
+
+::ng-deep .snackbar-info {
+  background: #2196F3 !important;
+  color: white !important;
+}
+
+/* Mobile Actions Row */
+.mobile-actions-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+@media (min-width: 769px) {
+  .mobile-actions-row {
+    display: none;
+  }
+}

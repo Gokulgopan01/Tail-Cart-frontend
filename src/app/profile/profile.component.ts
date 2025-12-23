@@ -181,7 +181,11 @@ export class ProfileComponent implements OnInit {
 
   deletePet(pet: Pet): void {
     if (window.confirm(`Are you sure you want to delete ${pet.pet_name}?`)) {
-      this.http.delete(`${this.petsApi}${pet.pet_id}/`).subscribe({
+      const token = localStorage.getItem('access_token');
+      this.http.delete(
+        `${this.petsApi}${pet.pet_id}/`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      ).subscribe({
         next: () => {
           this.pets = this.pets.filter(p => p.pet_id !== pet.pet_id);
           this.showSnackbar(`${pet.pet_name} has been deleted`, 'success');
@@ -196,7 +200,11 @@ export class ProfileComponent implements OnInit {
 
   loadProfile(): void {
     this.isLoading = true;
-    this.http.get<UserProfile>(`${this.profileApi}?user_id=${this.userId}`)
+    const token = localStorage.getItem('access_token');
+    this.http.get<UserProfile>(
+      `${this.profileApi}?user_id=${this.userId}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
       .subscribe({
         next: (response) => {
           this.isLoading = false;
@@ -236,10 +244,18 @@ export class ProfileComponent implements OnInit {
     this.successMessage = '';
 
     const profileData = { ...this.profile, user_id: this.userId };
-
+    const token = localStorage.getItem('access_token');
     const request$ = this.hasProfile
-      ? this.http.patch<ProfileResponse>(this.profileApi, profileData)
-      : this.http.post<ProfileResponse>(this.profileApi, profileData);
+      ? this.http.patch<ProfileResponse>(
+      this.profileApi,
+      profileData,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+  : this.http.post<ProfileResponse>(
+      this.profileApi,
+      profileData,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
     request$.subscribe({
       next: (response) => {
@@ -272,7 +288,12 @@ export class ProfileComponent implements OnInit {
   loadPets(): void {
     if (!this.userId) return;
     this.loadingPets = true;
-    this.http.get<Pet[]>(`${this.petsApi}?user_id=${this.userId}`)
+    const token = localStorage.getItem('access_token');
+
+    this.http.get<Pet[]>(
+      `${this.petsApi}?user_id=${this.userId}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
       .subscribe({
         next: (response) => {
           this.pets = response;
@@ -311,12 +332,21 @@ export class ProfileComponent implements OnInit {
   }
 
   savePet(): void {
+    const token = localStorage.getItem('access_token');
     const payload = { ...this.currentPet, owner: this.userId };
     this.loadingPets = true;
 
     const request$ = this.editingPet && this.currentPet.pet_id
-      ? this.http.put(`${this.petsApi}`, { ...payload, pet_id: this.currentPet.pet_id, user_id: this.userId })
-      : this.http.post(`${this.petsApi}`, payload);
+  ? this.http.put(
+      `${this.petsApi}`,
+      { ...payload, pet_id: this.currentPet.pet_id, user_id: this.userId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+  : this.http.post(
+      `${this.petsApi}`,
+      payload,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
     request$.subscribe({
       next: () => {

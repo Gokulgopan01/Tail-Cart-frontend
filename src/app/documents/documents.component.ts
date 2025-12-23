@@ -181,7 +181,10 @@ export class DocumentsComponent implements OnInit {
 
   // Document Methods
   loadDocuments(): void {
-    this.http.get<Document[]>(`${this.documentsApi}?user_id=${this.userId}`)
+    const token = localStorage.getItem('access_token');
+    const headers = { Authorization: `Bearer ${token}`};
+
+    this.http.get<Document[]>(`${this.documentsApi}?user_id=${this.userId}`,{ headers })
       .subscribe({
         next: (docs) => {
           this.documents = docs;
@@ -195,7 +198,11 @@ export class DocumentsComponent implements OnInit {
 
   loadAlerts(): void {
     this.loadingAlerts = true;
-    this.http.get<Alert[]>(`${this.alertsApi}?user_id=${this.userId}`)
+
+    const token = localStorage.getItem('access_token');
+    const headers = {Authorization: `Bearer ${token}` };
+
+    this.http.get<Alert[]>(`${this.alertsApi}?user_id=${this.userId}`,{headers})
       .subscribe({
         next: (alerts) => {
           this.alerts = alerts;
@@ -212,7 +219,11 @@ export class DocumentsComponent implements OnInit {
 
   loadUserPets(): void {
     this.loadingPets = true;
-    this.http.get<Pet[]>(`${this.petsApi}?user_id=${this.userId}`)
+
+    const token = localStorage.getItem('access_token');
+    const headers = { Authorization: `Bearer ${token}`};
+
+    this.http.get<Pet[]>(`${this.petsApi}?user_id=${this.userId}`,{headers})
       .subscribe({
         next: (response) => {
           this.userPets = response;
@@ -255,7 +266,10 @@ export class DocumentsComponent implements OnInit {
       formData.append('document_title', this.uploadForm.get('document_title')?.value);
       formData.append('document_file', this.selectedFile);
 
-      this.http.post(this.documentsApi, formData)
+      const token = localStorage.getItem('access_token');
+
+      this.http.post(this.documentsApi, formData, {headers: { Authorization: `Bearer ${token}` }}
+      )
         .subscribe({
           next: () => {
             this.isUploading = false;
@@ -310,8 +324,11 @@ export class DocumentsComponent implements OnInit {
 
   snackRef.onAction().subscribe(() => {
     const params = { document_id: documentId.toString() };
-
-    this.http.delete(this.documentsApi, { params })
+    const token = localStorage.getItem('access_token');
+    this.http.delete(this.documentsApi, {
+      params,
+      headers: { Authorization: `Bearer ${token}` }
+    })
       .subscribe({
         next: () => {
           this.documents = this.documents.filter(
@@ -338,7 +355,8 @@ export class DocumentsComponent implements OnInit {
         is_active: true
       };
 
-      const request$ = this.http.post(this.alertsApi, alertData);
+      const token = localStorage.getItem('access_token');
+      const request$ = this.http.post(this.alertsApi, alertData,{headers: {Authorization: `Bearer ${token}` }});
 
       request$.subscribe({
         next: () => {
@@ -386,8 +404,12 @@ export class DocumentsComponent implements OnInit {
 
   snackRef.onAction().subscribe(() => {
     const params = { alert_id: alertId.toString() };
+    const token = localStorage.getItem('access_token');
 
-    this.http.delete(this.alertsApi, { params })
+    this.http.delete(this.alertsApi, {
+        params,
+        headers: { Authorization: `Bearer ${token}` }
+      })
       .subscribe({
         next: () => {
           this.alerts = this.alerts.filter(
