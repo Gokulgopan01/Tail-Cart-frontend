@@ -482,19 +482,6 @@
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-.category-badge {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  background: var(--black); /* BLACK BACKGROUND */
-  color: var(--white); /* WHITE TEXT */
-  padding: 0.5rem 1rem;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  z-index: 3;
-  border: 2px solid var(--white);
-}
 
 /* =========================================================
    TESTIMONIALS SECTION - BLACK & WHITE THEME
@@ -1156,19 +1143,6 @@
   .btn-category:active {
     transform: translateY(2px);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .category-badge {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.75rem;
-    background: var(--black); /* BLACK BACKGROUND */
-    color: var(--white); /* WHITE TEXT */
-    border-radius: 20px;
-    font-weight: 600;
-    border: 2px solid var(--white);
   }
 
   /* Mobile grid version */

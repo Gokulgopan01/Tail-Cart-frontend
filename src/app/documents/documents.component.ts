@@ -76,9 +76,9 @@ export class DocumentsComponent implements OnInit {
   today = new Date().toISOString().split('T')[0];
   criticalAlerts: Alert[] = [];
   
-  private documentsApi = 'http://127.0.0.1:8000/api/user/documents/';
-  private alertsApi = 'http://127.0.0.1:8000/api/user/pet-alerts/';
-  private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
+  private documentsApi = 'https://tailcart1.duckdns.org/api/user/documents/';
+  private alertsApi = 'https://tailcart1.duckdns.org/api/user/pet-alerts/';
+  private petsApi = 'https://tailcart1.duckdns.org/api/user/pets/';
   private userId: string = '';
 
   constructor(
@@ -294,7 +294,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   downloadDocument(doc: Document): void {
-    const fileUrl = ` http://127.0.0.1:8000${doc.document_file}`;
+    const fileUrl = ` http://16.16.66.25:8000${doc.document_file}`;
     const link = document.createElement('a');
     link.href = fileUrl;
     link.download = doc.document_title;
@@ -306,7 +306,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   previewDocument(doc: Document): void {
-    const fileUrl = ` http://127.0.0.1:8000${doc.document_file}`;
+    const fileUrl = ` http://16.16.66.25:8000${doc.document_file}`;
     window.open(fileUrl, '_blank');
   }
 

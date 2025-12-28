@@ -45,81 +45,183 @@
               <!-- View Mode -->
               <div *ngIf="hasProfile && !isEditMode" class="profile-view">
                 <div class="profile-list">
-                  <div class="profile-list-item" *ngFor="let field of profileFields">
-                    <div class="info-icon">
-                      <i [class]="field.icon"></i>
+                  <div class="profile-list-item d-flex align-items-center mb-3" *ngFor="let field of profileFields">
+                    <div class="info-icon me-3">
+                      <i [class]="field.icon + ' text-black'"></i>
                     </div>
-                    <div class="info-content">
-                      <span class="info-label">{{ field.label }}</span>
-                      <span class="info-value text-truncate d-block">{{ getProfileValue(field.key) }}</span>
+                    <div class="info-content flex-grow-1">
+                      <span class="info-label d-block small text-muted mb-1">{{ field.label }}</span>
+                      <span class="info-value fw-medium text-black d-block">{{ getProfileValue(field.key) }}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               <!-- Edit/Create Mode -->
-              <form *ngIf="isEditMode" (ngSubmit)="onSubmit()" #profileForm="ngForm" class="profile-form">
-                <div class="row g-3">
-                  <div class="col-12 col-md-6" *ngFor="let field of formFields">
-                    <div class="form-group mb-3">
-                      <label [for]="field.key" class="form-label fw-semibold d-flex align-items-center gap-2 mb-2">
-                        <i [class]="field.icon + ' text-black'"></i>
-                        <span>{{ field.label }} <span class="text-danger">*</span></span>
-                      </label>
-                      <div class="input-with-icon position-relative">
-                        <input
-                          [type]="field.type"
-                          [id]="field.key"
-                          [name]="field.key"
-                          [ngModel]="profile[field.key]"
-                          (ngModelChange)="profile[field.key] = $event"
-                          [required]="field.required"
-                          [placeholder]="field.placeholder"
-                          class="form-control form-control-lg border-2 border-dark px-3"
-                          [class.is-invalid]="profileForm.controls[field.key].invalid && profileForm.controls[field.key].touched">
-                        <i class="fas fa-check valid-icon position-absolute end-0 top-50 translate-middle-y text-success"
-                           *ngIf="profileForm.controls[field.key]?.valid && profileForm.controls[field.key]?.touched"></i>
-                      </div>
-                      <div *ngIf="profileForm.controls[field.key].invalid && profileForm.controls[field.key].touched" 
-                           class="invalid-feedback d-flex align-items-center gap-2 mt-2">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span>{{ field.error }}</span>
-                      </div>
+              <div *ngIf="isEditMode" class="profile-edit-mode">
+                <form (ngSubmit)="onSubmit()" #profileForm="ngForm" class="profile-form">
+                  <!-- Full Name Field -->
+                  <div class="form-group mb-3">
+                    <label for="owner_name" class="form-label fw-semibold d-flex align-items-center gap-2 mb-2">
+                      <i class="fas fa-user text-black"></i>
+                      <span>Full Name <span class="text-danger">*</span></span>
+                    </label>
+                    <div class="input-with-icon position-relative">
+                      <input
+                        type="text"
+                        id="owner_name"
+                        name="owner_name"
+                        [(ngModel)]="profile.owner_name"
+                        required
+                        placeholder="Enter your full name"
+                        class="form-control form-control-lg border-2 border-dark px-3"
+                        [class.is-invalid]="profileForm.controls['owner_name']?.invalid && profileForm.controls['owner_name']?.touched">
+                      <i class="fas fa-check valid-icon position-absolute end-0 top-50 translate-middle-y text-success me-3"
+                         *ngIf="profileForm.controls['owner_name']?.valid && profileForm.controls['owner_name']?.touched"></i>
+                    </div>
+                    <div *ngIf="profileForm.controls['owner_name']?.invalid && profileForm.controls['owner_name']?.touched" 
+                         class="invalid-feedback d-flex align-items-center gap-2 mt-2">
+                      <i class="fas fa-exclamation-circle"></i>
+                      <span>Full name is required</span>
                     </div>
                   </div>
-                </div>
 
-                <!-- Messages -->
-                <div class="message-container mt-3">
-                  <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center gap-2 border border-danger mb-3">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <div class="flex-grow-1 small">{{ errorMessage }}</div>
-                    <button type="button" class="btn-close btn-close-white" (click)="errorMessage = ''"></button>
+                  <!-- Phone Number Field -->
+                  <div class="form-group mb-3">
+                    <label for="owner_phone" class="form-label fw-semibold d-flex align-items-center gap-2 mb-2">
+                      <i class="fas fa-phone text-black"></i>
+                      <span>Phone Number <span class="text-danger">*</span></span>
+                    </label>
+                    <div class="input-with-icon position-relative">
+                      <input
+                        type="tel"
+                        id="owner_phone"
+                        name="owner_phone"
+                        [(ngModel)]="profile.owner_phone"
+                        required
+                        placeholder="Enter your phone number"
+                        class="form-control form-control-lg border-2 border-dark px-3"
+                        [class.is-invalid]="profileForm.controls['owner_phone']?.invalid && profileForm.controls['owner_phone']?.touched">
+                      <i class="fas fa-check valid-icon position-absolute end-0 top-50 translate-middle-y text-success me-3"
+                         *ngIf="profileForm.controls['owner_phone']?.valid && profileForm.controls['owner_phone']?.touched"></i>
+                    </div>
+                    <div *ngIf="profileForm.controls['owner_phone']?.invalid && profileForm.controls['owner_phone']?.touched" 
+                         class="invalid-feedback d-flex align-items-center gap-2 mt-2">
+                      <i class="fas fa-exclamation-circle"></i>
+                      <span>Phone number is required</span>
+                    </div>
                   </div>
 
-                  <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center gap-2 border border-success mb-3">
-                    <i class="fas fa-check-circle"></i>
-                    <div class="flex-grow-1 small">{{ successMessage }}</div>
-                    <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+                  <!-- Address Field -->
+                  <div class="form-group mb-3">
+                    <label for="owner_address" class="form-label fw-semibold d-flex align-items-center gap-2 mb-2">
+                      <i class="fas fa-map-marker-alt text-black"></i>
+                      <span>Address <span class="text-danger">*</span></span>
+                    </label>
+                    <div class="input-with-icon position-relative">
+                      <input
+                        type="text"
+                        id="owner_address"
+                        name="owner_address"
+                        [(ngModel)]="profile.owner_address"
+                        required
+                        placeholder="Enter your full address"
+                        class="form-control form-control-lg border-2 border-dark px-3"
+                        [class.is-invalid]="profileForm.controls['owner_address']?.invalid && profileForm.controls['owner_address']?.touched">
+                      <i class="fas fa-check valid-icon position-absolute end-0 top-50 translate-middle-y text-success me-3"
+                         *ngIf="profileForm.controls['owner_address']?.valid && profileForm.controls['owner_address']?.touched"></i>
+                    </div>
+                    <div *ngIf="profileForm.controls['owner_address']?.invalid && profileForm.controls['owner_address']?.touched" 
+                         class="invalid-feedback d-flex align-items-center gap-2 mt-2">
+                      <i class="fas fa-exclamation-circle"></i>
+                      <span>Address is required</span>
+                    </div>
                   </div>
-                </div>
 
-                <div class="form-actions border-top border-dark pt-3 mt-3">
-                  <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
-                    <button type="submit" class="btn btn-dark btn-lg px-4 px-md-5 py-2 py-md-3 d-flex align-items-center justify-content-center gap-2 text-white"
-                            [disabled]="profileForm.invalid || isLoading">
-                      <i class="fas" [class.fa-spinner]="isLoading" [class.fa-save]="!isLoading"></i>
-                      {{ isLoading ? 'Saving...' : (hasProfile ? 'Update Profile' : 'Create Profile') }}
-                    </button>
-                    <button type="button" class="btn btn-outline-dark btn-lg px-4 px-md-5 py-2 py-md-3 d-flex align-items-center justify-content-center gap-2"
-                            (click)="cancelEdit()"
-                            [disabled]="isLoading">
-                      <i class="fas fa-times"></i>
-                      Cancel
-                    </button>
+                  <!-- City Field -->
+                  <div class="form-group mb-3">
+                    <label for="owner_city" class="form-label fw-semibold d-flex align-items-center gap-2 mb-2">
+                      <i class="fas fa-city text-black"></i>
+                      <span>City <span class="text-danger">*</span></span>
+                    </label>
+                    <div class="input-with-icon position-relative">
+                      <input
+                        type="text"
+                        id="owner_city"
+                        name="owner_city"
+                        [(ngModel)]="profile.owner_city"
+                        required
+                        placeholder="Enter your city"
+                        class="form-control form-control-lg border-2 border-dark px-3"
+                        [class.is-invalid]="profileForm.controls['owner_city']?.invalid && profileForm.controls['owner_city']?.touched">
+                      <i class="fas fa-check valid-icon position-absolute end-0 top-50 translate-middle-y text-success me-3"
+                         *ngIf="profileForm.controls['owner_city']?.valid && profileForm.controls['owner_city']?.touched"></i>
+                    </div>
+                    <div *ngIf="profileForm.controls['owner_city']?.invalid && profileForm.controls['owner_city']?.touched" 
+                         class="invalid-feedback d-flex align-items-center gap-2 mt-2">
+                      <i class="fas fa-exclamation-circle"></i>
+                      <span>City is required</span>
+                    </div>
                   </div>
-                </div>
-              </form>
+
+                  <!-- State Field -->
+                  <div class="form-group mb-3">
+                    <label for="owner_state" class="form-label fw-semibold d-flex align-items-center gap-2 mb-2">
+                      <i class="fas fa-map text-black"></i>
+                      <span>State <span class="text-danger">*</span></span>
+                    </label>
+                    <div class="input-with-icon position-relative">
+                      <input
+                        type="text"
+                        id="owner_state"
+                        name="owner_state"
+                        [(ngModel)]="profile.owner_state"
+                        required
+                        placeholder="Enter your state"
+                        class="form-control form-control-lg border-2 border-dark px-3"
+                        [class.is-invalid]="profileForm.controls['owner_state']?.invalid && profileForm.controls['owner_state']?.touched">
+                      <i class="fas fa-check valid-icon position-absolute end-0 top-50 translate-middle-y text-success me-3"
+                         *ngIf="profileForm.controls['owner_state']?.valid && profileForm.controls['owner_state']?.touched"></i>
+                    </div>
+                    <div *ngIf="profileForm.controls['owner_state']?.invalid && profileForm.controls['owner_state']?.touched" 
+                         class="invalid-feedback d-flex align-items-center gap-2 mt-2">
+                      <i class="fas fa-exclamation-circle"></i>
+                      <span>State is required</span>
+                    </div>
+                  </div>
+
+                  <!-- Messages -->
+                  <div class="message-container mt-3">
+                    <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center gap-2 border border-danger mb-3">
+                      <i class="fas fa-exclamation-circle"></i>
+                      <div class="flex-grow-1 small">{{ errorMessage }}</div>
+                      <button type="button" class="btn-close btn-close-white" (click)="errorMessage = ''"></button>
+                    </div>
+
+                    <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center gap-2 border border-success mb-3">
+                      <i class="fas fa-check-circle"></i>
+                      <div class="flex-grow-1 small">{{ successMessage }}</div>
+                      <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+                    </div>
+                  </div>
+
+                  <div class="form-actions border-top border-dark pt-3 mt-3">
+                    <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                      <button type="submit" class="btn btn-dark btn-lg px-4 px-md-5 py-2 py-md-3 d-flex align-items-center justify-content-center gap-2 text-white"
+                              [disabled]="profileForm.invalid || isLoading">
+                        <i class="fas" [class.fa-spinner]="isLoading" [class.fa-save]="!isLoading"></i>
+                        {{ isLoading ? 'Saving...' : (hasProfile ? 'Update Profile' : 'Create Profile') }}
+                      </button>
+                      <button type="button" class="btn btn-outline-dark btn-lg px-4 px-md-5 py-2 py-md-3 d-flex align-items-center justify-content-center gap-2"
+                              (click)="cancelEdit()"
+                              [disabled]="isLoading">
+                        <i class="fas fa-times"></i>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
@@ -155,7 +257,6 @@
                 </button>
               </div>
 
-              <!-- Pets list -->
               <!-- Pets list -->
               <div *ngIf="!loadingPets && pets.length > 0" class="pets-grid">
                 <div class="row g-3">

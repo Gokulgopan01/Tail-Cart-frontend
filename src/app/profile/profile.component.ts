@@ -18,7 +18,7 @@ export interface UserProfile {
   owner_city: string;
   owner_state: string;
   pets?: any[];
-  [key: string]: any; // Keep index signature for flexibility
+  [key: string]: any;
 }
 
 // Define profile keys as string literal types
@@ -39,13 +39,13 @@ export interface Pet {
 
 // Define typed field interfaces
 interface ProfileField {
-  key: ProfileKey; // Use specific string literal type
+  key: ProfileKey;
   label: string;
   icon: string;
 }
 
 interface FormField {
-  key: ProfileKey; // Use specific string literal type
+  key: ProfileKey;
   label: string;
   icon: string;
   type: string;
@@ -70,7 +70,7 @@ export class ProfileComponent implements OnInit {
     owner_state: ''
   };
 
-  // Profile fields for display - typed with specific keys
+  // Profile fields for display
   profileFields: ProfileField[] = [
     { key: 'owner_name', label: 'Full Name', icon: 'fas fa-user' },
     { key: 'owner_phone', label: 'Phone Number', icon: 'fas fa-phone' },
@@ -79,7 +79,7 @@ export class ProfileComponent implements OnInit {
     { key: 'owner_state', label: 'State', icon: 'fas fa-map' }
   ];
 
-  // Form fields for editing - typed with specific keys
+  // Form fields for editing
   formFields: FormField[] = [
     { 
       key: 'owner_name', 
@@ -140,9 +140,9 @@ export class ProfileComponent implements OnInit {
   editingPet = false;
   currentPet: Pet = { pet_id: null, pet_name: '', species: '', breed: '' };
 
-  // API URLs - Update these with your actual endpoints
-  private profileApi = 'http://127.0.0.1:8000/api/user/profile/';
-  private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
+  // API URLs
+  private profileApi = 'https://tailcart1.duckdns.org/api/user/profile/';
+  private petsApi = 'https://tailcart1.duckdns.org/api/user/pets/';
 
   constructor(
     private http: HttpClient, 
@@ -163,10 +163,10 @@ export class ProfileComponent implements OnInit {
 
   // Helper method to safely get profile field value
   getProfileValue(key: ProfileKey): string {
-    return this.profile[key] || '';
+    return this.profile[key] || 'Not provided';
   }
 
-  // Snackbar notification using global styles
+  // Snackbar notification
   private showSnackbar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
     const config: MatSnackBarConfig = {
       duration: type === 'error' || type === 'warning' ? 5000 : 3000,
@@ -208,9 +208,10 @@ export class ProfileComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.isLoading = false;
-          if (response.owner_name) {
+          if (response && response.owner_name) {
             this.profile = response;
             this.hasProfile = true;
+            this.isEditMode = false;
             this.showSnackbar('Profile loaded successfully', 'success');
           } else {
             this.isEditMode = true;
@@ -225,6 +226,7 @@ export class ProfileComponent implements OnInit {
             this.hasProfile = false;
             this.showSnackbar('No profile found. Create one now!', 'info');
           } else {
+            console.error('Load profile error:', error);
             this.showSnackbar('Failed to load profile. Please try again.', 'error');
           }
         }
@@ -233,34 +235,48 @@ export class ProfileComponent implements OnInit {
 
   toggleEditMode(): void {
     this.isEditMode = !this.isEditMode;
-    if (this.isEditMode && this.hasProfile) {
+    if (!this.isEditMode && this.hasProfile) {
       this.loadProfile();
     }
   }
 
   onSubmit(): void {
+    if (!this.validateForm()) {
+      return;
+    }
+
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
 
-    const profileData = { ...this.profile, user_id: this.userId };
+    const profileData = { 
+      ...this.profile, 
+      user_id: this.userId 
+    };
+    
     const token = localStorage.getItem('access_token');
+    const headers = { 
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
+
     const request$ = this.hasProfile
       ? this.http.patch<ProfileResponse>(
-      this.profileApi,
-      profileData,
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
-  : this.http.post<ProfileResponse>(
-      this.profileApi,
-      profileData,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+          this.profileApi,
+          profileData,
+          { headers }
+        )
+      : this.http.post<ProfileResponse>(
+          this.profileApi,
+          profileData,
+          { headers }
+        );
 
     request$.subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.successMessage = response.message || (this.hasProfile ? 'Profile updated successfully!' : 'Profile created successfully!');
+        this.successMessage = response.message || 
+          (this.hasProfile ? 'Profile updated successfully!' : 'Profile created successfully!');
         this.showSnackbar(this.successMessage, 'success');
         this.isEditMode = false;
         this.hasProfile = true;
@@ -270,8 +286,21 @@ export class ProfileComponent implements OnInit {
         this.isLoading = false;
         this.errorMessage = error.error?.message || 'Failed to save profile. Please try again.';
         this.showSnackbar(this.errorMessage, 'error');
+        console.error('Save profile error:', error);
       }
     });
+  }
+
+  private validateForm(): boolean {
+    // Check if all required fields are filled
+    for (const field of this.formFields) {
+      if (field.required && !this.profile[field.key]?.trim()) {
+        this.errorMessage = `${field.label} is required`;
+        this.showSnackbar(this.errorMessage, 'error');
+        return false;
+      }
+    }
+    return true;
   }
 
   cancelEdit(): void {
@@ -296,9 +325,9 @@ export class ProfileComponent implements OnInit {
     )
       .subscribe({
         next: (response) => {
-          this.pets = response;
+          this.pets = response || [];
           this.loadingPets = false;
-          if (response.length > 0) {
+          if (response && response.length > 0) {
             this.showSnackbar(`Loaded ${response.length} pets`, 'success');
           }
         },
@@ -333,26 +362,37 @@ export class ProfileComponent implements OnInit {
 
   savePet(): void {
     const token = localStorage.getItem('access_token');
-    const payload = { ...this.currentPet, owner: this.userId };
+    const payload = { 
+      ...this.currentPet, 
+      owner: this.userId 
+    };
+    
     this.loadingPets = true;
 
+    const headers = { 
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
+
     const request$ = this.editingPet && this.currentPet.pet_id
-  ? this.http.put(
-      `${this.petsApi}`,
-      { ...payload, pet_id: this.currentPet.pet_id, user_id: this.userId },
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
-  : this.http.post(
-      `${this.petsApi}`,
-      payload,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+      ? this.http.put(
+          `${this.petsApi}`,
+          { ...payload, pet_id: this.currentPet.pet_id, user_id: this.userId },
+          { headers }
+        )
+      : this.http.post(
+          `${this.petsApi}`,
+          payload,
+          { headers }
+        );
 
     request$.subscribe({
       next: () => {
         this.loadingPets = false;
         this.isPetFormVisible = false;
-        const message = this.editingPet ? `${this.currentPet.pet_name} updated successfully!` : 'Pet added successfully!';
+        const message = this.editingPet 
+          ? `${this.currentPet.pet_name} updated successfully!` 
+          : 'Pet added successfully!';
         this.showSnackbar(message, 'success');
         this.loadPets();
       },

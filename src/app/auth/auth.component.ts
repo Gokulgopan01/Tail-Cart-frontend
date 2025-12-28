@@ -86,8 +86,9 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
     this.isLoginMode.set(!this.isLoginMode());
     this.errorMessage.set('');
     this.successMessage.set('');
-    this.loginData.password = '';
-    this.registerData.password = '';
+    this.loginData = { email_address: '', password: '' };
+    this.registerData = { username: '', email_address: '', password: '' };
+    this.showPassword = false;
   }
 
   togglePasswordVisibility(): void {
@@ -105,7 +106,7 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
 
     if (this.isLoginMode()) {
       this.http
-        .post<LoginResponse>('http://127.0.0.1:8000/api/user/login/', this.loginData)
+        .post<LoginResponse>('https://tailcart1.duckdns.org/api/user/login/', this.loginData)
         .subscribe({
           next: (response) => {
             if (response.message === 'Login successful') {
@@ -137,8 +138,15 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
         });
 
     } else {
+      // Validate username before registration
+      if (!this.registerData.username || this.registerData.username.trim().length === 0) {
+        this.stopLoader();
+        this.errorMessage.set('Username is required');
+        return;
+      }
+
       this.http
-        .post<RegisterResponse>('http://127.0.0.1:8000/api/user/register/', this.registerData)
+        .post<RegisterResponse>('https://tailcart1.duckdns.org/api/user/register/', this.registerData)
         .subscribe({
           next: (response) => {
             this.stopLoader();
@@ -151,7 +159,11 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
               }
 
               this.successMessage.set('Registration successful! You can now login.');
-              setTimeout(() => this.isLoginMode.set(true), 2000);
+              setTimeout(() => {
+                this.isLoginMode.set(true);
+                this.loginData.email_address = this.registerData.email_address;
+                this.registerData = { username: '', email_address: '', password: '' };
+              }, 2000);
             } else {
               this.errorMessage.set(response.message || 'Registration completed.');
             }

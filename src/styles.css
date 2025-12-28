@@ -171,7 +171,7 @@ html, body {
   padding: 0 12px !important;
   height: 32px !important;
   line-height: 32px !important;
-  transition: all 0.2s ease !important;
+  transition: all 0.2s ease !important; 
 }
 
 .mat-mdc-button.mat-mdc-snack-bar-action .mdc-button__label {

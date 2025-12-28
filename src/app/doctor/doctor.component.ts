@@ -83,7 +83,7 @@ export class DoctorComponent implements OnInit, AfterViewChecked {
     this.error = '';
     this.showSnackBar('Analyzing your pet\'s symptoms...', 'info');
 
-    this.http.post<{response: string}>('http://127.0.0.1:8000/api/ai-doctor/', {
+    this.http.post<{response: string}>('https://tailcart1.duckdns.org/api/ai-doctor/', {
       question: this.userInput
     }).subscribe({
       next: (res) => {

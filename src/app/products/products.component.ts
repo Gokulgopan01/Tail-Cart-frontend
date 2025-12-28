@@ -133,8 +133,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
 
-  private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
-  private productsApi = 'http://127.0.0.1:8000/api/admin/products/';
+  private petsApi = 'https://tailcart1.duckdns.org/api/user/pets/';
+  private productsApi = 'https://tailcart1.duckdns.org/api/admin/products/';
 
   ngOnInit() {
     this.checkMobileView();
@@ -743,7 +743,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       quantity: this.quantity 
     };
 
-    this.http.post('http://127.0.0.1:8000/api/user/cart/', payload, headers).subscribe({
+    this.http.post('https://tailcart1.duckdns.org/api/user/cart/', payload, headers).subscribe({
       next: (res: any) => {
         this.showSnackbar(`${this.selectedProductForCart!.model} added to your cart!`, 'success');
         this.closeModal();

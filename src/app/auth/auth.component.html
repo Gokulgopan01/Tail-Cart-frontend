@@ -35,7 +35,32 @@
 
         <!-- Compact Form -->
         <form (ngSubmit)="onSubmit()" #authForm="ngForm" class="auth-form">
-            <!-- Email Field -->
+            <!-- Username Field (Only for Register) -->
+            <div class="form-group" *ngIf="!isLoginMode()">
+                <div class="input-container">
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        [(ngModel)]="registerData.username"
+                        required
+                        minlength="3"
+                        maxlength="30"
+                        #username="ngModel"
+                        [class.invalid]="username.invalid && username.touched"
+                        placeholder="Choose a username"
+                    >
+                </div>
+                <div class="error" *ngIf="username.invalid && username.touched">
+                    <i class="fas fa-exclamation-circle error-icon"></i>
+                    Username must be 3-30 characters
+                </div>
+            </div>
+
+            <!-- Email Field (ALWAYS SHOWS - for both Login and Register) -->
             <div class="form-group">
                 <div class="input-container">
                     <div class="input-icon">
@@ -44,17 +69,17 @@
                     <input 
                         type="email" 
                         id="email" 
-                        name="email_address" 
+                        name="email" 
                         [ngModel]="isLoginMode() ? loginData.email_address : registerData.email_address"
                         (ngModelChange)="isLoginMode() ? loginData.email_address = $event : registerData.email_address = $event"
                         required
                         email
-                        #email="ngModel"
-                        [class.invalid]="email.invalid && email.touched"
+                        #emailInput="ngModel"
+                        [class.invalid]="emailInput.invalid && emailInput.touched"
                         placeholder="you@example.com"
                     >
                 </div>
-                <div class="error" *ngIf="email.invalid && email.touched">
+                <div class="error" *ngIf="emailInput.invalid && emailInput.touched">
                     <i class="fas fa-exclamation-circle error-icon"></i>
                     Please enter a valid email address
                 </div>

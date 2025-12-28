@@ -33,7 +33,7 @@ export class CartComponent implements OnInit, AfterViewInit  {
   loading = false;
   userId: string | null = '';
   totalAmount = 0;
-  readonly API_BASE_URL = 'http://127.0.0.1:8000/api';
+  readonly API_BASE_URL = 'https://tailcart1.duckdns.org/api';
   readonly TAX_RATE = 0.18;
 
   
@@ -114,7 +114,7 @@ export class CartComponent implements OnInit, AfterViewInit  {
               ...item,
               product_image: item.product_image?.startsWith('http')
                 ? item.product_image
-                : `http://127.0.0.1:8000/${item.product_image}`
+                : `https://tailcart1.duckdns.org/${item.product_image}`
             }));
             this.calculateTotal();
             this.loading = false;
