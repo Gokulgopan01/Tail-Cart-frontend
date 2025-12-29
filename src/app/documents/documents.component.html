@@ -1,419 +1,460 @@
-<div class="documents-container">
-  <!-- Header with Stats -->
-  <section class="documents-header">
+<div class="documents-locker">
+  <!-- Header Section -->
+  <header class="header-section">
     <div class="container">
       <div class="header-content">
         <div class="header-text">
-          
-          
-          <!-- Stats Cards -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon bg-primary">
-                <i class="fas fa-file-alt"></i>
-              </div>
-              <div class="stat-content">
-                <div class="stat-number">{{ documents.length }}</div>
-                <div class="stat-label">Documents</div>
-              </div>
-            </div>
-            
-            <div class="stat-card">
-              <div class="stat-icon bg-warning">
-                <i class="fas fa-bell"></i>
-              </div>
-              <div class="stat-content">
-                <div class="stat-number">{{ getUpcomingAlertsCount() }}</div>
-                <div class="stat-label">Upcoming Alerts</div>
-              </div>
-            </div>
-            
-            <div *ngIf="criticalAlerts.length > 0" class="stat-card">
-              <div class="stat-icon bg-danger">
-                <i class="fas fa-exclamation-triangle"></i>
-              </div>
-              <div class="stat-content">
-                <div class="stat-number">{{ criticalAlerts.length }}</div>
-                <div class="stat-label">Critical</div>
-              </div>
-            </div>
+          <h1 class="header-title">My Documents</h1>
+          <p class="header-subtitle">Securely store and manage all your important documents</p>
+        </div>
+        
+        <!-- Stats/Tabs -->
+        <div class="tabs-section">
+          <div class="tabs-container">
+            <button class="tab-btn active" (click)="activeTab = 'documents'" [class.active]="activeTab === 'documents'">
+              <span>Documents</span>
+              <span class="tab-badge">{{ documents.length }}</span>
+            </button>
+            <button class="tab-btn" (click)="activeTab = 'alerts'" [class.active]="activeTab === 'alerts'">
+              <span>Alerts</span>
+              <span class="tab-badge">{{ alerts.length }}</span>
+            </button>
           </div>
         </div>
-        
-        <!-- Action Buttons -->
-        <div class="header-actions">
-        <!-- First row - 2 buttons side by side -->
-        <div class="action-buttons-row">
-          <button class="action-btn btn-upload" (click)="openUploadModal()">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <span>Upload Document</span>
-          </button>
-          <button class="action-btn btn-alert" (click)="openCreateAlertModal()">
-            <i class="fas fa-bell"></i>
-            <span>Create Alert</span>
-          </button>
-        </div>
-        
-        <!-- Second row - Single centered button -->
-        <div class="action-button-center">
-          <button class="action-btn btn-view-alerts" (click)="toggleAlertsModal()">
-            <i class="fas fa-list-ul"></i>
-            <span>View Alerts</span>
-            <span *ngIf="getUpcomingAlertsCount() > 0" class="alert-badge">
-              {{ getUpcomingAlertsCount() }}
-            </span>
-          </button>
-        </div>
-      </div>
-
       </div>
     </div>
-  </section>
+  </header>
 
-  <!-- Critical Alerts Banner -->
-  <div *ngIf="criticalAlerts.length > 0" class="critical-alerts-banner">
+  <!-- Overdue Alert Banner -->
+  <div *ngIf="getOverdueAlerts().length > 0" class="overdue-banner">
     <div class="container">
       <div class="banner-content">
-        <div class="d-flex align-items-center gap-3">
-          <i class="fas fa-exclamation-triangle fa-2x"></i>
-          <div>
-            <h5 class="mb-0 fw-bold">Critical Alerts</h5>
-            <p class="mb-0">You have {{criticalAlerts.length}} urgent alert{{criticalAlerts.length > 1 ? 's' : ''}} requiring attention</p>
-          </div>
+        <i class="fas fa-exclamation-circle"></i>
+        <div class="banner-text">
+          <strong>Overdue Alert:</strong> {{ getOverdueAlerts().length }} document{{ getOverdueAlerts().length > 1 ? 's' : '' }} need attention
         </div>
-        <button class="btn btn-light btn-sm" (click)="toggleAlertsModal()">
-          View Details
+        <button class="banner-action" (click)="activeTab = 'alerts'">
+          View
+          <i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Documents Grid -->
-  <section class="documents-section">
+  <!-- Main Content Area -->
+  <main class="main-content">
     <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Your Documents</h2>
-        <p class="section-subtitle">Manage all your pet's important records</p>
-      </div>
-
-      <div *ngIf="documents.length > 0; else emptyState" class="documents-grid">
-        <div class="row">
-          <div *ngFor="let doc of documents" class="col-12 col-md-6 col-lg-4">
-            <div class="document-card-modern">
-              <div class="document-card-header">
-                <div class="document-type">
-                  <i class="fas fa-file-medical"></i>
-                  <span>Medical</span>
-                </div>
-                <div class="document-actions">
-                  <button class="btn-action" (click)="downloadDocument(doc)" matTooltip="Download">
-                    <i class="fas fa-download"></i>
-                  </button>
-                  <button class="btn-action" (click)="deleteDocument(doc.document_id)" matTooltip="Delete">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </div>
-              
-              <div class="document-card-body">
-                <h5 class="document-title">{{ doc.document_title }}</h5>
-                <div class="document-meta">
-                  <div class="meta-item">
-                    <i class="fas fa-paw"></i>
-                    <span>{{ getPetNameById(doc.pet) || 'Unknown Pet' }}</span>
-                  </div>
-                  <div class="meta-item">
-                    <i class="far fa-calendar"></i>
-                    <span>{{ doc.upload_date | date:'MMM dd, yyyy' }}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="document-card-footer">
-                <button class="btn btn-outline-primary" (click)="openAlertFormForDocument(doc)">
-                  <i class="fas fa-bell"></i> Set Alert
-                </button>
-                <button class="btn btn-primary" (click)="previewDocument(doc)">
-                  <i class="fas fa-eye"></i> View
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <ng-template #emptyState>
-        <div class="empty-state-modern">
-          <div class="empty-state-icon">
-            <i class="fas fa-folder-open"></i>
-          </div>
-          <h3>No Documents Yet</h3>
-          <p class="text-muted">Upload your first document to get started</p>
-          <button class="btn btn-primary" (click)="openUploadModal()">
-            <i class="fas fa-plus"></i> Upload First Document
-          </button>
-        </div>
-      </ng-template>
-    </div>
-  </section>
-
-  <!-- Recent Alerts -->
-  <section class="alerts-preview-section" *ngIf="alerts.length > 0">
-    <div class="container">
-      <div class="section-header">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h2 class="section-title">Recent Alerts</h2>
-            <p class="section-subtitle">Upcoming reminders for your pets</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="alerts-grid">
-        <div class="row">
-          <div *ngFor="let alert of alerts.slice(0, 3)" class="col-12 col-md-4">
-            <div class="alert-card-modern">
-              <div class="alert-header">
-                <div class="alert-icon" [ngClass]="getAlertIconClass(alert.alert_type)">
-                  <i [class]="getAlertIcon(alert.alert_type)"></i>
-                </div>
-                <div class="badge" [ngClass]="getDaysRemainingClass(alert)">
-                  {{ getDaysRemaining(alert) }}
-                </div>
-              </div>
-              
-              <div class="alert-body">
-                <h5 class="alert-title">{{ alert.title }}</h5>
-                <div class="alert-meta">
-                  <span class="badge" [ngClass]="getAlertBadgeClass(alert.alert_type)">
-                    {{ alert.alert_type }}
-                  </span>
-                </div>
-                <p class="alert-date">
-                  <i class="far fa-calendar"></i>
-                  Due: {{ alert.due_date | date:'MMM dd, yyyy' }}
-                </p>
-              </div>
-              
-              <div class="alert-footer">
-                <button class="btn btn-sm btn-outline-primary" (click)="editAlert(alert)">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger" (click)="deleteAlert(alert.alert_id)">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- Upload Document Modal -->
-<div class="modal" [class.show]="showUploadModal" tabindex="-1" 
-     [attr.aria-hidden]="!showUploadModal" [style.display]="showUploadModal ? 'block' : 'none'">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">
-          <i class="fas fa-cloud-upload-alt"></i>
-          Upload Document
-        </h2>
-        <button type="button" class="btn-close" (click)="closeUploadModal()"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label class="form-label">Document Title</label>
-            <input type="text" class="form-control" formControlName="document_title" 
-                   placeholder="e.g., Annual Vaccination Record">
+      <!-- Documents Tab -->
+      <div *ngIf="activeTab === 'documents'" class="tab-content active">
+        <!-- Search and Filters -->
+        <div class="controls-section">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input 
+              type="text" 
+              [(ngModel)]="searchQuery" 
+              (ngModelChange)="filterDocuments()"
+              placeholder="Search documents..." 
+              class="search-input"
+            >
           </div>
           
-          <div class="form-group">
-            <label class="form-label">Select Pet</label>
-            <select class="form-select" formControlName="pet">
-              <option value="">Choose a pet</option>
-              <option *ngFor="let pet of userPets" [value]="pet.pet_id">
-                {{ pet.pet_name }} ({{ pet.species }})
-              </option>
+          <div class="filter-controls">
+            <select class="filter-select" [(ngModel)]="selectedType" (change)="filterDocuments()">
+              <option value="">All Types</option>
+              <option value="Pet Vaccination Record">Pet Vaccination Record</option>
+              <option value="Pet Medical Record">Pet Medical Record</option>
+              <option value="Pet Prescription">Pet Prescription</option>
+              <option value="Veterinary Document">Veterinary Document</option>
+              <option value="Other Pet Document">Other Pet Document</option>
             </select>
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label">Upload File</label>
-            <div class="file-upload-modern" (click)="fileInput.click()">
-              <input type="file" #fileInput (change)="onFileSelected($event)" class="d-none">
-              <div class="upload-area" [class.has-file]="selectedFile">
-                <i class="fas fa-cloud-upload-alt fa-2x mb-3"></i>
-                <h5>Click to upload</h5>
-                <p class="text-muted">Supports PDF, DOC, JPG, PNG up to 10MB</p>
-                <div *ngIf="selectedFile" class="file-preview">
-                  <i class="fas fa-file-pdf text-danger"></i>
-                  <div>
-                    <strong>{{ selectedFile.name }}</strong>
-                    <small>{{ (selectedFile.size / 1024).toFixed(0) }} KB</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="closeUploadModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="uploadForm.invalid || isUploading">
-              <span *ngIf="isUploading" class="spinner-border spinner-border-sm me-2"></span>
-              {{ isUploading ? 'Uploading...' : 'Upload Document' }}
+            
+            <button class="upload-btn" (click)="openUploadModal()">
+              <i class="fas fa-plus"></i>
+              Upload Documents
             </button>
           </div>
-        </form>
+        </div>
+
+        <!-- Documents Grid -->
+        <div class="documents-grid" [class.grid-view]="viewMode === 'grid'" [class.list-view]="viewMode === 'list'">
+          <!-- View Toggle -->
+          <div class="view-toggle">
+            <button class="view-btn" [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
+              <i class="fas fa-th"></i>
+            </button>
+            <button class="view-btn" [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
+              <i class="fas fa-list"></i>
+            </button>
+          </div>
+
+          <!-- Document Cards -->
+          <div *ngIf="filteredDocuments.length > 0; else emptyDocuments" class="cards-container">
+            <div *ngFor="let doc of filteredDocuments" class="document-card" 
+                 [class.expired]="isDocumentExpired(doc)"
+                 [class.expiring]="isDocumentExpiring(doc)">
+              <div class="card-header">
+                <div class="doc-type-icon" [ngClass]="getDocTypeClass(doc.document_type)">
+                  <i [class]="getDocTypeIcon(doc.document_type)"></i>
+                </div>
+                <div class="card-actions">
+                  <button class="action-btn" (click)="previewDocument(doc)" matTooltip="View">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="action-btn" (click)="downloadDocument(doc)" matTooltip="Download">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <div class="dropdown">
+                    <button class="action-btn" type="button" data-bs-toggle="dropdown">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <button class="dropdown-item" (click)="openEditModal(doc)">
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                      </li>
+                      <li>
+                        <button class="dropdown-item" (click)="setAlertForDocument(doc)">
+                          <i class="fas fa-bell"></i> Set Alert
+                        </button>
+                      </li>
+                      <li>
+                        <button class="dropdown-item text-danger" (click)="deleteDocument(doc.document_id)">
+                          <i class="fas fa-trash"></i> Delete
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <h3 class="doc-title">{{ doc.document_title }}</h3>
+                <div class="doc-meta">
+                  <div class="doc-info">
+                    <div class="info-item">
+                      <i class="far fa-file"></i>
+                      <span>{{ doc.file_name || 'document.pdf' }}</span>
+                    </div>
+                    <div class="info-item">
+                      <i class="fas fa-weight-hanging"></i>
+                      <span>{{ doc.file_size || '240.0 KB' }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Expiry Status -->
+                <div *ngIf="doc.expiry_date" class="expiry-status">
+                  <span class="expiry-label">Expires</span>
+                  <span class="expiry-date" [ngClass]="{
+                    'text-danger': isDocumentExpired(doc),
+                    'text-warning': isDocumentExpiring(doc)
+                  }">
+                    {{ doc.expiry_date | date:'dd MMM yyyy' }}
+                    <span *ngIf="isDocumentExpired(doc)" class="badge expired-badge">Expired</span>
+                    <span *ngIf="isDocumentExpiring(doc)" class="badge expiring-badge">Expiring Soon</span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <button class="view-btn" (click)="previewDocument(doc)">
+                  <span *ngIf="doc.document_type === 'PAN Card'">View</span>
+                  <span *ngIf="doc.document_type !== 'PAN Card'">{{ getDocTypeIconText(doc.document_type) }}.pdf</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #emptyDocuments>
+            <div class="empty-state">
+              <div class="empty-icon">
+                <i class="far fa-folder-open"></i>
+              </div>
+              <h3>No documents found</h3>
+              <p class="text-muted">Upload your first document to get started</p>
+              <button class="btn-upload-primary" (click)="openUploadModal()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Upload Document
+              </button>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Alerts Tab -->
+      <div *ngIf="activeTab === 'alerts'" class="tab-content active">
+        <!-- Search Alerts -->
+        <div class="controls-section">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input 
+              type="text" 
+              [(ngModel)]="alertSearchQuery" 
+              (ngModelChange)="filterAlerts()"
+              placeholder="Search alerts..." 
+              class="search-input"
+            >
+          </div>
+          
+          <button class="create-alert-btn" (click)="openCreateAlertModal()">
+            <i class="fas fa-plus"></i>
+            Create Alert
+          </button>
+        </div>
+
+        <!-- Alerts List -->
+        <div *ngIf="filteredAlerts.length > 0; else emptyAlerts" class="alerts-list">
+          <div *ngFor="let alert of filteredAlerts" class="alert-card">
+            <div class="alert-header">
+              <div class="alert-type">
+                <i class="fas fa-bell"></i>
+                <span>{{ alert.alert_type }}</span>
+              </div>
+              <div class="alert-toggle">
+                <label class="toggle-switch">
+                  <input type="checkbox" [(ngModel)]="alert.is_active" (change)="toggleAlert(alert)">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="alert-body">
+              <h4 class="alert-title">{{ alert.title }}</h4>
+              <div class="alert-meta">
+                <div class="meta-item">
+                  <i class="far fa-calendar"></i>
+                  <span>{{ alert.due_date | date:'dd MMM yyyy' }}</span>
+                </div>
+                <div class="meta-item">
+                  <i class="far fa-clock"></i>
+                  <span>{{ calculateDaysAgo(alert.due_date) }}</span>
+                </div>
+              </div>
+              <p class="alert-message">{{ alert.custom_message || getDefaultAlertMessage(alert) }}</p>
+            </div>
+
+            <div class="alert-footer">
+              <button class="btn-edit" (click)="editAlert(alert)">
+                <i class="fas fa-edit"></i>
+                Edit Alert
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #emptyAlerts>
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="far fa-bell-slash"></i>
+            </div>
+            <h3>No alerts yet</h3>
+            <p class="text-muted">Create your first alert to get reminders</p>
+            <button class="btn-upload-primary" (click)="openCreateAlertModal()">
+              <i class="fas fa-bell"></i>
+              Create Alert
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </main>
+
+  <!-- Upload Modal -->
+  <div class="modal" [class.show]="showUploadModal" tabindex="-1" 
+       [attr.aria-hidden]="!showUploadModal" [style.display]="showUploadModal ? 'block' : 'none'">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Upload Documents</h2>
+          <button type="button" class="btn-close" (click)="closeUploadModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="upload-zone" (click)="fileInput.click()" [class.dragover]="isDragOver"
+               (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+            <input type="file" #fileInput (change)="onFileSelected($event)" class="d-none" multiple>
+            <i class="fas fa-cloud-upload-alt"></i>
+            <h4>Drag & drop files here</h4>
+            <p class="text-muted">or click to browse</p>
+            <p class="upload-hint">Supports PDF, JPG, PNG up to 10MB</p>
+            
+            <div *ngIf="selectedFiles.length > 0" class="selected-files">
+              <div *ngFor="let file of selectedFiles" class="file-item">
+                <i class="fas fa-file-pdf"></i>
+                <div class="file-info">
+                  <strong>{{ file.name }}</strong>
+                  <small>{{ (file.size / 1024).toFixed(1) }} KB</small>
+                </div>
+                <button class="btn-remove" (click)="removeFile(file)">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <form [formGroup]="uploadForm" class="upload-form">
+            <div class="form-group">
+              <label>Document Type</label>
+              <select class="form-select" formControlName="document_type">
+                <option value="">Select Type</option>
+                <option value="Pet Vaccination Record">Pet Vaccination Record</option>
+                <option value="Pet Medical Record">Pet Medical Record</option>
+                <option value="Pet Prescription">Pet Prescription</option>
+                <option value="Veterinary Document">Veterinary Document</option>
+                <option value="Other Pet Document">Other Pet Document</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Document Title</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="document_title"
+                placeholder="e.g., Rabies Vaccination Certificate"
+              />
+            </div>
+            <div class="form-group">
+              <label>Expiry Date (Optional)</label>
+              <input type="date" class="form-control" formControlName="expiry_date">
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn-cancel" (click)="closeUploadModal()">Cancel</button>
+              <button type="button" class="btn-upload" (click)="uploadDocuments()" 
+                      [disabled]="uploadForm.invalid || selectedFiles.length === 0 || isUploading">
+                <span *ngIf="isUploading" class="spinner"></span>
+                {{ isUploading ? 'Uploading...' : 'Upload' }}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Create Alert Modal -->
-<div class="modal" [class.show]="showCreateAlertModal" tabindex="-1" 
-     [attr.aria-hidden]="!showCreateAlertModal" [style.display]="showCreateAlertModal ? 'block' : 'none'">
+  <!-- Edit Alert Modal -->
+  <div class="modal" [class.show]="showEditAlertModal" tabindex="-1" 
+       [attr.aria-hidden]="!showEditAlertModal" [style.display]="showEditAlertModal ? 'block' : 'none'">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Edit Alert</h2>
+          <button type="button" class="btn-close" (click)="closeEditAlertModal()"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="alertForm" class="alert-form">
+            <div class="form-group">
+              <label>Alert Type</label>
+              <select class="form-select" formControlName="alert_type">
+                <option value="Expiry Reminder">Expiry Reminder</option>
+                <option value="Review Reminder">Review Reminder</option>
+                <option value="Renewal Reminder">Renewal Reminder</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Alert Date</label>
+              <input type="date" class="form-control" formControlName="due_date">
+            </div>
+
+            <div class="form-group">
+              <label>Days Before Expiry</label>
+              <select class="form-select" formControlName="days_before">
+                <option value="7">7 days</option>
+                <option value="15">15 days</option>
+                <option value="30">30 days</option>
+                <option value="60">60 days</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Custom Message (Optional)</label>
+              <textarea class="form-control" formControlName="custom_message" 
+                        placeholder="Add a custom reminder message..." rows="3"></textarea>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn-cancel" (click)="closeEditAlertModal()">Cancel</button>
+              <button type="button" class="btn-save" (click)="saveAlert()" 
+                      [disabled]="alertForm.invalid || isSavingAlert">
+                <span *ngIf="isSavingAlert" class="spinner"></span>
+                {{ isSavingAlert ? 'Saving...' : 'Update Alert' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Document Modal -->
+<div class="modal" [class.show]="showViewModal" tabindex="-1" 
+     [attr.aria-hidden]="!showViewModal" [style.display]="showViewModal ? 'block' : 'none'">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title">
-          <i class="fas fa-bell"></i>
-          Create Alert
-        </h2>
-        <button type="button" class="btn-close" (click)="closeCreateAlertModal()"></button>
+        <h2 class="modal-title">{{ selectedDoc?.document_type }}</h2>
+        <button type="button" class="btn-close" (click)="closeViewModal()"></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="alertForm" (ngSubmit)="createAlert()">
-          <div class="form-group">
-            <label class="form-label">Alert Title</label>
-            <input type="text" class="form-control" formControlName="title" 
-                   placeholder="e.g., Annual Checkup">
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label">Select Pet</label>
-            <select class="form-select" formControlName="pet">
-              <option value="">Choose a pet</option>
-              <option *ngFor="let pet of userPets" [value]="pet.pet_id">
-                {{ pet.pet_name }} ({{ pet.species }})
-              </option>
-            </select>
-          </div>
-          
-          <div class="row g-2">
-            <div class="col-6">
-              <div class="form-group">
-                <label class="form-label">Type</label>
-                <select class="form-select" formControlName="alert_type">
-                  <option value="">Select Type</option>
-                  <option value="Vaccination">Vaccination</option>
-                  <option value="Medication">Medication</option>
-                  <option value="Appointment">Appointment</option>
-                  <option value="Checkup">Checkup</option>
-                </select>
-              </div>
+        <div *ngIf="selectedDoc" class="document-view">
+          <div class="doc-header">
+            <div class="doc-icon" [ngClass]="getDocTypeClass(selectedDoc.document_type)">
+              <i [class]="getDocTypeIcon(selectedDoc.document_type)"></i>
             </div>
-            <div class="col-6">
-              <div class="form-group">
-                <label class="form-label">Frequency</label>
-                <select class="form-select" formControlName="frequency">
-                  <option value="One-time">One-time</option>
-                  <option value="Monthly">Monthly</option>
-                  <option value="Yearly">Yearly</option>
-                </select>
-              </div>
+            <h3>{{ selectedDoc.document_title }}</h3>
+          </div>
+
+          <div class="doc-details">
+            <div class="detail-item">
+              <span class="label">File Name:</span>
+              <span class="value">{{ selectedDoc.file_name || 'document.pdf' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">File Size:</span>
+              <span class="value">{{ selectedDoc.file_size || 'N/A' }}</span>
+            </div>
+            <div class="detail-item" *ngIf="selectedDoc.expiry_date">
+              <span class="label">Expiry Date:</span>
+              <span class="value" [ngClass]="{
+                'text-danger': isDocumentExpired(selectedDoc),
+                'text-warning': isDocumentExpiring(selectedDoc)
+              }">
+                {{ selectedDoc.expiry_date | date:'dd MMM yyyy' }}
+                <span *ngIf="isDocumentExpired(selectedDoc)" class="badge expired-badge">Expired</span>
+                <span *ngIf="isDocumentExpiring(selectedDoc)" class="badge expiring-badge">Expiring Soon</span>
+              </span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Uploaded:</span>
+              <span class="value">{{ selectedDoc.upload_date | date:'dd MMM yyyy' }}</span>
             </div>
           </div>
-          
-          <div class="form-group">
-            <label class="form-label">Due Date</label>
-            <input type="date" class="form-control" formControlName="due_date" [min]="today">
-          </div>
-          
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="closeCreateAlertModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="alertForm.invalid || isCreatingAlert">
-              <span *ngIf="isCreatingAlert" class="spinner-border spinner-border-sm me-2"></span>
-              {{ isCreatingAlert ? 'Creating...' : 'Create Alert' }}
+
+          <div class="doc-actions">
+            <button class="btn-download" (click)="selectedDoc && downloadDocument(selectedDoc)">
+              <i class="fas fa-download"></i>
+              Download
+            </button>
+            <button class="btn-set-alert" (click)="selectedDoc && setAlertForDocument(selectedDoc)">
+              <i class="fas fa-bell"></i>
+              Set Alert
+            </button>
+            <button class="btn-delete" (click)="selectedDoc && deleteDocument(selectedDoc.document_id)">
+              <i class="fas fa-trash"></i>
+              Delete
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Alerts Modal -->
-<div class="modal" [class.show]="showAlertsModal" tabindex="-1" 
-     [attr.aria-hidden]="!showAlertsModal" [style.display]="showAlertsModal ? 'block' : 'none'">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">
-          <i class="fas fa-bell"></i>
-          All Alerts
-        </h2>
-        <button type="button" class="btn-close" (click)="toggleAlertsModal()"></button>
-      </div>
-      <div class="modal-body">
-        <div *ngIf="loadingAlerts" class="text-center py-5">
-          <div class="spinner-border text-primary"></div>
-          <p>Loading alerts...</p>
-        </div>
-        
-        <div *ngIf="!loadingAlerts && alerts.length === 0" class="text-center py-5">
-          <i class="fas fa-bell-slash fa-2x text-muted mb-3"></i>
-          <h4>No alerts yet</h4>
-          <p class="text-muted">Create your first alert</p>
-          <button class="btn btn-primary mt-3" (click)="openCreateAlertModal()">
-            <i class="fas fa-plus"></i> Create Alert
-          </button>
-        </div>
-        
-        <div *ngIf="!loadingAlerts && alerts.length > 0" class="alerts-list-modern">
-          <div *ngFor="let alert of alerts" class="alert-item">
-            <div class="alert-item-icon" [ngClass]="getAlertIconClass(alert.alert_type)">
-              <i [class]="getAlertIcon(alert.alert_type)"></i>
-            </div>
-            <div class="alert-item-content">
-              <h5>{{ alert.title }}</h5>
-              <div class="alert-item-meta">
-                <span class="badge" [ngClass]="getAlertBadgeClass(alert.alert_type)">
-                  {{ alert.alert_type }}
-                </span>
-                <span class="text-muted">
-                  <i class="fas fa-paw"></i> {{ getPetNameById(alert.pet) }}
-                </span>
-                <span class="text-muted">
-                  <i class="far fa-calendar"></i> {{ alert.due_date | date:'MMM dd' }}
-                </span>
-              </div>
-            </div>
-            <div class="alert-item-actions">
-              <button class="btn btn-sm btn-outline-primary" (click)="editAlert(alert)">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger" (click)="deleteAlert(alert.alert_id)">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="toggleAlertsModal()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="openCreateAlertModal()">
-          <i class="fas fa-plus"></i> New Alert
-        </button>
-      </div>
-    </div>
-  </div>
+  <!-- Modal Backdrop -->
+  <div class="modal-backdrop" [class.show]="showUploadModal || showEditAlertModal || showViewModal" 
+       (click)="closeAllModals()"></div>
 </div>
-
-<!-- Modal Backdrop -->
-<div class="modal-backdrop fade" [class.show]="showUploadModal || showCreateAlertModal || showAlertsModal" 
-     [style.display]="showUploadModal || showCreateAlertModal || showAlertsModal ? 'block' : 'none'"
-     (click)="closeAllModals()"></div>

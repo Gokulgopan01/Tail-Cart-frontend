@@ -1,240 +1,199 @@
-<div class="ai-doctor-container">
-  <!-- Main Chat Section -->
-  <section class="chat-section py-5">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-xl-10">
-          <!-- Chat Container -->
-          <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
-            <!-- Chat Header -->
-            <div class="card-header bg-dark text-white py-4 px-4 px-lg-5">
-              <div class="d-flex align-items-center gap-3">
-                <div class="doctor-avatar bg-white bg-opacity-20 rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                  <i class="fas fa-stethoscope fs-4"></i>
+<div class="pet-care-assistant-container">
+  <!-- Welcome Screen -->
+  <div class="welcome-screen" *ngIf="showWelcomeScreen">
+    <div class="welcome-container">
+      <!-- Features -->
+      
+
+      <!-- Example Prompts -->
+      <div class="prompts-section">
+        <h3 class="prompts-title">Try asking about...</h3>
+        <div class="prompts-grid">
+          <button *ngFor="let prompt of examplePrompts" 
+                  class="prompt-card" 
+                  (click)="useExamplePrompt(prompt)">
+            <div class="prompt-content">
+              <h4 class="prompt-main">{{ prompt.title }}</h4>
+              <p class="prompt-desc">{{ prompt.subtitle }}</p>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Input Section -->
+      <div class="welcome-input-section">
+        <div class="input-container">
+          <div class="input-wrapper">
+            <textarea 
+              #chatInput
+              [(ngModel)]="userInput"
+              (keydown)="onKeyPress($event)"
+              (input)="adjustTextareaHeight()"
+              placeholder="Ask about your pet's health..."
+              class="chat-input"
+              rows="1"
+              maxlength="1000"
+            ></textarea>
+            <button class="send-btn" (click)="askDoctor()" [disabled]="!userInput.trim()">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <div class="input-hint">
+            <i class="fas fa-info-circle"></i>
+            <span>Not a substitute for professional veterinary care</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Interface -->
+  <div class="chat-screen" *ngIf="!showWelcomeScreen">
+    <div class="chat-container">
+      <!-- Chat Messages Area -->
+      <div #chatContainer class="messages-container" (scroll)="onChatScroll()">
+        <!-- Welcome Message in Chat -->
+        <div class="welcome-message-container" *ngIf="showWelcomeInChat">
+          <div class="welcome-message">
+            <div class="welcome-message-header">
+              <h2 class="welcome-message-title">Hello, Pet Parent!</h2>
+              <p class="welcome-message-subtitle">
+                I'm your AI veterinary assistant. Ask me anything about your<br>
+                furry, feathery, or scaly friends!
+              </p>
+            </div>
+            
+            <div class="features-section chat-features">
+              <div class="feature-item">
+                <div class="feature-checkbox">
+                  <i class="fas fa-square"></i>
                 </div>
-                <div class="flex-grow-1">
-                  <h3 class="h4 fw-bold mb-1">Dr. PetAI</h3>
-                  <p class="mb-0 opacity-90">Online • Ready to help</p>
+                <span class="feature-text">Safe & Confidential</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-checkbox active">
+                  <i class="fas fa-check-square"></i>
                 </div>
-                <div class="d-flex align-items-center gap-2">
-                  <span class="status-dot bg-success rounded-circle" style="width: 8px; height: 8px; animation: pulse 2s infinite;"></span>
-                  <span>Connected</span>
+                <span class="feature-text">24/7 Available</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-checkbox active">
+                  <i class="fas fa-check-square"></i>
                 </div>
+                <span class="feature-text">Pet-First Care</span>
               </div>
             </div>
+          </div>
+        </div>
 
-            <!-- Chat Messages -->
-            <div class="card-body p-0">
-              <div class="chat-messages bg-light p-4" #chatMessages style="max-height: 500px; overflow-y: auto;">
-                <!-- Welcome Message -->
-                <div class="message mb-4 animate__animated animate__fadeIn">
-                  <div class="d-flex gap-3">
-                    <div class="flex-shrink-0">
-                      <div class="message-avatar bg-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                        <i class="fas fa-stethoscope text-white"></i>
-                      </div>
-                    </div>
-                    <div class="flex-grow-1">
-                      <div class="message-bubble bg-dark text-white p-4 rounded-4 mb-2">
-                        <p class="mb-3">Please describe your pet's symptoms or ask any questions about their well-being.</p>
-                        <div class="quick-questions">
-                          <small class="d-block mb-2 opacity-90">Try asking:</small>
-                          <div class="d-flex flex-wrap gap-2">
-                            <button class="btn btn-outline-light btn-sm px-3 py-2 rounded-pill" 
-                                    (click)="setQuickQuestion('My dog is vomiting, what should I do?')">
-                              Vomiting issues
-                            </button>
-                            <button class="btn btn-outline-light btn-sm px-3 py-2 rounded-pill"
-                                    (click)="setQuickQuestion('What foods are toxic to cats?')">
-                              Toxic foods
-                            </button>
-                            <button class="btn btn-outline-light btn-sm px-3 py-2 rounded-pill"
-                                    (click)="setQuickQuestion('My pet is not eating, what could be wrong?')">
-                              Loss of appetite
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <small class="text-muted">Just now</small>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- User Message -->
-                <div *ngIf="userInput && !loading" class="message mb-4 animate__animated animate__fadeIn">
-                  <div class="d-flex gap-3 justify-content-end">
-                    <div class="flex-grow-1 text-end">
-                      <div class="message-bubble bg-secondary text-white p-4 rounded-4 mb-2">
-                        <p class="mb-0">{{ userInput }}</p>
-                      </div>
-                      <small class="text-muted">Now</small>
-                    </div>
-                    <div class="flex-shrink-0">
-                      <div class="message-avatar bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                        <i class="fas fa-user text-white"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Loading Message -->
-                <div *ngIf="loading" class="message mb-4 animate__animated animate__fadeIn">
-                  <div class="d-flex gap-3">
-                    <div class="flex-shrink-0">
-                      <div class="message-avatar bg-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                        <i class="fas fa-stethoscope text-white"></i>
-                      </div>
-                    </div>
-                    <div class="flex-grow-1">
-                      <div class="message-bubble bg-white border border-dark p-4 rounded-4 mb-2">
-                        <div class="d-flex align-items-center gap-3">
-                          <div class="typing-indicator d-flex gap-1">
-                            <span class="bg-dark rounded-circle" style="width: 8px; height: 8px;"></span>
-                            <span class="bg-dark rounded-circle" style="width: 8px; height: 8px;"></span>
-                            <span class="bg-dark rounded-circle" style="width: 8px; height: 8px;"></span>
-                          </div>
-                          <span class="text-muted">Dr. PetAI is thinking...</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- AI Response -->
-                <div *ngIf="response && !loading" class="message mb-4 animate__animated animate__fadeIn">
-                  <div class="d-flex gap-3">
-                    <div class="flex-shrink-0">
-                      <div class="message-avatar bg-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                        <i class="fas fa-stethoscope text-white"></i>
-                      </div>
-                    </div>
-                    <div class="flex-grow-1">
-                      <div class="message-bubble bg-white border border-dark p-4 rounded-4 mb-2">
-                        <h6 class="fw-bold text-dark mb-2">Dr. PetAI Analysis:</h6>
-                        <p class="mb-0">{{ response }}</p>
-                        <div class="alert alert-warning mt-3 mb-0 py-2 px-3">
-                          <i class="fas fa-exclamation-triangle me-2"></i>
-                          <small class="mb-0">Disclaimer: This is AI-generated advice. Always consult a licensed veterinarian for serious concerns.</small>
-                        </div>
-                      </div>
-                      <small class="text-muted">Just now</small>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Error Message -->
-                <div *ngIf="error" class="message mb-4 animate__animated animate__fadeIn">
-                  <div class="d-flex gap-3">
-                    <div class="flex-shrink-0">
-                      <div class="message-avatar bg-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                        <i class="fas fa-exclamation-triangle text-white"></i>
-                      </div>
-                    </div>
-                    <div class="flex-grow-1">
-                      <div class="message-bubble bg-danger bg-opacity-10 border border-danger border-opacity-25 p-4 rounded-4 mb-2">
-                        <h6 class="fw-bold text-danger mb-2">Connection Issue</h6>
-                        <p class="mb-3">{{ error }}</p>
-                        <button class="btn btn-danger btn-sm px-3" (click)="askDoctor()">
-                          <i class="fas fa-redo me-1"></i>
-                          Try Again
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+        <!-- Chat Messages -->
+        <ng-container *ngFor="let message of messages">
+          <div *ngIf="message.sender === 'ai'" class="message-wrapper ai-message-wrapper">
+            <div class="message ai-message">
+              <div class="message-avatar ai-avatar">
+                <div class="avatar-icon">
+                  <i class="fas fa-stethoscope"></i>
                 </div>
               </div>
-
-              <!-- Input Area -->
-              <div class="chat-input p-4 bg-white border-top">
-                <div class="mb-3">
-                  <textarea 
-                    [(ngModel)]="userInput" 
-                    placeholder="Describe your pet's symptoms or ask a health question..."
-                    rows="3"
-                    class="form-control form-control-lg border-2 rounded-3"
-                    [class.border-dark]="userInput"
-                    [disabled]="loading"
-                    (keydown.enter)="$event.preventDefault(); askDoctor()"
-                  ></textarea>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <button class="btn btn-outline-secondary px-3" (click)="clearChat()" [disabled]="loading">
-                    <i class="fas fa-trash me-1"></i>
-                    Clear Chat
-                  </button>
-                  <button 
-                    class="btn btn-dark btn-lg px-4" 
-                    (click)="askDoctor()" 
-                    [disabled]="loading || !userInput.trim()"
-                  >
-                    <i class="fas fa-paper-plane me-2" *ngIf="!loading"></i>
-                    <i class="fas fa-spinner fa-spin me-2" *ngIf="loading"></i>
-                    {{ loading ? 'Analyzing...' : 'Ask Doctor' }}
-                  </button>
-                </div>
-                <div class="mt-3 text-center">
-                  <small class="text-muted">
-                    <i class="fas fa-info-circle me-1"></i>
-                    For emergencies, contact your local veterinarian immediately.
-                  </small>
+              
+              <div class="message-content">
+                <div class="message-bubble ai-bubble" [innerHTML]="formatMessage(message.text)"></div>
+                <div class="message-time">
+                  {{ message.timestamp | date:'h:mm a' }}
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- Features Grid -->
-          <div class="row g-4">
-            <div class="col-12 col-md-6 col-lg-4">
-              <div class="card border-0 shadow-sm h-100 hover-lift rounded-4">
-                <div class="card-body p-4 text-center">
-                  <div class="feature-icon bg-dark bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
-                    <i class="fas fa-first-aid fs-3 text-dark"></i>
-                  </div>
-                  <h4 class="h5 fw-bold mb-2">Symptom Checker</h4>
-                  <p class="text-muted mb-0">Get instant guidance on common pet symptoms and when to seek veterinary care.</p>
+          
+          <div *ngIf="message.sender === 'user'" class="message-wrapper user-message-wrapper">
+            <div class="message user-message">
+              <div class="message-content">
+                <div class="message-bubble user-bubble">
+                  {{ message.text }}
+                </div>
+                <div class="message-time">
+                  {{ message.timestamp | date:'h:mm a' }}
                 </div>
               </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4">
-              <div class="card border-0 shadow-sm h-100 hover-lift rounded-4">
-                <div class="card-body p-4 text-center">
-                  <div class="feature-icon bg-dark bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
-                    <i class="fas fa-paw fs-3 text-dark"></i>
-                  </div>
-                  <h4 class="h5 fw-bold mb-2">Breed Specific</h4>
-                  <p class="text-muted mb-0">Tailored advice for different pet breeds and their specific health considerations.</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4">
-              <div class="card border-0 shadow-sm h-100 hover-lift rounded-4">
-                <div class="card-body p-4 text-center">
-                  <div class="feature-icon bg-dark bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
-                    <i class="fas fa-pills fs-3 text-dark"></i>
-                  </div>
-                  <h4 class="h5 fw-bold mb-2">Medication Info</h4>
-                  <p class="text-muted mb-0">Learn about common medications, dosages, and potential side effects.</p>
+              <div class="message-avatar user-avatar">
+                <div class="avatar-icon">
+                  <i class="fas fa-user"></i>
                 </div>
               </div>
             </div>
           </div>
+        </ng-container>
 
-          <!-- Emergency Contact Card -->
-          <div class="card border-danger border-2 mt-5 rounded-4">
-            <div class="card-body p-4">
-              <div class="d-flex align-items-center gap-3">
-                <div class="bg-danger bg-opacity-10 rounded-circle p-3">
-                  <i class="fas fa-phone-alt fs-3 text-danger"></i>
-                </div>
-                <div>
-                  <h4 class="h5 fw-bold text-danger mb-1">Emergency Contact</h4>
-                  <p class="text-muted mb-0">For urgent pet health concerns, contact your local veterinarian or emergency animal hospital immediately.</p>
+        <!-- Typing Indicator -->
+        <div *ngIf="isAiTyping" class="message-wrapper ai-message-wrapper">
+          <div class="message ai-message">
+            <div class="message-avatar ai-avatar">
+              <div class="avatar-icon">
+                <i class="fas fa-stethoscope"></i>
+              </div>
+            </div>
+            <div class="message-content">
+              <div class="message-bubble typing-indicator">
+                <div class="thinking-text">Pet AI Doctor is thinking</div>
+                <div class="dots-container">
+                  <span class="thinking-dot"></span>
+                  <span class="thinking-dot"></span>
+                  <span class="thinking-dot"></span>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Incomplete Message Notice -->
+        <div *ngIf="showIncompleteNotice" class="message-wrapper ai-message-wrapper">
+          <div class="message ai-message">
+            <div class="message-avatar ai-avatar">
+              <div class="avatar-icon">
+                <i class="fas fa-stethoscope"></i>
+              </div>
+            </div>
+            <div class="message-content">
+              <div class="message-bubble ai-bubble">
+                <p>It looks like your message didn't come through completely, but I'm here to help! If you have a question about your pet's health, behavior, nutrition, or care, please feel free to share it, and I'll do my best to assist you!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clear Chat Button - Fixed to bottom -->
+      <div class="clear-chat-container" *ngIf="messages.length > 1">
+        <button class="clear-chat-btn" (click)="clearChat()">
+          <i class="fas fa-trash-alt"></i>
+          <span>Clear Chat</span>
+        </button>
+      </div>
+
+      <!-- Input Area - Always visible -->
+      <div class="input-area">
+        <div class="input-container">
+          <div class="input-wrapper">
+            <textarea 
+              #chatInput
+              [(ngModel)]="userInput"
+              (keydown)="onKeyPress($event)"
+              (input)="adjustTextareaHeight()"
+              placeholder="Ask about your pet's health..."
+              class="chat-input"
+              rows="1"
+              maxlength="1000"
+            ></textarea>
+            <button class="send-btn" (click)="askDoctor()" [disabled]="!userInput.trim() || isAiTyping">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <div class="input-hint">
+            <i class="fas fa-info-circle"></i>
+            <span>Not a substitute for professional veterinary care</span>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 </div>
