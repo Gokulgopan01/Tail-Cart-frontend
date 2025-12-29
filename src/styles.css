@@ -2,18 +2,31 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 
 :root {
-  --primary: #8A2BE2;        /* Electric Purple */
-  --primary-dark: #6A0DAD;
-  --secondary: #00FFFF;      /* Cyan */
-  --accent: #FF00FF;         /* Magenta */
-  --teal: #00FFC3;           /* Aqua */
-  --dark: #0A0A14;           /* Deep Space Blue */
-  --light: #1A1A2E;          /* Cosmic Gray */
+  --primary: #6366F1;        /* Indigo */
+  --primary-dark: #4F46E5;
+  --secondary: #8B5CF6;      /* Violet */
+  --accent: #F59E0B;         /* Amber */
+  --teal: #06B6D4;           /* Cyan */
+  --dark: #1F2937;           /* Dark gray */
+  --light: #F8FAFC;          /* Light gray */
   --white: #FFFFFF;
-  --gray: #8B93A5;           /* Star Gray */
-  --gray-light: #2D3047;
+  --gray: #6B7280;
+  --gray-light: #E5E7EB;
   --black: #000000;
-  --glow: 0 0 10px;
+}
+
+.dark-theme {
+    --primary: #60A5FA;
+  --primary-dark: #3B82F6;
+  --secondary: #A855F7;
+  --accent: #EC4899;
+  --teal: #2DD4BF;
+  --dark: #0F172A;
+  --light: #1E293B;
+  --white: #334155;
+  --gray: #94A3B8;
+  --gray-light: #475569;
+  --black: #000000;
 }
 
 body {
