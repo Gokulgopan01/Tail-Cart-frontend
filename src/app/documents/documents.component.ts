@@ -51,6 +51,7 @@ export class DocumentsComponent implements OnInit {
   alerts: Alert[] = [];
   filteredDocuments: Document[] = [];
   filteredAlerts: Alert[] = [];
+  userPets: { id: number, name: string }[] = [];
   
   // UI State
   activeTab: 'documents' | 'alerts' = 'documents';
@@ -97,22 +98,45 @@ export class DocumentsComponent implements OnInit {
     });
 
     this.alertForm = this.fb.group({
-      alert_type: ['Expiry Reminder', Validators.required],
+      pet: ['', Validators.required],
+      alert_type: ['', Validators.required],
+      title: ['', Validators.required],
       due_date: ['', Validators.required],
-      days_before: ['30', Validators.required],
-      custom_message: [''],
-      title: ['']
+      frequency: ['One-time', Validators.required],
+      is_active: [true]
     });
   }
 
   ngOnInit(): void {
-    this.userId = localStorage.getItem('user_id') || '';
+  this.userId = localStorage.getItem('user_id') || '';
     if (this.userId) {
       this.loadDocuments();
       this.loadAlerts();
+      this.loadUserPets(); // <-- ADD THIS
     } else {
       this.showSnackbar('Please log in to access documents.', 'error');
     }
+  }
+
+  loadUserPets(): void {
+    const token = localStorage.getItem('access_token');
+    if (!this.userId) return;
+
+    this.http.get<any[]>(`https://tailcart1.duckdns.org/api/user/pets/?user_id=${this.userId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe({
+      next: (pets) => {
+        this.userPets = pets.map(p => ({ id: p.pet_id, name: p.pet_name })); // pets should be array of {id, pet_name}
+        // If creating a new alert, preselect the first pet
+        if (!this.editingAlert && this.userPets.length > 0) {
+          this.alertForm.patchValue({ pet: this.userPets[0].id });
+        }
+      },
+      error: (err) => {
+        console.error('Error loading pets:', err);
+        this.showSnackbar('Failed to load pets', 'error');
+      }
+    });
   }
 
   // Data Loading
@@ -370,24 +394,28 @@ export class DocumentsComponent implements OnInit {
 
   // Alert Methods
   openCreateAlertModal(): void {
-    this.alertForm.reset({
-      alert_type: 'Expiry Reminder',
-      days_before: '30'
-    });
-    this.editingAlert = null;
-    this.showEditAlertModal = true;
-    document.body.style.overflow = 'hidden';
-  }
+  this.alertForm.reset({
+    alert_type: 'Vaccination',
+    frequency: 'One-time',
+    is_active: true,   // <-- Add this
+    pet: this.userPets.length > 0 ? this.userPets[0].id : ''
+  });
+
+  this.editingAlert = null;
+  this.showEditAlertModal = true;
+  document.body.style.overflow = 'hidden';
+}
 
   editAlert(alert: Alert): void {
     this.editingAlert = alert;
     this.alertForm.patchValue({
-      alert_type: alert.alert_type,
-      due_date: alert.due_date,
-      days_before: alert.days_before?.toString() || '30',
-      custom_message: alert.custom_message || '',
-      title: alert.title
-    });
+    pet: alert.pet,
+    alert_type: alert.alert_type,
+    title: alert.title,
+    due_date: alert.due_date,
+    frequency: alert.frequency,
+    is_active: alert.is_active
+  });
     this.showEditAlertModal = true;
     document.body.style.overflow = 'hidden';
   }
@@ -401,16 +429,21 @@ export class DocumentsComponent implements OnInit {
     this.isSavingAlert = true;
     const alertData = {
       user: this.userId,
-      pet: 1, // Default pet ID
-      ...this.alertForm.value,
-      is_active: true,
-      frequency: 'One-time',
-      title: this.alertForm.get('title')?.value || 'Document Expiry Reminder'
+      pet: this.alertForm.value.pet,
+      alert_type: this.alertForm.value.alert_type,
+      title: this.alertForm.value.title,
+      due_date: this.alertForm.value.due_date,
+      frequency: this.alertForm.value.frequency,
+      is_active: this.alertForm.value.is_active ?? true
     };
 
     const token = localStorage.getItem('access_token');
     const request$ = this.editingAlert
-      ? this.http.put(`${this.alertsApi}${this.editingAlert.alert_id}/`, alertData, {
+      ? this.http.put(this.alertsApi, {
+          ...alertData,
+          alert_id: this.editingAlert.alert_id,
+          user_id: this.userId
+        }, {
           headers: { Authorization: `Bearer ${token}` }
         })
       : this.http.post(this.alertsApi, alertData, {
@@ -432,21 +465,50 @@ export class DocumentsComponent implements OnInit {
     });
   }
 
+  deleteAlert(alert: Alert): void {
+    const token = localStorage.getItem('access_token');
+
+    this.http.delete(
+      `${this.alertsApi}?alert_id=${alert.alert_id}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    ).subscribe({
+      next: () => {
+        this.alerts = this.alerts.filter(a => a.alert_id !== alert.alert_id);
+        this.filteredAlerts = this.filteredAlerts.filter(a => a.alert_id !== alert.alert_id);
+        this.showSnackbar('Alert deleted successfully', 'success');
+      },
+      error: (error) => {
+        console.error('Delete alert error:', error);
+        this.showSnackbar('Failed to delete alert', 'error');
+      }
+    });
+  }
+
   toggleAlert(alert: Alert): void {
     const token = localStorage.getItem('access_token');
-    const updatedAlert = { ...alert, is_active: !alert.is_active };
-    
-    this.http.put(`${this.alertsApi}${alert.alert_id}/`, updatedAlert, {
+
+    const payload = {
+      alert_id: alert.alert_id,
+      user_id: this.userId,
+      is_active: alert.is_active   // ✅ USE DIRECT VALUE
+    };
+
+    this.http.put(this.alertsApi, payload, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: () => {
-        alert.is_active = !alert.is_active;
-        this.showSnackbar(`Alert ${alert.is_active ? 'enabled' : 'disabled'}`, 'info');
+        this.showSnackbar(
+          `Alert ${alert.is_active ? 'enabled' : 'disabled'}`,
+          'success'
+        );
       },
       error: (error) => {
-        console.error('Error toggling alert:', error);
-        alert.is_active = !alert.is_active; // Revert on error
-        this.showSnackbar('Error updating alert', 'error');
+        console.error('Toggle failed:', error);
+
+        // 🔁 revert UI if backend fails
+        alert.is_active = !alert.is_active;
+
+        this.showSnackbar('Failed to update alert', 'error');
       }
     });
   }
@@ -455,9 +517,8 @@ export class DocumentsComponent implements OnInit {
   if (!doc) return;
   
   this.alertForm.patchValue({
-    title: `${doc.document_type} Expiry Reminder`,
-    due_date: doc.expiry_date || ''
-  });
+    title: `${doc.document_type} Alert`,
+    alert_type: 'Vaccination'  });
   this.openCreateAlertModal();
 }
 
@@ -585,7 +646,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   openEditModal(doc: Document): void {
-    // Implement edit document functionality
+    
     console.log('Edit document:', doc);
   }
 

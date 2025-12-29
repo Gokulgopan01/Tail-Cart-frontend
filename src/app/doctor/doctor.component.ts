@@ -24,7 +24,7 @@ interface ExamplePrompt {
   templateUrl: './doctor.component.html',
   styleUrls: ['./doctor.component.css']
 })
-export class DoctorComponent implements OnInit, AfterViewChecked {
+export class DoctorComponent implements OnInit {
   // Chat state
   messages: ChatMessage[] = [];
   userInput: string = '';
@@ -72,25 +72,15 @@ export class DoctorComponent implements OnInit, AfterViewChecked {
     this.isMobileView = window.innerWidth < 768;
   }
 
-  ngAfterViewChecked() {
-    // Only auto-scroll if not manually scrolled up
-    if (!this.isScrolledUp) {
-      this.scrollToBottom();
-    }
-  }
-
   // Handle chat scroll
   onChatScroll() {
-    if (this.chatContainer?.nativeElement) {
-      const container = this.chatContainer.nativeElement;
-      const scrollTop = container.scrollTop;
-      const scrollHeight = container.scrollHeight;
-      const clientHeight = container.clientHeight;
-      
-      // User is scrolled up if not near bottom
-      this.isScrolledUp = scrollTop + clientHeight < scrollHeight - 100;
-    }
+  if (this.chatContainer?.nativeElement) {
+    const container = this.chatContainer.nativeElement;
+    this.isScrolledUp =
+      container.scrollTop + container.clientHeight <
+      container.scrollHeight - 100;
   }
+}
 
   // Main function to handle user questions
   askDoctor(): void {
@@ -124,8 +114,8 @@ export class DoctorComponent implements OnInit, AfterViewChecked {
     
     // Scroll to bottom immediately for new message
     setTimeout(() => {
-      this.scrollToBottom(true);
-    }, 50);
+  this.scrollToBottom(true);
+}, 50);
 
     // Call Gemini API
     this.callGeminiAPI(userText);
@@ -310,17 +300,11 @@ export class DoctorComponent implements OnInit, AfterViewChecked {
   }
 
   scrollToBottom(force: boolean = false): void {
-    try {
-      if (this.chatContainer?.nativeElement && (force || !this.isScrolledUp)) {
-        const container = this.chatContainer.nativeElement;
-        setTimeout(() => {
-          container.scrollTop = container.scrollHeight;
-        }, 50);
-      }
-    } catch (err) {
-      console.error('Scroll error:', err);
-    }
+  if (this.chatContainer?.nativeElement && (force || !this.isScrolledUp)) {
+    const container = this.chatContainer.nativeElement;
+    container.scrollTop = container.scrollHeight;
   }
+}
 
   // Auto-resize textarea
   adjustTextareaHeight(): void {

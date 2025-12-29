@@ -3,15 +3,24 @@
   <div class="profile-header">
     <div class="container">
       <div class="header-content">
-        <h1 class="page-title">Owner Profile</h1>
+        <h1 class="page-title">Manage Profile</h1>
         <div class="tab-navigation">
-          <button class="tab-btn active" (click)="switchTab('owner')">
-            Owner Profile
-          </button>
-          <button class="tab-btn" (click)="switchTab('pets')">
-            My Pets
-          </button>
-        </div>
+            <button
+              class="tab-btn"
+              [class.active]="activeTab === 'owner'"
+              (click)="switchTab('owner')"
+            >
+              Owner Profile
+            </button>
+
+            <button
+              class="tab-btn"
+              [class.active]="activeTab === 'pets'"
+              (click)="switchTab('pets')"
+            >
+              Pets Profile
+            </button>
+          </div>
       </div>
     </div>
   </div>
@@ -157,7 +166,7 @@
               
               <!-- Pet ID Highlight (Crucial Section) -->
               <div class="pet-id-section">
-                <div class="pet-id-label">PFI ID</div>
+                <div class="pet-id-label">PET ID</div>
                 <div class="pet-id-value">{{ pet.pet_id || 'Generating...' }}</div>
                 <div class="pet-id-note">Required for purchases & document uploads</div>
               </div>

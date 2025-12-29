@@ -567,7 +567,7 @@
 .toggle-switch {
   position: relative;
   display: inline-block;
-  width: 44px;
+  width: 50px;
   height: 24px;
 }
 
@@ -580,11 +580,8 @@
 .toggle-slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #e5e7eb;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
   transition: .4s;
   border-radius: 24px;
 }
@@ -592,26 +589,29 @@
 .toggle-slider:before {
   position: absolute;
   content: "";
-  height: 16px;
-  width: 16px;
-  left: 4px;
-  bottom: 4px;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
   background-color: white;
   transition: .4s;
   border-radius: 50%;
 }
 
 input:checked + .toggle-slider {
-  background-color: #10b981;
+  background-color: #4caf50; /* Green when active */
 }
 
 input:checked + .toggle-slider:before {
-  transform: translateX(20px);
+  transform: translateX(26px);
 }
 
 .alert-body {
   margin-bottom: 16px;
 }
+
+
+
 
 .alert-title {
   font-size: 16px;
@@ -645,6 +645,8 @@ input:checked + .toggle-slider:before {
 .alert-footer {
   padding-top: 16px;
   border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 12px;
 }
 
 .btn-edit {
@@ -1059,7 +1061,7 @@ textarea.form-control {
   border-top: 1px solid #e5e7eb;
 }
 
-.btn-download, .btn-set-alert, .btn-delete {
+.btn-download, .btn-set-alert{
   flex: 1;
   padding: 12px;
   border-radius: 8px;
@@ -1094,9 +1096,18 @@ textarea.form-control {
 }
 
 .btn-delete {
-  background: #fee2e2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
+  background: transparent;
+  border: 1px solid #ef4444;   /* red */
+  color: #ef4444;
+  padding: 8px 16px;           /* SAME as edit */
+  border-radius: 6px;
+  font-size: 14px;             /* SAME as edit */
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
 }
 
 .btn-delete:hover {

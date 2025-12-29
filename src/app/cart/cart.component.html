@@ -1,119 +1,88 @@
 <div class="container-fluid px-0" *ngIf="!loading; else loadingTpl">
-
   <!-- Main Content -->
-  <section class="cart-main-section py-5">
+  <section class="cart-main-section py-4">
     <div class="container">
-      <div class="row g-4">
-        <!-- Cart Items -->
+      <!-- Cart Header -->
+      <div class="cart-header">
+        <h1 class="cart-title">Cart Items ({{ cartItems.length }})</h1>
+        <p class="cart-subtitle">Products you're about to purchase</p>
+      </div>
+
+      <div class="row g-4 g-lg-5">
+        <!-- Cart Items Column -->
         <div class="col-12 col-lg-8">
-          <div class="card border-0 shadow-sm rounded-4 mb-4">
-            <div class="card-body p-4">
-              <div class="d-flex justify-content-between align-items-end mb-4">
-                <div>
-                  <h2 class="h3 fw-bold text-black mb-1">Cart Items ({{ cartItems.length }})</h2>
-                  <p class="text-muted mb-0">Products you're about to purchase</p>
-                </div>
+          <div class="cart-items-container">
+            <!-- Empty Cart State -->
+            <div *ngIf="cartItems.length === 0" class="empty-cart-state">
+              <div class="empty-icon">
+                <i class="fas fa-shopping-cart"></i>
               </div>
+              <h3 class="empty-title">Your Cart is Empty</h3>
+              <p class="empty-text">Looks like you haven't added any items to your cart yet</p>
+              <button class="shop-btn" routerLink="/shop">
+                <i class="fas fa-shopping-bag"></i>
+                Start Shopping
+              </button>
+            </div>
 
-              <!-- Empty Cart -->
-              <div *ngIf="cartItems.length === 0" class="text-center py-5">
-                <div class="empty-state">
-                  <div class="empty-icon mb-4">
-                    <i class="fas fa-shopping-cart fa-4x text-muted opacity-25"></i>
+            <!-- Cart Items List -->
+            <div *ngIf="cartItems.length > 0">
+              <div class="cart-item" *ngFor="let item of cartItems; let i = index">
+                <!-- Product Image - Small square -->
+                <div class="product-image-container">
+                  <img [src]="item.product_image" 
+                       [alt]="item.product_name"
+                       class="product-image"
+                       onerror="this.src='assets/images/shop-main.jpg'" />
+                </div>
+
+                <!-- Product Details -->
+                <div class="product-info">
+                  <!-- Product Name Row -->
+                  <div class="product-name-row">
+                    <h3 class="product-name">{{ item.product_name }}</h3>
+                    <button class="remove-btn" (click)="removeItem(item)" title="Remove item">
+                      ×
+                    </button>
                   </div>
-                  <h3 class="h4 fw-bold mb-3 text-black">Your Cart is Empty</h3>
-                  <p class="text-muted mb-4">Looks like you haven't added any items to your cart yet</p>
-                  <button class="btn btn-dark btn-lg px-4" routerLink="/shop">
-                    <i class="fas fa-shopping-bag me-2"></i>
-                    Start Shopping
-                  </button>
-                </div>
-              </div>
 
-              <!-- Cart Items List -->
-              <div class="cart-items" *ngIf="cartItems.length > 0">
-                <div class="cart-item card border-0 shadow-sm rounded-3 mb-3" *ngFor="let item of cartItems; let i = index">
-                  <div class="card-body p-3">
-                    <div class="row g-3 align-items-center">
-                      <!-- Product Image -->
-                      <div class="col-12 col-md-3 col-lg-2">
-                        <div class="position-relative">
-                          <img [src]="item.product_image" 
-                               [alt]="item.product_name"
-                               class="img-fluid rounded-3 border border-dark"
-                               style="height: 120px; width: 100%; object-fit: cover;"
-                               onerror="this.src='assets/images/shop-main.jpg'" />
-                          <span *ngIf="item.status === 'pending'" class="badge bg-warning position-absolute top-0 start-0 m-2">
-                            Pending
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <!-- Product Details -->
-                      <div class="col-12 col-md-9 col-lg-10">
-                        <div class="row g-2">
-                          <!-- Header with title and remove button -->
-                          <div class="col-12">
-                            <div class="d-flex justify-content-between align-items-start">
-                              <h3 class="h5 fw-bold mb-1 text-black">{{ item.product_name }}</h3>
-                              <button class="btn btn-outline-danger btn-sm" (click)="removeItem(item)">
-                                <i class="fas fa-trash"></i>
-                              </button>
-                            </div>
-                          </div>
-                          
-                          <!-- Meta information -->
-                          <div class="col-12">
-                            <div class="d-flex flex-wrap gap-3 mb-2">
-                              <span class="d-flex align-items-center gap-1 text-muted">
-                                <i class="fas fa-paw text-black"></i>
-                                <small>{{ item.pet_name || 'Generic Pet' }}</small>
-                              </span>
-                              <span class="d-flex align-items-center gap-1 text-muted">
-                                <i class="fas fa-tag text-black"></i>
-                                <span class="badge" [ngClass]="{
-                                  'bg-warning': item.status === 'pending',
-                                  'bg-success': item.status === 'confirmed',
-                                  'bg-info': item.status === 'available'
-                                }">
-                                  {{ item.status }}
-                                </span>
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <!-- Pricing -->
-                          <div class="col-12 col-md-6">
-                            <div class="bg-light rounded-3 p-2">
-                              <div class="d-flex align-items-center flex-wrap gap-2">
-                                <span class="fw-bold text-black fs-5">₹{{ item.product_price }}</span>
-                                <span class="text-muted">×</span>
-                                <span class="text-muted">{{ item.quantity }}</span>
-                                <span class="text-muted">=</span>
-                                <span class="fw-bold text-black">₹{{ item.product_price * item.quantity }}</span>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <!-- Quantity Controls -->
-                          <div class="col-12 col-md-6">
-                            <div class="d-flex align-items-center justify-content-md-end">
-                              <div class="btn-group border border-dark rounded-3">
-                                <button class="btn btn-outline-dark btn-sm px-3" 
-                                        (click)="updateQuantity(item, item.quantity - 1)" 
-                                        [disabled]="item.quantity <= 1">
-                                  <i class="fas fa-minus"></i>
-                                </button>
-                                <span class="btn btn-white disabled px-4 text-black">{{ item.quantity }}</span>
-                                <button class="btn btn-outline-dark btn-sm px-3" 
-                                        (click)="updateQuantity(item, item.quantity + 1)">
-                                  <i class="fas fa-plus"></i>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                  <!-- Product Meta -->
+                  <div class="product-meta">
+                    <span class="meta-item">
+                      <i class="fas fa-paw meta-icon"></i>
+                      <span>{{ item.pet_name || 'Generic Pet' }}</span>
+                    </span>
+                    <span class="separator">•</span>
+                    <span class="status-badge">
+                      <i class="fas fa-check-circle"></i>
+                      In Cart
+                    </span>
+                  </div>
+
+                  <!-- Price and Quantity - Side by side -->
+                  <div class="price-quantity-row">
+                    <!-- Price Display -->
+                    <div class="price-display">
+                      <span class="price">₹{{ item.product_price }}</span>
+                      <span class="price-label">each</span>
+                      <span class="separator">×</span>
+                      <span class="quantity-text">{{ item.quantity }}</span>
+                      <span class="equal">=</span>
+                      <span class="item-total">₹{{ item.product_price * item.quantity }}</span>
+                    </div>
+
+                    <!-- Quantity Controls -->
+                    <div class="quantity-controls">
+                      <button class="quantity-btn" 
+                              (click)="updateQuantity(item, item.quantity - 1)" 
+                              [disabled]="item.quantity <= 1">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <span class="quantity-display">{{ item.quantity }}</span>
+                      <button class="quantity-btn" 
+                              (click)="updateQuantity(item, item.quantity + 1)">
+                        <i class="fas fa-plus"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -122,94 +91,83 @@
           </div>
         </div>
 
-        <!-- Checkout Summary -->
+        <!-- Order Summary Column -->
         <div class="col-12 col-lg-4" *ngIf="cartItems.length > 0">
-          <div class="sticky-top" style="top: 20px;">
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-              <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                  <h3 class="h4 fw-bold mb-0 text-black">Order Summary</h3>
-                  <i class="fas fa-receipt text-black fs-4"></i>
-                </div>
-                
-                <div class="mb-4">
-                  <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Items ({{ getTotalItems() }})</span>
-                    <span class="fw-medium text-black">₹{{ getSubtotal() }}</span>
-                  </div>
-                  <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Shipping</span>
-                    <span class="text-success fw-bold">FREE</span>
-                  </div>
-                  <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Tax</span>
-                    <span class="text-black">₹{{ getTax() }}</span>
-                  </div>
-                  <hr class="my-3">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <span class="h5 fw-bold text-black mb-0">Total Amount</span>
-                    <span class="h4 fw-bold text-black">₹{{ totalAmount }}</span>
-                  </div>
-                </div>
-                
-                <div class="mb-4">
-                  <div class="row g-2 text-center">
-                    <div class="col-4">
-                      <div class="p-2 border border-dark rounded-3">
-                        <i class="fas fa-shield-alt text-black mb-1"></i>
-                        <small class="d-block text-muted">Secure</small>
-                      </div>
-                    </div>
-                    <div class="col-4">
-                      <div class="p-2 border border-dark rounded-3">
-                        <i class="fas fa-truck text-black mb-1"></i>
-                        <small class="d-block text-muted">Free Shipping</small>
-                      </div>
-                    </div>
-                    <div class="col-4">
-                      <div class="p-2 border border-dark rounded-3">
-                        <i class="fas fa-undo text-black mb-1"></i>
-                        <small class="d-block text-muted">Easy Returns</small>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <button class="btn btn-dark btn-lg w-100 py-3 mb-3" (click)="checkout()">
-                  <i class="fas fa-lock me-2 text-white"></i>
-                  <span class="text-white">Proceed to Checkout</span>
-                </button>
-                
-                <div class="text-center">
-                  <small class="text-muted d-flex align-items-center justify-content-center gap-1">
-                    <i class="fas fa-lock text-success"></i>
-                    Your payment information is secure and encrypted
-                  </small>
-                </div>
+          <div class="order-summary-card">
+            <!-- Header -->
+            <div class="summary-header">
+              <h2 class="summary-title">Order Summary</h2>
+              <i class="fas fa-receipt summary-icon"></i>
+            </div>
+
+            <!-- Summary Details -->
+            <div class="summary-items">
+              <div class="summary-row">
+                <span class="summary-label">Items ({{ getTotalItems() }})</span>
+                <span class="summary-value">₹{{ getSubtotal() }}</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Shipping</span>
+                <span class="summary-value free-shipping">FREE</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Tax</span>
+                <span class="summary-value">₹{{ getTax() }}</span>
+              </div>
+              
+              <div class="summary-divider"></div>
+              
+              <div class="total-row">
+                <span class="total-label">Total Amount</span>
+                <span class="total-amount">₹{{ totalAmount }}</span>
               </div>
             </div>
 
-            <!-- Continue Shopping -->
-            <div class="card border-0 shadow-sm rounded-4">
-              <div class="card-body p-4 text-center">
-                <h4 class="h5 fw-bold mb-3 text-black">Need more items?</h4>
-                <button class="btn btn-outline-dark w-100" routerLink="/shop">
-                  <i class="fas fa-arrow-left me-2"></i>
-                  Continue Shopping
-                </button>
+            <!-- Trust Badges -->
+            <div class="trust-badges">
+              <div class="trust-badge">
+                <i class="fas fa-shield-alt"></i>
+                <small>Secure checkout</small>
               </div>
+              <div class="trust-badge">
+                <i class="fas fa-shipping-fast"></i>
+                <small>Free shipping</small>
+              </div>
+              <div class="trust-badge">
+                <i class="fas fa-undo"></i>
+                <small>Free returns</small>
+              </div>
+            </div>
+
+            <!-- Checkout Button -->
+            <button class="checkout-btn" (click)="checkout()">
+              <i class="fas fa-lock"></i>
+              Proceed to Checkout
+            </button>
+
+            <!-- Security Note -->
+            <div class="security-note">
+              <i class="fas fa-lock"></i>
+              Your payment information is secure and encrypted
+            </div>
+
+            <!-- Continue Shopping -->
+            <div class="continue-shopping">
+              <h4 class="continue-title">Need more items?</h4>
+              <button class="continue-btn" routerLink="/shop">
+                <i class="fas fa-arrow-left"></i>
+                Continue Shopping
+              </button>
             </div>
           </div>
         </div>
       </div>
-
-      
     </div>
   </section>
 </div>
 
 <ng-template #loadingTpl>
-  <div class="d-flex justify-content-center align-items-center min-vh-100">
+  <div class="loading-container">
     <div class="text-center">
       <div class="spinner-border text-black" style="width: 3rem; height: 3rem;" role="status">
         <span class="visually-hidden">Loading...</span>

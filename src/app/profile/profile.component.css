@@ -1,8 +1,10 @@
+/* Profile Page Styles - Using Global Variables */
+
 /* Base Styles */
 .profile-page {
   min-height: 100vh;
-  background-color: #ffffff;
-  color: #1a1a1a;
+  background-color: var(--white);
+  color: var(--dark);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -14,7 +16,7 @@
 
 /* Header */
 .profile-header {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--gray-light);
   padding: 24px 0;
 }
 
@@ -28,6 +30,7 @@
   font-size: 28px;
   font-weight: 600;
   margin: 0;
+  color: var(--black);
 }
 
 /* Tab Navigation */
@@ -38,22 +41,23 @@
 
 .tab-btn {
   padding: 10px 24px;
-  border: 1px solid #e5e5e5;
-  background: white;
+  border: 1px solid var(--gray-light);
+  background: var(--white);
   border-radius: 6px;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.2s;
+  color: var(--black);
 }
 
 .tab-btn:hover {
-  background: #f8f9fa;
+  background: var(--light);
 }
 
 .tab-btn.active {
-  background: #1a1a1a;
-  color: white;
-  border-color: #1a1a1a;
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
 }
 
 /* Tab Content */
@@ -70,15 +74,15 @@
 .profile-card {
   max-width: 800px;
   margin: 0 auto;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--gray-light);
   border-radius: 8px;
   overflow: hidden;
 }
 
 .profile-card-header {
   padding: 24px;
-  border-bottom: 1px solid #e5e5e5;
-  background: #f8f9fa;
+  border-bottom: 1px solid var(--gray-light);
+  background: var(--light);
 }
 
 .header-title {
@@ -91,20 +95,22 @@
   font-size: 20px;
   font-weight: 600;
   margin: 0;
+  color: var(--black);
 }
 
 .edit-btn {
   padding: 8px 20px;
-  background: white;
-  border: 1px solid #1a1a1a;
+  background: var(--white);
+  border: 1px solid var(--black);
   border-radius: 4px;
-  color: #1a1a1a;
+  color: var(--black);
   cursor: pointer;
   font-size: 14px;
+  transition: all 0.2s;
 }
 
 .edit-btn:hover {
-  background: #f8f9fa;
+  background: var(--light);
 }
 
 /* Profile Body */
@@ -119,14 +125,14 @@
 .profile-field label {
   display: block;
   font-size: 14px;
-  color: #666;
+  color: var(--gray);
   margin-bottom: 8px;
   font-weight: 500;
 }
 
 .field-value {
   font-size: 16px;
-  color: #1a1a1a;
+  color: var(--black);
   margin: 0;
   padding: 10px 0;
 }
@@ -148,15 +154,17 @@
 .form-input, .form-select {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--gray-light);
   border-radius: 4px;
   font-size: 16px;
   box-sizing: border-box;
+  color: var(--black);
+  background: var(--white);
 }
 
 .form-input:focus, .form-select:focus {
   outline: none;
-  border-color: #1a1a1a;
+  border-color: var(--black);
 }
 
 .form-actions {
@@ -174,13 +182,13 @@
 }
 
 .save-btn {
-  background: #1a1a1a;
-  color: white;
+  background: var(--black);
+  color: var(--white);
   border: none;
 }
 
 .save-btn:hover:not(:disabled) {
-  background: #333;
+  background: var(--dark);
 }
 
 .save-btn:disabled {
@@ -189,13 +197,13 @@
 }
 
 .cancel-btn {
-  background: white;
-  border: 1px solid #ddd;
-  color: #666;
+  background: var(--white);
+  border: 1px solid var(--gray-light);
+  color: var(--gray);
 }
 
 .cancel-btn:hover {
-  background: #f8f9fa;
+  background: var(--light);
 }
 
 /* Pets Section */
@@ -215,20 +223,22 @@
   font-size: 24px;
   font-weight: 600;
   margin: 0;
+  color: var(--black);
 }
 
 .add-pet-btn {
   padding: 10px 24px;
-  background: #1a1a1a;
-  color: white;
+  background: var(--black);
+  color: var(--white);
   border: none;
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .add-pet-btn:hover {
-  background: #333;
+  background: var(--dark);
 }
 
 /* Pets Grid */
@@ -239,10 +249,11 @@
 }
 
 .pet-card {
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--gray-light);
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.2s;
+  transition: all 0.2s;
+  background: var(--white);
 }
 
 .pet-card:hover {
@@ -252,19 +263,20 @@
 
 .pet-card-header {
   padding: 20px;
-  border-bottom: 1px solid #e5e5e5;
-  background: #f8f9fa;
+  border-bottom: 1px solid var(--gray-light);
+  background: var(--light);
 }
 
 .pet-card-header h3 {
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 8px 0;
+  color: var(--black);
 }
 
 .pet-species {
   font-size: 14px;
-  color: #666;
+  color: var(--gray);
 }
 
 .pet-details {
@@ -273,14 +285,14 @@
 
 .pet-breed {
   font-size: 14px;
-  color: #666;
+  color: var(--gray);
   margin-bottom: 20px;
 }
 
-/* Pet ID Section (CRUCIAL) */
+/* Pet ID Section */
 .pet-id-section {
-  background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--black) 0%, var(--dark) 100%);
+  color: var(--white);
   padding: 16px;
   border-radius: 6px;
   margin-bottom: 20px;
@@ -315,55 +327,64 @@
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
-  border: 1px solid #ddd;
-  background: white;
+  transition: all 0.2s;
+}
+
+.edit-pet-btn {
+  border: 1px solid var(--gray-light);
+  background: var(--white);
+  color: var(--black);
 }
 
 .edit-pet-btn:hover {
-  background: #f8f9fa;
+  background: var(--light);
 }
 
 .delete-pet-btn {
-  border-color: #dc3545;
+  border: 1px solid #dc3545;
+  background: var(--white);
   color: #dc3545;
 }
 
 .delete-pet-btn:hover {
   background: #dc3545;
-  color: white;
+  color: var(--white);
 }
 
 /* Add Pet Card */
 .add-pet-card {
-  border: 2px dashed #ddd;
+  border: 2px dashed var(--gray-light);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 200px;
+  background: var(--white);
+  transition: all 0.2s;
 }
 
 .add-pet-card:hover {
-  border-color: #1a1a1a;
-  background: #f8f9fa;
+  border-color: var(--black);
+  background: var(--light);
 }
 
 .add-pet-content {
   text-align: center;
-  color: #666;
+  color: var(--gray);
 }
 
 .add-icon {
   font-size: 48px;
   margin-bottom: 12px;
-  color: #1a1a1a;
+  color: var(--black);
 }
 
 /* No Pets */
 .no-pets {
   text-align: center;
   padding: 60px 20px;
-  color: #666;
+  color: var(--gray);
+  background: var(--white);
 }
 
 .no-pets-content {
@@ -375,7 +396,8 @@
 .loading-state {
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: var(--gray);
+  background: var(--white);
 }
 
 /* Modal */
@@ -393,7 +415,7 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--white);
   border-radius: 8px;
   width: 100%;
   max-width: 500px;
@@ -403,7 +425,7 @@
 
 .modal-header {
   padding: 24px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--gray-light);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -413,6 +435,7 @@
   margin: 0;
   font-size: 20px;
   font-weight: 600;
+  color: var(--black);
 }
 
 .close-btn {
@@ -420,7 +443,12 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #666;
+  color: var(--gray);
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: var(--black);
 }
 
 .modal-form {
@@ -437,10 +465,12 @@
   
   .tab-navigation {
     width: 100%;
+    flex-wrap: wrap;
   }
   
   .tab-btn {
     flex: 1;
+    min-width: 120px;
     text-align: center;
   }
   

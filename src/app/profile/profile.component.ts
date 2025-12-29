@@ -52,6 +52,17 @@ export class ProfileComponent implements OnInit {
   private profileApi = 'https://tailcart1.duckdns.org/api/user/profile/';
   private petsApi = 'https://tailcart1.duckdns.org/api/user/pets/';
 
+  private showSnackbar(
+    message: string,
+    type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: [`snackbar-${type}`],
+      horizontalPosition: 'right',
+      verticalPosition: 'top'
+    });
+  }
+
   constructor(
     private http: HttpClient, 
     private router: Router,
@@ -132,13 +143,13 @@ export class ProfileComponent implements OnInit {
         this.isLoading = false;
         this.isEditMode = false;
         this.hasProfile = true;
-        this.snackBar.open('Profile saved successfully!', 'Close', { duration: 3000 });
+        this.showSnackbar('Profile saved successfully!', 'success');
         this.loadProfile();
       },
       error: (error) => {
         this.isLoading = false;
         console.error('Save profile error:', error);
-        this.snackBar.open('Failed to save profile', 'Close', { duration: 3000 });
+        this.showSnackbar('Failed to save profile', 'error');
       }
     });
   }
@@ -220,33 +231,46 @@ export class ProfileComponent implements OnInit {
       next: () => {
         this.loadingPets = false;
         this.isPetFormVisible = false;
-        this.snackBar.open('Pet saved successfully!', 'Close', { duration: 3000 });
+        this.showSnackbar('Pet saved successfully!', 'success');
         this.loadPets();
       },
       error: (error) => {
         this.loadingPets = false;
         console.error('Save pet error:', error);
-        this.snackBar.open('Failed to save pet', 'Close', { duration: 3000 });
+        this.showSnackbar('Failed to save pet', 'error');
       }
     });
   }
 
   deletePet(pet: Pet): void {
-    if (window.confirm(`Are you sure you want to delete ${pet.pet_name}?`)) {
+    const snackRef = this.snackBar.open(
+      `Delete ${pet.pet_name}?`,
+      'DELETE',
+      {
+        duration: 5000,
+        panelClass: ['snackbar-warning'],
+        horizontalPosition: 'right',
+        verticalPosition: 'top'
+      }
+    );
+
+    snackRef.onAction().subscribe(() => {
       const token = localStorage.getItem('access_token');
+
       this.http.delete(
-        `${this.petsApi}${pet.pet_id}/`,
+        `${this.petsApi}?user_id=${this.userId}&pet_id=${pet.pet_id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       ).subscribe({
         next: () => {
           this.pets = this.pets.filter(p => p.pet_id !== pet.pet_id);
-          this.snackBar.open(`${pet.pet_name} deleted`, 'Close', { duration: 3000 });
+          this.showSnackbar(`${pet.pet_name} deleted`, 'success');
         },
         error: (error) => {
           console.error('Delete pet error:', error);
-          this.snackBar.open('Failed to delete pet', 'Close', { duration: 3000 });
+          this.showSnackbar('Failed to delete pet', 'error');
         }
       });
-    }
+    });
   }
+
 }

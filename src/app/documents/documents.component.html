@@ -4,8 +4,6 @@
     <div class="container">
       <div class="header-content">
         <div class="header-text">
-          <h1 class="header-title">My Documents</h1>
-          <p class="header-subtitle">Securely store and manage all your important documents</p>
         </div>
         
         <!-- Stats/Tabs -->
@@ -109,11 +107,11 @@
                       <i class="fas fa-ellipsis-v"></i>
                     </button>
                     <ul class="dropdown-menu">
-                      <li>
+                      <!-- <li>
                         <button class="dropdown-item" (click)="openEditModal(doc)">
                           <i class="fas fa-edit"></i> Edit
                         </button>
-                      </li>
+                      </li> -->
                       <li>
                         <button class="dropdown-item" (click)="setAlertForDocument(doc)">
                           <i class="fas fa-bell"></i> Set Alert
@@ -240,6 +238,11 @@
                 <i class="fas fa-edit"></i>
                 Edit Alert
               </button>
+
+              <button class="btn-delete" (click)="deleteAlert(alert)">
+                <i class="fas fa-trash"></i>
+                Delete
+              </button>
             </div>
           </div>
         </div>
@@ -342,49 +345,55 @@
         <div class="modal-header">
           <h2 class="modal-title">Edit Alert</h2>
           <button type="button" class="btn-close" (click)="closeEditAlertModal()"></button>
+          
         </div>
         <div class="modal-body">
           <form [formGroup]="alertForm" class="alert-form">
             <div class="form-group">
-              <label>Alert Type</label>
-              <select class="form-select" formControlName="alert_type">
-                <option value="Expiry Reminder">Expiry Reminder</option>
-                <option value="Review Reminder">Review Reminder</option>
-                <option value="Renewal Reminder">Renewal Reminder</option>
-                <option value="Other">Other</option>
+              <label>Pet</label>
+              <select class="form-select" formControlName="pet">
+                <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label>Alert Date</label>
+              <label>Alert Type</label>
+              <select class="form-select" formControlName="alert_type">
+                <option value="Vaccination">Vaccination</option>
+                <option value="Medication">Medication</option>
+                <option value="Appointment">Appointment</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" class="form-control" formControlName="title" placeholder="Alert Title">
+            </div>
+
+            <div class="form-group">
+              <label>Due Date</label>
               <input type="date" class="form-control" formControlName="due_date">
             </div>
 
             <div class="form-group">
-              <label>Days Before Expiry</label>
-              <select class="form-select" formControlName="days_before">
-                <option value="7">7 days</option>
-                <option value="15">15 days</option>
-                <option value="30">30 days</option>
-                <option value="60">60 days</option>
+              <label>Frequency</label>
+              <select class="form-select" formControlName="frequency">
+                <option value="One-time">One-time</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
               </select>
-            </div>
-
-            <div class="form-group">
-              <label>Custom Message (Optional)</label>
-              <textarea class="form-control" formControlName="custom_message" 
-                        placeholder="Add a custom reminder message..." rows="3"></textarea>
             </div>
 
             <div class="modal-footer">
               <button type="button" class="btn-cancel" (click)="closeEditAlertModal()">Cancel</button>
-              <button type="button" class="btn-save" (click)="saveAlert()" 
-                      [disabled]="alertForm.invalid || isSavingAlert">
+              <button type="button" class="btn-save" (click)="saveAlert()" [disabled]="alertForm.invalid || isSavingAlert">
                 <span *ngIf="isSavingAlert" class="spinner"></span>
-                {{ isSavingAlert ? 'Saving...' : 'Update Alert' }}
+                {{ isSavingAlert ? 'Saving...' : (editingAlert ? 'Update Alert' : 'Create Alert') }}
               </button>
             </div>
           </form>
+
         </div>
       </div>
     </div>
