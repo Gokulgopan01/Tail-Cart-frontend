@@ -40,8 +40,8 @@ def params_check():
     else:
           #return None,None  
           # Returns auto for manualy opening Autologin  
-        #   return "AutoLogin",None,None
-        return "SmartEntry","2128","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NTI3NDg2NjgsImV4cCI6MTc1MzYxMjY2OH0.Itsc57tAJ08YEyCS-HaBYJqn-lpceWz3O3cGXezgHH8"
+          return "AutoLogin",2299,None
+        # return "SmartEntry","2299","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NTI3NDg2NjgsImV4cCI6MTc1MzYxMjY2OH0.Itsc57tAJ08YEyCS-HaBYJqn-lpceWz3O3cGXezgHH8"
 
 process_type, hybrid_orderid,hybrid_token = params_check()
 
@@ -257,7 +257,9 @@ def get_order_address_from_assigned_order(order_id, token):
                 order_data = data["content"]["data"]
                 portal_order_id = order_data.get("portal_order_id", "Address Not Found")
                 tfs_orderid = order_data.get("tfs_orderid", "TFS ID Not Found")
+                print("API")
                 return portal_order_id, tfs_orderid
+                
             else:
                 logger.log(
                     module="get_order_address_from_assigned_order",
@@ -266,7 +268,7 @@ def get_order_address_from_assigned_order(order_id, token):
                     remarks=f"Invalid Response Format.",
                     severity="INFO"
                 )
-                return "Invalid Response Format"
+                return "Invalid Response Format",None
                 
         else:
             logger.log(
@@ -276,7 +278,7 @@ def get_order_address_from_assigned_order(order_id, token):
                     remarks=f"Error: {response.status_code} - {response.text}",
                     severity="INFO"
                 )
-            return f"Error: {response.status_code} - {response.text}"
+            return f"Error: {response.status_code} - {response.text}",None
     
     except Exception as e:
         logger.log(
@@ -286,8 +288,60 @@ def get_order_address_from_assigned_order(order_id, token):
                     remarks=f"Request Failed: {str(e)}",
                     severity="INFO"
                 )
-        return f"Request Failed: {str(e)}"
+        return f"Request Failed: {str(e)}",None
         
+# def get_order_address_from_assigned_order(order_id, token):
+#     url = f"{ASSIGNEDORDERS_URL}{order_id}"
+
+#     headers = {
+#         "Authorization": f"Bearer {token}",
+#         "Accept": "application/json"
+#     }
+
+#     try:
+#         response = requests.get(url, headers=headers)
+
+#         if response.status_code == 200:
+#             data = response.json()
+
+#             if "content" in data and "data" in data["content"]:
+#                 order_data = data["content"]["data"]
+
+#                 portal_order_id = order_data.get("portal_order_id")
+#                 tfs_orderid = order_data.get("tfs_orderid")
+
+#                 return portal_order_id, tfs_orderid
+
+#             else:
+#                 logger.log(
+#                     module="get_order_address_from_assigned_order",
+#                     order_id=order_id,
+#                     action_type="Condition-check",
+#                     remarks="Invalid Response Format",
+#                     severity="INFO"
+#                 )
+#                 return None, None  
+
+#         else:
+#             logger.log(
+#                 module="get_order_address_from_assigned_order",
+#                 order_id=order_id,
+#                 action_type="Condition-check",
+#                 remarks=f"Error: {response.status_code} - {response.text}",
+#                 severity="INFO"
+#             )
+#             return None, None  
+
+#     except Exception as e:
+#         logger.log(
+#             module="get_order_address_from_assigned_order",
+#             order_id=order_id,
+#             action_type="Exception",
+#             remarks=f"Request Failed: {str(e)}",
+#             severity="INFO"
+#         )
+#         return None, None  
+
 
 
 def clean_address(address):
@@ -377,7 +431,10 @@ def get_cookie_from_api(username, portal, proxy=None):
             
         response = session.post(api_url, headers=headers, data=payload, timeout=60)
         response.raise_for_status()
+        print(response.raise_for_status())
+        print(response.json())
         return response.json()
+    
 
     except requests.exceptions.RequestException as e:
         #logging.error(f"API request failed: {e}")
@@ -1028,7 +1085,7 @@ def update_order_status(assigned_order_id, status, stage, order_event_status,tok
         "status": status,
         "stage": stage,
         "order_event_status": order_event_status,
-        "token":f"Bearer {token}"
+        # "token":f"Bearer {token}"
     }
 
     headers = {
@@ -1507,5 +1564,3 @@ def update_portal_login_confirmation_status(order_id):
            
         )
         return False
-
-    

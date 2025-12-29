@@ -12,7 +12,6 @@ from screens.Portal_Instruction_Screen import PortalInstructionScreen
 from screens.ecesis_login_screen import EcesisLoginScreen
 from screens.entry_screen import EntryScreen
 from screens.profile_screen import ProfileScreen
-# import pyi_splash
 
 
 class Application(tk.Tk):
@@ -28,9 +27,8 @@ class Application(tk.Tk):
         self.logo = ImageTk.PhotoImage(image)
         #self.iconphoto(False, self.logo)
         self.after(200, self.set_icon)
-
-        # pyi_splash.close()
-
+        
+       
 
     
         # Bring to front briefly
@@ -71,9 +69,9 @@ class Application(tk.Tk):
     def route_startup(self):
         """Decide which screen to show based on input parameters or login status."""
         arg1, arg2, arg3 = params_check()
-        arg1="SmartEntry"
+        # arg1="SmartEntry"
         #arg1="PortalLogin"
-        #arg1="AutoLogin"
+        # arg1="AutoLogin"
         print(f"Params: arg1={arg1}, arg2={arg2}, arg3={arg3}")
         login_data = user_data.load_login_data()
         print("Login data:", login_data)

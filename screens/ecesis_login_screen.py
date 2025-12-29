@@ -74,7 +74,8 @@ class EcesisLoginScreen(tk.Frame):
             text=f"Version: {env.VERSION_FILE}",
             bg="white",
             fg="#333333",
-            font=("Arial", 9)
+            font=("Arial", 9),
+            foreground="blue"
         )
         self.version_label.pack(side="right", padx=5, pady=5)
         """Create a login UI with a dark blue, yellow, and white color scheme."""
@@ -401,7 +402,7 @@ class EcesisLoginScreen(tk.Frame):
 
     def create_combobox(self, parent, var, placeholder, callback):
         """Create a searchable dropdown with a placeholder."""
-        cb = ttk.Combobox(parent, textvariable=var, width=30, state="readonly")
+        cb = ttk.Combobox(parent, textvariable=var, width=30, state="normal")
         cb.set(placeholder)
         cb.bind("<<ComboboxSelected>>", callback)
         return cb
@@ -784,85 +785,64 @@ class EcesisLoginScreen(tk.Frame):
 ############################################################
     def bind_dropdown_keyboard_sort(self, combobox, values_list, default_text="Select"):
         """
-        Adds live starts-with filtering to a ttk.Combobox.
-        The full list always includes the default_text at the top, and the 
-        original list is restored when the search string is empty (via Backspace).
+        Live filtering for a ttk.Combobox.
+        Filters as you type, highlights first match, keeps default_text on top.
         """
-        # 1. Setup Initial Values and State
         str_values = [str(v) for v in values_list]
         original_values = [default_text] + [v for v in str_values if v != default_text]
-        
+
         typed_chars = []
-        
-        # Initialize the Combobox
+
+        # Initialize
         combobox["values"] = original_values
         combobox.set(default_text)
 
         def force_dropdown_open():
-            """Simulates clicking the dropdown arrow to open the list."""
-            combobox.event_generate('<Control-Key-a>')
+            """Ensures the dropdown is visible."""
+            combobox.event_generate('<Button-1>')  # open dropdown
 
         def on_keypress(event):
             nonlocal typed_chars
-            
-            # Ignore keys that don't produce a character (Shift, Ctrl, F keys, etc.)
-            if len(event.char) == 0:
-                if event.keysym in ("Up", "Down", "Return"):
-                    return
-                return "break" 
 
-            # --- Keyboard Control ---
+            # Ignore non-printable keys except Backspace/Escape
+            if len(event.char) == 0:
+                return
+
             if event.keysym == "BackSpace":
                 if typed_chars:
                     typed_chars.pop()
-                
-                # Restore original list if search string is empty
-                if not typed_chars:
-                    combobox["values"] = original_values
-                    combobox.set(default_text)
-                    combobox.selection_clear() # Safely clear highlight
-                    return "break"
-                
-                # If still characters, falls through to re-filter
-                pass 
-            
             elif event.keysym == "Escape":
                 typed_chars.clear()
                 combobox["values"] = original_values
                 combobox.set(default_text)
-                combobox.selection_clear() # Safely clear highlight
-                return "break" 
-            
-            # --- Printable Typing ---
+                return "break"
             elif event.char.isprintable():
                 typed_chars.append(event.char.upper())
 
-            # --- Filtering Logic (Common for typing and partial backspacing) ---
+            # Create search string
             search_str = "".join(typed_chars)
-            
-            filtered = [default_text] + sorted(
-                [v for v in str_values if v.upper().startswith(search_str)]
-            )
-            
-            # --- Update Combobox and Highlight ---
-            combobox["values"] = filtered
-            
-            if len(filtered) > 1:
-                first_match_index = 1 
-                match_text = filtered[first_match_index]
-                
-                # Set text and visually highlight the first match
-                combobox.set(match_text)
-                combobox.current(first_match_index) 
-            else:
-                # No match found (ERROR FIXED HERE)
-                combobox.set(search_str if search_str else default_text) 
-                combobox.selection_clear() # ✨ FIXED: Safely clear highlight instead of using .current(-1)
 
-            # Auto-Open Dropdown when typing
+            # Filter list (case-insensitive starts-with)
+            filtered = [default_text] + [v for v in str_values if v.upper().startswith(search_str)]
+
+            # Update combobox values
+            combobox["values"] = filtered
+
+            # Highlight first match if exists
+            if len(filtered) > 1:
+                combobox.set(filtered[1])
+                combobox.current(1)
+            else:
+                combobox.set(search_str if search_str else default_text)
+                combobox.selection_clear()
+
+            # Show dropdown
             force_dropdown_open()
-                
-            return "break" 
+
+            return "break"  # prevent default handling
+
+        combobox.bind("<Key>", on_keypress)
+
 
         # Bind the custom key handler to all key presses
         combobox.bind("<Key>", on_keypress)
@@ -991,9 +971,7 @@ class EcesisLoginScreen(tk.Frame):
 
 
 
-
     def load_main_clients(self):
-        """Fetch and populate main clients."""
         response = self.fetch_data(MAIN_CLIENTS_API)
         if response:
             self.client_data["main_clients"] = response
