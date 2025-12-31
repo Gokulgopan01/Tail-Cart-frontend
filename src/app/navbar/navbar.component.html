@@ -4,7 +4,10 @@
   <div class="navbar-top">
     <div class="nav-brand">
       <img src="assets/images/Tail_cart_logo.jpg" alt="Tail Cart Logo" class="nav-logo" />
-      
+      <div class="brand-text">
+        <h1>Tail Cart</h1>
+        <p>Pet Safety & Care</p>
+      </div>
     </div>
 
     <div class="nav-links-container">
@@ -34,7 +37,7 @@
     </div>
   </div>
   
-  <!-- Page-specific header content (Lottie + Title) - Always visible -->
+  <!-- Page-specific header content (Lottie + Title) - KEEPING THIS -->
   <div class="page-header-content" *ngIf="currentPageData">
     <div class="lottie-container" 
         *ngIf="currentPageData.showLottie !== false"
@@ -58,9 +61,11 @@
   <div class="mobile-nav-header">
     <div class="mobile-brand">
       <img src="assets/images/Tail_cart_logo.jpg" alt="Tail Cart Logo" class="nav-logo" />
-      
+      <div class="mobile-brand-text">
+        <h1>Tail Cart</h1>
+        <p>Pet Safety & Care</p>
+      </div>
     </div>
-
     
     <button class="menu-toggle" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()">
       <div class="hamburger-icon">
@@ -71,7 +76,7 @@
     </button>
   </div>
 
-  <!-- Mobile header content (Lottie + Title) - Always visible -->
+  <!-- Mobile header content (Lottie + Title) - KEEPING THIS -->
   <div class="mobile-page-header-content" *ngIf="currentPageData">
     <div class="mobile-lottie-container" 
          *ngIf="currentPageData.showLottie !== false"
@@ -89,93 +94,74 @@
     </div>
   </div>
 
-  <!-- Mobile navigation menu -->
-   <!-- Modern Slide-Up Menu Overlay -->
-<div class="mobile-menu-overlay" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()"></div>
-
-<!-- Modern Bottom Sheet Menu -->
-<div class="mobile-bottom-sheet" [class.active]="isMobileMenuOpen">
-  <!-- Sheet Handle -->
-  <div class="sheet-handle" (click)="toggleMobileMenu()">
-    <div class="handle-bar"></div>
-  </div>
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()"></div>
   
-  <!-- User Info -->
-   <!-- User Info - THIS MUST ALWAYS BE HERE -->
-  <div class="mobile-user-info">
-    <div class="user-avatar">
-      <i class="fas fa-user-circle"></i>
+  <!-- FULL SCREEN MOBILE MENU (Fixed version) -->
+  <div class="mobile-menu" [class.active]="isMobileMenuOpen">
+    <!-- User Info Section -->
+    <div class="mobile-menu-header">
+      <div class="mobile-user-info">
+        <div class="user-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-details">
+          <h3>{{ username || 'Guest User' }}</h3>
+          <p>{{ userId ? 'ID: ' + userId : 'Please login' }}</p>
+        </div>
+      </div>
+      <button class="close-menu-btn" (click)="toggleMobileMenu()">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
-    <div class="user-details">
-      <h3>{{ username || 'Guest User' }}</h3>
-      <p>{{ userId ? 'ID: ' + userId : 'Please login' }}</p>
+
+    <!-- Navigation Links -->
+    <div class="mobile-menu-links">
+      <a class="mobile-menu-link" routerLink="/home" routerLinkActive="active" (click)="toggleMobileMenu()">
+        <i class="fas fa-home"></i>
+        <span>HOME</span>
+      </a>
+      
+      <a class="mobile-menu-link" routerLink="/shop" routerLinkActive="active" (click)="toggleMobileMenu()">
+        <i class="fas fa-shopping-bag"></i>
+        <span>SHOP</span>
+      </a>
+      
+      <a class="mobile-menu-link" routerLink="/document" routerLinkActive="active" (click)="toggleMobileMenu()">
+        <i class="fas fa-file-medical"></i>
+        <span>DOCUMENTS</span>
+      </a>
+      
+      <a class="mobile-menu-link" routerLink="/doctor-ai" routerLinkActive="active" (click)="toggleMobileMenu()">
+        <i class="fas fa-stethoscope"></i>
+        <span>DOCTOR AI</span>
+      </a>
+      
+      <a class="mobile-menu-link" routerLink="/contact" routerLinkActive="active" (click)="toggleMobileMenu()">
+        <i class="fas fa-address-card"></i>
+        <span>REACH US</span>
+      </a>
+      
+      <a class="mobile-menu-link" routerLink="/profile" routerLinkActive="active" (click)="toggleMobileMenu()">
+        <i class="fas fa-user-circle"></i>
+        <span>PROFILE</span>
+      </a>
+      
+      <a class="mobile-menu-link cart-link" routerLink="/cart" routerLinkActive="active" (click)="toggleMobileMenu()">
+        <i class="fas fa-shopping-cart"></i>
+        <span>CART</span>
+        <span class="mobile-cart-badge" *ngIf="cartItems > 0">{{ cartItems }}</span>
+      </a>
+      
+      <a class="mobile-menu-link logout-link" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>LOGOUT</span>
+      </a>
+    </div>
+    
+    <!-- Footer -->
+    <div class="mobile-menu-footer">
+      <p>Tail Cart © {{ currentYear }}. All rights reserved.</p>
     </div>
   </div>
-
-  <!-- Modern Grid Layout -->
-  <div class="mobile-nav-grid">
-    <a class="nav-grid-item" routerLink="/home" routerLinkActive="active" (click)="onNavLinkClick()">
-        <div class="grid-icon">
-          <i class="fas fa-home"></i>
-        </div>
-        <span class="grid-label">HOME</span>
-      </a>
-    
-    <a class="nav-grid-item" routerLink="/shop" routerLinkActive="active" (click)="onNavLinkClick()">
-        <div class="grid-icon">
-          <i class="fas fa-key"></i>
-        </div>
-        <span class="grid-label">KEYCHAINS</span>
-      </a>
-    
-    <a class="nav-grid-item" routerLink="/document" routerLinkActive="active" (click)="onNavLinkClick()">
-        <div class="grid-icon">
-          <i class="fas fa-file-medical"></i>
-        </div>
-        <span class="grid-label">DOCUMENTS</span>
-      </a>
-      
-      <a class="nav-grid-item" routerLink="/doctor-ai" routerLinkActive="active" (click)="onNavLinkClick()">
-        <div class="grid-icon">
-          <i class="fas fa-stethoscope"></i>
-        </div>
-        <span class="grid-label">DOCTOR AI</span>
-      </a>
-    
-    <a class="nav-grid-item" routerLink="/contact" routerLinkActive="active" (click)="onNavLinkClick()">
-        <div class="grid-icon">
-          <i class="fas fa-phone-alt"></i>
-        </div>
-        <span class="grid-label">REACH US</span>
-      </a>
-      
-      <a class="nav-grid-item" routerLink="/profile" routerLinkActive="active" (click)="onNavLinkClick()">
-        <div class="grid-icon">
-          <i class="fas fa-user-cog"></i>
-        </div>
-        <span class="grid-label">PROFILE</span>
-      </a>
-    
-    <a class="nav-grid-item" routerLink="/cart" routerLinkActive="active" (click)="onNavLinkClick()">
-        <div class="grid-icon">
-          <i class="fas fa-shopping-bag"></i>
-          <span class="grid-badge" *ngIf="cartItems > 0">{{ cartItems }}</span>
-        </div>
-        <span class="grid-label">ORDERS</span>
-      </a>
-      
-      <a class="nav-grid-item logout-grid" (click)="logout()">
-        <div class="grid-icon">
-          <i class="fas fa-sign-out-alt"></i>
-        </div>
-        <span class="grid-label">LOGOUT</span>
-      </a>
-  </div>
-  
-  <div class="mobile-footer">
-    <p>Tail Cart &copy; {{ currentYear }}. All rights reserved.</p>
-  </div>
-</div>  
-  
 </nav>
-

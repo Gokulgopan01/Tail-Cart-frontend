@@ -383,6 +383,21 @@ export class NavbarComponent implements OnInit, OnDestroy {
     
     requestAnimationFrame(animateScroll);
   }
+  @HostListener('document:click', ['$event'])
+    handleDocumentClick(event: MouseEvent) {
+      if (!this.isBrowser || !this.isMobileMenuOpen) return;
+      
+      const target = event.target as HTMLElement;
+      const isClickInsideSheet = target.closest('.mobile-bottom-sheet');
+      const isClickOnToggle = target.closest('.menu-toggle');
+      
+      // If menu is open and click is outside sheet (but not on toggle)
+      if (this.isMobileMenuOpen && !isClickInsideSheet && !isClickOnToggle) {
+        this.closeMobileMenu();
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }
 
   smoothScrollToElement(element: HTMLElement, offset: number = 80) {
     if (!this.isBrowser) return;
@@ -431,18 +446,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   this.isMobileMenuOpen = !this.isMobileMenuOpen;
   
   if (this.isMobileMenuOpen) {
-    // Prevent body scroll when menu is open
-    this.document.body.classList.add('menu-open');
-    
-    // Add a slight delay for smooth animation
-    setTimeout(() => {
-      const bottomSheet = this.document.querySelector('.mobile-bottom-sheet');
-      if (bottomSheet) {
-        bottomSheet.classList.add('active');
-      }
-    }, 10);
+    document.body.classList.add('menu-open');
   } else {
-    this.closeMobileMenu();
+    document.body.classList.remove('menu-open');
   }
 }
 
@@ -453,18 +459,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   closeMobileMenu() {
   this.isMobileMenuOpen = false;
-  
-  // Remove active class with animation
-  const bottomSheet = this.document.querySelector('.mobile-bottom-sheet');
-  if (bottomSheet) {
-    bottomSheet.classList.remove('active');
-  }
-  
-  // Remove menu-open class after animation completes
-  setTimeout(() => {
-    this.removeMenuOpenClass();
-  }, 400); // Match this with CSS transition duration
+  this.document.body.classList.remove('menu-open');
 }
+
 
   private removeMenuOpenClass() {
   this.document.body.classList.remove('menu-open');
@@ -502,17 +499,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('document:touchstart', ['$event'])
-handleTouchStart(event: TouchEvent) {
-  if (!this.isBrowser) return;
-  
-  if (this.isMobileMenuOpen && 
-      !(event.target as Element).closest('.mobile-bottom-sheet') &&
-      !(event.target as Element).closest('.menu-toggle') &&
-      !(event.target as Element).closest('.sheet-handle')) {
-    this.closeMobileMenu();
-  }
-}
+
 
   handleNavigation(route: string, anchor?: string) {
     this.router.navigate([route]).then(() => {
