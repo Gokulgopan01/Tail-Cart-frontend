@@ -1,214 +1,24 @@
 <div class="home-container">
-  
-
-  <!-- Features Section -->
-  <section class="features-section" id="features">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">What We Offer</h2>
-        <p class="section-subtitle">Safety, convenience, and care for your beloved pets</p>
-      </div>
-
-      <!-- Desktop Features Grid -->
-      <div class="features-grid d-none d-md-grid">
-        <div class="feature-card reveal">
-          <div #lottieDoc class="lottie-wrapper"></div>
-          <div class="feature-content">
-            <h3>Health Document</h3>
-            <p>Store your pet's Health Documents and set alerts</p>
-            <button class="feature-btn" (click)="navigateTo('/document')">Manage Documents</button>
-          </div>
-        </div>
-
-        <div class="feature-card reveal">
-          <div #lottieCart class="lottie-wrapper"></div>
-          <div class="feature-content">
-            <h3>Browse Products</h3>
-            <p>Browse to get your pet keychains</p>
-            <button class="feature-btn" (click)="navigateTo('/shop')">Browse Products</button>
-          </div>
-        </div>
-
-        <div class="feature-card reveal">
-          <div #lottieDoctor class="lottie-wrapper"></div>
-          <div class="feature-content">
-            <h3>AI Vet Assistant</h3>
-            <p>Ask any of your concerns to our 24/7 AI Doctor</p>
-            <button class="feature-btn" (click)="navigateTo('/training')">Ask Doctor</button>
-          </div>
-        </div>
-
-        <div class="feature-card reveal">
-          <div #lottieProfile class="lottie-wrapper"></div>
-          <div class="feature-content">
-            <h3>Manage Profile</h3>
-            <p>Manage your pet's profile</p>
-            <button class="feature-btn" (click)="navigateTo('/profile')">Manage Pets</button>
-          </div>
-        </div>
-
-        <div class="feature-card reveal">
-          <div #lottieCommunity class="lottie-wrapper"></div>
-          <div class="feature-content">
-            <h3>Pet Community</h3>
-            <p>Connect with other pet owners and share experiences</p>
-            <button class="feature-btn">Coming Soon</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modern Mobile Carousel -->
-      <div class="features-carousel-wrapper d-md-none">
-        <div class="features-carousel" id="featuresCarousel">
-          <!-- Slide 1 -->
-          <div class="carousel-slide">
-            <div #lottieDocMob class="lottie-wrapper"></div>
-            <h4>Health Documents</h4>
-            <p>Store and manage all your pet's medical records in one place</p>
-            <button class="btn" (click)="navigateTo('/document')">Manage Documents</button>
-          </div>
-          <!-- Slide 2 -->
-          <div class="carousel-slide">
-            <div #lottieCartMob class="lottie-wrapper"></div>
-            <h4>Pet Supplies</h4>
-            <p>Browse our premium QR keychains and accessories</p>
-            <button class="btn" (click)="navigateTo('/shop')">Browse Products</button>
-          </div>
-          <!-- Slide 3 -->
-          <div class="carousel-slide">
-            <div #lottieDoctorMob class="lottie-wrapper"></div>
-            <h4>AI Vet Assistant</h4>
-            <p>Get instant advice for your pet's health concerns</p>
-            <button class="btn" (click)="navigateTo('/training')">Ask Doctor</button>
-          </div>
-          <!-- Slide 4 -->
-          <div class="carousel-slide">
-            <div #lottieProfileMob class="lottie-wrapper"></div>
-            <h4>Pet Profiles</h4>
-            <p>Create and manage detailed profiles for all your pets</p>
-            <button class="btn" (click)="navigateTo('/profile')">Manage Pets</button>
-          </div>
-          <!-- Slide 5 -->
-          <div class="carousel-slide">
-            <div #lottieCommunityMob class="lottie-wrapper"></div>
-            <h4>Pet Community</h4>
-            <p>Connect with other pet owners and share experiences</p>
-            <button class="btn">Coming Soon</button>
-          </div>
-        </div>
-        <!-- Carousel Navigation Dots -->
-        <div class="carousel-nav">
-          <button class="carousel-dot active" data-slide="0"></button>
-          <button class="carousel-dot" data-slide="1"></button>
-          <button class="carousel-dot" data-slide="2"></button>
-          <button class="carousel-dot" data-slide="3"></button>
-          <button class="carousel-dot" data-slide="4"></button>
-        </div>
-      </div>
-    </div>
-  </section>
   <!-- Hero Section -->
   <section class="hero-section">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <div class="hero-text">
-        <div class="badge">Premium Pet Safety</div>
-        <h2 class="hero-subtitle">Protect Your Pets With</h2>
-        <h1 class="hero-title">QR <span class="gradient-text">Keychains</span></h1>
-        <p class="hero-description">If someone finds your pet, scanning the QR on their keychain will show your contact details instantly.</p>
-        <div class="hero-buttons">
-          <button class="btn btn-secondary" (click)="navigateTo('/shop')">Shop Now</button>
-        </div>
-        <div class="hero-stats">
-          <div class="stat">
-            <div class="stat-number">5000+</div>
-            <div class="stat-label">Pets Protected</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">98%</div>
-            <div class="stat-label">Recovery Rate</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">24/7</div>
-            <div class="stat-label">Support</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- Category Section -->
-  <section class="category-section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Choose Your Keychain</h2>
-        <p class="section-subtitle">Designed for every type of pet personality</p>
-      </div>
-      
-      <!-- Desktop grid -->
-      <div class="category-grid d-none d-md-grid">
-        <div class="category-card dogs" (click)="navigateTo('/shop')">
-          <div class="category-image">
-            <img src="assets/images/Home-Card-Puppe.jpg" alt="Dog Keychains">
-          </div>
-          <div class="category-content">
-            <h3>Dog Keychains</h3>
-            <p>Durable tags designed for active dogs</p>
-            <button class="btn-category">Shop Now</button>
-          </div>
-        </div>
-
-        <div class="category-card cats" (click)="navigateTo('/shop')">
-          <div class="category-image">
-            <img src="assets/images/Home-Card-cat.jpg" alt="Cat Keychains">
-          </div>
-          <div class="category-content">
-            <h3>Cat Keychains</h3>
-            <p>Lightweight designs perfect for curious cats</p>
-            <button class="btn-category">Shop Now</button>
-          </div>
-        </div>
-
-        <div class="category-card birds" (click)="navigateTo('/shop')">
-          <div class="category-image">
-            <img src="assets/images/Home-Card-Other.jpg" alt="Other Pets">
-          </div>
-          <div class="category-content">
-            <h3>Other Pets</h3>
-            <p>Custom keychains for birds, fish tanks, and more</p>
-            <button class="btn-category">Shop Now</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mobile grid -->
-      <div class="row d-md-none g-3">
-        <div class="col-12">
-          <div class="category-card-mobile dogs" (click)="navigateTo('/shop')">
-            <img src="assets/images/Home-Card-Puppe.jpg" alt="Dog Keychains" class="img-fluid rounded-3">
-            <div class="p-3">
-              <h4 class="fw-bold">Dog Keychains</h4>
-              <p class="mb-2">Durable tags designed for active dogs</p>
-              <button class="btn btn-primary w-100">Shop Now</button>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="category-card-mobile cats" (click)="navigateTo('/shop')">
-            <img src="assets/images/Home-Card-cat.jpg" alt="Cat Keychains" class="img-fluid rounded-3">
-            <div class="p-3">
-              <h4 class="fw-bold">Cat Keychains</h4>
-              <p class="mb-2">Lightweight designs perfect for curious cats</p>
-              <button class="btn btn-primary w-100">Shop Now</button>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="category-card-mobile birds" (click)="navigateTo('/shop')">
-            <img src="assets/images/Home-Card-Other.jpg" alt="Other Pets" class="img-fluid rounded-3">
-            <div class="p-3">
-              <h4 class="fw-bold">Other Pets</h4>
-              <p class="mb-2">Custom keychains for birds, fish tanks, and more</p>
-              <button class="btn btn-primary w-100">Shop Now</button>
+      <div class="container">
+        <div class="row">
+          <div class="col-12 text-center">
+            <div class="hero-text">
+              <h1 class="hero-title animate__animated animate__fadeInUp">
+                Your Pet's Safety,<br>
+                <span class="gradient-text">Just a Scan Away</span>
+              </h1>
+              <p class="hero-description animate__animated animate__fadeInUp animate__delay-1s">
+                Smart QR tags, digital health records, and AI-powered vet assistance — 
+                everything your furry friend needs in one place.
+              </p>
+              <div class="hero-buttons animate__animated animate__fadeInUp animate__delay-2s">
+                <button class="btn btn-primary" (click)="navigateTo('/shop')">Get Your QR Tag</button>
+                <button class="btn btn-outline" (click)="scrollToFeatures()">See How It Works</button>
+              </div>
             </div>
           </div>
         </div>
@@ -216,93 +26,263 @@
     </div>
   </section>
 
-  <!-- Testimonials Section -->
-  <section class="testimonials-section">
+  <!-- QR Tags Section (Slide 2) -->
+  <section class="feature-slide qr-slide">
     <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Happy Pet Owners</h2>
-        <p class="section-subtitle">See what our customers have to say</p>
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="slide-content">
+            <div class="slide-badge">Complete Pet Care in Your Pocket</div>
+            <h2 class="slide-title">Three powerful modules designed to keep your pet safe, healthy, and happy.</h2>
+            <div class="module-header">
+              <h3 class="module-title">Smart QR Tags</h3>
+              <h4 class="module-subtitle">Never Lose Your<br>Furry Friend Again</h4>
+            </div>
+            <p class="slide-description">
+              Our premium QR tags with stylish belts ensure anyone who finds your pet can instantly contact you. 
+              Get real-time notifications the moment your pet is scanned.
+            </p>
+            
+            <ul class="feature-list">
+              <li>✓ Instant notification when scanned</li>
+              <li>✓ GPS location of the finder</li>
+              <li>✓ Direct messaging to rescuer</li>
+              <li>✓ Durable, waterproof design</li>
+            </ul>
+            
+            <button class="btn btn-primary" (click)="navigateTo('/shop')">Order QR Tag</button>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="slide-preview">
+            <div class="qr-notification">
+              <div class="notification-header">
+                <div class="notification-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM13 7H11V11H7V13H11V17H13V13H17V11H13V7Z" fill="var(--accent)"/>
+                  </svg>
+                </div>
+                <div class="notification-content">
+                  <h4>Max was just scanned!</h4>
+                  <p class="notification-time">2 seconds ago</p>
+                </div>
+              </div>
+              <div class="notification-body">
+                <p class="notification-location">📍 Central Park, New York</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      
-      <!-- Desktop grid -->
-      <div class="testimonials-grid d-none d-md-grid">
-        <div class="testimonial-card">
-          <div class="testimonial-image">
-            <img src="assets/images/Home-review1.jpg" alt="Sarah Johnson">
-          </div>
-          <div class="testimonial-content">
-            <p>"The QR keychain saved my dog Max when he got lost last month. Someone found him and contacted me within minutes!"</p>
-          </div>
-          <div class="testimonial-author">
-            <h4>Sarah Johnson</h4>
-            <p>Dog Owner</p>
-          </div>
-        </div>
-        
-        <div class="testimonial-card">
-          <div class="testimonial-image">
-            <img src="assets/images/Home-review3.jpg" alt="Michael Chen">
-          </div>
-          <div class="testimonial-content">
-            <p>"I love how I can store all my cat's medical records in one place. The vet appointments are so much easier now."</p>
-          </div>
-          <div class="testimonial-author">
-            <h4>Michael Chen</h4>
-            <p>Cat Owner</p>
-          </div>
-        </div>
-        
-        <div class="testimonial-card">
-          <div class="testimonial-image">
-            <img src="assets/images/Home-review2.jpg" alt="Emily Rodriguez">
-          </div>
-          <div class="testimonial-content">
-            <p>"The peace of mind knowing my pets are protected is priceless. The keychains are stylish and durable too!"</p>
-          </div>
-          <div class="testimonial-author">
-            <h4>Emily Rodriguez</h4>
-            <p>Multiple Pet Owner</p>
+    </div>
+  </section>
+
+  <!-- Health Records Section (Slide 3) -->
+  <section class="feature-slide health-slide">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="slide-preview">
+            <div class="health-dashboard">
+              <div class="dashboard-header">
+                <h4>All Health Records</h4>
+                <button class="btn-digilocker">Start DigiLocker</button>
+              </div>
+              
+              <div class="health-categories">
+                <div class="health-item">
+                  <h5>Vaccination Records</h5>
+                  <p class="health-meta">Last updated: 3 days ago</p>
+                </div>
+                
+                <div class="health-item">
+                  <h5>Vet Prescriptions</h5>
+                  <p class="health-meta">5 documents</p>
+                </div>
+                
+                <div class="health-item">
+                  <h5>Insurance Documents</h5>
+                  <p class="health-meta">2 documents</p>
+                </div>
+                
+                <div class="health-item active">
+                  <h5>Vaccination Reminder</h5>
+                  <p class="health-alert">Rabies shot due in 5 days</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+        <div class="col-lg-6">
+          <div class="slide-content">
+            <h2 class="slide-title">All Health Records,<br>Safely Secured</h2>
+            <p class="slide-description">
+              A secure digital vault for all your pet's veterinary documents. 
+              Never miss a vaccination with smart email reminders that keep you on track.
+            </p>
+            
+            <ul class="feature-list">
+              <li>✓ Unlimited document storage</li>
+              <li>✓ Automated vaccine reminders via email</li>
+              <li>✓ Share records with any vet instantly</li>
+              <li>✓ Military-grade encryption</li>
+            </ul>
+            
+            <button class="btn btn-secondary" (click)="navigateTo('/document')">Start DigiLocker</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Doctor Section (Slide 4) -->
+  <section class="feature-slide ai-slide">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="slide-content">
+            <h2 class="slide-title">Expert Advice,<br>Available 24/7</h2>
+            <p class="slide-description">
+              Get instant, accurate answers to your pet health questions. 
+              Our AI is trained on veterinary knowledge to give you reliable guidance any time, day or night.
+            </p>
+            
+            <ul class="feature-list">
+              <li>✓ Instant responses, no waiting</li>
+              <li>✓ Trained on veterinary medical data</li>
+              <li>✓ Symptom checker & care tips</li>
+              <li>✓ Know when to see a real vet</li>
+            </ul>
+            
+            <button class="btn btn-teal" (click)="navigateTo('/training')">Ask AI Doctor</button>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="slide-preview">
+            <div class="ai-chat">
+              <div class="chat-header">
+                <h4>AI Vet Assistant</h4>
+                <div class="chat-status">Online</div>
+              </div>
+              
+              <div class="chat-messages">
+                <div class="message user">
+                  <div class="message-content">
+                    <p><strong>My dog hasn't been eating for 2 days. Should I be worried?</strong></p>
+                  </div>
+                </div>
+                
+                <div class="message ai">
+                  <div class="message-content">
+                    <p><strong>AI Doctor:</strong> Loss of appetite for 2 days can have several causes. Here are some quick checks:</p>
+                    <ul>
+                      <li>Check for dental pain</li>
+                      <li>Look for signs of lethargy</li>
+                      <li>Monitor water intake</li>
+                    </ul>
+                    <p class="recommendation"><em>I recommend visiting a vet if this continues.</em></p>
+                  </div>
+                </div>
+                
+                <div class="response-time">
+                  <span>Response in 1.2 seconds</span>
+                </div>
+              </div>
+              
+              <div class="chat-input">
+                <input type="text" placeholder="Ask anything about your pet...">
+                <button>Ask</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <h2 class="section-title">Simple Setup</h2>
+        <p class="section-subtitle">Up and Running in Minutes</p>
       </div>
 
-      <!-- Mobile grid -->
-      <div class="row d-md-none g-3">
-        <div class="col-12">
-          <div class="testimonial-card-mobile">
-            <div class="d-flex align-items-center mb-3">
-              <img src="assets/images/Home-review1.jpg" alt="Sarah Johnson" class="rounded-circle me-3">
-              <div>
-                <h5 class="fw-bold mb-0">Sarah Johnson</h5>
-                <p class="text-muted mb-0 small">Dog Owner</p>
-              </div>
-            </div>
-            <p class="mb-0 fst-italic">"The QR keychain saved my dog Max when he got lost last month. Someone found him and contacted me within minutes!"</p>
-          </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-icon">🛒</div>
+          <h4 class="step-title">Order Your Tag</h4>
+          <p class="step-description">Choose from our stylish QR tag collection with premium belts.</p>
         </div>
-        <div class="col-12">
-          <div class="testimonial-card-mobile">
-            <div class="d-flex align-items-center mb-3">
-              <img src="assets/images/Home-review3.jpg" alt="Michael Chen" class="rounded-circle me-3">
-              <div>
-                <h5 class="fw-bold mb-0">Michael Chen</h5>
-                <p class="text-muted mb-0 small">Cat Owner</p>
-              </div>
-            </div>
-            <p class="mb-0 fst-italic">"I love how I can store all my cat's medical records in one place. The vet appointments are so much easier now."</p>
-          </div>
+
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-icon">📝</div>
+          <h4 class="step-title">Register Your Pet</h4>
+          <p class="step-description">Create your pet's profile with contact info and health details.</p>
         </div>
-        <div class="col-12">
-          <div class="testimonial-card-mobile">
-            <div class="d-flex align-items-center mb-3">
-              <img src="assets/images/Home-review2.jpg" alt="Emily Rodriguez" class="rounded-circle me-3">
-              <div>
-                <h5 class="fw-bold mb-0">Emily Rodriguez</h5>
-                <p class="text-muted mb-0 small">Multiple Pet Owner</p>
-              </div>
-            </div>
-            <p class="mb-0 fst-italic">"The peace of mind knowing my pets are protected is priceless. The keychains are stylish and durable too!"</p>
-          </div>
+
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-icon">🔗</div>
+          <h4 class="step-title">Attach & Activate</h4>
+          <p class="step-description">Secure the tag on your pet's collar and you're all set.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <div class="step-icon">🔔</div>
+          <h4 class="step-title">Peace of Mind</h4>
+          <p class="step-description">Get notified instantly if someone scans your pet's tag.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Section -->
+  <section class="trust-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">50K+</div>
+          <div class="stat-label">Happy Pets</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">99.9%</div>
+          <div class="stat-label">Recovery Rate</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">4.9/5</div>
+          <div class="stat-label">User Rating</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">AI Support</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content text-center">
+        <h2 class="cta-title">Give Your Pet<br>The Protection They Deserve</h2>
+        <p class="cta-description">
+          Start with a smart QR tag today and unlock the complete Talicart experience
+          — Digilocker and AI Doctor included.
+        </p>
+        
+        <div class="cta-buttons">
+          <button class="btn btn-light" (click)="navigateTo('/shop')">Get Started Free</button>
+          <button class="btn btn-outline-light" (click)="scrollToFeatures()">View Pricing</button>
+        </div>
+        
+        <div class="cta-features">
+          <span>✓ Free Shipping</span>
+          <span>✓ 30-Day Guarantee</span>
+          <span>✓ Secure Checkout</span>
         </div>
       </div>
     </div>
