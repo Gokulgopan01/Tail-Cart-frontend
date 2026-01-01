@@ -1,290 +1,583 @@
-<div class="home-container">
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 text-center">
-            <div class="hero-text">
-              <h1 class="hero-title animate__animated animate__fadeInUp">
-                Your Pet's Safety,<br>
-                <span class="gradient-text">Just a Scan Away</span>
-              </h1>
-              <p class="hero-description animate__animated animate__fadeInUp animate__delay-1s">
-                Smart QR tags, digital health records, and AI-powered vet assistance — 
-                everything your furry friend needs in one place.
-              </p>
-              <div class="hero-buttons animate__animated animate__fadeInUp animate__delay-2s">
-                <button class="btn btn-primary" (click)="navigateTo('/shop')">Get Your QR Tag</button>
-                <button class="btn btn-outline" (click)="scrollToFeatures()">See How It Works</button>
+<!-- Hero Carousel Section -->
+<section class="hero-section">
+  <div class="hero-carousel">
+    <!-- Slide 1: Never Lose Your Furry Friend (Orange Theme) -->
+    <div class="carousel-slide active" id="slide-1">
+      <div class="slide-content">
+        <div class="slide-text">
+          <h1 class="slide-title">Never Lose Your<br><span class="highlight">Furry Friend Again</span></h1>
+          <p class="slide-description">
+            Smart QR tags & GPS belts that instantly connect finders to you. Real-time location alerts keep your pet safe.
+          </p>
+          <div class="slide-actions">
+            <button class="btn-primary">Get Started Free</button>
+            <button class="btn-secondary">Watch Demo</button>
+          </div>
+          <div class="slide-rating">
+            <div class="stars">★★★★★</div>
+            <div class="rating-text">4.9/5 from 2,000+ reviews</div>
+          </div>
+          <div class="slide-features">
+            <div class="feature-tag">
+              <div class="feature-icon">📍</div>
+              <div class="feature-text">
+                <strong>Real-time Alerts</strong>
+                <span>Instant notifications</span>
+              </div>
+            </div>
+            <div class="feature-tag">
+              <div class="feature-icon">🔒</div>
+              <div class="feature-text">
+                <strong>100% Secure</strong>
+                <span>Your data is safe</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-image">
+          <div class="mock-device">
+            <div class="device-screen qr-screen">
+              <div class="map-view">
+                <div class="pet-marker"></div>
+              </div>
+              <div class="qr-preview"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: All Pet Records (Teal/Green Theme) -->
+    <div class="carousel-slide" id="slide-2">
+      <div class="slide-content">
+        <div class="slide-text">
+          <h1 class="slide-title">All Pet Records<br><span class="highlight">One Secure Place</span></h1>
+          <p class="slide-description">
+            Store vaccinations, vet visits & medications. Set smart reminders so you never miss an appointment.
+          </p>
+          <div class="slide-actions">
+            <button class="btn-primary">Get Started Free</button>
+            <button class="btn-secondary">Watch Demo</button>
+          </div>
+          <div class="slide-rating">
+            <div class="stars">★★★★★</div>
+            <div class="rating-text">4.9/5 from 2,000+ reviews</div>
+          </div>
+          <div class="slide-features">
+            <div class="feature-tag">
+              <div class="feature-icon">⏰</div>
+              <div class="feature-text">
+                <strong>Smart Reminders</strong>
+                <span>Never miss appointments</span>
+              </div>
+            </div>
+            <div class="feature-tag">
+              <div class="feature-icon">🔒</div>
+              <div class="feature-text">
+                <strong>100% Secure</strong>
+                <span>Your data is safe</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-image">
+          <div class="mock-device">
+            <div class="device-screen doc-screen">
+              <div class="doc-list">
+                <div class="doc-item">
+                  <span>Rabies Vaccine</span>
+                  <span class="doc-date">Due: 03/15/2024</span>
+                </div>
+                <div class="doc-item">
+                  <span>Annual Checkup</span>
+                  <span class="doc-date">Scheduled</span>
+                </div>
+                <div class="doc-item">
+                  <span>Dental Cleaning</span>
+                  <span class="doc-date">Completed</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- QR Tags Section (Slide 2) -->
-  <section class="feature-slide qr-slide">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6">
-          <div class="slide-content">
-            <div class="slide-badge">Complete Pet Care in Your Pocket</div>
-            <h2 class="slide-title">Three powerful modules designed to keep your pet safe, healthy, and happy.</h2>
-            <div class="module-header">
-              <h3 class="module-title">Smart QR Tags</h3>
-              <h4 class="module-subtitle">Never Lose Your<br>Furry Friend Again</h4>
+    <!-- Slide 3: 24/7 AI Pet Doctor (Purple Theme) -->
+    <div class="carousel-slide" id="slide-3">
+      <div class="slide-content">
+        <div class="slide-text">
+          <h1 class="slide-title">24/7 AI<br><span class="highlight">Pet Doctor On Call</span></h1>
+          <p class="slide-description">
+            Instant answers to pet health questions. Get expert guidance anytime, anywhere for your beloved companion.
+          </p>
+          <div class="slide-actions">
+            <button class="btn-primary">Get Started Free</button>
+            <button class="btn-secondary">Watch Demo</button>
+          </div>
+          <div class="slide-rating">
+            <div class="stars">★★★★★</div>
+            <div class="rating-text">4.9/5 from 2,000+ reviews</div>
+          </div>
+          <div class="slide-features">
+            <div class="feature-tag">
+              <div class="feature-icon">💬</div>
+              <div class="feature-text">
+                <strong>Instant Answers</strong>
+                <span>24/7 available</span>
+              </div>
             </div>
-            <p class="slide-description">
-              Our premium QR tags with stylish belts ensure anyone who finds your pet can instantly contact you. 
-              Get real-time notifications the moment your pet is scanned.
-            </p>
-            
-            <ul class="feature-list">
-              <li>✓ Instant notification when scanned</li>
-              <li>✓ GPS location of the finder</li>
-              <li>✓ Direct messaging to rescuer</li>
-              <li>✓ Durable, waterproof design</li>
-            </ul>
-            
-            <button class="btn btn-primary" (click)="navigateTo('/shop')">Order QR Tag</button>
+            <div class="feature-tag">
+              <div class="feature-icon">🔒</div>
+              <div class="feature-text">
+                <strong>100% Secure</strong>
+                <span>Your data is safe</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="col-lg-6">
-          <div class="slide-preview">
-            <div class="qr-notification">
-              <div class="notification-header">
-                <div class="notification-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM13 7H11V11H7V13H11V17H13V13H17V11H13V7Z" fill="var(--accent)"/>
-                  </svg>
+        <div class="slide-image">
+          <div class="mock-device">
+            <div class="device-screen ai-screen">
+              <div class="ai-chat">
+                <div class="chat-bubble">
+                  Based on symptoms, I recommend consulting your vet for proper diagnosis.
                 </div>
-                <div class="notification-content">
-                  <h4>Max was just scanned!</h4>
-                  <p class="notification-time">2 seconds ago</p>
-                </div>
-              </div>
-              <div class="notification-body">
-                <p class="notification-location">📍 Central Park, New York</p>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Health Records Section (Slide 3) -->
-  <section class="feature-slide health-slide">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6">
-          <div class="slide-preview">
-            <div class="health-dashboard">
-              <div class="dashboard-header">
-                <h4>All Health Records</h4>
-                <button class="btn-digilocker">Start DigiLocker</button>
-              </div>
-              
-              <div class="health-categories">
-                <div class="health-item">
-                  <h5>Vaccination Records</h5>
-                  <p class="health-meta">Last updated: 3 days ago</p>
-                </div>
-                
-                <div class="health-item">
-                  <h5>Vet Prescriptions</h5>
-                  <p class="health-meta">5 documents</p>
-                </div>
-                
-                <div class="health-item">
-                  <h5>Insurance Documents</h5>
-                  <p class="health-meta">2 documents</p>
-                </div>
-                
-                <div class="health-item active">
-                  <h5>Vaccination Reminder</h5>
-                  <p class="health-alert">Rabies shot due in 5 days</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="slide-content">
-            <h2 class="slide-title">All Health Records,<br>Safely Secured</h2>
-            <p class="slide-description">
-              A secure digital vault for all your pet's veterinary documents. 
-              Never miss a vaccination with smart email reminders that keep you on track.
-            </p>
-            
-            <ul class="feature-list">
-              <li>✓ Unlimited document storage</li>
-              <li>✓ Automated vaccine reminders via email</li>
-              <li>✓ Share records with any vet instantly</li>
-              <li>✓ Military-grade encryption</li>
-            </ul>
-            
-            <button class="btn btn-secondary" (click)="navigateTo('/document')">Start DigiLocker</button>
-          </div>
-        </div>
-      </div>
+    <!-- Carousel Navigation -->
+    <div class="carousel-nav">
+      <button class="carousel-dot active" (click)="goToSlide(0)"></button>
+      <button class="carousel-dot" (click)="goToSlide(1)"></button>
+      <button class="carousel-dot" (click)="goToSlide(2)"></button>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- AI Doctor Section (Slide 4) -->
-  <section class="feature-slide ai-slide">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6">
-          <div class="slide-content">
-            <h2 class="slide-title">Expert Advice,<br>Available 24/7</h2>
-            <p class="slide-description">
-              Get instant, accurate answers to your pet health questions. 
-              Our AI is trained on veterinary knowledge to give you reliable guidance any time, day or night.
-            </p>
-            
-            <ul class="feature-list">
-              <li>✓ Instant responses, no waiting</li>
-              <li>✓ Trained on veterinary medical data</li>
-              <li>✓ Symptom checker & care tips</li>
-              <li>✓ Know when to see a real vet</li>
-            </ul>
-            
-            <button class="btn btn-teal" (click)="navigateTo('/training')">Ask AI Doctor</button>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="slide-preview">
-            <div class="ai-chat">
-              <div class="chat-header">
-                <h4>AI Vet Assistant</h4>
-                <div class="chat-status">Online</div>
-              </div>
-              
-              <div class="chat-messages">
-                <div class="message user">
-                  <div class="message-content">
-                    <p><strong>My dog hasn't been eating for 2 days. Should I be worried?</strong></p>
-                  </div>
-                </div>
-                
-                <div class="message ai">
-                  <div class="message-content">
-                    <p><strong>AI Doctor:</strong> Loss of appetite for 2 days can have several causes. Here are some quick checks:</p>
-                    <ul>
-                      <li>Check for dental pain</li>
-                      <li>Look for signs of lethargy</li>
-                      <li>Monitor water intake</li>
-                    </ul>
-                    <p class="recommendation"><em>I recommend visiting a vet if this continues.</em></p>
-                  </div>
-                </div>
-                
-                <div class="response-time">
-                  <span>Response in 1.2 seconds</span>
-                </div>
-              </div>
-              
-              <div class="chat-input">
-                <input type="text" placeholder="Ask anything about your pet...">
-                <button>Ask</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- Platform Section with Tabs -->
+<section class="platform-section">
+  <div class="container">
+    <div class="platform-hero">
+      <h1 class="section-title">One Platform, Complete Care</h1>
+      <p class="section-subtitle">
+        From safety to health records to instant medical guidance, Tail Cart has everything to keep your furry friend happy and healthy.
+      </p>
     </div>
-  </section>
 
-  <!-- How It Works Section -->
-  <section class="how-it-works">
-    <div class="container">
-      <div class="section-header text-center mb-5">
-        <h2 class="section-title">Simple Setup</h2>
-        <p class="section-subtitle">Up and Running in Minutes</p>
-      </div>
-
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-number">1</div>
-          <div class="step-icon">🛒</div>
-          <h4 class="step-title">Order Your Tag</h4>
-          <p class="step-description">Choose from our stylish QR tag collection with premium belts.</p>
-        </div>
-
-        <div class="step-card">
-          <div class="step-number">2</div>
-          <div class="step-icon">📝</div>
-          <h4 class="step-title">Register Your Pet</h4>
-          <p class="step-description">Create your pet's profile with contact info and health details.</p>
-        </div>
-
-        <div class="step-card">
-          <div class="step-number">3</div>
-          <div class="step-icon">🔗</div>
-          <h4 class="step-title">Attach & Activate</h4>
-          <p class="step-description">Secure the tag on your pet's collar and you're all set.</p>
-        </div>
-
-        <div class="step-card">
-          <div class="step-number">4</div>
-          <div class="step-icon">🔔</div>
-          <h4 class="step-title">Peace of Mind</h4>
-          <p class="step-description">Get notified instantly if someone scans your pet's tag.</p>
-        </div>
-      </div>
+    <!-- Platform Tabs -->
+    <div class="platform-tabs">
+      <button class="platform-tab qr-tab active" data-tab="smart-qr" (click)="switchTab('smart-qr')">
+        <div class="tab-icon">🏷️</div>
+        <span>Smart QR</span>
+      </button>
+      <button class="platform-tab doc-tab" data-tab="doc-locker" (click)="switchTab('doc-locker')">
+        <div class="tab-icon">📁</div>
+        <span>Doc Locker</span>
+      </button>
+      <button class="platform-tab ai-tab" data-tab="ai-pet" (click)="switchTab('ai-pet')">
+        <div class="tab-icon">🤖</div>
+        <span>AI Pet</span>
+      </button>
     </div>
-  </section>
 
-  <!-- Trust Section -->
-  <section class="trust-section">
-    <div class="container">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-number">50K+</div>
-          <div class="stat-label">Happy Pets</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">99.9%</div>
-          <div class="stat-label">Recovery Rate</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">4.9/5</div>
-          <div class="stat-label">User Rating</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">24/7</div>
-          <div class="stat-label">AI Support</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="cta-section">
-    <div class="container">
-      <div class="cta-content text-center">
-        <h2 class="cta-title">Give Your Pet<br>The Protection They Deserve</h2>
-        <p class="cta-description">
-          Start with a smart QR tag today and unlock the complete Talicart experience
-          — Digilocker and AI Doctor included.
-        </p>
-        
-        <div class="cta-buttons">
-          <button class="btn btn-light" (click)="navigateTo('/shop')">Get Started Free</button>
-          <button class="btn btn-outline-light" (click)="scrollToFeatures()">View Pricing</button>
+    <!-- Smart QR Tab Content -->
+    <div class="tab-content active" id="smart-qr-content">
+      <div class="feature-card qr-feature">
+        <div class="feature-header">
+          <div class="feature-icon qr-icon">🏷️</div>
+          <h3 class="feature-title">Smart QR</h3>
         </div>
         
-        <div class="cta-features">
-          <span>✓ Free Shipping</span>
-          <span>✓ 30-Day Guarantee</span>
-          <span>✓ Secure Checkout</span>
+        <div class="feature-content">
+          <div class="feature-tagline">
+            <span class="tagline-icon">📍</span>
+            <span class="tagline-text">NEWER LOSE SIGHT OF YOUR PET</span>
+          </div>
+          
+          <h2 class="feature-main-title">Smart QR Tags & GPS Belts</h2>
+          
+          <p class="feature-description">
+            Our intelligent QR tags instantly connect anyone who finds your lost pet to you.
+            GPS belts provide real-time tracking so you always know where your furry friend is.
+          </p>
+          
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="item-bullet qr-bullet">•</span>
+              <span class="item-text"><strong>Real-time GPS tracking</strong></span>
+            </div>
+            <div class="feature-item">
+              <span class="item-bullet qr-bullet">•</span>
+              <span class="item-text"><strong>Instant scan notifications</strong></span>
+            </div>
+            <div class="feature-item">
+              <span class="item-bullet qr-bullet">•</span>
+              <span class="item-text"><strong>Waterproof & durable</strong></span>
+            </div>
+          </div>
+          
+          <div class="feature-footer">
+            <div class="brand-section">
+              <div class="brand-text">what's pet lovers are?</div>
+              <div class="brand-cta">Easy Setup</div>
+              <div class="brand-subtext">Get started in 2 mins</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-visual">
+          <div class="qr-visual">
+            <div class="phone-mockup">
+              <div class="phone-screen">
+                <div class="app-view">
+                  <div class="app-header">Pet Tracker</div>
+                  <div class="gps-map">
+                    <div class="location-pin"></div>
+                  </div>
+                  <div class="qr-display">QR</div>
+                </div>
+              </div>
+            </div>
+            <div class="qr-tag-mockup">
+              <div class="qr-code">QR</div>
+              <div class="qr-label">SCAN ME</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </section>
-</div>
+
+    <!-- Doc Locker Tab Content -->
+    <div class="tab-content" id="doc-locker-content">
+      <div class="feature-card doc-feature">
+        <div class="feature-header">
+          <div class="feature-icon doc-icon">📁</div>
+          <h3 class="feature-title">Doc Locker</h3>
+        </div>
+        
+        <div class="feature-content">
+          <div class="feature-tagline">
+            <span class="tagline-icon">📄</span>
+            <span class="tagline-text">ALL RECORDS, ONE SECURE PLACE</span>
+          </div>
+          
+          <h2 class="feature-main-title">Doc Locker</h2>
+          
+          <p class="feature-description">
+            Store vaccination records, vet visits, medications, and important documents. 
+            Set smart reminders for upcoming appointments and never miss a health milestone.
+          </p>
+          
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="item-bullet doc-bullet">•</span>
+              <span class="item-text"><strong>Secure cloud storage</strong></span>
+            </div>
+            <div class="feature-item">
+              <span class="item-bullet doc-bullet">•</span>
+              <span class="item-text"><strong>Smart reminders</strong></span>
+            </div>
+            <div class="feature-item">
+              <span class="item-bullet doc-bullet">•</span>
+              <span class="item-text"><strong>Easy document sharing</strong></span>
+            </div>
+          </div>
+          
+          <div class="feature-footer">
+            <div class="brand-section">
+              <div class="brand-cta">Easy Setup</div>
+              <div class="brand-subtext">Get started in 2 mins</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-visual">
+          <div class="doc-visual">
+            <div class="doc-interface">
+              <div class="doc-header">
+                <h4>Vaccination Records</h4>
+                <div class="doc-date">Last updated: Today</div>
+              </div>
+              <div class="doc-items">
+                <div class="doc-item">
+                  <div class="doc-icon">💉</div>
+                  <div class="doc-details">
+                    <div class="doc-name">Rabies Vaccine</div>
+                    <div class="doc-date">Completed: 03/15/2024</div>
+                  </div>
+                  <div class="doc-status completed">✓</div>
+                </div>
+                <div class="doc-item">
+                  <div class="doc-icon">🏥</div>
+                  <div class="doc-details">
+                    <div class="doc-name">Annual Checkup</div>
+                    <div class="doc-date">Due: 04/20/2024</div>
+                  </div>
+                  <div class="doc-status pending">!</div>
+                </div>
+                <div class="doc-item">
+                  <div class="doc-icon">💊</div>
+                  <div class="doc-details">
+                    <div class="doc-name">Heartworm Prevention</div>
+                    <div class="doc-date">Due: 05/01/2024</div>
+                  </div>
+                  <div class="doc-status upcoming">→</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Pet Tab Content -->
+    <div class="tab-content" id="ai-pet-content">
+      <div class="feature-card ai-feature">
+        <div class="feature-header">
+          <div class="feature-icon ai-icon">🤖</div>
+          <h3 class="feature-title">AI Pet</h3>
+        </div>
+        
+        <div class="feature-content">
+          <div class="feature-tagline">
+            <span class="tagline-icon">👨‍⚕️</span>
+            <span class="tagline-text">24/7 EXPERT GUIDANCE AT YOUR FINGERTIPS</span>
+          </div>
+          
+          <h2 class="feature-main-title">AI Pet Doctor</h2>
+          
+          <p class="feature-description">
+            Get instant answers to pet health questions anytime. Our AI doctor is trained on veterinary knowledge to provide reliable guidance when you need it most.
+          </p>
+          
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="item-bullet ai-bullet">•</span>
+              <span class="item-text"><strong>24/7 availability</strong></span>
+            </div>
+            <div class="feature-item">
+              <span class="item-bullet ai-bullet">•</span>
+              <span class="item-text"><strong>AI-powered insights</strong></span>
+            </div>
+            <div class="feature-item">
+              <span class="item-bullet ai-bullet">•</span>
+              <span class="item-text"><strong>Vet-verified responses</strong></span>
+            </div>
+          </div>
+          
+          <div class="feature-footer">
+            <div class="brand-section">
+              <div class="brand-cta">Easy Setup</div>
+              <div class="brand-subtext">Get started in 2 mins</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-visual">
+          <div class="ai-visual">
+            <div class="ai-interface">
+              <div class="ai-header">
+                <div class="ai-avatar">AI</div>
+                <div class="ai-title">
+                  <h4>Pet Health Assistant</h4>
+                  <span class="ai-status">Online</span>
+                </div>
+              </div>
+              <div class="ai-chat">
+                <div class="chat-message user">
+                  <div class="message-content">My dog ate chocolate, what should I do?</div>
+                </div>
+                <div class="chat-message ai">
+                  <div class="message-content">Chocolate can be toxic to dogs. Contact your vet immediately and monitor for vomiting, diarrhea, or restlessness.</div>
+                </div>
+              </div>
+              <div class="ai-input">
+                <input type="text" placeholder="Type your pet health question..." disabled>
+                <button class="send-btn">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Process Section - Redesigned -->
+<section class="process-section">
+  <div class="container">
+    <div class="process-header">
+      <div class="process-title-wrapper">
+        <span class="process-label">Graph Process</span>
+        <h2 class="section-title">Get Started in 4 Easy Steps</h2>
+        <p class="section-subtitle">Setting up Tail Cart takes just minutes. Start protecting your pet today.</p>
+      </div>
+    </div>
+    
+    <div class="steps-grid">
+      <!-- Step 1 -->
+      <div class="step step-1">
+        <div class="step-corner"></div>
+        <div class="step-number">01</div>
+        <div class="step-content">
+          <h3 class="step-title">Create Account</h3>
+          <div class="step-divider"></div>
+          <p class="step-description">Sign up in seconds and set up your pet parent profile</p>
+        </div>
+      </div>
+      
+      <!-- Step 2 -->
+      <div class="step step-2">
+        <div class="step-corner"></div>
+        <div class="step-number">02</div>
+        <div class="step-content">
+          <h3 class="step-title">Register Your Pets</h3>
+          <div class="step-divider"></div>
+          <p class="step-description">Add your furry friends with their photos and details</p>
+        </div>
+      </div>
+      
+      <!-- Step 3 -->
+      <div class="step step-3">
+        <div class="step-corner"></div>
+        <div class="step-number">03</div>
+        <div class="step-content">
+          <h3 class="step-title">Order QR Tags</h3>
+          <div class="step-divider"></div>
+          <p class="step-description">Get personalized QR tags and GPS belts delivered</p>
+        </div>
+      </div>
+      
+      <!-- Step 4 -->
+      <div class="step step-4">
+        <div class="step-corner"></div>
+        <div class="step-number">04</div>
+        <div class="step-content">
+          <h3 class="step-title">Stay Protected</h3>
+          <div class="step-divider"></div>
+          <p class="step-description">Enjoy peace of mind with complete pet safety & health tracking</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Products Section - Redesigned to match image -->
+<section class="products-section">
+  <div class="container">
+    <div class="products-header">
+      <h2 class="section-title">Choose Your Protection</h2>
+      <p class="section-subtitle">Premium quality tags and trackers designed for pets of all sizes</p>
+    </div>
+    
+    <div class="products-grid">
+      <!-- Product 1 - Best Seller -->
+      <div class="product-card">
+        <div class="product-badge product-badge-1">Best Seller</div>
+        <div class="product-content">
+          <div class="product-top-section">
+            <h3 class="product-title">Classic QR Tag</h3>
+            <p class="product-subtitle">Durable QR tag that works forever. One scan connects finders to you instantly.</p>
+          </div>
+          
+          <ul class="product-features">
+            <li>
+              <span class="feature-icon">⚡</span>
+              <span class="feature-text"><strong>Instant Notifications</strong></span>
+            </li>
+            <li>
+              <span class="feature-icon">∞</span>
+              <span class="feature-text"><strong>Lifetime Access</strong></span>
+            </li>
+            <li>
+              <span class="feature-icon">💧</span>
+              <span class="feature-text"><strong>Waterproof</strong></span>
+            </li>
+          </ul>
+          
+          <div class="product-pricing">
+            <div class="price-current">$14.99</div>
+            <div class="price-original">$24.99</div>
+          </div>
+          
+          <button class="btn-add-to-cart btn-product-1">Add to Cart</button>
+        </div>
+      </div>
+      
+      <!-- Product 2 - Best Results -->
+      <div class="product-card">
+        <div class="product-badge product-badge-2">Best Results</div>
+        <div class="product-content">
+          <div class="product-top-section">
+            <h3 class="product-title">GPS Smart Belt</h3>
+            <p class="product-subtitle">Track your pet in real-time with our comfortable GPS-enabled smart belt.</p>
+          </div>
+          
+          <ul class="product-features">
+            <li>
+              <span class="feature-icon">📍</span>
+              <span class="feature-text"><strong>Real-time Tracking</strong></span>
+            </li>
+            <li>
+              <span class="feature-icon">🔋</span>
+              <span class="feature-text"><strong>7 Day Battery</strong></span>
+            </li>
+            <li>
+              <span class="feature-icon">🗺️</span>
+              <span class="feature-text"><strong>Geofencing</strong></span>
+            </li>
+          </ul>
+          
+          <div class="product-pricing">
+            <div class="price-current">$49.99</div>
+            <div class="price-original">$79.99</div>
+          </div>
+          
+          <button class="btn-add-to-cart btn-product-2">Add to Cart</button>
+        </div>
+      </div>
+      
+      <!-- Product 3 - Save 45% -->
+      <div class="product-card">
+        <div class="product-badge product-badge-3">Save 45%</div>
+        <div class="product-content">
+          <div class="product-top-section">
+            <h3 class="product-title">Premium Bundle</h3>
+            <p class="product-subtitle">Complete protection bundle with QR tag and GPS belt at an unbeatable price.</p>
+          </div>
+          
+          <ul class="product-features">
+            <li>
+              <span class="feature-icon">🏷️+📿</span>
+              <span class="feature-text"><strong>QR Tag + GPS Belt</strong></span>
+            </li>
+            <li>
+              <span class="feature-icon">⭐</span>
+              <span class="feature-text"><strong>Premium Support</strong></span>
+            </li>
+            <li>
+              <span class="feature-icon">🚚</span>
+              <span class="feature-text"><strong>Free Shipping</strong></span>
+            </li>
+          </ul>
+          
+          <div class="product-pricing">
+            <div class="price-current">$59.99</div>
+            <div class="price-original">$104.98</div>
+          </div>
+          
+          <button class="btn-add-to-cart btn-product-3">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="products-cta">
+      <button class="btn-view-all">View All Products</button>
+    </div>
+  </div>
+</section>
