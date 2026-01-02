@@ -40,7 +40,7 @@ def params_check():
     else:
           #return None,None  
           # Returns auto for manualy opening Autologin  
-          return "AutoLogin",2299,None
+          return "AutoLogin",None,None
         # return "SmartEntry","2299","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NTI3NDg2NjgsImV4cCI6MTc1MzYxMjY2OH0.Itsc57tAJ08YEyCS-HaBYJqn-lpceWz3O3cGXezgHH8"
 
 process_type, hybrid_orderid,hybrid_token = params_check()
@@ -1089,7 +1089,7 @@ def update_order_status(assigned_order_id, status, stage, order_event_status,tok
     }
 
     headers = {
-        # "Authorization": f"Bearer {token}",
+        "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
 

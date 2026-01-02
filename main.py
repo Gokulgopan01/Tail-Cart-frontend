@@ -106,7 +106,7 @@ def is_protocol_registered(protocol_name):
 def register_url_protocol(protocol_name, exe_path):
     base_path = f"Software\\Classes\\{protocol_name}"
     command = f'"{exe_path}" "%1"'
- 
+
     try:
         print(f" Registering protocol: {protocol_name} -> {command}")
         # Create protocol root
@@ -150,6 +150,7 @@ if __name__ == "__main__":
     # Step 1: Run version check first, then launch_app
     # version_update(lambda: Application().mainloop())
     # launch_app()
+    version_update(launch_app) 
 
-    version_update(launch_app)
+
 
