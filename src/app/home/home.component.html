@@ -15,7 +15,7 @@
           </div>
           <div class="slide-rating">
             <div class="stars">★★★★★</div>
-            <div class="rating-text">4.9/5 from 2,000+ reviews</div>
+            <div class="rating-text">4.9/5 from 1,000+ reviews</div>
           </div>
           <div class="slide-features">
             <div class="feature-tag">
@@ -35,14 +35,7 @@
           </div>
         </div>
         <div class="slide-image">
-          <div class="mock-device">
-            <div class="device-screen qr-screen">
-              <div class="map-view">
-                <div class="pet-marker"></div>
-              </div>
-              <div class="qr-preview"></div>
-            </div>
-          </div>
+          <div class="lottie-container" id="lottie-1"></div>
         </div>
       </div>
     </div>
@@ -81,24 +74,7 @@
           </div>
         </div>
         <div class="slide-image">
-          <div class="mock-device">
-            <div class="device-screen doc-screen">
-              <div class="doc-list">
-                <div class="doc-item">
-                  <span>Rabies Vaccine</span>
-                  <span class="doc-date">Due: 03/15/2024</span>
-                </div>
-                <div class="doc-item">
-                  <span>Annual Checkup</span>
-                  <span class="doc-date">Scheduled</span>
-                </div>
-                <div class="doc-item">
-                  <span>Dental Cleaning</span>
-                  <span class="doc-date">Completed</span>
-                </div>
-              </div>
-            </div>
-          </div>
+           <div class="lottie-container" id="lottie-2"></div>
         </div>
       </div>
     </div>
@@ -107,7 +83,7 @@
     <div class="carousel-slide" id="slide-3">
       <div class="slide-content">
         <div class="slide-text">
-          <h1 class="slide-title">24/7 AI<br><span class="highlight">Pet Doctor On Call</span></h1>
+          <h1 class="slide-title">24/7 AI<br><span class="highlight">Pet Doctor On Fingertips</span></h1>
           <p class="slide-description">
             Instant answers to pet health questions. Get expert guidance anytime, anywhere for your beloved companion.
           </p>
@@ -137,15 +113,7 @@
           </div>
         </div>
         <div class="slide-image">
-          <div class="mock-device">
-            <div class="device-screen ai-screen">
-              <div class="ai-chat">
-                <div class="chat-bubble">
-                  Based on symptoms, I recommend consulting your vet for proper diagnosis.
-                </div>
-              </div>
-            </div>
-          </div>
+          <div class="lottie-container" id="lottie-3"></div>
         </div>
       </div>
     </div>
@@ -163,6 +131,7 @@
 <section class="platform-section">
   <div class="container">
     <div class="platform-hero">
+      <span class="process-label">Our Services</span>
       <h1 class="section-title">One Platform, Complete Care</h1>
       <p class="section-subtitle">
         From safety to health records to instant medical guidance, Tail Cart has everything to keep your furry friend happy and healthy.
@@ -220,32 +189,35 @@
               <span class="item-text"><strong>Waterproof & durable</strong></span>
             </div>
           </div>
-          
-          <div class="feature-footer">
-            <div class="brand-section">
-              <div class="brand-text">what's pet lovers are?</div>
-              <div class="brand-cta">Easy Setup</div>
-              <div class="brand-subtext">Get started in 2 mins</div>
-            </div>
-          </div>
         </div>
         
         <div class="feature-visual">
-          <div class="qr-visual">
-            <div class="phone-mockup">
-              <div class="phone-screen">
-                <div class="app-view">
-                  <div class="app-header">Pet Tracker</div>
-                  <div class="gps-map">
-                    <div class="location-pin"></div>
+          <div class="tab-image-container">
+            <img src="assets/images/catdog_friends-HomeCover.jpg" alt="Smart QR Pet Safety" class="tab-image">
+            
+            <!-- Image Overlay with tags on both sides -->
+            <div class="image-overlay">
+              <!-- Left side tags -->
+              <div class="footer-tag-container left-tags">
+                <div class="tag-block">
+                  <div class="tag-icon">🏥</div>
+                  <div class="tag-content">
+                    <div class="tag-title">Vet Connected</div>
+                    <div class="tag-subtitle">24/7 Support</div>
                   </div>
-                  <div class="qr-display">QR</div>
                 </div>
               </div>
-            </div>
-            <div class="qr-tag-mockup">
-              <div class="qr-code">QR</div>
-              <div class="qr-label">SCAN ME</div>
+              
+              <!-- Right side tags -->
+              <div class="footer-tag-container right-tags">
+                <div class="tag-block">
+                  <div class="tag-icon">📊</div>
+                  <div class="tag-content">
+                    <div class="tag-title">Health Protected</div>
+                    <div class="tag-subtitle">All records synced</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -287,50 +259,39 @@
               <span class="item-text"><strong>Easy document sharing</strong></span>
             </div>
           </div>
-          
-          <div class="feature-footer">
-            <div class="brand-section">
-              <div class="brand-cta">Easy Setup</div>
-              <div class="brand-subtext">Get started in 2 mins</div>
-            </div>
-          </div>
         </div>
         
         <div class="feature-visual">
-          <div class="doc-visual">
-            <div class="doc-interface">
-              <div class="doc-header">
-                <h4>Vaccination Records</h4>
-                <div class="doc-date">Last updated: Today</div>
-              </div>
-              <div class="doc-items">
-                <div class="doc-item">
-                  <div class="doc-icon">💉</div>
-                  <div class="doc-details">
-                    <div class="doc-name">Rabies Vaccine</div>
-                    <div class="doc-date">Completed: 03/15/2024</div>
-                  </div>
-                  <div class="doc-status completed">✓</div>
-                </div>
-                <div class="doc-item">
-                  <div class="doc-icon">🏥</div>
-                  <div class="doc-details">
-                    <div class="doc-name">Annual Checkup</div>
-                    <div class="doc-date">Due: 04/20/2024</div>
-                  </div>
-                  <div class="doc-status pending">!</div>
-                </div>
-                <div class="doc-item">
-                  <div class="doc-icon">💊</div>
-                  <div class="doc-details">
-                    <div class="doc-name">Heartworm Prevention</div>
-                    <div class="doc-date">Due: 05/01/2024</div>
-                  </div>
-                  <div class="doc-status upcoming">→</div>
-                </div>
+         <div class="feature-visual">
+      <div class="tab-image-container">
+        <img src="assets/images/Home-Catalog-Pet_Doc.jpg" alt="Pet Document Management" class="tab-image">
+        
+        <!-- Image Overlay with tags on both sides -->
+        <div class="image-overlay doc-overlay">
+          <!-- Left side tags -->
+          <div class="footer-tag-container left-tags">
+            <div class="tag-block">
+              <div class="tag-icon">📁</div>
+              <div class="tag-content">
+                <div class="tag-title">Records Secured</div>
+                <div class="tag-subtitle">All in one place</div>
               </div>
             </div>
           </div>
+          
+          <!-- Right side tags -->
+          <div class="footer-tag-container right-tags">
+            <div class="tag-block">
+              <div class="tag-icon">⏰</div>
+              <div class="tag-content">
+                <div class="tag-title">Smart Reminders</div>
+                <div class="tag-subtitle">Never miss dates</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
         </div>
       </div>
     </div>
@@ -369,39 +330,38 @@
               <span class="item-text"><strong>Vet-verified responses</strong></span>
             </div>
           </div>
-          
-          <div class="feature-footer">
-            <div class="brand-section">
-              <div class="brand-cta">Easy Setup</div>
-              <div class="brand-subtext">Get started in 2 mins</div>
-            </div>
-          </div>
+
         </div>
         
         <div class="feature-visual">
-          <div class="ai-visual">
-            <div class="ai-interface">
-              <div class="ai-header">
-                <div class="ai-avatar">AI</div>
-                <div class="ai-title">
-                  <h4>Pet Health Assistant</h4>
-                  <span class="ai-status">Online</span>
-                </div>
-              </div>
-              <div class="ai-chat">
-                <div class="chat-message user">
-                  <div class="message-content">My dog ate chocolate, what should I do?</div>
-                </div>
-                <div class="chat-message ai">
-                  <div class="message-content">Chocolate can be toxic to dogs. Contact your vet immediately and monitor for vomiting, diarrhea, or restlessness.</div>
-                </div>
-              </div>
-              <div class="ai-input">
-                <input type="text" placeholder="Type your pet health question..." disabled>
-                <button class="send-btn">Send</button>
+          <div class="tab-image-container">
+        <img src="assets/images/Home-Catalog-Pet_Doctor.jpg" alt="AI Pet Health Assistant" class="tab-image">
+        
+        <!-- Image Overlay with tags on both sides -->
+        <div class="image-overlay ai-overlay">
+          <!-- Left side tags -->
+          <div class="footer-tag-container left-tags">
+            <div class="tag-block">
+              <div class="tag-icon">🤖</div>
+              <div class="tag-content">
+                <div class="tag-title">AI Doctor</div>
+                <div class="tag-subtitle">24/7 Available</div>
               </div>
             </div>
           </div>
+          
+          <!-- Right side tags -->
+          <div class="footer-tag-container right-tags">
+            <div class="tag-block">
+              <div class="tag-icon">💬</div>
+              <div class="tag-content">
+                <div class="tag-title">Instant Answers</div>
+                <div class="tag-subtitle">Expert guidance</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
         </div>
       </div>
     </div>
@@ -467,117 +427,54 @@
   </div>
 </section>
 
-<!-- Products Section - Redesigned to match image -->
+<!-- Products Section - Updated with proper card layout -->
 <section class="products-section">
   <div class="container">
     <div class="products-header">
+      <span class="process-label">Our Products</span>
       <h2 class="section-title">Choose Your Protection</h2>
       <p class="section-subtitle">Premium quality tags and trackers designed for pets of all sizes</p>
     </div>
     
-    <div class="products-grid">
-      <!-- Product 1 - Best Seller -->
-      <div class="product-card">
-        <div class="product-badge product-badge-1">Best Seller</div>
-        <div class="product-content">
-          <div class="product-top-section">
-            <h3 class="product-title">Classic QR Tag</h3>
-            <p class="product-subtitle">Durable QR tag that works forever. One scan connects finders to you instantly.</p>
-          </div>
-          
-          <ul class="product-features">
-            <li>
-              <span class="feature-icon">⚡</span>
-              <span class="feature-text"><strong>Instant Notifications</strong></span>
-            </li>
-            <li>
-              <span class="feature-icon">∞</span>
-              <span class="feature-text"><strong>Lifetime Access</strong></span>
-            </li>
-            <li>
-              <span class="feature-icon">💧</span>
-              <span class="feature-text"><strong>Waterproof</strong></span>
-            </li>
-          </ul>
-          
-          <div class="product-pricing">
-            <div class="price-current">$14.99</div>
-            <div class="price-original">$24.99</div>
-          </div>
-          
-          <button class="btn-add-to-cart btn-product-1">Add to Cart</button>
-        </div>
-      </div>
-      
-      <!-- Product 2 - Best Results -->
-      <div class="product-card">
-        <div class="product-badge product-badge-2">Best Results</div>
-        <div class="product-content">
-          <div class="product-top-section">
-            <h3 class="product-title">GPS Smart Belt</h3>
-            <p class="product-subtitle">Track your pet in real-time with our comfortable GPS-enabled smart belt.</p>
-          </div>
-          
-          <ul class="product-features">
-            <li>
-              <span class="feature-icon">📍</span>
-              <span class="feature-text"><strong>Real-time Tracking</strong></span>
-            </li>
-            <li>
-              <span class="feature-icon">🔋</span>
-              <span class="feature-text"><strong>7 Day Battery</strong></span>
-            </li>
-            <li>
-              <span class="feature-icon">🗺️</span>
-              <span class="feature-text"><strong>Geofencing</strong></span>
-            </li>
-          </ul>
-          
-          <div class="product-pricing">
-            <div class="price-current">$49.99</div>
-            <div class="price-original">$79.99</div>
-          </div>
-          
-          <button class="btn-add-to-cart btn-product-2">Add to Cart</button>
-        </div>
-      </div>
-      
-      <!-- Product 3 - Save 45% -->
-      <div class="product-card">
-        <div class="product-badge product-badge-3">Save 45%</div>
-        <div class="product-content">
-          <div class="product-top-section">
-            <h3 class="product-title">Premium Bundle</h3>
-            <p class="product-subtitle">Complete protection bundle with QR tag and GPS belt at an unbeatable price.</p>
-          </div>
-          
-          <ul class="product-features">
-            <li>
-              <span class="feature-icon">🏷️+📿</span>
-              <span class="feature-text"><strong>QR Tag + GPS Belt</strong></span>
-            </li>
-            <li>
-              <span class="feature-icon">⭐</span>
-              <span class="feature-text"><strong>Premium Support</strong></span>
-            </li>
-            <li>
-              <span class="feature-icon">🚚</span>
-              <span class="feature-text"><strong>Free Shipping</strong></span>
-            </li>
-          </ul>
-          
-          <div class="product-pricing">
-            <div class="price-current">$59.99</div>
-            <div class="price-original">$104.98</div>
-          </div>
-          
-          <button class="btn-add-to-cart btn-product-3">Add to Cart</button>
-        </div>
-      </div>
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Loading products...</p>
     </div>
     
-    <div class="products-cta">
-      <button class="btn-view-all">View All Products</button>
+    <!-- Error State -->
+    <div *ngIf="errorMessage" class="error-container">
+      <p>{{errorMessage}}</p>
+      <button (click)="loadProducts()">Retry</button>
+    </div>
+    
+    <!-- Products Grid with API Data - HORIZONTAL LAYOUT -->
+    <div *ngIf="!isLoading && !errorMessage && displayedProducts.length > 0" class="products-grid-horizontal">
+      
+      <!-- Product Cards -->
+      <div class="product-card-api" *ngFor="let product of displayedProducts">
+        <div class="product-image-container">
+          <img [src]="product.image" [alt]="product.model" class="product-img" (error)="handleImageError($event)">
+          <div class="product-badge" *ngIf="product.deals">{{product.deals}}</div>
+        </div>
+        
+        <div class="product-info">
+          <h3 class="product-model">{{product.model}}</h3>
+          <div class="product-price">₹{{product.price}}</div>
+          <button class="shop-now-btn-black" (click)="goToShop()">Shop Now</button>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- Browse More Button -->
+    <div class="products-cta" *ngIf="!isLoading && !errorMessage && displayedProducts.length > 0">
+      <button class="btn-view-all" (click)="goToShop()">View All Products</button>
+    </div>
+    
+    <!-- No Products State -->
+    <div *ngIf="!isLoading && !errorMessage && displayedProducts.length === 0" class="no-products">
+      <p>No products available at the moment.</p>
     </div>
   </div>
 </section>
