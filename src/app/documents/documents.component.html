@@ -2,21 +2,31 @@
   <!-- Header Section -->
   <header class="header-section">
     <div class="container">
-      <div class="header-content">
-        <div class="header-text">
+      <!-- DOCUMENTS HEADER WITH TITLE -->
+      <div class="documents-header-wrapper">
+        <!-- Title Section -->
+        <div class="documents-title-section">
+          <h1 class="documents-main-title">Document Locker</h1>
+          <p class="documents-subtitle">Securely store, manage, and access your important documents anytime, anywhere</p>
         </div>
         
-        <!-- Stats/Tabs -->
-        <div class="tabs-section">
-          <div class="tabs-container">
-            <button class="tab-btn active" (click)="activeTab = 'documents'" [class.active]="activeTab === 'documents'">
-              <span>Documents</span>
-              <span class="tab-badge">{{ documents.length }}</span>
-            </button>
-            <button class="tab-btn" (click)="activeTab = 'alerts'" [class.active]="activeTab === 'alerts'">
-              <span>Alerts</span>
-              <span class="tab-badge">{{ alerts.length }}</span>
-            </button>
+        <div class="header-content">
+          <div class="header-text">
+            <!-- Original header content if any -->
+          </div>
+          
+          <!-- Stats/Tabs -->
+          <div class="tabs-section">
+            <div class="tabs-container">
+              <button class="tab-btn active" (click)="activeTab = 'documents'" [class.active]="activeTab === 'documents'">
+                <span>Documents</span>
+                <span class="tab-badge">{{ documents.length }}</span>
+              </button>
+              <button class="tab-btn" (click)="activeTab = 'alerts'" [class.active]="activeTab === 'alerts'">
+                <span>Alerts</span>
+                <span class="tab-badge">{{ alerts.length }}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

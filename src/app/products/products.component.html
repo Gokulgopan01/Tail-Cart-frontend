@@ -2,20 +2,29 @@
   <!-- Main Content -->
   <section class="shop-main-section">
     <div class="container">
-      <!-- Top Header -->
-      <div class="shop-header">
-        <div class="search-bar-container">
-          <i class="fas fa-search search-icon"></i>
-          <input type="text" class="search-input" placeholder="Search products..." (input)="applyFilters()">
+      <!-- SHOP HEADER WITH TITLE -->
+      <div class="shop-header-wrapper">
+        <!-- Title Section -->
+        <div class="shop-title-section">
+          <h1 class="shop-main-title">Our Products</h1>
+          <p class="shop-subtitle">Discover premium tech accessories designed to elevate your digital experience</p>
         </div>
-        <div class="desktop-cart-container" *ngIf="!isMobileView">
-          <button class="desktop-cart-btn" (click)="viewCart()">
-            <i class="fas fa-shopping-cart"></i>
-            <span class="desktop-cart-label">View Cart</span>
-            <span class="desktop-cart-count" *ngIf="getCartCount() > 0">
-              {{ getCartCount() }}
-            </span>
-          </button>
+        
+        <!-- Search and Cart -->
+        <div class="shop-header">
+          <div class="search-bar-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search products..." (input)="applyFilters()">
+          </div>
+          <div class="desktop-cart-container" *ngIf="!isMobileView">
+            <button class="desktop-cart-btn" (click)="viewCart()">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="desktop-cart-label">View Cart</span>
+              <span class="desktop-cart-count" *ngIf="getCartCount() > 0">
+                {{ getCartCount() }}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
