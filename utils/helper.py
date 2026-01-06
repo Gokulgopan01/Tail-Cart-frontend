@@ -42,7 +42,7 @@ def params_check():
           #return None,None  
           # Returns auto for manualy opening Autologin  
          return "AutoLogin",None,None   
-         #return "PortalLogin","2266","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NTI3NDg2NjgsImV4cCI6MTc1MzYxMjY2OH0.Itsc57tAJ08YEyCS-HaBYJqn-lpceWz3O3cGXezgHH8"
+         #return "SmartEntry","2286","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjQ1LCJlbWFpbCI6ImFyYXRoeV9hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NjYwNTA5MTcsImV4cCI6MTc2NjEzNzMxN30.qQDHce-O1McqfRXHzauml6KyLH8V4vxd2h5YFENMn4w"
    
 process_type, hybrid_orderid,hybrid_token = params_check()
 
@@ -1356,8 +1356,8 @@ def tfs_statuschange(tfs_order_id,bpo_statusid,tfs_status,tfs_status_reason):
                     "ProcParameters": ["sAutoBPOdata", "sOrderId"]
                     }
                 
-                response2=requests.post("https://bpotrackers.com/bvupcqp/home/ProcUpdateTFSstatusEntry",data=data)
-                #response2=requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateTFSstatusEntry",data=data)                
+                # response2=requests.post("https://bpotrackers.com/bvupcqp/home/ProcUpdateTFSstatusEntry",data=data)
+                response2=requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateTFSstatusEntry",data=data)                
                 #logging.info(f"response2 :{response2.text} , ordID {tfs_order_id}")
                 logger.log(
                     module="tfs_statuschange",
@@ -1368,8 +1368,8 @@ def tfs_statuschange(tfs_order_id,bpo_statusid,tfs_status,tfs_status_reason):
            
         )
 
-                response1 =requests.post("https://bpotrackers.com/bvupcqp/Home/ProcUpdateAutoEntry",data=data1)
-                #response1 =requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateAutoEntry",data=data1)
+                # response1 =requests.post("https://bpotrackers.com/bvupcqp/Home/ProcUpdateAutoEntry",data=data1)
+                response1 =requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateAutoEntry",data=data1)
           
                 #logging.info(f"response1 :{response1.text} , ordID: {tfs_order_id}")
                 logger.log(

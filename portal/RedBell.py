@@ -92,10 +92,11 @@ class RedBell:
                         #     order_id=self.order_id)
                     # elif process_type =="PortalLogin":
                     #      handle_login_status(title, self.username, login_check_keyword, self.portal_name)   
-                    else:    
+                    else:  
+                        update_portal_login_confirmation_status(hybrid_orderid)  
                         handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)
-                        update_portal_login_confirmation_status(hybrid_orderid)
-                        logging.info("After handle_login_status call")
+                        #update_portal_login_confirmation_status(hybrid_orderid)
+                        logging.info("After the handle_login_status call")
                     return self.driver, self.session
 
                 else:
@@ -262,15 +263,15 @@ class RedBell:
                     severity="INFO"
                 )
         #logging.info("Starting form open process")
-        if not orders:
-            #logging.info("No orders in portal")
-            logger.log(
-                    module="Redbell-redbell_formopen",
-                    order_id=hybrid_orderid,
-                    action_type="Condition_check",
-                    remarks=f"Starting form open process",
-                    severity="INFO"
-                )
+        # if not orders:
+        #     #logging.info("No orders in portal")
+        logger.log(
+                module="Redbell-redbell_formopen",
+                order_id=hybrid_orderid,
+                action_type="Condition_check",
+                remarks=f"Starting form open process",
+                severity="INFO"
+            )
         target_genorderid =order_details_from_api
         form_types = ["Interior Enhanced BPO",'Interior BPO - W Rentals','Exterior Enhanced BPO','Interior BPO','Exterior BPO','Exterior BPO - W Rentals','5 Day MIT ARBPO','5 Day Interior Appraiser Reconciled BPO','5 Day Exterior Appraiser Reconciled BPO','5 Day Exterior BPO - W Rentals','5 Day Exterior BPO','5 Day Interior BPO','5 Day Interior BPO - W Rentals',"3 Day Exterior BPO - W Rentals","Interior BPO"]
         if not orders:
