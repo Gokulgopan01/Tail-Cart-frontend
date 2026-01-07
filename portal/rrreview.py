@@ -267,7 +267,7 @@ class rrreview:
                 config_path = 'json/rrreviewjson/RRReview_Exterior_BPO.json'
             else:
                 logging.warning(f"No matching config path found for form type: {formtype_value}")
-                update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
+                update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                 tfs_statuschange(tfs_orderid, "27", "3", "14")
                 return
             
@@ -403,7 +403,7 @@ class rrreview:
 
             if sub_data is None:
                 logging.error("'entry_data' missing or empty in merged_json")
-                update_order_status(order_id, "In Progress", "Entry", "Failed", hybrid_token)
+                update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
                 tfs_statuschange(tfs_orderid, "27", "3", "14")
                 return False
 
@@ -428,7 +428,7 @@ class rrreview:
                     self.driver.switch_to.default_content()
                     time.sleep(0.5)
                     # Step 1: Click the corresponding tab
-                    print(f"\n🔹 Switching to tab: {tab_name}")
+                    print(f"\n Switching to tab: {tab_name}")
                     
                     try:
                         tab_xpath = f"//a[contains(@class,'ui-tabs-anchor') and contains(.,'{tab_name}')]"
@@ -438,10 +438,10 @@ class rrreview:
                         self.driver.execute_script("arguments[0].scrollIntoView({block:'center'});", tab_element)
                         time.sleep(0.5)
                         tab_element.click()
-                        print(f"✔ Clicked tab: {tab_name}")
+                        print(f"Clicked tab: {tab_name}")
                         time.sleep(1)
                     except Exception as e:
-                        print(f"⚠️ Could not click tab '{tab_name}': {e}")
+                        print(f"Could not click tab '{tab_name}': {e}")
                         continue
 
                     # Step 2: Switch to iframe
@@ -453,9 +453,9 @@ class rrreview:
                                 EC.presence_of_element_located((By.ID, iframe_id))
                             )
                             self.driver.switch_to.frame(iframe)
-                            print(f"✅ Switched to iframe: {iframe_id}")
+                            print(f"Switched to iframe: {iframe_id}")
                         except Exception as e:
-                            print(f"⚠️ Could not switch to iframe {iframe_id}: {e}")
+                            print(f"Could not switch to iframe {iframe_id}: {e}")
                             continue
                     else:
                         print(f"No iframe mapping for tab: {tab_name}")
@@ -534,12 +534,13 @@ class rrreview:
                                 logging.error(f"Exception filling field {key_expr}: {e}")
 
             # --- Final Status Update ---
-            update_order_status(order_id, "In Progress", "Entry", "Completed",hybrid_token)
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
+            print(hybrid_orderid,"Smart Entry")
             tfs_statuschange(tfs_orderid, "26", "3", "14")
             return saved_form
 
         except Exception as e:
             logging.error(f"Critical error in fill_form_multi: {e}")
-            update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False

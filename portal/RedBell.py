@@ -12,6 +12,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from dotenv import load_dotenv
 
 from condtions.all_portal_conditions import generate_condition_data
@@ -91,10 +92,11 @@ class RedBell:
                         #     order_id=self.order_id)
                     # elif process_type =="PortalLogin":
                     #      handle_login_status(title, self.username, login_check_keyword, self.portal_name)   
-                    else:    
+                    else:  
+                        update_portal_login_confirmation_status(hybrid_orderid)  
                         handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)
-                        update_portal_login_confirmation_status(hybrid_orderid)
-                        logging.info("After handle_login_status call")
+                        #update_portal_login_confirmation_status(hybrid_orderid)
+                        logging.info("After the handle_login_status call")
                     return self.driver, self.session
 
                 else:
@@ -261,15 +263,15 @@ class RedBell:
                     severity="INFO"
                 )
         #logging.info("Starting form open process")
-        if not orders:
-            #logging.info("No orders in portal")
-            logger.log(
-                    module="Redbell-redbell_formopen",
-                    order_id=hybrid_orderid,
-                    action_type="Condition_check",
-                    remarks=f"Starting form open process",
-                    severity="INFO"
-                )
+        # if not orders:
+        #     #logging.info("No orders in portal")
+        logger.log(
+                module="Redbell-redbell_formopen",
+                order_id=hybrid_orderid,
+                action_type="Condition_check",
+                remarks=f"Starting form open process",
+                severity="INFO"
+            )
         target_genorderid =order_details_from_api
         form_types = ["Interior Enhanced BPO",'Interior BPO - W Rentals','Exterior Enhanced BPO','Interior BPO','Exterior BPO','Exterior BPO - W Rentals','5 Day MIT ARBPO','5 Day Interior Appraiser Reconciled BPO','5 Day Exterior Appraiser Reconciled BPO','5 Day Exterior BPO - W Rentals','5 Day Exterior BPO','5 Day Interior BPO','5 Day Interior BPO - W Rentals',"3 Day Exterior BPO - W Rentals","Interior BPO"]
         if not orders:
@@ -783,6 +785,8 @@ def upload_file_js(driver, input_id, file_path):
         return False
 
 
+
+
 def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderid: str) -> bool:
     data = fetch_upload_data(self, order_id)
     if not data:
@@ -899,14 +903,160 @@ def get_required_non_subject_labels(self):
     return labels
 
 
+def delete_non_subject_photos(self):
+    wait = WebDriverWait(self.driver, 20)
+
+    try:
+        # Wait for at least one photo item
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "li.qq-upload-success")))
+    except TimeoutException:
+        #print("No photos found.")
+        logger.log(
+            module="Redbell-delete_non_subject_photos",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"No photos found.",
+            severity="INFO"
+            )
+        return False
+
+    #print("Scanning uploaded photos...")
+
+    photo_items = self.driver.find_elements(By.CSS_SELECTOR, "li.qq-upload-success")
+    non_subject_count = 0
+
+    for item in photo_items:
+        try:
+            # Each photo dropdown
+            dropdown_el = item.find_element(By.CSS_SELECTOR, "select.qq-edit-filetype")
+            dropdown = Select(dropdown_el)
+
+            selected_text = dropdown.first_selected_option.text.strip()
+            # print("Dropdown:", selected_text)
+
+            # If not Subject → tick checkbox
+            if "Subject" not in selected_text:
+                checkbox = item.find_element(By.CSS_SELECTOR, "input.qq-upload-checkbox")
+
+                if not checkbox.is_selected():
+                    checkbox.click()
+                    non_subject_count += 1
+                    #print(f"✔ Marked NON-Subject photo: {selected_text}")
+                    logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"✔ Marked NON-Subject photo: {selected_text}",
+                    severity="INFO"
+                    )
+
+        except NoSuchElementException:
+            logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"NoSuchElementException: {NoSuchElementException}",
+                    severity="INFO"
+                    )
+            continue
+
+    if non_subject_count == 0:
+        #print("No non-subject photos found.")
+        logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"No non-subject photos found.",
+                    severity="INFO"
+                    )
+        return False
+
+    #print(f"Total photos to delete: {non_subject_count}")
+    logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Total photos to delete: {non_subject_count}",
+                    severity="INFO"
+                    )
+    # Click Delete Photos button
+    try:
+        delete_btn = wait.until(EC.element_to_be_clickable((By.ID, "trigger-delete")))
+        delete_btn.click()
+        #print("Delete button clicked.")
+        logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Confirmation",
+                    remarks=f"Delete button clicked.",
+                    severity="INFO"
+                    )
+    except TimeoutException:
+        #print(" Delete Photos button not found.")
+        logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f" Delete Photos button not found.",
+                    severity="INFO"
+                    )
+        return False
+
+    # Handle confirmation popup (if exists)
+    try:
+        confirm_btn = wait.until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, ".confirm, .btn-primary"))
+        )
+        confirm_btn.click()
+        #print("✔ Confirmed delete.")
+        logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Confirmation",
+                    remarks=f"Confirmed delete.",
+                    severity="INFO"
+                    )
+    except TimeoutException:
+        #print("⚠ No confirmation popup found (maybe auto-deleted).")
+        logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"No confirmation popup found (maybe auto-deleted).",
+                    severity="INFO"
+                    )
+
+    return True
 
 def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, rental_folder=None) -> bool:
+    missing = []
     try:
         self.driver.get(photos_url)
         time.sleep(3)
-         # --- Step 0: Click "Location Map" button to load map ---
+        # --- Step 0: FIRST delete old non-subject photos ---
+        result = delete_non_subject_photos(self)
+
+        if result:
+            #print("Non-subject photos deleted successfully!")
+            logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Non-subject photos deleted successfully!",
+                    severity="INFO"
+                    )
+        else:
+            #print("No deletion performed.")
+            logger.log(
+                    module="Redbell-delete_non_subject_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"No deletion performed.",
+                    severity="INFO"
+                    )
+         # --- Step 1: Click "Location Map" button to load map ---
         try:
-            location_map_btn = WebDriverWait(self.driver, 10).until(
+            location_map_btn = WebDriverWait(self.driver, 20).until(
                 EC.element_to_be_clickable((By.XPATH, "//a[@title='Refresh location map']"))
             )
             self.driver.execute_script("arguments[0].click();", location_map_btn)
@@ -919,7 +1069,7 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
             severity="INFO"
             )
             # Optional: wait for the map div to appear
-            WebDriverWait(self.driver, 10).until(
+            WebDriverWait(self.driver, 20).until(
                 EC.visibility_of_element_located((By.ID, "location-map"))
             )
             #print("Location Map loaded.")
@@ -1132,7 +1282,7 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
                 severity="INFO"
                 )
 
-        missing = []
+        #missing = []
         for lbl in expected_labels:
             if lbl.lower() in remaining_required:
                 missing.append(lbl)

@@ -2,7 +2,6 @@ import re
 import time
 import tkinter as tk
 from tkinter import ttk, messagebox
-import threading
 import logging
 from dotenv import load_dotenv
 import requests
@@ -13,21 +12,13 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-# --- Redbell Class (Assuming portal.Proteck.py is renamed to portal_login.py and Redbell is implemented there) ---WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Dashboard')]")) #Replace with unique element.
-                   
-
-import logging
-import requests
-import json
-import os
-from selenium.webdriver.chrome.options import Options
 from condtions.all_portal_conditions import generate_condition_data
 from config import env
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import SS_fill_repair_details, adj_click, close_validation_popup, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_source_save_form, update_client_account_status, update_order_status
+from utils.helper import SS_fill_repair_details, adj_click, close_validation_popup, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_source_save_form, update_client_account_status, update_order_status, update_portal_login_confirmation_status
 # Load environment variables from the .env file
 load_dotenv()
-arg1, arg2,arg3 = params_check()
+process_type, hybrid_orderid,hybrid_token = params_check()
 class SingleSource:
     def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id):
         self.username = username
@@ -50,7 +41,7 @@ class SingleSource:
             headers = {'Content-Type': env.API_HEADERS_CONTENT_TYPE}
             payload = json.dumps({"username": self.username, "portal": "single_source"})
 
-            response = requests.post(api_url, headers=headers, data=payload)
+            response = requests.post(api_url, headers=headers, data=payload ,timeout=190)
             #response.raise_for_status()
             api_response = response.json()
 
@@ -80,10 +71,10 @@ class SingleSource:
                     elif "main.aspx" in current_url:
                         logging.info("Login successful")
 
-                        #arg1 = "SmartEntry"  # Manually set for testing
-                        #arg1="PortalLogin"
-                        #arg1="AutoLogin"
-                        if arg1 == "SmartEntry":
+                        #process_type = "SmartEntry"  # Manually set for testing
+                        #process_type="PortalLogin"
+                        #process_type="AutoLogin"
+                        if process_type == "SmartEntry":
                             self.handle_post_login_frames()
                             self.singleSource_formopen(
                                 session=session,
@@ -94,7 +85,9 @@ class SingleSource:
                             return session
                         else:
                             login_check_keyword = ["main.aspx"]
+                            update_portal_login_confirmation_status(hybrid_orderid)
                             handle_login_status(current_url, self.username, login_check_keyword, self.portal_name)
+                            #update_portal_login_confirmation_status(hybrid_orderid)
                             return session
                     else:
                         logging.error(f"Unexpected redirect: {current_url}")
@@ -103,7 +96,7 @@ class SingleSource:
             else:
                 logging.error(f"API call failed: {api_response.get('status')}")
 
-            update_order_status(arg2, "In Progress", "Entry", "Failed",arg3)
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
 
         except requests.exceptions.RequestException as e:
             logging.error(f"API request failed: {e}")
@@ -117,7 +110,7 @@ class SingleSource:
         # Final fallback in case of failure
         title = "MFA FAILED"
         login_check_keyword = ["False"]
-        update_order_status(arg2, "In Progress", "Entry", "Failed",arg3)
+        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         update_client_account_status(self.account_id)
         handle_login_status(title, self.username, login_check_keyword, self.portal_name)
         return None, None
@@ -148,7 +141,7 @@ class SingleSource:
 
     def singleSource_formopen(self,session, merged_json, order_details, order_id):
         try:
-            orders_from_api = HybridBPOApi.get_entry_order(arg2) 
+            orders_from_api = HybridBPOApi.get_entry_order(hybrid_orderid) 
             if not orders_from_api:  # Check if the order list is empty
                 print("No orders found.")
                 return
@@ -162,7 +155,7 @@ class SingleSource:
                 proxy = order_from_api.get("proxy", None)  # Optional proxy
                 sessions=order_from_api.get("session",None)
                 order_id=order_from_api.get("order_id","")
-                order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(order_id,arg3)
+                order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(order_id,hybrid_token)
                 print("order_details_from_api:", order_details_from_api)
                 # if not order_details_from_api:
                 #     messagebox.showerror("Authentication Required", "Please log in again.")
@@ -272,14 +265,14 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
             config_path = 'json/singlesourcejson/SingleSource_SS_New_BPO_Exterior.json'        
     else:
         logging.warning(f"No matching config path for form type: {formtype_value}")
-        update_order_status(arg2, "In Progress", "Entry", "Failed",arg3)
+        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         return
     form_config, merged_json = load_form_config_and_data(
         order_id=order_id,
         config_path=config_path,
         researchpad_data_retrival_url=researchpad_data_retrival_url,
         session=session,
-        merged_json=merged_json,token=arg3
+        merged_json=merged_json,token=hybrid_token
     )
     # Optional: Check if loading was successful
     if not form_config or not merged_json:
@@ -307,7 +300,7 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
         data = fetch_upload_data(self, order_id)
         if not data:
             logging.warning(f"No upload data found for order {order_id}")
-            update_order_status(arg2, "In Progress", "Entry", "Failed",arg3)
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             return
         mls_result = upload_mls_for_order(self,order_id)
         tax_result = upload_tax_for_order(self,order_id)
@@ -319,17 +312,17 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
             upload_photos=upload_photos_to_order(self, comparables_folder)
         else:
             logging.warning(f"Comparables folder is missing or invalid for order {order_id}: {comparables_folder!r}")
-            update_order_status(arg2, "In Progress", "Entry", "Failed",arg3)
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         # Check if all 3 are True
         if form_fill and mls_result and tax_result and upload_photos:
             logging.info("All form filling and upload functions completed successfully.")
-            update_order_status(arg2, "In Progress", "Entry", "Completed",arg3)
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
         else:
             logging.warning(f"One or more functions failed: form_fill={form_fill}, upload_photos={upload_photos}")
-            update_order_status(arg2, "In Progress", "Entry", "Failed")
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed")
     except Exception as e:
         logging.exception(f"Error during photo upload steps: {e}")
-        update_order_status(arg2, "In Progress", "Entry", "Failed",arg3)
+        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         return
 
         
@@ -398,7 +391,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
             sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3 ,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3= extract_data_sections(merged_json)
             if sub_data is None:
                 logging.error("'entry_data' missing or empty in merged_json")
-                update_order_status(arg2, "In Progress", "Entry", "Failed",arg3)
+                update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                 return False
 
             condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3)
@@ -515,7 +508,7 @@ def upload_mls_for_order(self, order_id: int) -> bool:
     # Fetch order data
     data = fetch_upload_data(self, order_id)
     if not data:
-        update_order_status(arg2, "In Progress", "Entry", "Failed",arg3)
+        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         return False
 
     # Get MLS document info
@@ -573,7 +566,7 @@ def upload_tax_for_order(self, order_id: int, wait_seconds: int = 10) -> bool:
     # Fetch order data
     data = fetch_upload_data(self, order_id)
     if not data:
-        update_order_status(arg2, "In Progress", "Entry", "Failed",arg3)
+        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         print(f"[ERROR] No data found for order {order_id}")
         return False
 
