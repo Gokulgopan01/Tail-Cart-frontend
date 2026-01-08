@@ -1,0 +1,1288 @@
+{
+     "page": [
+    {
+      "Subject Information": [
+        {
+          "filedtype": "select_data",
+          "values": [
+            ["sub_data['Style']", "//*[@id='ddlStyleType']", "xpath"]
+          ]
+        },
+        {
+          "filedtype":"select_data",
+          "values":[
+            ["sub_data['Location']","//*[@id='ddlLocationType']","xpath"]
+            ]
+        },
+        {
+          "filedtype":"Textbox",
+          "values":[
+            ["sub_data['County']","//*[@id='txtCounty']","xpath"]
+            ]
+        },
+        {
+          "filedtype": "Textbox",
+          "values": [
+            ["sub_data['Address']", "//*[@id='txtNewAddress']", "xpath"]
+          ]
+        },
+        {
+          "filedtype": "Textbox",
+          "values": [
+            ["sub_data['City']", "//*[@id='txtNewCity']", "xpath"]
+          ]
+        },
+         {
+          "filedtype": "select_data",
+          "values": [
+            ["sub_data['State']", "//*[@id='ddlNewState']", "xpath"]
+          ]
+        },
+        {
+          "filedtype":"Textbox",
+           "values":[
+            ["sub_data['Zipcode']","//*[@id='txtNewZip']","xpath"]
+            ]
+        },
+        {
+          "filedtype":"date_fill_javascript",
+          "values":[
+            ["condition_data['InspectionDate']","//*[@id='txtInspectionDate']","xpath"]
+            ]
+        },
+        {
+            "filedtype":"date_fill_javascript",
+            "values":[   
+            ["condition_data['OriginalListDateListing']","//*[@id='txtListingDate']","xpath"]
+               ]
+         },
+         {
+            "filedtype":"date_fill_javascript",
+            "values":[   
+            ["sub_data['OriginalListPriceListing']","//*[@id='txtOrigListPrice']","xpath"]
+               ]
+         },
+         {
+            "filedtype":"Textbox",
+            "values":[   
+            ["sub_data['NeighborhoodDescription']","//*[@id='txtNeighborhoodComments']","xpath"]
+               ]
+         },
+
+         {
+          "filedtype": "select_data",
+          "values": [
+            ["comp_data['State']", "//*[@id='rrrListing1_ddlState']", "xpath"]
+          ]
+        }
+       ]
+     },
+    
+    
+     {
+  "Repair Information": [
+    {
+      "filedtype": "repair_details_fill",
+      "values": [
+        ["sub_data['repair_details']['repairs']", "repair_table", "auto"]
+      ]
+    }
+  ]
+},
+
+     
+     {
+      "Comparable Information": [
+       {
+          "filedtype":"select_data",
+          "values":[
+            ["sub_data['DataSource']","//*[@id='rrrSubject_ddlDataSource']","xpath"]
+            ]
+       },
+
+       {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['HoaFees']","//*[@id='rrrSubject_txtHOA']","xpath"]
+          ]
+        },
+
+        
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['MarketValue']","//*[@id='rrrSubject_txtMarketRent']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['Units']","//*[@id='rrrSubject_txtNoUnits']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['LotAcrs']","//*[@id='rrrSubject_txtLotSizeAcres']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["sub_data['View']","//*[@id='rrrSubject_ddlView']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["sub_data['Condition']","//*[@id='rrrSubject_ddlConditionType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['YearBuilt']","//*[@id='rrrSubject_txtYearBuilt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['TotalRooms']","//*[@id='rrrSubject_txtRooms']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['Bed']","//*[@id='rrrSubject_txtBeds']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['FullBath']","//*[@id='rrrSubject_txtFullBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['HalfBath']","//*[@id='rrrSubject_txtHalfBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['BasementArea']","//*[@id='rrrSubject_txtBasementSqFt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['Garage']","//*[@id='rrrSubject_ddlGarageType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["sub_data['Pool']","//*[@id='rrrSubject_ddlPoolSpa']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['Address']","//*[@id='rrrSale1_txtAddress']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['City']","//*[@id='rrrSale1_txtCity']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['Zipcode']","//*[@id='rrrSale1_txtZip']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 1']['Proximity']","//*[@id='rrrSale1_ddlProximityType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 1']['DataSource']","//*[@id='rrrSale1_ddlDataSource']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['MLS']","//*[@id='rrrSale1_txtMLSNumber']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['OriginalListPriceListing']","//*[@id='rrrSale1_txtListPrice']","xpath"]
+          ]
+        },
+
+        
+
+        {
+          "filedtype": "date_fill_javascript",
+          "values": [
+            ["condition_data['orginal_sold1_date']", "//*[@id='rrrSale1_txtOrigListDate']", "xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['SalePrice']","//*[@id='rrrSale1_txtSalePrice']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["condition_data['sale_sold1_date']","//*[@id='rrrSale1_txtSaleDate']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['Concessions']","//*[@id='rrrSale1_txtConcessionsAmount']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 1']['SaleType']","//*[@id='rrrSale1_ddlSaleType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 1']['FinancingType']","//*[@id='rrrSale1_ddlFinancingType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 1']['PropertyType']","//*[@id='rrrSale1_ddlPropertyType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['Units']","//*[@id='rrrSale1_txtNoUnits']","xpath"]
+          ]
+        },
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 1']['Style']","//*[@id='rrrSale1_ddlStyle']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['LotAcrs']","//*[@id='rrrSale1_txtLotSizeAcres']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 1']['Condition']","//*[@id='rrrSale1_ddlConditionType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['YearBuilt']","//*[@id='rrrSale1_txtYearBuilt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['TotalRooms']","//*[@id='rrrSale1_txtRooms']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['Bed']","//*[@id='rrrSale1_txtBeds']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['FullBath']","//*[@id='rrrSale1_txtFullBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['HalfBath']","//*[@id='rrrSale1_txtHalfBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['BasementArea']","//*[@id='rrrSale1_txtBasementSqFt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 1']['Pool']","//*[@id='rrrSale1_ddlPoolSpa']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['Address']","//*[@id='rrrSale2_txtAddress']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['City']","//*[@id='rrrSale2_txtCity']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['Zipcode']","//*[@id='rrrSale2_txtZip']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 2']['Proximity']","//*[@id='rrrSale2_ddlProximityType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 2']['DataSource']","//*[@id='rrrSale2_ddlDataSource']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['MLS']","//*[@id='rrrSale2_txtMLSNumber']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['OriginalListPriceListing']","//*[@id='rrrSale2_txtListPrice']","xpath"]
+          ]
+        },
+
+
+        {
+          "filedtype": "date_fill_javascript",
+          "values": [
+            ["condition_data['orginal_sold2_date']", "//*[@id='rrrSale2_txtOrigListDate']", "xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['SalePrice']","//*[@id='rrrSale2_txtSalePrice']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["condition_data['sale_sold2_date']","//*[@id='rrrSale2_txtSaleDate']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['Concessions']","//*[@id='rrrSale2_txtConcessionsAmount']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 2']['SaleType']","//*[@id='rrrSale2_ddlSaleType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 2']['FinancingType']","//*[@id='rrrSale2_ddlFinancingType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 2']['PropertyType']","//*[@id='rrrSale2_ddlPropertyType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['Units']","//*[@id='rrrSale2_txtNoUnits']","xpath"]
+          ]
+        },
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 2']['Style']","//*[@id='rrrSale2_ddlStyle']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['LotAcrs']","//*[@id='rrrSale2_txtLotSizeAcres']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 2']['Condition']","//*[@id='rrrSale2_ddlConditionType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['YearBuilt']","//*[@id='rrrSale2_txtYearBuilt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['TotalRooms']","//*[@id='rrrSale2_txtRooms']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['Bed']","//*[@id='rrrSale2_txtBeds']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['FullBath']","//*[@id='rrrSale2_txtFullBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['HalfBath']","//*[@id='rrrSale2_txtHalfBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['BasementArea']","//*[@id='rrrSale2_txtBasementSqFt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 2']['Pool']","//*[@id='rrrSale2_ddlPoolSpa']","xpath"]
+          ]
+        },
+
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['Address']","//*[@id='rrrSale3_txtAddress']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['City']","//*[@id='rrrSale3_txtCity']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['Zipcode']","//*[@id='rrrSale3_txtZip']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 3']['Proximity']","//*[@id='rrrSale3_ddlProximityType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 3']['DataSource']","//*[@id='rrrSale3_ddlDataSource']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['MLS']","//*[@id='rrrSale3_txtMLSNumber']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['OriginalListPriceListing']","//*[@id='rrrSale3_txtListPrice']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype": "date_fill_javascript",
+          "values": [
+            ["condition_data['orginal_sold3_date']", "//*[@id='rrrSale3_txtOrigListDate']", "xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['SalePrice']","//*[@id='rrrSale3_txtSalePrice']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["condition_data['sale_sold3_date']","//*[@id='rrrSale3_txtSaleDate']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['Concessions']","//*[@id='rrrSale3_txtConcessionsAmount']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 3']['SaleType']","//*[@id='rrrSale3_ddlSaleType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 3']['FinancingType']","//*[@id='rrrSale3_ddlFinancingType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 3']['PropertyType']","//*[@id='rrrSale3_ddlPropertyType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['Units']","//*[@id='rrrSale3_txtNoUnits']","xpath"]
+          ]
+        },
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 3']['Style']","//*[@id='rrrSale3_ddlStyle']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['LotAcrs']","//*[@id='rrrSale3_txtLotSizeAcres']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 3']['Condition']","//*[@id='rrrSale3_ddlConditionType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['YearBuilt']","//*[@id='rrrSale3_txtYearBuilt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['TotalRooms']","//*[@id='rrrSale3_txtRooms']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['Bed']","//*[@id='rrrSale3_txtBeds']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['FullBath']","//*[@id='rrrSale3_txtFullBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['HalfBath']","//*[@id='rrrSale3_txtHalfBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['BasementArea']","//*[@id='rrrSale3_txtBasementSqFt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['Sold 3']['Pool']","//*[@id='rrrSale3_ddlPoolSpa']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['Address']","//*[@id='rrrListing1_txtAddress']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['City']","//*[@id='rrrListing1_txtCity']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 1']['State']","//*[@id='rrrListing1_ddlState']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['Zipcode']","//*[@id='rrrListing1_txtZip']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 1']['Proximity']","//*[@id='rrrListing1_ddlProximityType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 1']['DataSource']","//*[@id='rrrListing1_ddlDataSource']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['MLS']","//*[@id='rrrListing1_txtMLSNumber']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['OriginalListPriceListing']","//*[@id='rrrListing1_txtListPrice']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['CurrentListingPrice']","//*[@id='rrrListing1_txtCurrentListPrice']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype": "date_fill_javascript",
+          "values": [
+            ["condition_data['orginal_list1_date']", "//*[@id='rrrListing1_txtOrigListDate']", "xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 1']['SaleType']","//*[@id='rrrListing1_ddlSaleType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['Units']","//*[@id='rrrListing1_txtNoUnits']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 1']['Style']","//*[@id='rrrListing1_ddlStyle']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['LotAcrs']","//*[@id='rrrListing1_txtLotSizeAcres']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 1']['Condition']","//*[@id='rrrListing1_ddlConditionType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['YearBuilt']","//*[@id='rrrListing1_txtYearBuilt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['TotalRooms']","//*[@id='rrrListing1_txtRooms']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['Bed']","//*[@id='rrrListing1_txtBeds']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['FullBath']","//*[@id='rrrListing1_txtFullBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['HalfBath']","//*[@id='rrrListing1_txtHalfBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['BasementArea']","//*[@id='rrrListing1_txtBasementSqFt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 1']['Pool']","//*[@id='rrrListing1_ddlPoolSpa']","xpath"]
+          ]
+        },
+
+
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['Address']","//*[@id='rrrListing2_txtAddress']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['City']","//*[@id='rrrListing2_txtCity']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 2']['State']","//*[@id='rrrListing2_ddlState']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['Zipcode']","//*[@id='rrrListing2_txtZip']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 2']['Proximity']","//*[@id='rrrListing2_ddlProximityType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 2']['DataSource']","//*[@id='rrrListing2_ddlDataSource']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['MLS']","//*[@id='rrrListing2_txtMLSNumber']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['OriginalListPriceListing']","//*[@id='rrrListing2_txtListPrice']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['CurrentListingPrice']","//*[@id='rrrListing2_txtCurrentListPrice']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype": "date_fill_javascript",
+          "values": [
+            ["condition_data['orginal_list1_date']", "//*[@id='rrrListing2_txtOrigListDate']", "xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 2']['SaleType']","//*[@id='rrrListing2_ddlSaleType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['Units']","//*[@id='rrrListing2_txtNoUnits']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 2']['Style']","//*[@id='rrrListing2_ddlStyle']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['LotAcrs']","//*[@id='rrrListing2_txtLotSizeAcres']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 2']['Condition']","//*[@id='rrrListing2_ddlConditionType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['YearBuilt']","//*[@id='rrrListing2_txtYearBuilt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['TotalRooms']","//*[@id='rrrListing2_txtRooms']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['Bed']","//*[@id='rrrListing2_txtBeds']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['FullBath']","//*[@id='rrrListing2_txtFullBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['HalfBath']","//*[@id='rrrListing2_txtHalfBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['BasementArea']","//*[@id='rrrListing2_txtBasementSqFt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 2']['Pool']","//*[@id='rrrListing2_ddlPoolSpa']","xpath"]
+          ]
+        },
+
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['Address']","//*[@id='rrrListing3_txtAddress']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['City']","//*[@id='rrrListing3_txtCity']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 3']['State']","//*[@id='rrrListing3_ddlState']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['Zipcode']","//*[@id='rrrListing3_txtZip']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 3']['Proximity']","//*[@id='rrrListing3_ddlProximityType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 3']['DataSource']","//*[@id='rrrListing3_ddlDataSource']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['MLS']","//*[@id='rrrListing3_txtMLSNumber']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['OriginalListPriceListing']","//*[@id='rrrListing3_txtListPrice']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['CurrentListingPrice']","//*[@id='rrrListing3_txtCurrentListPrice']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype": "date_fill_javascript",
+          "values": [
+            ["condition_data['orginal_list1_date']", "//*[@id='rrrListing3_txtOrigListDate']", "xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 3']['SaleType']","//*[@id='rrrListing3_ddlSaleType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['Units']","//*[@id='rrrListing3_txtNoUnits']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 3']['Style']","//*[@id='rrrListing3_ddlStyle']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['LotAcrs']","//*[@id='rrrListing3_txtLotSizeAcres']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 3']['Condition']","//*[@id='rrrListing3_ddlConditionType']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['YearBuilt']","//*[@id='rrrListing3_txtYearBuilt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['TotalRooms']","//*[@id='rrrListing3_txtRooms']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['Bed']","//*[@id='rrrListing3_txtBeds']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['FullBath']","//*[@id='rrrListing3_txtFullBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['HalfBath']","//*[@id='rrrListing3_txtHalfBaths']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['BasementArea']","//*[@id='rrrListing3_txtBasementSqFt']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"select_data",
+          "values":[   
+          ["comp_data['List 3']['Pool']","//*[@id='rrrListing3_ddlPoolSpa']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype": "radiobutton_data",
+          "values": 
+            [
+              "condition_data['BestSoldcomp']",
+              "rrrSale{condition_data['BestSoldIndex']}_chkBestSaleList",
+              "id"
+            ]
+        },
+        
+        {
+          "filedtype": "radiobutton_data",
+          "values":
+            [
+              "condition_data['BestActivecomp']",
+              "rrrListing{condition_data['BestActiveIndex']}_chkBestSaleList",
+              "id"
+            ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["sub_data['SubjectComment']","//*[@id='txtSubjectComments']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 1']['ComparableComments']","//*[@id='txtSale1PropertyDataComments']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 2']['ComparableComments']","//*[@id='txtSale2PropertyDataComments']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['Sold 3']['ComparableComments']","//*[@id='txtSale3PropertyDataComments']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 1']['ComparableComments']","//*[@id='txtListing_1_PropertyDataComments']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 2']['ComparableComments']","//*[@id='txtListing_2_PropertyDataComments']","xpath"]
+          ]
+        },
+
+        {
+          "filedtype":"Textbox",
+          "values":[   
+          ["comp_data['List 3']['ComparableComments']","//*[@id='txtListing_3_PropertyDataComments']","xpath"]
+          ]
+        }
+
+        
+     ]
+     },
+
+     {
+      "Photos/Documents": [
+       
+      ]
+     },
+     {
+      "Validation Results": [
+       {
+          "filedtype": "Textbox",
+          "values": [
+            ["sub_data['Roof']", "//*[@id='txtExteriorRoof']", "xpath"]
+          ]
+        }
+      ]
+     }
+
+
+
+     
+   ]
+}
+              
+                     
