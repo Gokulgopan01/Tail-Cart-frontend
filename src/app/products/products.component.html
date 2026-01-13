@@ -17,6 +17,12 @@
             <input type="text" class="search-input" placeholder="Search products..." (input)="applyFilters()">
           </div>
           <div class="desktop-cart-container" *ngIf="!isMobileView">
+            <!-- Add Product Button (Admin Only) -->
+            <button class="add-product-btn" *ngIf="isAdmin()" (click)="openAddProductModal()">
+              <i class="fas fa-plus"></i>
+              <span class="add-product-label">Add Product</span>
+            </button>
+            
             <button class="desktop-cart-btn" (click)="viewCart()">
               <i class="fas fa-shopping-cart"></i>
               <span class="desktop-cart-label">View Cart</span>
@@ -175,10 +181,10 @@
               
               <!-- Admin Controls -->
               <div class="admin-controls" *ngIf="isAdmin()">
-                <button class="admin-btn edit-btn" (click)="editProduct(product, $event)">
+                <button class="admin-btn edit-btn" (click)="editProduct(product, $event)" data-label="Edit" aria-label="Edit product">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button class="admin-btn delete-btn" (click)="deleteProduct(product.id, $event)">
+                <button class="admin-btn delete-btn" (click)="deleteProduct(product.id, $event)" data-label="Delete" aria-label="Delete product">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -229,17 +235,15 @@
   </section>
 
   <!-- Mobile FAB Buttons -->
-  <div class="mobile-fab-container">
-    <button class="mobile-filter-fab" (click)="toggleMobileFilters()">
-      <i class="fas fa-filter"></i>
-      <span>Filter</span>
-    </button>
-    
-    <button class="mobile-cart-fab" (click)="viewCart()">
-      <i class="fas fa-shopping-cart"></i>
-      <span class="cart-count" *ngIf="getCartCount() > 0">{{ getCartCount() }}</span>
-    </button>
-  </div>
+   <div class="mobile-fab-container">
+  <button class="mobile-add-fab" *ngIf="isAdmin()" (click)="openAddProductModal()" data-label="Add Product"><i class="fas fa-plus"></i></button>
+  <button class="mobile-filter-fab" (click)="toggleMobileFilters()" data-label="Filter"><i class="fas fa-filter"></i></button>
+  <button class="mobile-cart-fab" (click)="viewCart()" data-label="View cart">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-count" *ngIf="getCartCount() > 0">{{ getCartCount() }}</span>
+  </button>
+</div>
+
 
   <!-- Cart Modal -->
   <div class="modal-overlay cart-overlay" *ngIf="showCartModal" (click)="closeCart()">

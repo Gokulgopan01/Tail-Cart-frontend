@@ -566,10 +566,13 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
   // Existing admin methods remain the same
   openAddProductModal() {
-    this.resetNewProduct();
-    this.showAddProductModal = true;
-    this.editingProduct = null;
-  }
+  this.resetNewProduct();
+  this.showAddProductModal = true;
+  this.editingProduct = null;
+  
+  // Lock body scroll when modal opens
+  this.toggleBodyScroll(true);
+}
 
   openEditProductModal(product: Product) {
     this.newProduct = {

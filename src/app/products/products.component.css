@@ -2492,3 +2492,202 @@
     margin-right: auto;
   }
 }
+
+
+
+
+/*addd button*/
+
+/* Add Product Button Styles */
+.desktop-cart-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.add-product-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  height: 40px; /* Match cart button height */
+}
+
+.add-product-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.add-product-btn:active {
+  transform: translateY(0);
+}
+
+.add-product-btn i {
+  font-size: 14px;
+}
+
+.add-product-label {
+  font-size: 13px;
+}
+
+/* Desktop Cart Button - Original styling preserved */
+.desktop-cart-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  height: 40px;
+  position: relative;
+}
+
+.desktop-cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff4757;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Shop Header Layout */
+.shop-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.search-bar-container {
+  flex: 1;
+  max-width: 400px;
+}
+
+/* For desktop layout adjustments */
+.desktop-cart-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Ensure desktop-cart-btn maintains its styling */
+.desktop-cart-btn {
+  position: relative;
+}
+
+.mobile-add-fab {
+  background: linear-gradient(135deg, #000000 0%, #000000 100%);
+  color: rgb(255, 255, 255);
+}
+
+.mobile-filter-fab {
+    background: linear-gradient(135deg, #000000 0%, #000000 100%);
+  color: white;
+}
+
+.mobile-cart-fab {
+    background: linear-gradient(135deg, #000000 0%, #000000 100%);
+  color: white;
+}
+
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mobile-fab-container {
+    position: fixed;          /* 👈 MUST be fixed */
+    right: 16px;
+    bottom: 20px;             /* 👈 always bottom */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 9999;            /* 👈 above cards */
+  }
+
+  .mobile-fab-container button {
+    position: relative; /* ❗ important */
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Hide text labels on mobile if needed */
+  .mobile-fab-container button span:not(.cart-count) {
+    display: none;
+  }
+  .mobile-fab-container button::after {
+    content: attr(data-label);
+    position: absolute;
+    right: 64px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ffffff;
+    color: #000000;
+    padding: 6px 10px;
+    border-radius: 14px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .mobile-fab-container button:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-4px);
+  }
+}
+
+
+@media (min-width: 769px) {
+  .mobile-add-fab,
+  .mobile-filter-fab,
+  .mobile-cart-fab {
+    display: none; /* Hide mobile FABs on desktop */
+  }
+  
+  .shop-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: space-between;
+  }
+  
+  .desktop-cart-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}

@@ -245,21 +245,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     container.innerHTML = '';
 
-    try {
-      this.lottieAnimation = window.lottie.loadAnimation({
-        container: container,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: url,
-        rendererSettings: {
-          progressiveLoad: true,
-          hideOnTransparent: true
-        }
-      });
-    } catch (error) {
-      console.error('Error loading desktop Lottie:', error);
-    }
+    
   }
 
   private loadMobileLottieAnimation(url: string): void {
@@ -274,21 +260,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     container.innerHTML = '';
 
-    try {
-      this.mobileLottieAnimation = window.lottie.loadAnimation({
-        container: container,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: url,
-        rendererSettings: {
-          progressiveLoad: true,
-          hideOnTransparent: true
-        }
-      });
-    } catch (error) {
-      console.error('Error loading mobile Lottie:', error);
-    }
+    
   }
 
   private loadUserData() {

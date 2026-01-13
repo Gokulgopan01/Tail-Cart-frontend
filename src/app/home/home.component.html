@@ -19,17 +19,19 @@
           </div>
           <div class="slide-features">
             <div class="feature-tag">
-              <div class="feature-icon">📍</div>
+              <div class="feature-icon">
+                <img src="assets/icons/map-alert.svg" alt="Location icon" />
+              </div>
               <div class="feature-text">
                 <strong>Real-time Alerts</strong>
                 <span>Instant notifications</span>
               </div>
             </div>
             <div class="feature-tag">
-              <div class="feature-icon">🔒</div>
+              <div class="feature-icon"><img src="assets/icons/shopping.svg" alt="Location icon" /></div>
               <div class="feature-text">
-                <strong>100% Secure</strong>
-                <span>Your data is safe</span>
+                <strong>Fast Delivery</strong>
+                <span>Better Order Tracking</span>
               </div>
             </div>
           </div>
@@ -58,17 +60,17 @@
           </div>
           <div class="slide-features">
             <div class="feature-tag">
-              <div class="feature-icon">⏰</div>
+              <div class="feature-icon"> <img src="assets/icons/pill-reminder.svg" alt="alerts" /></div>
               <div class="feature-text">
-                <strong>Smart Reminders</strong>
+                <strong>Smart Alerts</strong>
                 <span>Never miss appointments</span>
               </div>
             </div>
             <div class="feature-tag">
-              <div class="feature-icon">🔒</div>
+              <div class="feature-icon"> <img src="assets/icons/verified-lock.svg" alt="Location icon" /></div>
               <div class="feature-text">
-                <strong>100% Secure</strong>
-                <span>Your data is safe</span>
+                <strong>Documents</strong>
+                <span>Your data is 100% Secure</span>
               </div>
             </div>
           </div>
@@ -97,14 +99,14 @@
           </div>
           <div class="slide-features">
             <div class="feature-tag">
-              <div class="feature-icon">💬</div>
+              <div class="feature-icon"><img src="assets/icons/chat.svg" alt="chat" /></div>
               <div class="feature-text">
                 <strong>Instant Answers</strong>
                 <span>24/7 available</span>
               </div>
             </div>
             <div class="feature-tag">
-              <div class="feature-icon">🔒</div>
+              <div class="feature-icon"><img src="assets/icons/doctor.svg" alt="Doctor" /></div>
               <div class="feature-text">
                 <strong>100% Secure</strong>
                 <span>Your data is safe</span>
@@ -141,15 +143,15 @@
     <!-- Platform Tabs -->
     <div class="platform-tabs">
       <button class="platform-tab qr-tab active" data-tab="smart-qr" (click)="switchTab('smart-qr')">
-        <div class="tab-icon">🏷️</div>
+        <div class="tab-icon"><img src="assets/icons/barcode.svg" alt="Cart" /></div>
         <span>Smart QR</span>
       </button>
       <button class="platform-tab doc-tab" data-tab="doc-locker" (click)="switchTab('doc-locker')">
-        <div class="tab-icon">📁</div>
+        <div class="tab-icon"><img src="assets/icons/safe-box.svg" alt="Document" /></div>
         <span>Doc Locker</span>
       </button>
       <button class="platform-tab ai-tab" data-tab="ai-pet" (click)="switchTab('ai-pet')">
-        <div class="tab-icon">🤖</div>
+        <div class="tab-icon"><img src="assets/icons/female-doctor.svg" alt="Doctor" /></div>
         <span>AI Pet</span>
       </button>
     </div>
@@ -158,7 +160,7 @@
     <div class="tab-content active" id="smart-qr-content">
       <div class="feature-card qr-feature">
         <div class="feature-header">
-          <div class="feature-icon qr-icon">🏷️</div>
+          <div class="feature-icon qr-icon"><img src="assets/icons/barcode.svg" alt="Cart" /></div>
           <h3 class="feature-title">Smart QR</h3>
         </div>
         
@@ -193,12 +195,12 @@
         
         <div class="feature-visual">
           <div class="tab-image-container">
-            <img src="assets/images/catdog_friends-HomeCover.jpg" alt="Smart QR Pet Safety" class="tab-image">
+            <img src="assets/images/Home-Catalog-QR_Scanning.png" alt="Smart QR Pet Safety" class="tab-image">
             
             <!-- Image Overlay with tags on both sides -->
             <div class="image-overlay">
               <!-- Left side tags -->
-              <!-- <div class="footer-tag-container left-tags">
+              <div class="footer-tag-container left-tags">
                 <div class="tag-block">
                   <div class="tag-icon">🏥</div>
                   <div class="tag-content">
@@ -206,10 +208,10 @@
                     <div class="tag-subtitle">24/7 Support</div>
                   </div>
                 </div>
-              </div> -->
+              </div>
               
               <!-- Right side tags -->
-              <div class="footer-tag-container right-tags">
+              <!-- <div class="footer-tag-container right-tags">
                 <div class="tag-block">
                   <div class="tag-icon">📊</div>
                   <div class="tag-content">
@@ -217,7 +219,7 @@
                     <div class="tag-subtitle">All records synced</div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -228,7 +230,7 @@
     <div class="tab-content" id="doc-locker-content">
       <div class="feature-card doc-feature">
         <div class="feature-header">
-          <div class="feature-icon doc-icon">📁</div>
+          <div class="feature-icon doc-icon"><img src="assets/icons/safe-box.svg" alt="Document" /></div>
           <h3 class="feature-title">Doc Locker</h3>
         </div>
         
@@ -269,7 +271,7 @@
         <!-- Image Overlay with tags on both sides -->
         <div class="image-overlay doc-overlay">
           <!-- Left side tags -->
-          <!-- <div class="footer-tag-container left-tags">
+          <div class="footer-tag-container left-tags">
             <div class="tag-block">
               <div class="tag-icon">📁</div>
               <div class="tag-content">
@@ -277,10 +279,10 @@
                 <div class="tag-subtitle">All in one place</div>
               </div>
             </div>
-          </div> -->
+          </div>
           
           <!-- Right side tags -->
-          <div class="footer-tag-container right-tags">
+          <!-- <div class="footer-tag-container right-tags">
             <div class="tag-block">
               <div class="tag-icon">⏰</div>
               <div class="tag-content">
@@ -288,7 +290,7 @@
                 <div class="tag-subtitle">Never miss dates</div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         </div>
         </div>
@@ -300,7 +302,7 @@
     <div class="tab-content" id="ai-pet-content">
       <div class="feature-card ai-feature">
         <div class="feature-header">
-          <div class="feature-icon ai-icon">🤖</div>
+          <div class="feature-icon ai-icon"><img src="assets/icons/female-doctor.svg" alt="Doctor" /></div>
           <h3 class="feature-title">AI Pet</h3>
         </div>
         
@@ -340,7 +342,7 @@
         <!-- Image Overlay with tags on both sides -->
         <div class="image-overlay ai-overlay">
           <!-- Left side tags -->
-          <!-- <div class="footer-tag-container left-tags">
+          <div class="footer-tag-container left-tags">
             <div class="tag-block">
               <div class="tag-icon">🤖</div>
               <div class="tag-content">
@@ -348,10 +350,10 @@
                 <div class="tag-subtitle">24/7 Available</div>
               </div>
             </div>
-          </div> -->
+          </div>
           
           <!-- Right side tags -->
-          <div class="footer-tag-container right-tags">
+          <!-- <div class="footer-tag-container right-tags">
             <div class="tag-block">
               <div class="tag-icon">💬</div>
               <div class="tag-content">
@@ -359,7 +361,7 @@
                 <div class="tag-subtitle">Expert guidance</div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         </div>
         </div>

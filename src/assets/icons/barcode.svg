@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" id="barcode">
+  <defs>
+    <linearGradient id="a" x1="3" x2="61" y1="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#008500"></stop>
+      <stop offset=".084" stop-color="#098500"></stop>
+      <stop offset=".222" stop-color="#218700"></stop>
+      <stop offset=".396" stop-color="#498900"></stop>
+      <stop offset=".6" stop-color="#808c00"></stop>
+      <stop offset=".825" stop-color="#c68f00"></stop>
+      <stop offset=".994" stop-color="#ff9200"></stop>
+    </linearGradient>
+  </defs>
+  <path fill="url(#a)" d="M29 9H10a1 1 0 0 0-1 1v19a1 1 0 0 0 1 1h19a1 1 0 0 0 1-1V10a1 1 0 0 0-1-1Zm-1 19H11V11h17Zm1 6H10a1 1 0 0 0-1 1v19a1 1 0 0 0 1 1h19a1 1 0 0 0 1-1V35a1 1 0 0 0-1-1Zm-1 19H11V36h17Zm7-23h19a1 1 0 0 0 1-1V10a1 1 0 0 0-1-1H35a1 1 0 0 0-1 1v19a1 1 0 0 0 1 1Zm1-19h17v17H36Zm11 5h-5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1Zm-1 5h-3v-3h3Zm-29 2h5a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1h-5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1Zm1-5h3v3h-3Zm-1 30h5a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1h-5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1Zm1-5h3v3h-3Zm12 17a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V35a1 1 0 0 1 2 0v24h24a1 1 0 0 1 1 1Zm31-25v25a1 1 0 0 1-1 1H35a1 1 0 0 1 0-2h24V35a1 1 0 0 1 2 0Zm0-31v25a1 1 0 0 1-2 0V5H35a1 1 0 0 1 0-2h25a1 1 0 0 1 1 1ZM30 4a1 1 0 0 1-1 1H5v24a1 1 0 0 1-2 0V4a1 1 0 0 1 1-1h25a1 1 0 0 1 1 1Zm5 51h8a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-3v-9h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1H39a1 1 0 0 0-1 1v3h-3a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1Zm5-19h13v2H40Zm-4 4h2v10a1 1 0 0 0 1 1h3v2h-6Zm11 15h7a1 1 0 0 0 1-1V43a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v6h-2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1Zm1-4h2a1 1 0 0 0 1-1v-6h2v9h-5ZM37 37h-3v-1.5a1.5 1.5 0 0 1 1.5-1.5H37Zm5 6.5v-2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5Zm2 4V47h-1.5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5H46v-2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5H47v.5a.5.5 0 0 1-.5.5H46v.5a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5Z"></path>
+</svg>

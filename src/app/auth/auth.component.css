@@ -19,6 +19,44 @@ body {
     background: var(--white);
 }
 
+
+.auth-page {
+  display: flex;
+  min-height: 100vh;      /* Use min-height instead of height */
+  overflow-y: auto; 
+}
+
+.auth-banner {
+  flex: 0 0 60%;
+  background: #444444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.banner-lottie {
+  width: 100%;
+  height: 100%;
+  max-width: none;     /* REMOVE old limit */
+  max-height: none;
+}
+
+.banner-lottie svg {
+  width: 130% !important;
+  height: 130% !important;
+}
+
+.auth-form-wrapper {
+  flex: 0 0 40%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
 /* Auth Container */
 .auth-container {
     min-height: 100vh;
@@ -29,20 +67,7 @@ body {
     position: relative;
 }
 
-/* Auth Card - Single Container */
-.auth-card {
-    background: var(--white);
-    border-radius: 24px;
-    padding: 40px 35px;
-    width: 100%;
-    max-width: 420px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.1),
-        0 0 0 1px rgba(0, 0, 0, 0.05);
-    border: 1px solid var(--gray-light);
-}
+
 
 /* Background Shapes Inside Card */
 .auth-shapes {
@@ -127,14 +152,15 @@ body {
 }
 
 .auth-header h2 {
-    font-size: 1.75rem;
+    font-size: 28px;
     font-weight: 700;
     color: var(--black);
     margin-bottom: 8px;
 }
 
 .auth-subtitle {
-    color: var(--gray);
+    color: #6b7280;
+    margin-bottom: 32px;
     font-size: 0.95rem;
     margin: 0;
 }
@@ -204,13 +230,14 @@ body {
     width: 100%;
     padding: 14px 16px 14px 48px;
     border: 2px solid var(--gray-light);
-    border-radius: 12px;
     font-size: 1rem;
     background: var(--white);
     color: var(--black);
     transition: all 0.3s ease;
     font-family: inherit;
     font-size: 0.95rem;
+    height: 48px;
+  border-radius: 12px;
 }
 
 .input-container input:focus {
@@ -310,14 +337,15 @@ body {
 }
 
 .forgot-password {
-    color: var(--black);
+    
+    color: rgb(61, 61, 61);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .forgot-password:hover {
-    color: var(--gray-dark);
+    color: var(--black);
     text-decoration: underline;
 }
 
@@ -443,33 +471,48 @@ body {
 }
 
 /* Switch Mode */
-.switch-mode {
-    text-align: center;
-    padding-top: 20px;
-    border-top: 1px solid var(--gray-light);
+.auth-toggle {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 32px;
 }
 
-.switch-text {
-    color: var(--gray);
-    font-size: 0.95rem;
-    margin: 0;
+.toggle-btn {
+  flex: 1;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-.mode-switch-btn {
-    background: none;
-    border: none;
-    color: var(--black);
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
-    font-size: 0.95rem;
-    transition: color 0.3s ease;
-    padding: 0;
-    margin-left: 5px;
+.toggle-btn.active {
+  background: #111827;
+  color: #ffffff;
+  border-color: #111827;
 }
 
-.mode-switch-btn:hover {
-    color: var(--gray-dark);
+.toggle-btn:not(.active):hover {
+  background: #f3f4f6;
+}
+
+.auth-animate {
+  animation: fadeSlide 0.3s ease;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Lottie Overlay */
@@ -544,4 +587,39 @@ body {
 
 .auth-card {
     animation: fadeInUp 0.5s ease-out;
+}
+
+
+@media (max-width: 768px) {
+  .auth-page {
+    flex-direction: column;
+  }
+
+  .auth-banner {
+    flex: none;
+    height: 260px;
+    background: #000000;
+  }
+
+   .auth-container {
+    min-height: auto;     /* 🔥 IMPORTANT */
+    align-items: flex-start;
+  }
+
+  .banner-lottie svg {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .auth-form-wrapper {
+    flex: none;
+    width: 100%;
+    padding: 24px;
+  }
+
+  .auth-form-panel {
+    max-width: 100%;
+    padding: 0;
+    margin-bottom: auto;
+  }
 }

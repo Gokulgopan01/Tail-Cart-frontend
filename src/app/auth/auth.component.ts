@@ -51,10 +51,15 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
   loginData: LoginData = { email_address: '', password: '' };
   registerData: RegisterData = { username: '', email_address: '', password: '' };
 
+  // running cat
   @ViewChild('lottieContainer', { static: true })
   lottieContainer!: ElementRef<HTMLDivElement>;
-
   private animation: AnimationItem | null = null;
+
+  // login lottie
+  @ViewChild('bannerLottie', { static: true })
+  bannerLottie!: ElementRef<HTMLDivElement>;
+  private bannerAnimation: AnimationItem | null = null;
 
   constructor(
     private http: HttpClient,
@@ -62,6 +67,14 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit(): void {
+    this.bannerAnimation = lottie.loadAnimation({
+      container: this.bannerLottie.nativeElement,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'assets/Login_banner.json'
+    });
+
     this.animation = lottie.loadAnimation({
       container: this.lottieContainer.nativeElement,
       renderer: 'svg',
@@ -122,7 +135,7 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
               setTimeout(() => {
                 this.stopLoader();
                 this.router.navigate(['/home']);
-              }, 1500);
+              }, 500);
 
             } else {
               this.stopLoader();
@@ -180,6 +193,7 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.animation?.destroy();
+    this.bannerAnimation?.destroy();
     this.animation = null;
   }
 }

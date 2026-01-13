@@ -38,12 +38,12 @@
   </div>
   
   <!-- Page-specific header content (Lottie + Title) - KEEPING THIS -->
-  <div class="page-header-content" *ngIf="currentPageData">
+  <!-- <div class="page-header-content" *ngIf="currentPageData">
     <div class="lottie-container" 
         *ngIf="currentPageData.showLottie !== false"
-        [style.height]="currentPageData.lottieHeight || '180px'">
+        [style.height]="currentPageData.lottieHeight || '180px'"> -->
       <!-- Lottie will be loaded here -->
-    </div>
+    <!-- </div> -->
     
     <!-- <div class="page-title-section">
       <h1 class="page-title" [style.fontSize]="currentPageData.titleSize || '2.5rem'">
@@ -53,7 +53,7 @@
         {{ currentPageData.subtitle }}
       </p>
     </div> -->
-  </div>
+  <!-- </div> -->
 </nav>
 
 <!-- MOBILE NAVBAR -->
@@ -67,22 +67,26 @@
       </div>
     </div>
     
-    <button class="menu-toggle" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()">
-      <div class="hamburger-icon">
-        <span class="line"></span>
-        <span class="line"></span>
-        <span class="line"></span>
-      </div>
+    <button
+      class="menu-toggle"
+      [class.active]="isMobileMenuOpen"
+      (click)="toggleMobileMenu()"
+    >
+      <img
+        src="assets/icons/menu.svg"
+        alt="Menu"
+        class="menu-icon"
+      />
     </button>
   </div>
 
   <!-- Mobile header content (Lottie + Title) - KEEPING THIS -->
-  <div class="mobile-page-header-content" *ngIf="currentPageData">
+  <!-- <div class="mobile-page-header-content" *ngIf="currentPageData">
     <div class="mobile-lottie-container" 
          *ngIf="currentPageData.showLottie !== false"
-         [style.height]="currentPageData.lottieHeight || '150px'">
+         [style.height]="currentPageData.lottieHeight || '150px'"> -->
       <!-- Lottie will be loaded here -->
-    </div>
+    <!-- </div> -->
     
     <!-- <div class="mobile-title-section">
       <h1 class="mobile-page-title" [style.fontSize]="currentPageData.titleSize || '1.8rem'">
@@ -92,7 +96,7 @@
         {{ currentPageData.subtitle }}
       </p>
     </div> -->
-  </div>
+  <!-- </div> -->
 
   <!-- Mobile Menu Overlay -->
   <div class="mobile-menu-overlay" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()"></div>
