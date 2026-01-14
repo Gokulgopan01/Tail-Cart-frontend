@@ -1,249 +1,314 @@
 <div class="profile-page">
-  <!-- Header with tabs -->
-  <div class="profile-header">
-    <div class="container">
-      <div class="header-content">
-        <h1 class="page-title">Manage Profile</h1>
-        <div class="tab-navigation">
-            <button
-              class="tab-btn"
-              [class.active]="activeTab === 'owner'"
-              (click)="switchTab('owner')"
-            >
-              Owner Profile
-            </button>
+  <!-- Header -->
+  <div class="header">
+    <h1 class="page-title">My Pet Family</h1>
+    <p class="page-subtitle">Manage your profile and furry friends</p>
+  </div>
 
-            <button
-              class="tab-btn"
-              [class.active]="activeTab === 'pets'"
-              (click)="switchTab('pets')"
-            >
-              Pets Profile
-            </button>
-          </div>
-      </div>
+  <!-- Tabs -->
+  <div class="tabs-container">
+    <div class="tabs">
+      <button class="tab-btn" [class.active]="activeTab === 'owner'" (click)="switchTab('owner')">
+        Owner Profile
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'pets'" (click)="switchTab('pets')">
+        My Pets
+      </button>
     </div>
   </div>
 
-  <div class="container">
-    <!-- Owner Profile Tab -->
-    <div class="tab-content" [class.active]="activeTab === 'owner'">
-      <div class="profile-card">
-        <div class="profile-card-header">
-          <div class="header-title">
-            <h2>Owner Profile</h2>
-            <button *ngIf="hasProfile && !isEditMode" class="edit-btn" (click)="toggleEditMode()">
-              Edit
-            </button>
-          </div>
-        </div>
-
-        <div class="profile-card-body">
-          <!-- View Mode -->
-          <div *ngIf="hasProfile && !isEditMode" class="profile-view">
-            <div class="profile-field">
-              <label>Full Name</label>
-              <p class="field-value">{{ profile.owner_name || 'Not provided' }}</p>
-            </div>
-            
-            <div class="profile-field">
-              <label>Address</label>
-              <p class="field-value">{{ profile.owner_address || 'Not provided' }}</p>
-            </div>
-            
-            <div class="profile-field">
-              <label>Phone Number</label>
-              <p class="field-value">{{ profile.owner_phone || 'Not provided' }}</p>
-            </div>
-            
-            <div class="row-fields">
-              <div class="profile-field half">
-                <label>City</label>
-                <p class="field-value">{{ profile.owner_city || 'Not provided' }}</p>
-              </div>
-              <div class="profile-field half">
-                <label>State</label>
-                <p class="field-value">{{ profile.owner_state || 'Not provided' }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Edit Mode -->
-          <div *ngIf="isEditMode" class="profile-edit">
-            <form (ngSubmit)="onSubmit()" #profileForm="ngForm">
-              <div class="form-field">
-                <label for="owner_name">Full Name</label>
-                <input type="text" id="owner_name" name="owner_name" 
-                       [(ngModel)]="profile.owner_name" required
-                       placeholder="Enter your full name"
-                       class="form-input">
-              </div>
-              
-              <div class="form-field">
-                <label for="owner_address">Address</label>
-                <input type="text" id="owner_address" name="owner_address" 
-                       [(ngModel)]="profile.owner_address" required
-                       placeholder="Enter your address"
-                       class="form-input">
-              </div>
-              
-              <div class="form-field">
-                <label for="owner_phone">Phone Number</label>
-                <input type="tel" id="owner_phone" name="owner_phone" 
-                       [(ngModel)]="profile.owner_phone" required
-                       placeholder="Enter your phone number"
-                       class="form-input">
-              </div>
-              
-              <div class="row-fields">
-                <div class="form-field half">
-                  <label for="owner_city">City</label>
-                  <input type="text" id="owner_city" name="owner_city" 
-                         [(ngModel)]="profile.owner_city" required
-                         placeholder="Enter your city"
-                         class="form-input">
-                </div>
-                <div class="form-field half">
-                  <label for="owner_state">State</label>
-                  <input type="text" id="owner_state" name="owner_state" 
-                         [(ngModel)]="profile.owner_state" required
-                         placeholder="Enter your state"
-                         class="form-input">
-                </div>
-              </div>
-              
-              <div class="form-actions">
-                <button type="submit" class="save-btn" [disabled]="profileForm.invalid || isLoading">
-                  {{ isLoading ? 'Saving...' : 'Save Profile' }}
-                </button>
-                <button type="button" class="cancel-btn" (click)="cancelEdit()">
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pets Tab -->
-    <div class="tab-content" [class.active]="activeTab === 'pets'">
-      <div class="pets-section">
-        <div class="pets-header">
-          <h2>My Pets</h2>
-          <button class="add-pet-btn" (click)="startAddPet()">
-            Add Pet
-          </button>
-        </div>
-
-        <!-- Loading -->
-        <div *ngIf="loadingPets" class="loading-state">
-          <p>Loading pets...</p>
-        </div>
-
-        <!-- No Pets -->
-        <div *ngIf="!loadingPets && pets.length === 0" class="no-pets">
-          <div class="no-pets-content">
-            <p>No pets added yet. Add your first pet!</p>
-            <button class="add-pet-btn" (click)="startAddPet()">
-              Add Pet
-            </button>
-          </div>
-        </div>
-
-        <!-- Pets Grid -->
-        <div *ngIf="!loadingPets && pets.length > 0" class="pets-grid">
-          <div class="pet-card" *ngFor="let pet of pets">
-            <div class="pet-card-header">
-              <h3>{{ pet.pet_name }}</h3>
-              <div class="pet-species">{{ pet.species }}</div>
-            </div>
-            
-            <div class="pet-details">
-              <div class="pet-breed">
-                {{ pet.breed || 'Breed not specified' }}
-              </div>
-              
-              <!-- Pet ID Highlight (Crucial Section) -->
-              <div class="pet-id-section">
-                <div class="pet-id-label">PET ID</div>
-                <div class="pet-id-value">{{ pet.pet_id || 'Generating...' }}</div>
-                <div class="pet-id-note">Required for purchases & document uploads</div>
-              </div>
-              
-              <div class="pet-actions">
-                <button class="edit-pet-btn" (click)="editPet(pet)">
-                  Edit
-                </button>
-                <button class="delete-pet-btn" (click)="deletePet(pet)">
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Add Pet Card -->
-          <div class="pet-card add-pet-card" (click)="startAddPet()">
-            <div class="add-pet-content">
-              <div class="add-icon">+</div>
-              <h3>Add New Pet</h3>
-              <p>Add another furry friend</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Add/Edit Pet Modal -->
-  <div *ngIf="isPetFormVisible" class="modal-overlay" (click)="cancelPetForm()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>{{ editingPet ? 'Edit Pet' : 'Add New Pet' }}</h3>
-        <button class="close-btn" (click)="cancelPetForm()">×</button>
-      </div>
+  <!-- Owner Profile Tab -->
+  <div class="tab-content" [class.active]="activeTab === 'owner'">
+    <!-- View Mode -->
+    <div *ngIf="hasProfile && !isEditMode" class="profile-view">
       
-      <form (ngSubmit)="savePet()" #petForm="ngForm" class="modal-form">
+      <!-- Profile Header with Avatar, Name, Location -->
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <div class="avatar-display"> <img *ngIf="ownerAvatar === 'male'" src="assets/icons/avatar.svg" alt="avatar" class="avatar-icon"/><img  *ngIf="ownerAvatar === 'female'" src="assets/icons/female_AVATAR.svg" alt="Female" class="avatar-icon" /></div>
+          <div class="profile-name-location">
+            <h2 class="owner-name">{{ profile.owner_name || 'gokul' }}</h2>
+            <p class="owner-location">{{ profile.owner_city || 'tvm' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- About Me Card -->
+      <div class="about-card">
+        <div class="card-header">
+          <h3 class="about-title">ABOUT ME</h3>
+        </div>
+        <div class="card-content">
+          <div class="about-section">
+            <!-- Display address -->
+            <div *ngIf="profile.owner_address" class="about-item">
+              <div class="about-icon">📍</div>
+              <div class="about-text">{{ profile.owner_address }}</div>
+            </div>
+            
+            <!-- Display phone -->
+            <div *ngIf="profile.owner_phone" class="about-item">
+              <div class="about-icon">📞</div>
+              <div class="about-text">{{ profile.owner_phone }}</div>
+            </div>
+            
+            <!-- Display state -->
+            <div *ngIf="profile.owner_state" class="about-item">
+              <div class="about-icon">🏛️</div>
+              <div class="about-text">{{ profile.owner_state }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Button -->
+      <div class="edit-button-container">
+        <button class="edit-btn" (click)="toggleEditMode()">Edit Profile</button>
+      </div>
+    </div>
+
+    <!-- Edit Mode -->
+    <div *ngIf="isEditMode" class="profile-edit">
+      <div class="edit-header">
+        <h2>Edit Your Profile</h2>
+      </div>
+
+      <!-- Avatar Selection - Male/Female Only -->
+      <div class="avatar-section">
+        <h4>Choose Your Avatar</h4>
+        <div class="avatar-grid">
+          <div class="avatar-option" [class.selected]="ownerAvatar === 'male'" (click)="selectOwnerAvatar('male')">
+            <img src="assets/icons/avatar.svg" alt="Male" class="avatar-icon" />
+            <span class="avatar-label">Male</span>
+          </div>
+          <div class="avatar-option" [class.selected]="ownerAvatar === 'female'" (click)="selectOwnerAvatar('female')">
+            <img src="assets/icons/female_AVATAR.svg" alt="Male" class="avatar-icon" />
+            <span class="avatar-label">Female</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Form -->
+      <form (ngSubmit)="onSubmit()" #profileForm="ngForm" class="edit-form">
+        <!-- Display Name -->
         <div class="form-field">
-          <label for="pet_name">Pet Name</label>
-          <input type="text" id="pet_name" name="pet_name" 
-                 [(ngModel)]="currentPet.pet_name" required
-                 placeholder="What's your pet's name?"
+          <label for="owner_name">Display Name</label>
+          <input type="text" id="owner_name" name="owner_name" 
+                 [(ngModel)]="profile.owner_name" required
+                 placeholder="Enter your name"
                  class="form-input">
         </div>
-        
+
+        <!-- City -->
         <div class="form-field">
-          <label for="species">Species</label>
-          <select id="species" name="species" 
-                  [(ngModel)]="currentPet.species" required
-                  class="form-select">
-            <option value="">Select species</option>
-            <option value="Dog">Dog</option>
-            <option value="Cat">Cat</option>
-            <option value="Fish">Fish</option>
-            <option value="Bird">Bird</option>
-            <option value="Rabbit">Rabbit</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        
-        <div class="form-field">
-          <label for="breed">Breed (optional)</label>
-          <input type="text" id="breed" name="breed" 
-                 [(ngModel)]="currentPet.breed"
-                 placeholder="e.g., Golden Retriever, Persian"
+          <label for="owner_city">City</label>
+          <input type="text" id="owner_city" name="owner_city" 
+                 [(ngModel)]="profile.owner_city" required
+                 placeholder="Enter your city"
                  class="form-input">
         </div>
-        
+
+        <!-- Address -->
+        <div class="form-field">
+          <label for="owner_address">Address</label>
+          <textarea id="owner_address" name="owner_address" 
+                    [(ngModel)]="profile.owner_address" required
+                    placeholder="Enter your address"
+                    class="form-textarea"></textarea>
+        </div>
+
+        <!-- State -->
+        <div class="form-field">
+          <label for="owner_state">State</label>
+          <input type="text" id="owner_state" name="owner_state" 
+                 [(ngModel)]="profile.owner_state" required
+                 placeholder="Enter your state"
+                 class="form-input">
+        </div>
+
+        <!-- Phone -->
+        <div class="form-field">
+          <label for="owner_phone">Phone Number</label>
+          <input type="tel" id="owner_phone" name="owner_phone" 
+                 [(ngModel)]="profile.owner_phone"
+                 placeholder="Enter your phone number"
+                 class="form-input">
+        </div>
+
+        <!-- Form Actions -->
         <div class="form-actions">
-          <button type="submit" class="save-btn" [disabled]="petForm.invalid || loadingPets">
-            {{ loadingPets ? 'Saving...' : (editingPet ? 'Update Pet' : 'Add Pet') }}
-          </button>
-          <button type="button" class="cancel-btn" (click)="cancelPetForm()">
+          <button type="button" class="cancel-btn" (click)="cancelEdit()">
             Cancel
+          </button>
+          <button type="submit" class="save-btn" [disabled]="profileForm.invalid || isLoading">
+            {{ isLoading ? 'Saving...' : 'Save Profile' }}
           </button>
         </div>
       </form>
     </div>
   </div>
+
+  <!-- Pets Tab -->
+  <!-- Pets Tab -->
+<div class="tab-content" [class.active]="activeTab === 'pets'">
+  <div class="pets-container">
+    <!-- Header with Tabs -->
+    <div class="pets-header">
+      <h2>My Pets</h2>
+      <div class="pets-tabs">
+        <button class="pet-tab-btn active" (click)="showAllPets()">All Pets</button>
+        <button class="pet-tab-btn" (click)="showOnlyDogs()">Dogs</button>
+        <button class="pet-tab-btn" (click)="showOnlyCats()">Cats</button>
+        <button class="pet-tab-btn" (click)="showOtherPets()">Other</button>
+      </div>
+    </div>
+
+    <!-- Add Pet Button (Moved to top right) -->
+    <div class="add-pet-container">
+      <button class="add-pet-btn-top" (click)="startAddPet()">
+        + Add New Pet
+      </button>
+    </div>
+
+    <!-- Pets Grid -->
+    <div *ngIf="!loadingPets && pets.length > 0" class="pets-grid">
+      <div class="pet-card" *ngFor="let pet of pets" (click)="editPet(pet)">
+        <!-- Stretched Avatar -->
+        <div class="pet-avatar-large">
+          <div class="avatar-display-large">
+            <img
+              [src]="'assets/icons/pet1.svg'"
+              alt="Pet Avatar"
+              class="pet-avatar-icon"
+            />
+          </div>
+        </div>
+
+        <!-- Pet Info -->
+        <div class="pet-card-content">
+          <div class="pet-name-section">
+            <h3 class="pet-name">{{ pet.pet_name || 'Unnamed Pet' }}</h3>
+            <span class="pet-badge">{{ pet.species }}</span>
+          </div>
+
+          <div class="pet-details">
+            <div class="pet-breed">{{ pet.breed || 'Mixed Breed' }}</div>
+            
+            <!-- Pet ID Highlighted -->
+            <div class="pet-id-section">
+              <div class="pet-id-label">PET ID</div>
+              <div class="pet-id-value">{{ pet.pet_id || 'N/A' }}</div>
+              <div class="pet-id-note">Required for purchases & documents</div>
+            </div>
+
+            <!-- Age (hardcoded as per image) -->
+            <div class="pet-age">
+              <span class="age-label">Age:</span>
+              <span class="age-value">2 years</span>
+            </div>
+
+            <!-- Personality Traits (hardcoded as per image) -->
+            <div class="pet-traits">
+              <div class="trait-tag">Cuddly</div>
+              <div class="trait-tag">Energetic</div>
+              <div class="trait-tag">Protective</div>
+            </div>
+
+            <!-- Bio (hardcoded as per image) -->
+            <div class="pet-bio">
+              {{ pet.breed || 'sdsd' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Pet Card (in grid) -->
+    <div class="add-pet-card-grid" (click)="startAddPet()">
+      <div class="add-pet-icon">+</div>
+      <div class="add-pet-text">
+        <h3>Add New Pet</h3>
+        <p>Welcome a new member to your family!</p>
+      </div>
+    </div>
+
+    <!-- No Pets -->
+    <div *ngIf="!loadingPets && pets.length === 0" class="no-pets">
+      <div class="no-pets-icon">🐾</div>
+      <h3>No pets yet!</h3>
+      <p>Add your first furry friend to get started</p>
+      <button class="add-pet-btn-main" (click)="startAddPet()">
+        + Add Your First Pet
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Pet Modal -->
+<div *ngIf="isPetFormVisible" class="modal-overlay">
+  <div class="modal-content">
+    <h2>{{ editingPet ? 'Edit Pet' : 'Add New Pet' }}</h2>
+    
+    <form (ngSubmit)="savePet()" #petForm="ngForm" class="pet-form">
+      <!-- Pet Type -->
+      <div class="form-field">
+        <label>Pet Type</label>
+        <select [(ngModel)]="currentPet.species" name="species" required class="form-select">
+          <option value="">Select type</option>
+          <option value="Dog">Dog</option>
+          <option value="Cat">Cat</option>
+          <option value="Horse">Horse</option>
+          <option value="Bird">Bird</option>
+          <option value="Fish">Fish</option>
+        </select>
+      </div>
+
+      <!-- Avatar Selection -->
+      <div class="form-field">
+        <label>Choose Avatar</label>
+        <div class="avatar-grid">
+          <div class="avatar-option" [class.selected]="currentPetAvatar === 'pet1'" (click)="selectPetAvatar('pet1')">
+            <img src="assets/icons/pet1.svg" alt="Male" class="avatar-icon" />
+          </div>
+          <div class="avatar-option" [class.selected]="currentPetAvatar === 'pet2'" (click)="selectPetAvatar('pet2')">
+            <img src="assets/icons/cat-play.svg" alt="Male" class="avatar-icon" />
+          </div>
+          <div class="avatar-option" [class.selected]="currentPetAvatar === 'pet3'" (click)="selectPetAvatar('pet3')">
+            <img src="assets/icons/bird.svg" alt="Male" class="avatar-icon" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Pet Name -->
+      <div class="form-field">
+        <label for="pet_name">Pet Name *</label>
+        <p class="field-hint">What's their name?</p>
+        <input type="text" id="pet_name" name="pet_name" 
+               [(ngModel)]="currentPet.pet_name" required
+               placeholder="Enter pet name"
+               class="form-input">
+      </div>
+
+      <!-- Breed -->
+      <div class="form-field">
+        <label for="breed">Breed</label>
+        <p class="field-hint">e.g., Golden Retriever, Siamese</p>
+        <input type="text" id="breed" name="breed" 
+               [(ngModel)]="currentPet.breed"
+               placeholder="Enter breed"
+               class="form-input">
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="submit" class="add-pet-btn" [disabled]="petForm.invalid || loadingPets">
+          {{ loadingPets ? 'Saving...' : (editingPet ? 'Update Pet' : 'Add Pet') }}
+        </button>
+        <button type="button" class="cancel-btn" (click)="cancelPetForm()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 </div>

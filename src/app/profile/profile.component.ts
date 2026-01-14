@@ -11,7 +11,6 @@ export interface UserProfile {
   owner_phone: string;
   owner_city: string;
   owner_state: string;
-  pets?: any[];
 }
 
 export interface Pet {
@@ -30,6 +29,7 @@ export interface Pet {
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  // EXACT API DATA
   profile: UserProfile = {
     owner_name: '',
     owner_address: '',
@@ -38,30 +38,27 @@ export class ProfileComponent implements OnInit {
     owner_state: ''
   };
 
+  pets: Pet[] = [];
+  allpets: Pet[] = [];
+  
+  // UI states
   activeTab: 'owner' | 'pets' = 'owner';
   isEditMode = false;
   isLoading = false;
   hasProfile = false;
   userId: string | null = '';
-  pets: Pet[] = [];
   loadingPets = false;
   isPetFormVisible = false;
   editingPet = false;
   currentPet: Pet = { pet_id: null, pet_name: '', species: '', breed: '' };
+  
+  // ONLY ADDITION: Avatar (frontend only)
+  ownerAvatar: string = 'male';
+  currentPetAvatar: string = 'pet1';
+  petAvatars: Map<number, string> = new Map();
 
   private profileApi = 'https://tailcart1.duckdns.org/api/user/profile/';
   private petsApi = 'https://tailcart1.duckdns.org/api/user/pets/';
-
-  private showSnackbar(
-    message: string,
-    type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-      panelClass: [`snackbar-${type}`],
-      horizontalPosition: 'right',
-      verticalPosition: 'top'
-    });
-  }
 
   constructor(
     private http: HttpClient, 
@@ -106,8 +103,6 @@ export class ProfileComponent implements OnInit {
         if (error.status === 404) {
           this.isEditMode = true;
           this.hasProfile = false;
-        } else {
-          console.error('Load profile error:', error);
         }
       }
     });
@@ -117,10 +112,16 @@ export class ProfileComponent implements OnInit {
     this.isEditMode = !this.isEditMode;
   }
 
+  selectOwnerAvatar(avatar: 'male' | 'female'): void {
+  this.ownerAvatar = avatar;
+}
+
+  selectPetAvatar(avatar: string): void {
+    this.currentPetAvatar = avatar;
+  }
+
   onSubmit(): void {
-    if (!this.validateProfile()) {
-      return;
-    }
+    if (!this.profile.owner_name?.trim()) return;
 
     this.isLoading = true;
     const profileData = { 
@@ -143,23 +144,12 @@ export class ProfileComponent implements OnInit {
         this.isLoading = false;
         this.isEditMode = false;
         this.hasProfile = true;
-        this.showSnackbar('Profile saved successfully!', 'success');
         this.loadProfile();
       },
       error: (error) => {
         this.isLoading = false;
-        console.error('Save profile error:', error);
-        this.showSnackbar('Failed to save profile', 'error');
       }
     });
-  }
-
-  private validateProfile(): boolean {
-    return !!(this.profile.owner_name?.trim() && 
-              this.profile.owner_phone?.trim() && 
-              this.profile.owner_address?.trim() && 
-              this.profile.owner_city?.trim() && 
-              this.profile.owner_state?.trim());
   }
 
   cancelEdit(): void {
@@ -180,31 +170,52 @@ export class ProfileComponent implements OnInit {
     ).subscribe({
       next: (response) => {
         this.pets = response || [];
+        this.allpets = response || [];
         this.loadingPets = false;
       },
       error: (error) => {
         this.pets = [];
         this.loadingPets = false;
-        console.error('Load pets error:', error);
       }
     });
+  }
+
+  showOnlyDogs(): void {
+    this.pets = this.allpets.filter(
+      pet => pet.species?.toLowerCase() === 'dog'
+    );
+  }
+
+  showAllPets(): void {
+    this.pets = this.allpets;
+  }
+
+  showOnlyCats(): void {
+    this.pets = this.allpets.filter(pets => pets.species?.toLowerCase() === 'cat')
+  }
+
+  showOtherPets(): void {
+    this.pets = this.allpets.filter(pets => pets.species?.toLowerCase() !== 'cat' && pets.species?.toLowerCase() !== 'dog')
   }
 
   startAddPet(): void {
     this.isPetFormVisible = true;
     this.editingPet = false;
     this.currentPet = { pet_id: null, pet_name: '', species: '', breed: '' };
+    this.currentPetAvatar = 'pet1';
   }
 
   editPet(pet: Pet): void {
     this.isPetFormVisible = true;
     this.editingPet = true;
     this.currentPet = { ...pet };
+    this.currentPetAvatar = this.petAvatars.get(pet.pet_id!) || 'pet1';
   }
 
   cancelPetForm(): void {
     this.isPetFormVisible = false;
     this.currentPet = { pet_id: null, pet_name: '', species: '', breed: '' };
+    this.currentPetAvatar = 'pet1';
   }
 
   savePet(): void {
@@ -223,54 +234,47 @@ export class ProfileComponent implements OnInit {
 
     const request$ = this.editingPet && this.currentPet.pet_id
       ? this.http.put(`${this.petsApi}`, 
-          { ...payload, pet_id: this.currentPet.pet_id, user_id: this.userId }, 
+          { ...payload, user_id: this.userId }, 
           { headers })
       : this.http.post(`${this.petsApi}`, payload, { headers });
 
     request$.subscribe({
-      next: () => {
+      next: (response: any) => {
         this.loadingPets = false;
         this.isPetFormVisible = false;
-        this.showSnackbar('Pet saved successfully!', 'success');
+        
+        // Save avatar locally
+        if (response && response.pet_id) {
+          this.petAvatars.set(response.pet_id, this.currentPetAvatar);
+        }
+        
         this.loadPets();
       },
       error: (error) => {
         this.loadingPets = false;
-        console.error('Save pet error:', error);
-        this.showSnackbar('Failed to save pet', 'error');
       }
     });
   }
 
   deletePet(pet: Pet): void {
-    const snackRef = this.snackBar.open(
-      `Delete ${pet.pet_name}?`,
-      'DELETE',
-      {
-        duration: 5000,
-        panelClass: ['snackbar-warning'],
-        horizontalPosition: 'right',
-        verticalPosition: 'top'
+    const token = localStorage.getItem('access_token');
+
+    this.http.delete(
+      `${this.petsApi}?user_id=${this.userId}&pet_id=${pet.pet_id}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    ).subscribe({
+      next: () => {
+        this.pets = this.pets.filter(p => p.pet_id !== pet.pet_id);
+        this.petAvatars.delete(pet.pet_id!);
+      },
+      error: (error) => {
+        console.error('Delete pet error:', error);
       }
-    );
-
-    snackRef.onAction().subscribe(() => {
-      const token = localStorage.getItem('access_token');
-
-      this.http.delete(
-        `${this.petsApi}?user_id=${this.userId}&pet_id=${pet.pet_id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      ).subscribe({
-        next: () => {
-          this.pets = this.pets.filter(p => p.pet_id !== pet.pet_id);
-          this.showSnackbar(`${pet.pet_name} deleted`, 'success');
-        },
-        error: (error) => {
-          console.error('Delete pet error:', error);
-          this.showSnackbar('Failed to delete pet', 'error');
-        }
-      });
     });
   }
 
+  getPetAvatar(petId: number | null): string {
+    if (!petId) return 'pet1';
+    return this.petAvatars.get(petId) || 'pet1';
+  }
 }
