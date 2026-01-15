@@ -37,13 +37,14 @@ def params_check():
             arg3 = args.get('arg3', [None])[0]
             print(f"Args : {arg1}")   
             return arg1,arg2,arg3
-            #return "SmartEntry","1854","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NTI3NDg2NjgsImV4cCI6MTc1MzYxMjY2OH0.Itsc57tAJ08YEyCS-HaBYJqn-lpceWz3O3cGXezgHH8"
+            #return "SmartEntry","2560","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjksImVtYWlsIjoic2lkc21AZ21haWwuY29tIiwicm9sZSI6MywiaWF0IjoxNzY4MzcwMDc1LCJleHAiOjE3Njg0NTY0NzV9.GlzV5kBkj5rIlL8q-XvuHme_wQNgWjrFmC1IGn1-Yog"
     else:
           #return None,None  
           # Returns auto for manualy opening Autologin  
 
         return "AutoLogin",None,None
-        # return "SmartEntry","2467","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3Njc3NjczOTcsImV4cCI6MTc2Nzg1Mzc5N30.DU3tN6C0kgys0XWMmEzmJ0JjXUvd3h65ipS2YV7DbRs"
+        #return "SmartEntry","2560","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjQ1LCJlbWFpbCI6ImFyYXRoeV9hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3Njg0NTQyMzIsImV4cCI6MTc2ODU0MDYzMn0.YDVqgiA4eQBvGA_I8hrQrdNtVq6fvaB6KfhEYJYW3Go"
+   
 
 process_type, hybrid_orderid,hybrid_token = params_check()
 
@@ -522,12 +523,15 @@ def javascript_excecuter_filling(driver, data, elementlocator, selector):
     if not data:
         return
 
+    # Escape single quotes in data to prevent JS syntax errors
+    safe_data = str(data).replace("'", "\\'")
+
     script = f"""
         var el = document.evaluate("{elementlocator}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
         if (el) {{
             el.value = '';  // Clear existing value
             el.dispatchEvent(new Event('input'));  // Trigger input event
-            el.value = '{data}';  // Refill with new value
+            el.value = '{safe_data}';  // Refill with new value
             el.dispatchEvent(new Event('input'));
             el.dispatchEvent(new Event('change'));  // Trigger change event to ensure UI reacts
         }}
@@ -535,11 +539,19 @@ def javascript_excecuter_filling(driver, data, elementlocator, selector):
     driver.execute_script(script)
 
    
-def adj_click(driver,data,element_identifier,element_type):
-    selector_map=selector_mapping(element_type)
-    element=driver.find_elements(selector_map,element_identifier)
-    for x in element:
-        x.click()
+def adj_click(driver, data, element_identifier, element_type):
+    selector_map = selector_mapping(element_type)
+    elements = driver.find_elements(selector_map, element_identifier)
+    for x in elements:
+        try:
+            # Scroll to element
+            driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});", x)
+            x.click()
+        except Exception as e:
+            # If interrupted by overlay like 'dimbg', clear and try JS click
+            print(f"[adj_click] Click intercepted, attempting clearing and JS fallback: {e}")
+            close_validation_popup(driver)
+            driver.execute_script("arguments[0].click();", x)
 
 
 
@@ -562,7 +574,15 @@ def radio_btn_click(driver, btn_value, element_identifier, element_type):
     for elem in elements:
         elem_value = re.sub(r"\s+", " ", (elem.get_attribute("value") or "").strip().lower())
         if elem_value == btn_value_normalized:
-            elem.click()
+            try:
+                # Scroll into view first
+                driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});", elem)
+                elem.click()
+            except Exception as e:
+                # If interrupted by overlay like 'dimbg', clear and try JS click
+                print(f"[radio_btn_click] Click intercepted, attempting clearing and JS fallback: {e}")
+                close_validation_popup(driver)
+                driver.execute_script("arguments[0].click();", elem)
             return
 
     #print(f"[radio_btn_click] No matching radio found for value: {btn_value}")
@@ -594,23 +614,33 @@ def data_filling_text(driver, data, elementlocator, selector):
     element = find_elem(driver, selector_map, elementlocator)
 
     try:
+        # Scroll to element
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});", element)
+        
         # Step 1: Try standard Selenium input
-        element.clear()
-        element.send_keys(data)
+        try:
+            element.clear()
+            element.send_keys(data)
+            
+            # Trigger events
+            driver.execute_script("""
+                arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+                arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+            """, element)
+        except Exception as e:
+            # Fallback for hidden/read-only/blocked elements
+            print(f"[data_filling_text] Selenium filling failed (state issue?), using JS fallback: {e}")
+            driver.execute_script("""
+                arguments[0].value = arguments[1];
+                arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+                arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+            """, element, data)
 
-        # Step 2: Trigger input/change events (for JS/React binding)
-        driver.execute_script("""
-            arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
-            arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
-        """, element)
-
-        # Step 3: Verify value actually applied
+        # Step 2: Verify value actually applied
         current_val = driver.execute_script("return arguments[0].value;", element)
         if current_val.strip() != data.strip():
-            # Step 4: Fallback to JavaScript injection
+            # Force injection if verification fails
             driver.execute_script("""
-                arguments[0].value = '';
-                arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
                 arguments[0].value = arguments[1];
                 arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
                 arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
@@ -635,36 +665,54 @@ def data_filling_text(driver, data, elementlocator, selector):
 def select_field(driver, data, elementlocator, selector):
     try:
         data = data.strip().lower()
-        dropdown = Select(find_elem(driver, selector, elementlocator))
+        selector_map = selector_mapping(selector)
+        element = find_elem(driver, selector_map, elementlocator)
+        
+        # Scroll to element to ensure it's in view
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});", element)
+        
+        dropdown = Select(element)
 
         # If multi-select, deselect all before picking
         if dropdown.is_multiple:
             dropdown.deselect_all()
         
         # Loop through options and match by lowercase text
+        matched = False
         for option in dropdown.options:
             if option.text.strip().lower() == data:
-                dropdown.select_by_visible_text(option.text)
-                return
-        #print(f"[select_field] No matching option found for: '{data}'")
-        logger.log(
-                    module="select_field",
-                    order_id=hybrid_orderid,
-                    action_type="Condition-check",
-                    remarks=f"[select_field] No matching option found for: {data}",
-                    severity="INFO"
-           
-        )
+                try:
+                    dropdown.select_by_visible_text(option.text)
+                except Exception as click_err:
+                    print(f"[select_field] Selection intercepted, clearing overlays: {click_err}")
+                    close_validation_popup(driver)
+                    # Try selecting again or via JS
+                    dropdown.select_by_visible_text(option.text)
+                
+                matched = True
+                break
+        
+        if matched:
+            # Trigger events to ensure portal Reacts
+            driver.execute_script("""
+                arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+                arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+            """, element)
+        else:
+            logger.log(
+                module="select_field",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"[select_field] No matching option found for: {data}",
+                severity="INFO"
+            )
     except Exception as e:
-        data='' 
-        #print(f"[select_field] Error selecting option: {e}")
         logger.log(
-                    module="select_field",
-                    order_id=hybrid_orderid,
-                    action_type="Exception",
-                    remarks=f"[select_field] Error selecting option: {e}",
-                    severity="INFO"
-           
+            module="select_field",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"[select_field] Error selecting option: {e}",
+            severity="INFO"
         )
 
 
@@ -1444,21 +1492,46 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 def close_validation_popup(driver, timeout=5):
     """
     Detect and close the SingleSource validation popup if it appears.
-    
-    :param driver: Selenium WebDriver instance
-    :param timeout: Max seconds to wait for popup
-    :return: True if popup was found and closed, False otherwise
+    Also handles hiding the 'dimbg' overlay if it persists.
     """
     try:
-        ok_button = WebDriverWait(driver, timeout).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "#OK a.button"))
-        )
-        ok_button.click()
-        print(" Validation popup closed.")
-        return True
-    except (TimeoutException, NoSuchElementException):
-        # Popup not present
-        print(" No validation popup detected.")
+        # 1. Try to find and click the OK button in the validation panel
+        ok_selectors = [
+            (By.CSS_SELECTOR, "#OK a.button"),
+            (By.XPATH, "//div[@id='validation_panel']//button"),
+            (By.XPATH, "//div[@id='validation_panel']//a[contains(text(), 'OK')]"),
+            (By.XPATH, "//div[@id='msg']//button"),
+        ]
+        
+        popup_found = False
+        for by, selector in ok_selectors:
+            try:
+                ok_button = WebDriverWait(driver, 1).until(
+                    EC.element_to_be_clickable((by, selector))
+                )
+                driver.execute_script("arguments[0].click();", ok_button)
+                print(f" Validation popup closed via {selector}.")
+                popup_found = True
+                break
+            except:
+                continue
+
+        # 2. Force-hide the overlays if they are blocking
+        # Added 'image_modal' and broad cleanup
+        driver.execute_script("""
+            ['dimbg', 'validation_panel', 'image_modal', 'ui-widget-overlay'].forEach(id => {
+                var el = document.getElementById(id) || document.querySelector('.' + id);
+                if (el) { 
+                    el.style.display = 'none'; 
+                    el.style.visibility = 'hidden'; 
+                    el.style.zIndex = '-1';
+                }
+            });
+        """)
+
+        return popup_found
+    except Exception as e:
+        print(f" Error in close_validation_popup: {e}")
         return False
     
 import requests

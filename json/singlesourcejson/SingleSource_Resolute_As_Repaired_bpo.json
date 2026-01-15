@@ -459,7 +459,7 @@
                       "xpath"
                    ],
                    [
-                      "sub_data['Half_Baths']",
+                      "sub_data['Half_Bath']",
                       "//*[@id='PS_FORM/SUBJECT_PROPERTY/Half_Baths']",
                       "xpath"
                    ]

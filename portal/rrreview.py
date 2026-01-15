@@ -94,6 +94,7 @@ class rrreview:
                 self.rrreview_formopen()
                 
             else:
+                update_portal_login_confirmation_status(hybrid_orderid)
                 login_check_keyword = ["baseauth/activeorders"]
                 handle_login_status(current_url, self.username, login_check_keyword, self.portal_name)
 
@@ -101,6 +102,8 @@ class rrreview:
         except Exception as e:
             self.login_status = f"Exception occurred: {e}"
             logging.exception("Exception during login")
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
+            update_client_account_status(self.account_id)
             handle_login_status("EXCEPTION", self.username, ["activeorders"], self.portal_name)
             #update_client_account_status(self.order_id)
             return "Login error", self.driver
