@@ -119,7 +119,7 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
 
     if (this.isLoginMode()) {
       this.http
-        .post<LoginResponse>('https://tailcart1.duckdns.org/api/user/login/', this.loginData)
+        .post<LoginResponse>('http://127.0.0.1:8000/api/user/login/', this.loginData)
         .subscribe({
           next: (response) => {
             if (response.message === 'Login successful') {
@@ -159,7 +159,7 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
       }
 
       this.http
-        .post<RegisterResponse>('https://tailcart1.duckdns.org/api/user/register/', this.registerData)
+        .post<RegisterResponse>('http://127.0.0.1:8000/api/user/register/', this.registerData)
         .subscribe({
           next: (response) => {
             this.stopLoader();

@@ -175,9 +175,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
 
-  private petsApi = 'https://tailcart1.duckdns.org/api/user/pets/';
-  private productsApi = 'https://tailcart1.duckdns.org/api/admin/products/';
-  private cartApi = 'https://tailcart1.duckdns.org/api/user/cart/';
+  private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
+  private productsApi = 'http://127.0.0.1:8000/api/admin/products/';
+  private cartApi = 'http://127.0.0.1:8000/api/user/cart/';
 
   ngOnInit() {
     this.checkMobileView();

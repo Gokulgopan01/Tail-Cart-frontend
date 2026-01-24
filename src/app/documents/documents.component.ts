@@ -81,8 +81,8 @@ export class DocumentsComponent implements OnInit {
   editingAlert: Alert | null = null;
   
   // API Endpoints
-  private documentsApi = 'https://tailcart1.duckdns.org/api/user/documents/';
-  private alertsApi = 'https://tailcart1.duckdns.org/api/user/pet-alerts/';
+  private documentsApi = 'http://127.0.0.1:8000/api/user/documents/';
+  private alertsApi = 'http://127.0.0.1:8000/api/user/pet-alerts/';
   private userId: string = '';
 
   constructor(
@@ -122,7 +122,7 @@ export class DocumentsComponent implements OnInit {
     const token = localStorage.getItem('access_token');
     if (!this.userId) return;
 
-    this.http.get<any[]>(`https://tailcart1.duckdns.org/api/user/pets/?user_id=${this.userId}`, {
+    this.http.get<any[]>(`http://127.0.0.1:8000/api/user/pets/?user_id=${this.userId}`, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (pets) => {
