@@ -1312,10 +1312,11 @@
 
 @media (max-width: 768px) {
   .how-it-works-section {
-    background-image: url('/assets/images/how_it_works.jpg') !important;
+    background-image: url('/assets/images/how_it_works.png') !important;
     background-repeat: no-repeat;
     background-position: center top;
     background-size: cover;
+     background-attachment: scroll !important;
   }
 }
 
