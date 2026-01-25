@@ -1221,6 +1221,25 @@
   }
 }
 
+/* 🔥 FORCE CTA BUTTON VISIBILITY ON MOBILE */
+@media (max-width: 1024px) {
+  .cta-buttons {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    animation: none !important;
+    display: flex !important;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-flex !important;
+  }
+}
+
+
 
 /*Deatiled section ----------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -1524,6 +1543,7 @@
 
   .description-content {
     animation: slideUp 0.7s ease-out 0.6s both;
+    margin-bottom: 30px;
   }
   
   .cta-buttons {
@@ -1542,6 +1562,10 @@
   
   .detail-title {
     font-size: 1.8rem;
+  }
+
+  .description-content {
+    animation: slideUp 0.7s ease-out 0.6s both;
   }
   
   .cta-buttons {
@@ -1626,7 +1650,19 @@
 }
 
 
-/*Docuemnt section--------------------------------*/
+@media (max-width: 1024px) {
+  .description-content,
+  .description-text {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+}
+
+
+/*Docuemnt section----------------------------------------------------------------------------------------------------*/
 
 /* Pet Documents Section - Mirrored Layout */
 .pet-documents-section {
@@ -1868,6 +1904,20 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .documents-text,
+  .documents-tag,
+  .documents-title,
+  .documents-description,
+  .documents-buttons,
+  .documents-features {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+}
 
 
 /*FAQ ----------------------------------------------------------------------------------------------------------------------*/
