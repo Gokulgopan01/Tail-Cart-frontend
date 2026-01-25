@@ -1301,6 +1301,25 @@
   }
 }
 
+@media (max-width: 768px) {
+  .mini-faq-section {
+    background-image: url('/assets/images/FAQ.png') !important;
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: cover;
+  }
+}
+
+@media (max-width: 768px) {
+  .how-it-works-section {
+    background-image: url('/assets/images/how_it_works.jpg') !important;
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+  }
+}
+
+
 
 
 /*Deatiled section ----------------------------------------------------------------------------------------------------------------------------------------------------------*/
