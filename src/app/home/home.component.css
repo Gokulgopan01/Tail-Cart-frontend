@@ -1389,6 +1389,7 @@
 
   .detail-title {
     animation: slideUp 0.7s ease-out 0.4s both;
+    opacity: 1;
   }
   
   .content-right {
@@ -1430,6 +1431,7 @@
   
   .detail-title {
     font-size: 1.8rem;
+    opacity: 1;
   }
 
   .description-content {
@@ -1469,6 +1471,7 @@
   
   .detail-title {
     font-size: 1.6rem;
+    opacity: 1;
   }
   
   .detail-subtitle {
