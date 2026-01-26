@@ -1,171 +1,119 @@
-/* ===== ULTRA LUXURY GOLD & WHITE NAVBAR ===== */
+/* ===== LUXURY GOLD & WHITE NAVBAR ===== */
 
 /* Import luxury font */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
 
-/* Base Navbar - Ultra Luxury White & Gold */
+/* Base Navbar */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 9999;
+  z-index: 1000;
   background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 1.5rem 0;
+  transition: all 0.4s ease;
+  padding: 1rem 0;
   font-family: 'Montserrat', sans-serif;
 }
 
 .navbar.scrolled {
-  padding: 1rem 0;
+  padding: 0.7rem 0;
   background: rgba(255, 255, 255, 0.99);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
 }
 
 .nav-container {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0 3rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* left, center, right alignment */
   align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
 }
 
-/* Logo Section - Moved to Right Corner */
+/* Logo Section */
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
-  order: 3; /* Move to right */
-  transition: all 0.4s ease;
-  padding-left: 2rem;
-  border-left: 1px solid rgba(212, 175, 55, 0.2);
+  gap: 1rem;
+  transition: transform 0.3s ease;
 }
 
 .nav-logo:hover {
-  transform: translateX(-5px);
+  transform: translateY(-2px);
 }
 
 .nav-logo img {
-  height: 60px;
-  width: 60px;
-  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  border-radius: 12px;
   object-fit: cover;
   border: 2px solid #D4AF37;
   padding: 2px;
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-  transition: all 0.5s ease;
-}
-
-.nav-logo:hover img {
-  transform: rotate(-5deg);
-  box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
 }
 
 .logo-text h1 {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   font-family: 'Cormorant Garamond', serif;
   background: linear-gradient(135deg, #D4AF37 0%, #F4E4A6 50%, #D4AF37 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   margin: 0;
-  line-height: 1;
-  text-transform: uppercase;
-  position: relative;
-}
-
-.logo-text h1::after {
-  content: '';
-  
-  bottom: -5px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+  line-height: 1.2;
 }
 
 .logo-text p {
   font-size: 0.75rem;
   color: #8C7853;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  margin: 5px 0 0 0;
+  margin: 3px 0 0 0;
   font-weight: 500;
-  position: relative;
-  padding-left: 10px;
 }
 
-.logo-text p::before {
-  content: '✦';
-  
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #D4AF37;
-  font-size: 8px;
-}
-
-/* Center Navigation Links - Enhanced Luxury */
+/* Center Navigation Links */
 .nav-links {
+  position: static; /* remove left:50% etc */
+  transform: none;
   display: flex;
-  gap: clamp(2rem, 3vw, 3.2rem);
+  gap: 2.5rem;
   align-items: center;
-  flex: 1;
-  justify-content: center;
+  margin: 0 auto; /* optional: helps center links if logo width is small */
 }
 
 .nav-link {
   position: relative;
   color: #5D5346;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   text-decoration: none;
   text-transform: uppercase;
-  padding: 0.8rem 0;
-  transition: all 0.4s ease;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.nav-link::before {
-  content: '✦';
-  
-  left: -20px;
-  top: 50%;
-  transform: translateY(-50%) scale(0);
-  color: #D4AF37;
-  font-size: 10px;
-  transition: transform 0.3s ease;
-  opacity: 0;
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
 }
 
 .nav-link::after {
   content: '';
   
   bottom: 0;
-  
-  
+  left: 0;
   width: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
-  transition: width 0.4s ease;
+  height: 2px;
+  background: linear-gradient(90deg, #D4AF37 0%, #F4E4A6 100%);
+  transition: width 0.3s ease;
 }
 
 .nav-link:hover {
   color: #D4AF37;
-}
-
-.nav-link:hover::before {
-  transform: translateY(-50%) scale(1);
-  opacity: 1;
 }
 
 .nav-link:hover::after {
@@ -177,35 +125,16 @@
   font-weight: 600;
 }
 
-.nav-link.active::before {
-  content: '✦';
-  
-  left: -20px;
-  top: 50%;
-  transform: translateY(-50%) scale(1);
-  color: #D4AF37;
-  font-size: 12px;
-  opacity: 1;
-}
-
 .nav-link.active::after {
-  content: '';
-  
-  bottom: 0;
-  
-  
   width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, #D4AF37, #F4E4A6, #D4AF37);
-  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+  background: linear-gradient(90deg, #D4AF37 0%, #F4E4A6 100%);
 }
 
-/* Left Icons Section - Cart & Profile */
+/* Right Icons Section */
 .nav-icons {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: center;
-  order: 1; /* Move to left */
 }
 
 .nav-icon {
@@ -213,142 +142,100 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
   color: #5D5346;
   text-decoration: none;
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  box-shadow: 
-    0 4px 15px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .nav-icon:hover {
   background: linear-gradient(135deg, #D4AF37 0%, #F4E4A6 100%);
   color: white;
-  transform: translateY(-5px) rotate(5deg);
-  box-shadow: 
-    0 10px 25px rgba(212, 175, 55, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  border-color: rgba(212, 175, 55, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.25);
 }
 
 .nav-icon i {
-  font-size: 1.2rem;
-  transition: transform 0.3s ease;
+  font-size: 1.1rem;
 }
 
-.nav-icon:hover i {
-  transform: scale(1.1);
-}
-
-/* Cart Icon with Luxury Badge */
+/* Cart Icon with Badge */
 .cart-icon {
   position: relative;
 }
 
 .cart-badge {
   
-  top: -8px;
-  right: -8px;
+  top: -5px;
+  right: -5px;
   background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
   color: white;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 10px rgba(184, 134, 11, 0.4);
+  box-shadow: 0 3px 8px rgba(184, 134, 11, 0.3);
   border: 2px solid white;
-  animation: pulse-gold 2s infinite;
 }
 
-@keyframes pulse-gold {
-  0% { box-shadow: 0 3px 10px rgba(184, 134, 11, 0.4); }
-  50% { box-shadow: 0 3px 20px rgba(184, 134, 11, 0.6); }
-  100% { box-shadow: 0 3px 10px rgba(184, 134, 11, 0.4); }
-}
-
-/* Logout Button - Luxury Style */
+/* Logout Button */
 .logout-icon {
   border: none;
   cursor: pointer;
   outline: none;
   font-family: inherit;
-  position: relative;
-  overflow: hidden;
 }
 
-.logout-icon::after {
-  content: '';
-  
-  top: 50%;
-  
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(212, 175, 55, 0.1);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
+/* ===== MOBILE STYLES ===== */
 
-.logout-icon:hover::after {
-  width: 100px;
-  height: 100px;
-}
-
-/* Mobile Menu Button - Luxury Style */
+/* Mobile Menu Button */
 .mobile-toggle {
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  width: 35px;
+  width: 30px;
   height: 24px;
   background: transparent;
   border: none;
   cursor: pointer;
   padding: 0;
-  z-index: 10001;
+  z-index: 1001;
   outline: none;
   position: relative;
 }
 
 .mobile-toggle span {
   display: block;
-  height: 2px;
+  height: 3px;
   width: 100%;
   background: linear-gradient(90deg, #D4AF37 0%, #F4E4A6 100%);
-  border-radius: 1px;
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border-radius: 2px;
+  transition: all 0.3s ease;
   position: relative;
 }
 
-.mobile-toggle span:nth-child(2) {
-  width: 80%;
-  margin-left: auto;
-}
-
-/* Luxury Mobile Menu */
+/* Luxury Mobile Menu - WHITE BACKGROUND */
 .mobile-menu {
   position: fixed;
   top: 0;
   right: -100%;
   width: 85%;
-  max-width: 420px;
+  max-width: 380px;
   height: 100vh;
   background: #FFFFFF; /* SOLID WHITE */
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  z-index: 9998;
-  padding: 3rem 2.5rem;
-  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.15);
-  transition: right 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1002;
+  padding: 2rem;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
+  transition: right 0.4s ease;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -363,40 +250,29 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid rgba(212, 175, 55, 0.15);
-  position: relative;
-}
-
-.mobile-header::after {
-  content: '';
-  
-  bottom: -1px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
 }
 
 .mobile-logo {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .mobile-logo img {
-  height: 60px;
-  width: 60px;
+  height: 50px;
+  width: 50px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #D4AF37;
   padding: 2px;
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
 .mobile-logo h2 {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 700;
   font-family: 'Cormorant Garamond', serif;
   background: linear-gradient(135deg, #D4AF37 0%, #F4E4A6 100%);
@@ -404,79 +280,77 @@
   background-clip: text;
   color: transparent;
   margin: 0;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .close-menu {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
   border: 1px solid rgba(212, 175, 55, 0.2);
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #5D5346;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.4s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .close-menu:hover {
   background: linear-gradient(135deg, #D4AF37 0%, #F4E4A6 100%);
   color: white;
   transform: rotate(90deg);
-  border-color: rgba(212, 175, 55, 0.4);
 }
 
 .mobile-links {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.8rem;
   flex: 1;
 }
 
 .mobile-link {
-  padding: 1.2rem 1.5rem;
+  padding: 1rem 1.2rem;
   color: #5D5346;
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
-  border-radius: 12px;
-  transition: all 0.4s ease;
+  border-radius: 10px;
+  transition: all 0.3s ease;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   position: relative;
-  overflow: hidden;
-  background: #FDFBF7; /* warm luxury white */
+  background: #FDFBF7; /* Warm white */
   border: 1px solid rgba(212, 175, 55, 0.1);
-  margin-bottom: 0.5rem;
 }
 
-.mobile-link::before {
+/* ACTIVE TAB IN MOBILE MENU - GOLD */
+.mobile-link.active {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(244, 228, 166, 0.1) 100%);
+  color: #B8860B;
+  font-weight: 600;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.mobile-link.active::before {
   content: '✦';
   
-  left: 1.5rem;
+  left: 1.2rem;
   top: 50%;
   transform: translateY(-50%);
   color: #D4AF37;
-  font-size: 12px;
-  opacity: 0;
-  transition: all 0.3s ease;
+  font-size: 14px;
 }
 
 .mobile-link:hover {
   background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(244, 228, 166, 0.05) 100%);
-  color: #B8860B;
-  padding-left: 3rem;
-  transform: translateX(5px);
-  border-color: rgba(212, 175, 55, 0.2);
-  box-shadow: 0 5px 20px rgba(212, 175, 55, 0.1);
-}
-
-.mobile-link:hover::before {
-  opacity: 1;
+  color: #D4AF37;
+  padding-left: 1.5rem;
 }
 
 .logout-btn {
@@ -488,39 +362,42 @@
   background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
   color: white !important;
   font-weight: 600;
-  box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
-  padding: 1.2rem 1.5rem;
-  border-radius: 12px;
-  letter-spacing: 1.5px;
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+  padding: 1rem 1.2rem;
+  border-radius: 10px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.logout-btn::before {
-  content: '';
-  
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.6s;
+  transition: all 0.3s ease;
 }
 
 .logout-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
 }
 
-.logout-btn:hover::before {
-  left: 100%;
+/* Overlay for mobile menu */
+.mobile-menu::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: -1;
 }
 
-/* Luxury Scrollbar for Mobile Menu */
+.mobile-menu.active::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Luxury scrollbar for mobile menu */
 .mobile-menu::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 .mobile-menu::-webkit-scrollbar-track {
@@ -533,205 +410,198 @@
   border-radius: 10px;
 }
 
-/* Overlay for mobile menu - Luxury Style */
-.mobile-menu::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.5s ease;
-  z-index: -1;
-}
+/* ===== MOBILE RESPONSIVE STYLES ===== */
 
-.mobile-menu.active::before {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* ===== RESPONSIVE STYLES ===== */
-
-/* Large Desktop */
-@media (min-width: 1600px) {
-  .nav-container {
-    padding: 0 4rem;
-  }
-  
-  .nav-links {
-    gap: 4rem;
-  }
-}
-
-/* Tablet and smaller */
-@media (max-width: 1200px) {
-  .nav-links {
-    gap: 2.5rem;
-  }
-  
-  .nav-container {
-    padding: 0 2rem;
-  }
-  
-  .logo-text h1 {
-    font-size: 1.8rem;
-  }
-}
-
-/* Mobile - Hide center links, show mobile menu */
 @media (max-width: 1024px) {
+  /* Hide desktop elements */
   .nav-links {
-    display: none;
+    display: none !important;
+  }
+  
+  .nav-icons .nav-icon:not(.cart-icon),
+  .nav-icons .logout-icon {
+    display: none !important;
+  }
+  
+  /* Show mobile elements */
+  .mobile-toggle {
+    display: flex !important;
+    order: 1 !important;
   }
   
   .nav-icons {
-    order: 2;
-    margin-left: auto;
+    display: flex !important;
+    order: 2 !important;
+    margin-left: 1rem !important;
   }
   
   .nav-logo {
-    order: 3;
-    border-left: none;
-    padding-left: 0;
+    order: 3 !important;
+    margin-left: auto !important;
   }
   
-  .mobile-toggle {
-    display: flex;
-    order: 1;
-  }
-  
-  .nav-container {
-    padding: 0 1.5rem;
-  }
-  
-  .navbar {
-    padding: 1.2rem 0;
-  }
-  
-  .navbar.scrolled {
-    padding: 0.8rem 0;
-  }
-  
+  /* Adjust sizes for mobile */
   .nav-logo img {
-    height: 50px;
-    width: 50px;
+    height: 45px;
+    width: 45px;
   }
   
   .logo-text h1 {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
+  }
+  
+  .logo-text p {
+    font-size: 0.65rem;
   }
 }
 
-/* Small Mobile */
-@media (max-width: 480px) {
-  .mobile-menu {
-    width: 90%;
-    padding: 2rem 1.5rem;
+/* STRICT MOBILE ALIGNMENT - MENU & CART ON LEFT, LOGO ON RIGHT */
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
   }
   
-  .nav-logo {
-    display: none;
+  /* LEFT CORNER: Menu button + Cart icon */
+  .mobile-toggle {
+    order: 1 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    flex-shrink: 0;
   }
   
   .nav-icons {
-    gap: 1.5rem;
+    order: 2 !important;
+    margin-left: 1rem !important;
+    margin-right: auto !important;
+    display: flex !important;
+    gap: 1rem !important;
+  }
+  
+  /* RIGHT CORNER: Logo */
+  .nav-logo {
+    order: 3 !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+  }
+  
+  /* Smaller sizes for mobile */
+  .mobile-toggle {
+    width: 28px;
+    height: 22px;
+  }
+  
+  .mobile-toggle span {
+    height: 2.5px;
   }
   
   .nav-icon {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
   }
   
+  .nav-icon i {
+    font-size: 1rem;
+  }
+  
+  .nav-logo img {
+    height: 42px;
+    width: 42px;
+  }
+  
+  .logo-text h1 {
+    font-size: 1.3rem;
+  }
+  
+  .logo-text p {
+    font-size: 0.6rem;
+  }
+  
+  .cart-badge {
+    width: 18px;
+    height: 18px;
+    font-size: 0.65rem;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 480px) {
   .nav-container {
-    padding: 0 1rem;
+    padding: 0 0.8rem !important;
   }
   
-  .mobile-logo img {
-    height: 50px;
-    width: 50px;
+  /* Even more compact */
+  .mobile-toggle {
+    width: 26px;
+    height: 20px;
   }
   
-  .mobile-logo h2 {
-    font-size: 1.5rem;
+  .nav-icons {
+    gap: 0.8rem !important;
+    margin-left: 0.8rem !important;
   }
+  
+  .nav-icon {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .nav-logo img {
+    height: 40px;
+    width: 40px;
+  }
+  
+  .logo-text h1 {
+    font-size: 1.2rem;
+  }
+  
+  .logo-text p {
+    font-size: 0.55rem;
+  }
+  
+  /* Option: Hide logo text on very small screens */
+  /*
+  .logo-text p {
+    display: none;
+  }
+  */
 }
 
 /* Mobile toggle animation */
 .mobile-toggle.active span:nth-child(1) {
-  transform: rotate(45deg) translate(8px, 8px);
-  background: linear-gradient(90deg, #D4AF37 0%, #F4E4A6 100%);
+  transform: rotate(45deg) translate(6px, 6px);
 }
 
 .mobile-toggle.active span:nth-child(2) {
   opacity: 0;
-  transform: translateX(-20px);
 }
 
 .mobile-toggle.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(8px, -8px);
-  background: linear-gradient(90deg, #D4AF37 0%, #F4E4A6 100%);
+  transform: rotate(-45deg) translate(6px, -6px);
 }
 
-/* Luxury entrance animation */
-@keyframes luxuryEntrance {
-  0% {
+/* Add smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Add subtle animation to navbar on page load */
+@keyframes slideDown {
+  from {
     transform: translateY(-100%);
     opacity: 0;
   }
-  50% {
-    transform: translateY(10%);
-    opacity: 0.5;
-  }
-  100% {
+  to {
     transform: translateY(0);
     opacity: 1;
   }
 }
 
 .navbar {
-  animation: luxuryEntrance 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Gold shimmer effect on hover */
-.nav-link, .nav-icon, .mobile-link {
-  position: relative;
-  overflow: hidden;
-}
-
-.nav-link::after, .nav-icon::after {
-  content: '';
-  
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent 30%,
-    rgba(212, 175, 55, 0.1) 50%,
-    transparent 70%
-  );
-  transform: rotate(45deg);
-  transition: transform 0.6s;
-  opacity: 0;
-}
-
-.nav-link:hover::after, .nav-icon:hover::after {
-  transform: rotate(45deg) translate(10%, 10%);
-  opacity: 1;
-}
-
-/* Luxury separator dots between nav links */
-.nav-links::before,
-.nav-links::after {
-  content: '·';
-  color: rgba(212, 175, 55, 0.3);
-  font-size: 1.5rem;
+  animation: slideDown 0.5s ease-out;
 }
 
 /* Fix for Bootstrap conflicts */

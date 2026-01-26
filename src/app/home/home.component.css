@@ -1883,11 +1883,13 @@
   }
 
   .faq-accordion {
-    max-width: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 30px 20px;
-    border-radius: 18px;
-  }
+  background: rgba(255, 255, 255, 0.4); /* 40% white */
+  padding: 30px 20px;
+  border-radius: 18px;
+}
+
+
+
 }
 
 
