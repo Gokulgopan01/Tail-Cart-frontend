@@ -29,24 +29,24 @@
                     </p>
                 </div>
 
-                <div class="auth-toggle">
-                    <button
-                        type="button"
-                        class="toggle-btn"
-                        [class.active]="isLoginMode()"
-                        (click)="isLoginMode.set(true)"
-                    >
-                        Login
-                    </button>
+               <div class="auth-toggle">
+                <button
+                    type="button"
+                    class="toggle-btn"
+                    [class.active]="isLoginMode()"
+                    (click)="isLoginMode.set(true)"
+                >
+                    Login
+                </button>
 
-                    <button
-                        type="button"
-                        class="toggle-btn"
-                        [class.active]="!isLoginMode()"
-                        (click)="isLoginMode.set(false)"
-                    >
-                        Sign up
-                    </button>
+                <button
+                    type="button"
+                    class="toggle-btn"
+                    [class.active]="!isLoginMode()"
+                    (click)="isLoginMode.set(false)"
+                >
+                    Sign up
+                </button>
                 </div>
 
                 <!-- Messages -->
