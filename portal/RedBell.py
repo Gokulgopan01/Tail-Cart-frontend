@@ -30,10 +30,17 @@ load_dotenv()
 ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")  
                    
 process_type, hybrid_orderid,hybrid_token = params_check()
-logging.info(f"type,orderid,token,{process_type},{hybrid_orderid},{hybrid_token}")
+
+logger.log(
+    module="Redbell-global",
+    order_id=hybrid_orderid,
+    action_type="Info",
+    remarks=f"type,orderid,token,{process_type},{hybrid_orderid},{hybrid_token}",
+    severity="INFO"
+)
 
 class RedBell:
-    def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id):
+    def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id, portal_key):
         self.username = username
         self.password = password
         self.portal_url = portal_url
@@ -44,7 +51,8 @@ class RedBell:
         self.order_details = None
         self.order_id = None
         self.account_id=account_id
-        logging.basicConfig(level=logging.INFO)
+        self.portal_key = portal_key
+
 
     def login_to_portal(self):
         try:
@@ -96,11 +104,18 @@ class RedBell:
                         update_portal_login_confirmation_status(hybrid_orderid)  
                         handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)
                         #update_portal_login_confirmation_status(hybrid_orderid)
-                        logging.info("After the handle_login_status call")
+
+                        logger.log(
+                            module="Redbell-login_to_portal",
+                            order_id=hybrid_orderid,
+                            action_type="Info",
+                            remarks="After the handle_login_status call",
+                            severity="INFO"
+                        )
                     return self.driver, self.session
 
                 else:
-                    #logging.error("Cookie '.ASPXAUTH' not found in API response.")
+
                     logger.log(
                     module="Redbell-login_to_portal",
                     order_id=hybrid_orderid,
@@ -109,7 +124,7 @@ class RedBell:
                     severity="INFO"
                 )
             else:
-                #logging.error(f"API call failed: {api_response.get('status')}")
+
                 logger.log(
                     module="Redbell-login_to_portal",
                     order_id=hybrid_orderid,
@@ -119,7 +134,7 @@ class RedBell:
                 )
 
         except requests.exceptions.RequestException as e:
-            #logging.error(f"API request failed: {e}")
+
             logger.log(
             module="Redbell-login_to_portal",
             order_id=hybrid_orderid,
@@ -128,7 +143,7 @@ class RedBell:
             severity="INFO"
         )
         except json.JSONDecodeError as e:
-            #logging.error(f"Failed to decode JSON response: {e}")
+
             logger.log(
             module="Redbell-login_to_portal",
             order_id=hybrid_orderid,
@@ -137,7 +152,7 @@ class RedBell:
             severity="INFO"
         )
         except Exception as e:
-            #logging.exception(f"An error occurred: {e}")
+
             logger.log(
             module="Redbell-login_to_portal",
             order_id=hybrid_orderid,
@@ -148,7 +163,8 @@ class RedBell:
 
         title = "MFA FAILED"
         login_check_keyword = ["False"]
-        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
+        if process_type == "SmartEntry":
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         update_client_account_status(self.account_id)
         handle_login_status(title, self.username, login_check_keyword, self.portal_name,self.driver)
         return None, None
@@ -158,7 +174,7 @@ class RedBell:
             url = "https://valuationops.homegenius.com/VendorPortal/InprogressOrder"
             response = session.get(url)
             if response.status_code != 200:
-                #logging.error("Error fetching orders: Invalid response from server")
+
                 logger.log(
                     module="Redbell-fetch_data",
                     order_id=hybrid_orderid,
@@ -192,7 +208,7 @@ class RedBell:
                 orders = order_response.json().get('dt', {}).get('it', [])
                 return orders, session
             else:
-                #logging.error("Failed to fetch orders. Server returned error.")
+
                 logger.log(
                     module="Redbell-fetch_data",
                     order_id=hybrid_orderid,
@@ -202,7 +218,7 @@ class RedBell:
                 )
                 return [], session
         except Exception as e:
-            #logging.error(f"Error fetching data: {e}")
+
             logger.log(
                     module="Redbell-fetch_data",
                     order_id=hybrid_orderid,
@@ -262,9 +278,9 @@ class RedBell:
                     remarks=f"order_details_from_api: {order_details_from_api}",
                     severity="INFO"
                 )
-        #logging.info("Starting form open process")
+
         # if not orders:
-        #     #logging.info("No orders in portal")
+
         logger.log(
                 module="Redbell-redbell_formopen",
                 order_id=hybrid_orderid,
@@ -275,7 +291,7 @@ class RedBell:
         target_genorderid =order_details_from_api
         form_types = ["Interior Enhanced BPO",'Interior BPO - W Rentals','Exterior Enhanced BPO','Interior BPO','Exterior BPO','Exterior BPO - W Rentals','5 Day MIT ARBPO','5 Day Interior Appraiser Reconciled BPO','5 Day Exterior Appraiser Reconciled BPO','5 Day Exterior BPO - W Rentals','5 Day Exterior BPO','5 Day Interior BPO','5 Day Interior BPO - W Rentals',"3 Day Exterior BPO - W Rentals","Interior BPO"]
         if not orders:
-            #logging.info("No orders in portal")
+
             logger.log(
                     module="Redbell-redbell_formopen",
                     order_id=hybrid_orderid,
@@ -291,7 +307,7 @@ class RedBell:
 
         if matched and status == "matched":
             order_url = f"https://valuationops.homegenius.com/VendorPortal/EditReport?ItemId={order['ItemId']}&EntityType=Vendor"
-            #logging.info("Form matched. Opening in browser.")
+
             logger.log(
                     module="Redbell-redbell_formopen",
                     order_id=hybrid_orderid,
@@ -304,7 +320,7 @@ class RedBell:
             redbell_formopen_fill(self, order, session, merged_json, order_details, order_id,tfs_orderid)
            
         elif not matched:
-            #logging.info("No exact address match found.")
+
             logger.log(
                     module="Redbell-redbell_formopen",
                     order_id=hybrid_orderid,
@@ -334,7 +350,7 @@ class RedBell:
             if target_genorderid == order_genid:
                 address_found = True
                 print(f"Address Found {order['PropAddress']}for geniid{order['OrderGenId']}")
-                #logging.info(f"Address Found {order['PropAddress']} for geniid{order['OrderGenId']}")
+
                 logger.log(
                     module="Redbell-find_matching_order",
                     order_id=hybrid_orderid,
@@ -349,7 +365,7 @@ class RedBell:
                     print(order.get('OrderId'), order.get('ItemId'))
                     order_url = f"https://valuationops.homegenius.com/VendorPortal/EditReport?ItemId={order['ItemId']}&EntityType=Vendor"
                     print(order_url)
-                    #logging.info("Form Matched")
+
                     logger.log(
                     module="Redbell-find_matching_order",
                     order_id=hybrid_orderid,
@@ -362,7 +378,7 @@ class RedBell:
                 # Form not matched
                 else:
                     print("Form not matched---New Type")
-                    #logging.info(f"Form not Found --New Type {order.get('ProductDesc')}")
+
                     logger.log(
                     module="Redbell-find_matching_order",
                     order_id=hybrid_orderid,
@@ -377,7 +393,7 @@ class RedBell:
 
             else:
                 print(f"Address Not Found {order.get('PropAddress')}")
-                #logging.info(f"Address Not Found {order.get('PropAddress')}")
+
                 logger.log(
                     module="Redbell-find_matching_order",
                     order_id=hybrid_orderid,
@@ -462,7 +478,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
 
                 value_cache[expr] = value
                 if value is None:
-                    #logging.warning(f"[extract_value_from_expr] Value for '{expr}' not found, defaulting to None")
+
                     logger.log(
                     module="Redbell-fill_form_multi",
                     order_id=hybrid_orderid,
@@ -490,7 +506,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
     try:
         sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3 ,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3= extract_data_sections(merged_json)
         if sub_data is None:
-            #logging.error("'entry_data' missing or empty in merged_json")
+
             logger.log(
                     module="Redbell-fill_form_multi",
                     order_id=hybrid_orderid,
@@ -509,7 +525,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
             for section_name, controls in page.items():
                 page_url = page_urls.get(section_name)
                 if not page_url:
-                    #logging.warning(f"URL not found for section: {section_name}")
+
                     logger.log(
                     module="Redbell-fill_form_multi",
                     order_id=hybrid_orderid,
@@ -519,7 +535,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                     )
                     continue
 
-                #logging.info(f"Navigating to section: {section_name} => {page_url}")
+
                 logger.log(
                     module="Redbell-fill_form_multi",
                     order_id=hybrid_orderid,
@@ -534,7 +550,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                         EC.presence_of_element_located((By.TAG_NAME, "body"))
                     )
                 except Exception:
-                    #logging.warning(f"Timeout waiting for page to load: {section_name}")
+
                     logger.log(
                     module="Redbell-fill_form_multi",
                     order_id=hybrid_orderid,
@@ -550,7 +566,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                     if field_type == "save_data":
                         if not saved_form:
                             save_form(self.driver)
-                            #logging.info("Form saved.")
+
 
 
                             # for cookie in self.driver.get_cookies():
@@ -561,7 +577,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                     if field_type == "save_data_adj":
                         if not saved_form:
                             save_form_adj(self.driver)
-                            #logging.info("Form saved.")
+
                             # for cookie in self.driver.get_cookies():
                             #     session.cookies.set(cookie['name'], cookie['value'])
                             # time.sleep(5)
@@ -570,7 +586,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                     if field_type == "checkbox_list":
                         for field in values:
                             if not (isinstance(field, list) and len(field) == 3):
-                                #logging.warning(f"Invalid checkbox_list field: {field}")
+
                                 logger.log(
                                     module="Redbell-fill_form_multi",
                                     order_id=hybrid_orderid,
@@ -584,7 +600,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                                 value = extract_value_from_expr(key_expr)
                                 if value:
                                     select_checkboxes_from_list(self.driver, value, id_prefix)
-                                    #logging.info(f"Checkboxes selected for {key_expr} with prefix {id_prefix}")
+
                                     logger.log(
                                     module="Redbell-fill_form_multi",
                                     order_id=hybrid_orderid,
@@ -593,7 +609,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                                     severity="INFO"
                                     )
                             except Exception as e:
-                                #logging.error(f"Error selecting checkboxes for {key_expr}: {e}")
+
                                 logger.log(
                                     module="Redbell-fill_form_multi",
                                     order_id=hybrid_orderid,
@@ -606,7 +622,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                     if field_type == "repair_details_fill":
                         for field in values:
                             if not (isinstance(field, list) and len(field) == 3):
-                                #logging.warning(f"Invalid repair_details_fill field: {field}")
+
                                 logger.log(
                                     module="Redbell-fill_form_multi",
                                     order_id=hybrid_orderid,
@@ -621,12 +637,19 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                                 if isinstance(value, list):
                                     fill_repair_details(self.driver, value)
                             except Exception as e:
-                                logging.error(f"Error processing repair_details_fill: {e}")
+
+                                logger.log(
+                                    module="Redbell-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Exception",
+                                    remarks=f"Error processing repair_details_fill: {e}",
+                                    severity="ERROR"
+                                )
                         continue
 
                     for field in values:
                         if not (isinstance(field, list) and len(field) == 3):
-                            #logging.warning(f"Invalid field format: {field}")
+
                             logger.log(
                                     module="Redbell-fill_form_multi",
                                     order_id=hybrid_orderid,
@@ -649,7 +672,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                             if action_func:
                                 action_func(self.driver, value, xpath, mode)
                             else:
-                                #logging.warning(f"Unknown field type: {field_type}")
+
                                 logger.log(
                                     module="Redbell-fill_form_multi",
                                     order_id=hybrid_orderid,
@@ -665,7 +688,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                             remarks=f"Exception filling field {key_expr}: {e}",
                             severity="INFO"
                             )
-                            #logging.error(f"Exception filling field {key_expr}: {e}")
+
 
         if saved_form:
             #update_order_status(order_id, "In Progress", "Entry", "Completed")
@@ -689,7 +712,14 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
             return False
 
     except Exception as e:
-        logging.error(f"Critical error in fill_form_multi: {e}")
+
+        logger.log(
+            module="Redbell-fill_form_multi",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Critical error in fill_form_multi: {e}",
+            severity="ERROR"
+        )
         logger.log(
                             module="Redbell-fill_form_multi",
                             order_id=hybrid_orderid,
@@ -869,41 +899,75 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderi
 
 
 def count_non_subject_photos(self):
+    from selenium.common.exceptions import StaleElementReferenceException
     subject_labels = set()
-    tables = self.driver.find_elements(By.XPATH, "//div[@id='RequiedPhotosDetail']//table[@id='requiredphototable']")
-    for table in tables:
-        rows = table.find_elements(By.TAG_NAME, "tr")
-        for row in rows:
-            text = row.text.strip().lower()
-            if text:
-                subject_labels.add(text)
+    try:
+        tables = self.driver.find_elements(By.XPATH, "//div[@id='RequiedPhotosDetail']//table[@id='requiredphototable']")
+        for table in tables:
+            rows = table.find_elements(By.TAG_NAME, "tr")
+            for row in rows:
+                try:
+                    text = row.text.strip().lower()
+                    if text:
+                        subject_labels.add(text)
+                except StaleElementReferenceException:
+                    continue
 
-    photo_elements = self.driver.find_elements(By.XPATH, "//div[contains(@class,'photo-thumbnail')]//img")
-    count = 0
-    #print("Checking uploaded photo labels:")
-    for img in photo_elements:
-        alt = (img.get_attribute("alt") or "").strip().lower()
-        aria = (img.get_attribute("aria-label") or "").strip().lower()
-        label = alt or aria
-        print(f"   → ALT: {alt}, ARIA: {aria}")
-        if label in subject_labels:
-            continue
-        count += 1
-    return count
+        photo_elements = self.driver.find_elements(By.XPATH, "//div[contains(@class,'photo-thumbnail')]//img")
+        count = 0
+        #print("Checking uploaded photo labels:")
+        for img in photo_elements:
+            try:
+                alt = (img.get_attribute("alt") or "").strip().lower()
+                aria = (img.get_attribute("aria-label") or "").strip().lower()
+                label = alt or aria
+                #print(f"   → ALT: {alt}, ARIA: {aria}")
+                if label in subject_labels:
+                    continue
+                count += 1
+            except StaleElementReferenceException:
+                continue
+        return count
+    except Exception as e:
+
+        logger.log(
+            module="Redbell-count_non_subject_photos",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Error in count_non_subject_photos: {e}",
+            severity="INFO"
+        )
+        return 0
 
 def get_required_non_subject_labels(self):
+    from selenium.common.exceptions import StaleElementReferenceException
     labels = set()
-    tables = self.driver.find_elements(By.XPATH, "//div[@id='RequiedPhotosDetail']//table[@id='requiredphototable']")
-    for table in tables:
-        rows = table.find_elements(By.TAG_NAME, "tr")
-        for row in rows:
-            label = row.text.strip()
-            if label and "subject" not in label.lower():
-                labels.add(label.lower())
-    return labels
+    try:
+        tables = self.driver.find_elements(By.XPATH, "//div[@id='RequiedPhotosDetail']//table[@id='requiredphototable']")
+        for table in tables:
+            rows = table.find_elements(By.TAG_NAME, "tr")
+            for row in rows:
+                try:
+                    label = row.text.strip()
+                    if label and "subject" not in label.lower():
+                        labels.add(label.lower())
+                except StaleElementReferenceException:
+                    continue
+        return labels
+    except Exception as e:
+
+        logger.log(
+            module="Redbell-get_required_non_subject_labels",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Error in get_required_non_subject_labels: {e}",
+            severity="INFO"
+        )
+        return set()
 
 
 def delete_non_subject_photos(self):
+    from selenium.common.exceptions import StaleElementReferenceException
     wait = WebDriverWait(self.driver, 20)
 
     try:
@@ -921,112 +985,114 @@ def delete_non_subject_photos(self):
         return False
 
     #print("Scanning uploaded photos...")
+    try:
+        photo_items = self.driver.find_elements(By.CSS_SELECTOR, "li.qq-upload-success")
+        non_subject_count = 0
 
-    photo_items = self.driver.find_elements(By.CSS_SELECTOR, "li.qq-upload-success")
-    non_subject_count = 0
+        for item in photo_items:
+            try:
+                # Each photo dropdown
+                dropdown_el = item.find_element(By.CSS_SELECTOR, "select.qq-edit-filetype")
+                dropdown = Select(dropdown_el)
 
-    for item in photo_items:
-        try:
-            # Each photo dropdown
-            dropdown_el = item.find_element(By.CSS_SELECTOR, "select.qq-edit-filetype")
-            dropdown = Select(dropdown_el)
+                selected_text = dropdown.first_selected_option.text.strip()
+                # print("Dropdown:", selected_text)
 
-            selected_text = dropdown.first_selected_option.text.strip()
-            # print("Dropdown:", selected_text)
+                # If not Subject → tick checkbox
+                if "Subject" not in selected_text:
+                    checkbox = item.find_element(By.CSS_SELECTOR, "input.qq-upload-checkbox")
 
-            # If not Subject → tick checkbox
-            if "Subject" not in selected_text:
-                checkbox = item.find_element(By.CSS_SELECTOR, "input.qq-upload-checkbox")
+                    if not checkbox.is_selected():
+                        checkbox.click()
+                        non_subject_count += 1
+                        logger.log(
+                        module="Redbell-delete_non_subject_photos",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks=f" Marked NON-Subject photo: {selected_text}",
+                        severity="INFO"
+                        )
+            except (NoSuchElementException, StaleElementReferenceException):
+                continue
 
-                if not checkbox.is_selected():
-                    checkbox.click()
-                    non_subject_count += 1
-                    #print(f"✔ Marked NON-Subject photo: {selected_text}")
-                    logger.log(
-                    module="Redbell-delete_non_subject_photos",
-                    order_id=hybrid_orderid,
-                    action_type="Condition-check",
-                    remarks=f"✔ Marked NON-Subject photo: {selected_text}",
-                    severity="INFO"
-                    )
-
-        except NoSuchElementException:
+        if non_subject_count == 0:
+            #print("No non-subject photos found.")
             logger.log(
-                    module="Redbell-delete_non_subject_photos",
-                    order_id=hybrid_orderid,
-                    action_type="Exception",
-                    remarks=f"NoSuchElementException: {NoSuchElementException}",
-                    severity="INFO"
-                    )
-            continue
+                        module="Redbell-delete_non_subject_photos",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks=f"No non-subject photos found.",
+                        severity="INFO"
+                        )
+            return False
 
-    if non_subject_count == 0:
-        #print("No non-subject photos found.")
+        #print(f"Total photos to delete: {non_subject_count}")
         logger.log(
-                    module="Redbell-delete_non_subject_photos",
-                    order_id=hybrid_orderid,
-                    action_type="Condition-check",
-                    remarks=f"No non-subject photos found.",
-                    severity="INFO"
-                    )
-        return False
+                        module="Redbell-delete_non_subject_photos",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks=f"Total photos to delete: {non_subject_count}",
+                        severity="INFO"
+                        )
+        # Click Delete Photos button
+        try:
+            delete_btn = wait.until(EC.element_to_be_clickable((By.ID, "trigger-delete")))
+            delete_btn.click()
+            #print("Delete button clicked.")
+            logger.log(
+                        module="Redbell-delete_non_subject_photos",
+                        order_id=hybrid_orderid,
+                        action_type="Confirmation",
+                        remarks=f"Delete button clicked.",
+                        severity="INFO"
+                        )
+        except TimeoutException:
+            #print(" Delete Photos button not found.")
+            logger.log(
+                        module="Redbell-delete_non_subject_photos",
+                        order_id=hybrid_orderid,
+                        action_type="Exception",
+                        remarks=f" Delete Photos button not found.",
+                        severity="INFO"
+                        )
+            return False
 
-    #print(f"Total photos to delete: {non_subject_count}")
-    logger.log(
-                    module="Redbell-delete_non_subject_photos",
-                    order_id=hybrid_orderid,
-                    action_type="Condition-check",
-                    remarks=f"Total photos to delete: {non_subject_count}",
-                    severity="INFO"
-                    )
-    # Click Delete Photos button
-    try:
-        delete_btn = wait.until(EC.element_to_be_clickable((By.ID, "trigger-delete")))
-        delete_btn.click()
-        #print("Delete button clicked.")
-        logger.log(
-                    module="Redbell-delete_non_subject_photos",
-                    order_id=hybrid_orderid,
-                    action_type="Confirmation",
-                    remarks=f"Delete button clicked.",
-                    severity="INFO"
-                    )
-    except TimeoutException:
-        #print(" Delete Photos button not found.")
-        logger.log(
-                    module="Redbell-delete_non_subject_photos",
-                    order_id=hybrid_orderid,
-                    action_type="Exception",
-                    remarks=f" Delete Photos button not found.",
-                    severity="INFO"
-                    )
-        return False
+        # Handle confirmation popup (if exists)
+        try:
+            confirm_btn = wait.until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, ".confirm, .btn-primary"))
+            )
+            confirm_btn.click()
+            #print("✔ Confirmed delete.")
+            logger.log(
+                        module="Redbell-delete_non_subject_photos",
+                        order_id=hybrid_orderid,
+                        action_type="Confirmation",
+                        remarks=f"Confirmed delete.",
+                        severity="INFO"
+                        )
+        except TimeoutException:
+            #print("⚠ No confirmation popup found (maybe auto-deleted).")
+            logger.log(
+                        module="Redbell-delete_non_subject_photos",
+                        order_id=hybrid_orderid,
+                        action_type="Exception",
+                        remarks=f"No confirmation popup found (maybe auto-deleted).",
+                        severity="INFO"
+                        )
 
-    # Handle confirmation popup (if exists)
-    try:
-        confirm_btn = wait.until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, ".confirm, .btn-primary"))
+        return True
+    except Exception as e:
+        import traceback
+
+        logger.log(
+            module="Redbell-delete_non_subject_photos",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Error in delete_non_subject_photos: {traceback.format_exc()}",
+            severity="ERROR"
         )
-        confirm_btn.click()
-        #print("✔ Confirmed delete.")
-        logger.log(
-                    module="Redbell-delete_non_subject_photos",
-                    order_id=hybrid_orderid,
-                    action_type="Confirmation",
-                    remarks=f"Confirmed delete.",
-                    severity="INFO"
-                    )
-    except TimeoutException:
-        #print("⚠ No confirmation popup found (maybe auto-deleted).")
-        logger.log(
-                    module="Redbell-delete_non_subject_photos",
-                    order_id=hybrid_orderid,
-                    action_type="Exception",
-                    remarks=f"No confirmation popup found (maybe auto-deleted).",
-                    severity="INFO"
-                    )
-
-    return True
+        return False
 
 def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, rental_folder=None) -> bool:
     missing = []
@@ -1313,13 +1379,14 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
                 module="Redbell-upload_photos_to_order",
                 order_id=hybrid_orderid,
                 action_type="Condition-check",
-                remarks=f"   - {m}",
+                remarks=f" missing  - {m}",
                 severity="INFO"
                 )
             return False
 
     except Exception as e:
         import traceback
+        error_msg = traceback.format_exc()
         #print(" Upload failed with error:", e)
         for m in missing:
                 #print("   -", m)
@@ -1327,17 +1394,26 @@ def upload_photos_to_order(self, comparables_folder, photos_url, ProductDesc, re
                 module="Redbell-upload_photos_to_order",
                 order_id=hybrid_orderid,
                 action_type="Condition-check",
-                remarks=f"Upload failed with error: {e} ",
+                remarks=f"Upload failed with error: {e} - missing {m}",
                 severity="INFO"
                 )
-        traceback.print_exc()
-        logger.log(
+        if not missing:
+            logger.log(
                 module="Redbell-upload_photos_to_order",
                 order_id=hybrid_orderid,
                 action_type="Condition-check",
-                remarks=f"{traceback.print_exc()}",
+                remarks=f"Upload failed with error: {e}",
                 severity="INFO"
                 )
+        
+
+        logger.log(
+            module="Redbell-upload_photos_to_order",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"RedBell photo upload exception: {error_msg}",
+            severity="ERROR"
+        )
         return False
 
 
@@ -1410,7 +1486,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 remarks=f"No matching config path for ProductDesc: {ProductDesc}",
                 severity="INFO"
                 )
-        #logging.warning(f"No matching config path for ProductDesc: {ProductDesc}")
+
 
         update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         tfs_statuschange(tfs_orderid, "27", "3", "14")
@@ -1446,7 +1522,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
             # if page_key == "ComparablesAdj":
             #     continue
 
-            #logging.info(f"Loading page: {page_key} -> {url}")
+
             logger.log(
                 module="Redbell-redbell_formopen_fill",
                 order_id=hybrid_orderid,
@@ -1462,7 +1538,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 WebDriverWait(self.driver, 15).until(
                     EC.presence_of_element_located((By.TAG_NAME, "body"))  # Replace with unique tag if needed
                 )
-                #logging.info(f"Page {page_key} loaded successfully.")
+
                 logger.log(
                 module="Redbell-redbell_formopen_fill",
                 order_id=hybrid_orderid,
@@ -1471,7 +1547,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 severity="INFO"
                 )
             except Exception as e:
-                #logging.warning(f"Timeout waiting for page {page_key} to load: {e}")
+
                 logger.log(
                 module="Redbell-redbell_formopen_fill",
                 order_id=hybrid_orderid,
@@ -1487,7 +1563,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
             time.sleep(2)
 
     except Exception as e:
-        #logging.exception(f"Error while navigating and filling forms: {e}")
+
         logger.log(
                 module="Redbell-redbell_formopen_fill",
                 order_id=hybrid_orderid,
@@ -1504,7 +1580,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
 
         data = fetch_upload_data(self, order_id)
         if not data:
-            #logging.warning(f"No upload data found for order {order_id}")
+
             logger.log(
                 module="Redbell-redbell_formopen_fill",
                 order_id=hybrid_orderid,
@@ -1523,7 +1599,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
         if isinstance(comparables_folder, str) and comparables_folder.strip():
             upload_photos=upload_photos_to_order(self, comparables_folder, photos_url,ProductDesc, rental_folder)
         else:
-            #logging.warning(f"Comparables folder is missing or invalid for order {order_id}: {comparables_folder!r}")
+
             logger.log(
                 module="Redbell-redbell_formopen_fill",
                 order_id=hybrid_orderid,
@@ -1535,7 +1611,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
             tfs_statuschange(tfs_orderid, "27", "3", "14")
         # Check if all 3 are True
         if form_fill and uploda_files and upload_photos:
-            #logging.info("All form filling and upload functions completed successfully.")
+
             logger.log(
                 module="Redbell-redbell_formopen_fill",
                 order_id=hybrid_orderid,
@@ -1546,7 +1622,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
             tfs_statuschange(tfs_orderid, "26", "3", "14")
         else:
-            #logging.warning(f"One or more functions failed: form_fill={form_fill}, uploda_files={uploda_files}, upload_photos={upload_photos}")
+
             logger.log(
                 module="Redbell-redbell_formopen_fill",
                 order_id=hybrid_orderid,
@@ -1557,7 +1633,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
             update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
             tfs_statuschange(tfs_orderid, "27", "3", "14")
     except Exception as e:
-        #logging.exception(f"Error during photo upload steps: {e}")
+
         logger.log(
                 module="Redbell-redbell_formopen_fill",
                 order_id=hybrid_orderid,

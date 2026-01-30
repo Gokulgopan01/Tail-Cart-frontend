@@ -3,6 +3,7 @@ import time
 import tkinter as tk
 from tkinter import ttk, messagebox
 import logging
+
 from dotenv import load_dotenv
 import requests
 import json
@@ -16,11 +17,12 @@ from condtions.all_portal_conditions import generate_condition_data
 from config import env
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.helper import SS_fill_repair_details, adj_click, close_validation_popup, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_source_save_form, update_client_account_status, update_order_status, update_portal_login_confirmation_status
-# Load environment variables from the .env file
 load_dotenv()
+from utils.glogger import GLogger
+logger = GLogger()
 process_type, hybrid_orderid,hybrid_token = params_check()
 class SingleSource:
-    def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id):
+    def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id, portal_key):
         self.username = username
         self.password = password
         self.portal_url = portal_url
@@ -31,7 +33,8 @@ class SingleSource:
         self.order_details = None
         self.order_id = None
         self.account_id=account_id
-        logging.basicConfig(level=logging.INFO)
+        self.portal_key = portal_key
+        # logging.basicConfig(level=logging.INFO)
     def login_to_portal(self):
         try:
             setup_driver(self)
@@ -63,13 +66,41 @@ class SingleSource:
 
                     current_url = self.driver.current_url
                     if "SS_Vendor_Login.aspx" in current_url:
-                        logging.error("Login failed: stayed on login page")
+                        # logging.error("Login failed: stayed on login page")
+                        logger.log(
+                            module="SingleSource-login_to_portal",
+                            order_id=hybrid_orderid,
+                            action_type="Exception",
+                            remarks="Login failed: stayed on login page",
+                            severity="ERROR"
+                        )
                     elif "UserUpdate.aspx" in current_url:
-                        logging.info("Redirected to password update page")
+                        # logging.info("Redirected to password update page")
+                        logger.log(
+                            module="SingleSource-login_to_portal",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks="Redirected to password update page",
+                            severity="INFO"
+                        )
                     elif "MFA.aspx" in current_url:
-                        logging.warning("MFA encountered")
+                        # logging.warning("MFA encountered")
+                        logger.log(
+                            module="SingleSource-login_to_portal",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks="MFA encountered",
+                            severity="INFO"
+                        )
                     elif "main.aspx" in current_url:
-                        logging.info("Login successful")
+                        # logging.info("Login successful")
+                        logger.log(
+                            module="SingleSource-login_to_portal",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks="Login successful",
+                            severity="INFO"
+                        )
 
                         #process_type = "SmartEntry"  # Manually set for testing
                         #process_type="PortalLogin"
@@ -90,27 +121,71 @@ class SingleSource:
                             #update_portal_login_confirmation_status(hybrid_orderid)
                             return session
                     else:
-                        logging.error(f"Unexpected redirect: {current_url}")
+                        # logging.error(f"Unexpected redirect: {current_url}")
+                        logger.log(
+                            module="SingleSource-login_to_portal",
+                            order_id=hybrid_orderid,
+                            action_type="Exception",
+                            remarks=f"Unexpected redirect: {current_url}",
+                            severity="ERROR"
+                        )
                 else:
-                    logging.error("Cookie 'twoFactorRemember' not found in API response.")
+                    # logging.error("Cookie 'twoFactorRemember' not found in API response.")
+                    logger.log(
+                        module="SingleSource-login_to_portal",
+                        order_id=hybrid_orderid,
+                        action_type="Exception",
+                        remarks="Cookie 'twoFactorRemember' not found in API response.",
+                        severity="ERROR"
+                    )
             else:
-                logging.error(f"API call failed: {api_response.get('status')}")
-
-            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
+                # logging.error(f"API call failed: {api_response.get('status')}")
+                logger.log(
+                    module="SingleSource-login_to_portal",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"API call failed: {api_response.get('status')}",
+                    severity="ERROR"
+                )
+            if process_type == "SmartEntry":
+                update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
 
         except requests.exceptions.RequestException as e:
-            logging.error(f"API request failed: {e}")
+            # logging.error(f"API request failed: {e}")
+            logger.log(
+                module="SingleSource-login_to_portal",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"API request failed: {e}",
+                severity="ERROR"
+            )
         except json.JSONDecodeError as e:
-            logging.error(f"Failed to decode JSON response: {e}")
+            # logging.error(f"Failed to decode JSON response: {e}")
+            logger.log(
+                module="SingleSource-login_to_portal",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Failed to decode JSON response: {e}",
+                severity="ERROR"
+            )
         except Exception as e:
-            logging.exception(f"An unexpected error occurred during login: {e}")
+            # logging.exception(f"An unexpected error occurred during login: {e}")
+            import traceback
+            logger.log(
+                module="SingleSource-login_to_portal",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"An unexpected error occurred during login: {traceback.format_exc()}",
+                severity="ERROR"
+            )
 
 
 
         # Final fallback in case of failure
         title = "MFA FAILED"
         login_check_keyword = ["False"]
-        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
+        if process_type == "SmartEntry":
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         update_client_account_status(self.account_id)
         handle_login_status(title, self.username, login_check_keyword, self.portal_name)
         return None, None
@@ -122,20 +197,41 @@ class SingleSource:
             self.driver.switch_to.frame("_MAIN")
             skip_button_xpath = '//*[@id="Form1"]/div[3]/div[3]/button[2]'
             wait.until(EC.element_to_be_clickable((By.XPATH, skip_button_xpath))).click()
-            logging.info("Clicked skip/confirmation button in _MAIN frame")
+            # logging.info("Clicked skip/confirmation button in _MAIN frame")
+            logger.log(
+                module="SingleSource-handle_post_login_frames",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="Clicked skip/confirmation button in _MAIN frame",
+                severity="INFO"
+            )
             self.driver.switch_to.default_content()
             time.sleep(3)
 
             self.driver.switch_to.frame("_TOP_MENU")
             tab_xpath = '//*[@id="dl_screen_tabs"]/tbody/tr/td[2]/table/tbody/tr/td/a'
             wait.until(EC.element_to_be_clickable((By.XPATH, tab_xpath))).click()
-            logging.info("Clicked second tab in _TOP_MENU frame")
+            # logging.info("Clicked second tab in _TOP_MENU frame")
+            logger.log(
+                module="SingleSource-handle_post_login_frames",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="Clicked second tab in _TOP_MENU frame",
+                severity="INFO"
+            )
             self.driver.switch_to.default_content()
             time.sleep(3)
             return self.driver # Return both driver and session
 
         except Exception as e:
-            logging.error(f"Error navigating frames: {e}")
+            # logging.error(f"Error navigating frames: {e}")
+            logger.log(
+                module="SingleSource-handle_post_login_frames",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Error navigating frames: {e}",
+                severity="ERROR"
+            )
             self.driver.switch_to.default_content()
             return self.driver  # Return anyway, even if error
 
@@ -143,7 +239,14 @@ class SingleSource:
         try:
             orders_from_api = HybridBPOApi.get_entry_order(hybrid_orderid) 
             if not orders_from_api:  # Check if the order list is empty
-                print("No orders found.")
+                # print("No orders found.")
+                logger.log(
+                    module="SingleSource-singleSource_formopen",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks="No orders found.",
+                    severity="INFO"
+                )
                 return
             
             # Process each order
@@ -156,12 +259,26 @@ class SingleSource:
                 sessions=order_from_api.get("session",None)
                 order_id=order_from_api.get("order_id","")
                 order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(order_id,hybrid_token)
-                print("order_details_from_api:", order_details_from_api)
+                # print("order_details_from_api:", order_details_from_api)
+                logger.log(
+                    module="SingleSource-singleSource_formopen",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"order_details_from_api: {order_details_from_api}",
+                    severity="INFO"
+                )
                 # if not order_details_from_api:
                 #     messagebox.showerror("Authentication Required", "Please log in again.")
                 #     self.controller.show_frame("EcesisLoginScreen")
                 #     return
-            logging.info("Starting form open process")
+            # logging.info("Starting form open process")
+            logger.log(
+                module="SingleSource-singleSource_formopen",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="Starting form open process",
+                severity="INFO"
+            )
             target_genorderid =order_details_from_api
 
             form_type = [
@@ -170,10 +287,24 @@ class SingleSource:
             ]
 
             get_url = self.driver.current_url
-            logging.info(f"Current URL in formopen_fill: {get_url}")
+            # logging.info(f"Current URL in formopen_fill: {get_url}")
+            logger.log(
+                module="SingleSource-singleSource_formopen",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Current URL in formopen_fill: {get_url}",
+                severity="INFO"
+            )
 
             if 'main' in get_url:
-                print('Refreshing Portal')
+                # print('Refreshing Portal')
+                logger.log(
+                    module="SingleSource-singleSource_formopen",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks="Refreshing Portal",
+                    severity="INFO"
+                )
                 self.driver.switch_to.parent_frame()
                 self.driver.switch_to.frame("_MAIN")
                 time.sleep(5)
@@ -186,10 +317,24 @@ class SingleSource:
 
                 if rows:
                     for row in rows:
-                        print("Fetching the address")
+                        # print("Fetching the address")
+                        logger.log(
+                            module="SingleSource-singleSource_formopen",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks="Fetching the address",
+                            severity="INFO"
+                        )
                         cells = row.find_elements(By.TAG_NAME, 'td')
                         row_data = [cell.text for cell in cells]
-                        logging.info(f"Data fetched from form: {row_data}")
+                        # logging.info(f"Data fetched from form: {row_data}")
+                        logger.log(
+                            module="SingleSource-singleSource_formopen",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"Data fetched from form: {row_data}",
+                            severity="INFO"
+                        )
 
                         if len(row_data) > 2:
                             portal_orderid = target_genorderid
@@ -198,7 +343,14 @@ class SingleSource:
 
                             if (portal_orderid in portal_orderid_portal and portal_formtype in form_type) or(portal_orderid_portal in portal_orderid and portal_formtype in form_type) : 
 
-                                logging.info(f"Address matched in form: {portal_formtype}")
+                                # logging.info(f"Address matched in form: {portal_formtype}")
+                                logger.log(
+                                    module="SingleSource-singleSource_formopen",
+                                    order_id=hybrid_orderid,
+                                    action_type="Condition-check",
+                                    remarks=f"Address matched in form: {portal_formtype}",
+                                    severity="INFO"
+                                )
                                 orderidnotfound = True
 
                                 clickable_element = cells[-1].find_element(By.TAG_NAME, 'a')
@@ -209,11 +361,25 @@ class SingleSource:
                                 try:
                                     element =  self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table')
                                 except Exception as e:
-                                    logging.info(f"Exception finding form element: {e}")
+                                    # logging.info(f"Exception finding form element: {e}")
+                                    logger.log(
+                                        module="SingleSource-singleSource_formopen",
+                                        order_id=hybrid_orderid,
+                                        action_type="Exception",
+                                        remarks=f"Exception finding form element: {e}",
+                                        severity="INFO"
+                                    )
                                     element =  self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[1]/font')
                                 
                                 formtype_value = element.text.strip()
-                                logging.info(f"Form type inside the form: {formtype_value}")
+                                # logging.info(f"Form type inside the form: {formtype_value}")
+                                logger.log(
+                                    module="SingleSource-singleSource_formopen",
+                                    order_id=hybrid_orderid,
+                                    action_type="Condition-check",
+                                    remarks=f"Form type inside the form: {formtype_value}",
+                                    severity="INFO"
+                                )
                                 SingleSource_formopen_fill(self, formtype_value, session, merged_json, order_details, order_id)
                                 break
                                 # element = session.find_element(By.ID, "PS_FORM/RECENT_SALE1/Street_Address1")
@@ -221,36 +387,93 @@ class SingleSource:
                                 # logging.info(f"sale1 address: {listing_address}")
 
                             else:
-                                logging.info(f"portal_orderid_portal not matched in the corresponding row: {portal_orderid_portal}")
+                                # logging.info(f"portal_orderid_portal not matched in the corresponding row: {portal_orderid_portal}")
+                                logger.log(
+                                    module="SingleSource-singleSource_formopen",
+                                    order_id=hybrid_orderid,
+                                    action_type="Condition-check",
+                                    remarks=f"portal_orderid_portal not matched in the corresponding row: {portal_orderid_portal}",
+                                    severity="INFO"
+                                )
                                 if portal_orderid not in portal_orderid_portal:
                                     orderidnotfound += 1
                                 else:
                                     newform += 1
                         else:
-                            print("No orders in the portal")
-                            logging.info("No orders in the portal")
+                            # print("No orders in the portal")
+                            # logging.info("No orders in the portal")
+                            logger.log(
+                                module="SingleSource-singleSource_formopen",
+                                order_id=hybrid_orderid,
+                                action_type="Condition-check",
+                                remarks="No orders in the portal",
+                                severity="INFO"
+                            )
 
                     if not orderidnotfound:
-                        print("portal_orderid_portal not found")
-                        logging.info(f"portal_orderid_portal not found {portal_orderid_portal}")
+                        # print("portal_orderid_portal not found")
+                        # logging.info(f"portal_orderid_portal not found {portal_orderid_portal}")
+                        logger.log(
+                            module="SingleSource-singleSource_formopen",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"portal_orderid_portal not found {portal_orderid_portal}",
+                            severity="INFO"
+                        )
                         #statuschange(order_details, "29", "3" if order_desc == "X-Completed" else "16", "14")
                     else:
-                        print("address completed")
-                        logging.info("Address completed")
+                        # print("address completed")
+                        # logging.info("Address completed")
+                        logger.log(
+                            module="SingleSource-singleSource_formopen",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks="Address completed",
+                            severity="INFO"
+                        )
                         return
 
                     if newform > 0:
-                        logging.info(f"Form type outside the form: {formtype_value}")
+                        # logging.info(f"Form type outside the form: {formtype_value}")
+                        logger.log(
+                            module="SingleSource-singleSource_formopen",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"Form type outside the form: {formtype_value}",
+                            severity="INFO"
+                        )
                         #statuschange(order_details, "28", "3" if order_desc == "X-Completed" else "16", "14")
                     else:
-                        logging.info("Exception Form type outside the form")
+                        # logging.info("Exception Form type outside the form")
+                        logger.log(
+                            module="SingleSource-singleSource_formopen",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks="Exception Form type outside the form",
+                            severity="INFO"
+                        )
                 else:
-                    print("No orders in the portal Address Not Found")
-                    logging.info(f"No orders in the portal Address Not Found {order_details['subject_address']}")
+                    # print("No orders in the portal Address Not Found")
+                    # logging.info(f"No orders in the portal Address Not Found {order_details['subject_address']}")
+                    logger.log(
+                        module="SingleSource-singleSource_formopen",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks=f"No orders in the portal Address Not Found {order_details['subject_address']}",
+                        severity="INFO"
+                    )
                     #statuschange(order_details, "29", "3" if order_desc == "X-Completed" else "16", "14")
 
         except Exception as e:
-            logging.exception(f"Exception in singleSource_formopen: {e}")       
+            # logging.exception(f"Exception in singleSource_formopen: {e}")
+            import traceback
+            logger.log(
+                module="SingleSource-singleSource_formopen",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Exception in singleSource_formopen: {traceback.format_exc()}",
+                severity="ERROR"
+            )
 
 def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=None, order_details=None, order_id=None):
 
@@ -265,7 +488,14 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
     elif norm_formtype in ["SS New BPO Exterior", "BPO Exterior","SS New BPO Exterior Needs Corrections."]:
         config_path = 'json/singlesourcejson/SingleSource_SS_New_BPO_Exterior.json'        
     else:
-        logging.warning(f"No matching config path for form type: {formtype_value}")
+        # logging.warning(f"No matching config path for form type: {formtype_value}")
+        logger.log(
+            module="SingleSource-SingleSource_formopen_fill",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"No matching config path for form type: {formtype_value}",
+            severity="INFO"
+        )
         update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         return
     form_config, merged_json = load_form_config_and_data(
@@ -284,7 +514,14 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
     if "entry_data" in merged_json and merged_json["entry_data"]:
         merged_json["entry_data"][0]["condition_data"] = condition_data
 
-    print(merged_json)    
+    # print(merged_json)
+    logger.log(
+        module="SingleSource-SingleSource_formopen_fill",
+        order_id=hybrid_orderid,
+        action_type="Condition-check",
+        remarks=f"merged_json: {merged_json}",
+        severity="INFO"
+    )
 
     try:
         # Call fill_form_multi for just this page
@@ -292,7 +529,15 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
         time.sleep(2)
 
     except Exception as e:
-        logging.exception(f"Error while navigating and filling forms: {e}")
+        # logging.exception(f"Error while navigating and filling forms: {e}")
+        import traceback
+        logger.log(
+            module="SingleSource-SingleSource_formopen_fill",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Error while navigating and filling forms: {traceback.format_exc()}",
+            severity="ERROR"
+        )
         #update_order_status(order_id, "In Progress", "Entry", "Failed")
         return
     
@@ -300,7 +545,14 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
 
         data = fetch_upload_data(self, order_id)
         if not data:
-            logging.warning(f"No upload data found for order {order_id}")
+            # logging.warning(f"No upload data found for order {order_id}")
+            logger.log(
+                module="SingleSource-SingleSource_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"No upload data found for order {order_id}",
+                severity="INFO"
+            )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             return
         mls_result = upload_mls_for_order(self,order_id)
@@ -312,17 +564,50 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
         if isinstance(comparables_folder, str) and comparables_folder.strip():
             upload_photos=upload_photos_to_order(self, comparables_folder)
         else:
-            logging.warning(f"Comparables folder is missing or invalid for order {order_id}: {comparables_folder!r}")
+            # logging.warning(f"Comparables folder is missing or invalid for order {order_id}: {comparables_folder!r}")
+            logger.log(
+                module="SingleSource-SingleSource_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Comparables folder is missing or invalid for order {order_id}: {comparables_folder!r}",
+                severity="INFO"
+            )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-        # Check if all 3 are True
-        if form_fill and mls_result and tax_result and upload_photos:
-            logging.info("All form filling and upload functions completed successfully.")
+            
+        # Upload Signature
+        signature_result = upload_signature_for_order(self, order_id)
+
+        # Check if all are True
+        if form_fill and mls_result and tax_result and upload_photos and signature_result:
+            # logging.info("All form filling and upload functions completed successfully.")
+            logger.log(
+                module="SingleSource-SingleSource_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="All form filling and upload functions completed successfully.",
+                severity="INFO"
+            )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
         else:
-            logging.warning(f"One or more functions failed: form_fill={form_fill}, upload_photos={upload_photos}")
+            # logging.warning(f"One or more functions failed: form_fill={form_fill}, upload_photos={upload_photos}, signature_result={signature_result}")
+            logger.log(
+                module="SingleSource-SingleSource_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"One or more functions failed: form_fill={form_fill}, upload_photos={upload_photos}, signature_result={signature_result}",
+                severity="INFO"
+            )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
     except Exception as e:
-        logging.exception(f"Error during photo upload steps: {e}")
+        # logging.exception(f"Error during photo upload steps: {e}")
+        import traceback
+        logger.log(
+            module="SingleSource-SingleSource_formopen_fill",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Error during photo upload steps: {traceback.format_exc()}",
+            severity="ERROR"
+        )
         update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         return
 
@@ -385,13 +670,21 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
             "radiobutton_data": radio_btn_click,
             "radiobutton_default": radio_btn_click,
             "date_fill_javascript": javascript_excecuter_filling,
-            "checkbox": select_checkboxes_from_list,
+            "checkbox_list": select_checkboxes_from_list,
+    
         }
 
         try:
             sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3 ,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3= extract_data_sections(merged_json)
             if sub_data is None:
-                logging.error("'entry_data' missing or empty in merged_json")
+                # logging.error("'entry_data' missing or empty in merged_json")
+                logger.log(
+                    module="SingleSource-fill_form_multi",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks="'entry_data' missing or empty in merged_json",
+                    severity="ERROR"
+                )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                 return False
 
@@ -401,12 +694,26 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
             for page in form_config.get("page", []):
                 controls = page.get("Controls", [])
                 if not isinstance(controls, (list, tuple)):
-                    logging.warning(f"Expected 'Controls' to be list but got {type(controls)}")
+                    # logging.warning(f"Expected 'Controls' to be list but got {type(controls)}")
+                    logger.log(
+                        module="SingleSource-fill_form_multi",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks=f"Expected 'Controls' to be list but got {type(controls)}",
+                        severity="INFO"
+                    )
                     continue
 
                 for control in controls:
                     if not isinstance(control, dict):
-                        logging.warning(f"Control is not dict: {control}")
+                        # logging.warning(f"Control is not dict: {control}")
+                        logger.log(
+                            module="SingleSource-fill_form_multi",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"Control is not dict: {control}",
+                            severity="INFO"
+                        )
                         continue
 
                     field_type = control.get("filedtype")
@@ -418,7 +725,14 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                     if field_type == "save_data":
                         if not saved_form:
                             single_source_save_form(self.driver)
-                            logging.info("Form saved.")
+                            # logging.info("Form saved.")
+                            logger.log(
+                                module="SingleSource-fill_form_multi",
+                                order_id=hybrid_orderid,
+                                action_type="Condition-check",
+                                remarks="Form saved.",
+                                severity="INFO"
+                            )
                             # for cookie in self.driver.get_cookies():
                             #     session.cookies.set(cookie['name'], cookie['value'])
                             # time.sleep(5)
@@ -449,7 +763,14 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                         for field in values:
                             # Validate field format
                             if not (isinstance(field, list) and len(field) >= 3):
-                                logging.warning(f"Invalid repair_details_fill field: {field}")
+                                # logging.warning(f"Invalid repair_details_fill field: {field}")
+                                logger.log(
+                                    module="SingleSource-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Condition-check",
+                                    remarks=f"Invalid repair_details_fill field: {field}",
+                                    severity="INFO"
+                                )
                                 continue
 
                             key_expr, _, _ = field
@@ -459,17 +780,80 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                                 
                                 if isinstance(repair_details, dict) and "repairs" in repair_details:
                                     SS_fill_repair_details(self.driver, repair_details)
-                                    logging.info(f"Filled repair details for {key_expr}")
+                                    # logging.info(f"Filled repair details for {key_expr}")
+                                    logger.log(
+                                        module="SingleSource-fill_form_multi",
+                                        order_id=hybrid_orderid,
+                                        action_type="Condition-check",
+                                        remarks=f"Filled repair details for {key_expr}",
+                                        severity="INFO"
+                                    )
                                 else:
-                                    logging.warning(f"Expected dict with 'repairs' for repair details but got: {repair_details}")
+                                    # logging.warning(f"Expected dict with 'repairs' for repair details but got: {repair_details}")
+                                    logger.log(
+                                        module="SingleSource-fill_form_multi",
+                                        order_id=hybrid_orderid,
+                                        action_type="Condition-check",
+                                        remarks=f"Expected dict with 'repairs' for repair details but got: {repair_details}",
+                                        severity="INFO"
+                                    )
                             except Exception as e:
-                                logging.error(f"Error processing repair_details_fill for {key_expr}: {e}")
+                                # logging.error(f"Error processing repair_details_fill for {key_expr}: {e}")
+                                logger.log(
+                                    module="SingleSource-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Exception",
+                                    remarks=f"Error processing repair_details_fill for {key_expr}: {e}",
+                                    severity="ERROR"
+                                )
                         continue
 
+                    if field_type == "checkbox_list":
+                        for field in values:
+                            if not (isinstance(field, list) and len(field) == 3):
+                                #logging.warning(f"Invalid checkbox_list field: {field}")
+                                logger.log(
+                                    module="SingleSource-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Condition-check",
+                                    remarks=f"Invalid checkbox_list field: {field}",
+                                    severity="INFO"
+                                    )
+                                continue
+                            key_expr, id_prefix, mode = field
+                            try:
+                                value = extract_value_from_expr(key_expr)
+                                if value:
+                                    select_checkboxes_from_list(self.driver, value, id_prefix)
+                                    #logging.info(f"Checkboxes selected for {key_expr} with prefix {id_prefix}")
+                                    logger.log(
+                                    module="SingleSource-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Condition-check",
+                                    remarks=f"Checkboxes selected for {key_expr} with prefix {id_prefix}",
+                                    severity="INFO"
+                                    )
+                            except Exception as e:
+                                #logging.error(f"Error selecting checkboxes for {key_expr}: {e}")
+                                logger.log(
+                                    module="SingleSource-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Exception",
+                                    remarks=f"Error selecting checkboxes for {key_expr}: {e}",
+                                    severity="INFO"
+                                    )
+                        continue    
 
                     for field in values:
                         if not (isinstance(field, list) and len(field) == 3):
-                            logging.warning(f"Invalid field format: {field}")
+                            # logging.warning(f"Invalid field format: {field}")
+                            logger.log(
+                                module="SingleSource-fill_form_multi",
+                                order_id=hybrid_orderid,
+                                action_type="Condition-check",
+                                remarks=f"Invalid field format: {field}",
+                                severity="INFO"
+                            )
                             continue
 
                         key_expr, xpath, mode = field
@@ -488,9 +872,23 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                                 if action_func:
                                     action_func(self.driver, value, xpath, mode)
                                 else:
-                                    logging.warning(f"Unknown field type: {field_type}")
+                                    # logging.warning(f"Unknown field type: {field_type}")
+                                    logger.log(
+                                        module="SingleSource-fill_form_multi",
+                                        order_id=hybrid_orderid,
+                                        action_type="Condition-check",
+                                        remarks=f"Unknown field type: {field_type}",
+                                        severity="INFO"
+                                    )
                         except Exception as e:
-                            logging.error(f"Exception filling field {key_expr}: {e}")
+                            # logging.error(f"Exception filling field {key_expr}: {e}")
+                            logger.log(
+                                module="SingleSource-fill_form_multi",
+                                order_id=hybrid_orderid,
+                                action_type="Exception",
+                                remarks=f"Exception filling field {key_expr}: {e}",
+                                severity="INFO"
+                            )
 
             if saved_form:
                 #update_order_status(order_id, "In Progress", "Entry", "Completed")
@@ -500,7 +898,14 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                 return False
 
         except Exception as e:
-            logging.error(f"Critical error in fill_form_multi: {e}")
+            # logging.error(f"Critical error in fill_form_multi: {e}")
+            logger.log(
+                module="SingleSource-fill_form_multi",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Critical error in fill_form_multi: {e}",
+                severity="ERROR"
+            )
             #update_order_status(order_id, "In Progress", "Entry", "Failed")
             return False
 
@@ -574,18 +979,39 @@ def upload_mls_for_order(self, order_id: int) -> bool:
         )
 
         if not mls_doc:
-            print(f"[WARN] No MLS document found for order {order_id}")
+            # print(f"[WARN] No MLS document found for order {order_id}")
+            logger.log(
+                module="SingleSource-upload_mls_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"No MLS document found for order {order_id}",
+                severity="INFO"
+            )
             return True
 
         file_path = mls_doc.get("path")
         if not file_path or not os.path.exists(file_path):
-            print(f"[ERROR] MLS file not found: {file_path}")
+            # print(f"[ERROR] MLS file not found: {file_path}")
+            logger.log(
+                module="SingleSource-upload_mls_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"MLS file not found: {file_path}",
+                severity="INFO"
+            )
             return False
 
         # -------------------------------------------------
         # STEP 1: Remove ANY existing MLS files (Multiple)
         # -------------------------------------------------
-        print("[INFO] Checking for existing MLS files to remove...")
+        # print("[INFO] Checking for existing MLS files to remove...")
+        logger.log(
+            module="SingleSource-upload_mls_for_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks="Checking for existing MLS files to remove...",
+            severity="INFO"
+        )
         files_to_remove = []
         
         # 1. Identify checkboxes in the MLS cell specifically
@@ -593,28 +1019,56 @@ def upload_mls_for_order(self, order_id: int) -> bool:
             # The input is id="fname_MLS". We look for checkboxes in its parent td.
             mls_row_cell = self.driver.find_element(By.ID, "fname_MLS").find_element(By.XPATH, "./ancestor::td[1]/following-sibling::td[1]")
             mls_cell_checkboxes = mls_row_cell.find_elements(By.XPATH, ".//input[@type='checkbox' and @name='remove_file']")
-            for cb in mls_cell_checkboxes:
-                if cb not in files_to_remove:
-                    files_to_remove.append(cb)
-                    print(f"[INFO] Found targeted MLS removal box: {cb.get_attribute('value')}")
+            for checkbox in mls_cell_checkboxes:
+                if checkbox not in files_to_remove:
+                    files_to_remove.append(checkbox)
+                    # print(f"[INFO] Found targeted MLS removal box: {checkbox.get_attribute('value')}")
+                    logger.log(
+                        module="SingleSource-upload_mls_for_order",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks=f"Found targeted MLS removal box: {checkbox.get_attribute('value')}",
+                        severity="INFO"
+                    )
         except Exception as e:
-            print(f"[WARN] Error finding targeted MLS cell boxes: {e}")
+            # print(f"[WARN] Error finding targeted MLS cell boxes: {e}")
+            logger.log(
+                module="SingleSource-upload_mls_for_order",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Error finding targeted MLS cell boxes: {e}",
+                severity="INFO"
+            )
 
         # 2. Identify any other checkboxes on the page where filename starts with 'mls'
         try:
             all_remove_boxes = self.driver.find_elements(By.XPATH, "//input[@name='remove_file']")
-            for cb in all_remove_boxes:
-                filename = (cb.get_attribute("value") or "").lower()
+            for checkbox in all_remove_boxes:
+                filename = (checkbox.get_attribute("value") or "").lower()
                 if filename.startswith("mls") and filename.endswith(".pdf"):
-                    if cb not in files_to_remove:
-                        files_to_remove.append(cb)
-                        print(f"[INFO] Found global MLS removal box: {cb.get_attribute('value')}")
+                    if checkbox not in files_to_remove:
+                        files_to_remove.append(checkbox)
+                        # print(f"[INFO] Found global MLS removal box: {checkbox.get_attribute('value')}")
+                        logger.log(
+                            module="SingleSource-upload_mls_for_order",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"Found global MLS removal box: {checkbox.get_attribute('value')}",
+                            severity="INFO"
+                        )
         except:
             pass
 
         # 3. Mark all identified for removal
         if files_to_remove:
-            print(f"[INFO] Removing {len(files_to_remove)} existing MLS file(s)...")
+            # print(f"[INFO] Removing {len(files_to_remove)} existing MLS file(s)...")
+            logger.log(
+                module="SingleSource-upload_mls_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Removing {len(files_to_remove)} existing MLS file(s)...",
+                severity="INFO"
+            )
             marked_count = 0
             for box in files_to_remove:
                 # Use robust JS marking
@@ -635,16 +1089,44 @@ def upload_mls_for_order(self, order_id: int) -> bool:
                 # Re-ensure frame after save
                 self.driver.switch_to.default_content()
                 self.driver.switch_to.frame("_MAIN")
-                print(f"[SUCCESS] {marked_count} MLS files marked for removal and form saved.")
+                # print(f"[SUCCESS] {marked_count} MLS files marked for removal and form saved.")
+                logger.log(
+                    module="SingleSource-upload_mls_for_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"{marked_count} MLS files marked for removal and form saved.",
+                    severity="INFO"
+                )
             else:
-                print("[INFO] All detected MLS files were already marked.")
+                # print("[INFO] All detected MLS files were already marked.")
+                logger.log(
+                    module="SingleSource-upload_mls_for_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks="All detected MLS files were already marked.",
+                    severity="INFO"
+                )
         else:
-            print("[INFO] No existing MLS files detected for removal.")
+            # print("[INFO] No existing MLS files detected for removal.")
+            logger.log(
+                module="SingleSource-upload_mls_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="No existing MLS files detected for removal.",
+                severity="INFO"
+            )
 
         # -------------------------------------------------
         # STEP 2: Upload MLS file
         # -------------------------------------------------
-        print(f"[INFO] Uploading new MLS file: {file_path}")
+        # print(f"[INFO] Uploading new MLS file: {file_path}")
+        logger.log(
+            module="SingleSource-upload_mls_for_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Uploading new MLS file: {file_path}",
+            severity="INFO"
+        )
         input_elem = self.driver.find_element(By.ID, "fname_MLS")
         self.driver.execute_script("""
             arguments[0].style.display = 'block';
@@ -652,7 +1134,14 @@ def upload_mls_for_order(self, order_id: int) -> bool:
         """, input_elem)
 
         input_elem.send_keys(file_path)
-        print(f"[INFO] MLS uploaded: {file_path}")
+        # print(f"[INFO] MLS uploaded: {file_path}")
+        logger.log(
+            module="SingleSource-upload_mls_for_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"MLS uploaded: {file_path}",
+            severity="INFO"
+        )
 
         single_source_save_form(self.driver)
 
@@ -674,7 +1163,14 @@ def upload_mls_for_order(self, order_id: int) -> bool:
         return True
 
     except Exception as e:
-        print(f"[ERROR] Failed to upload MLS: {e}")
+        # print(f"[ERROR] Failed to upload MLS: {e}")
+        logger.log(
+            module="SingleSource-upload_mls_for_order",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Failed to upload MLS: {e}",
+            severity="ERROR"
+        )
         return False
 
 
@@ -769,10 +1265,24 @@ def remove_all_subject_tax_sheets(self):
         tax_description_inputs = self.driver.find_elements(By.XPATH, tax_description_xpath)
 
         if not tax_description_inputs:
-            print("[INFO] No existing Subject Tax Sheet found")
+            # print("[INFO] No existing Subject Tax Sheet found")
+            logger.log(
+                module="SingleSource-remove_all_subject_tax_sheets",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="No existing Subject Tax Sheet found",
+                severity="INFO"
+            )
             return
 
-        print(f"[INFO] Found {len(tax_description_inputs)} Subject Tax Sheet(s). Removing...")
+        # print(f"[INFO] Found {len(tax_description_inputs)} Subject Tax Sheet(s). Removing...")
+        logger.log(
+            module="SingleSource-remove_all_subject_tax_sheets",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Found {len(tax_description_inputs)} Subject Tax Sheet(s). Removing...",
+            severity="INFO"
+        )
 
         files_marked_for_removal = 0
         for description_input in tax_description_inputs:
@@ -819,15 +1329,43 @@ def remove_all_subject_tax_sheets(self):
                     # Double check state
                     if self.driver.execute_script("return arguments[0].checked;", remove_checkbox):
                         files_marked_for_removal += 1
-                        print(f"[INFO] Marked for removal: {description_input.get_attribute('value')}")
+                        # print(f"[INFO] Marked for removal: {description_input.get_attribute('value')}")
+                        logger.log(
+                            module="SingleSource-remove_all_subject_tax_sheets",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"Marked for removal: {description_input.get_attribute('value')}",
+                            severity="INFO"
+                        )
                     else:
-                        print(f"[WARN] Failed to mark checkbox for: {description_input.get_attribute('value')}")
+                        # print(f"[WARN] Failed to mark checkbox for: {description_input.get_attribute('value')}")
+                        logger.log(
+                            module="SingleSource-remove_all_subject_tax_sheets",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"Failed to mark checkbox for: {description_input.get_attribute('value')}",
+                            severity="INFO"
+                        )
                 else:
                     files_marked_for_removal += 1
-                    print(f"[INFO] Already marked for removal: {description_input.get_attribute('value')}")
+                    # print(f"[INFO] Already marked for removal: {description_input.get_attribute('value')}")
+                    logger.log(
+                        module="SingleSource-remove_all_subject_tax_sheets",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks=f"Already marked for removal: {description_input.get_attribute('value')}",
+                        severity="INFO"
+                    )
 
             except Exception as e:
-                print(f"[WARN] Error marking removal for an entry: {e}")
+                # print(f"[WARN] Error marking removal for an entry: {e}")
+                logger.log(
+                    module="SingleSource-remove_all_subject_tax_sheets",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Error marking removal for an entry: {e}",
+                    severity="INFO"
+                )
                 continue
 
         if files_marked_for_removal > 0:
@@ -843,14 +1381,42 @@ def remove_all_subject_tax_sheets(self):
                 WebDriverWait(self.driver, 20).until_not(
                     EC.presence_of_element_located((By.XPATH, tax_description_xpath))
                 )
-                print("[SUCCESS] All Subject Tax Sheets removed successfully")
+                # print("[SUCCESS] All Subject Tax Sheets removed successfully")
+                logger.log(
+                    module="SingleSource-remove_all_subject_tax_sheets",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks="All Subject Tax Sheets removed successfully",
+                    severity="INFO"
+                )
             except Exception as e:
-                print(f"[ERROR] Timeout waiting for Subject Tax Sheet removal. They might still be there: {e}")
+                # print(f"[ERROR] Timeout waiting for Subject Tax Sheet removal. They might still be there: {e}")
+                logger.log(
+                    module="SingleSource-remove_all_subject_tax_sheets",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Timeout waiting for Subject Tax Sheet removal. They might still be there: {e}",
+                    severity="INFO"
+                )
         else:
-            print("[INFO] No sheets were marked for removal.")
+            # print("[INFO] No sheets were marked for removal.")
+            logger.log(
+                module="SingleSource-remove_all_subject_tax_sheets",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="No sheets were marked for removal.",
+                severity="INFO"
+            )
 
     except Exception as e:
-        print(f"[ERROR] Failed in remove_all_subject_tax_sheets: {e}")
+        # print(f"[ERROR] Failed in remove_all_subject_tax_sheets: {e}")
+        logger.log(
+            module="SingleSource-remove_all_subject_tax_sheets",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Failed in remove_all_subject_tax_sheets: {e}",
+            severity="ERROR"
+        )
 
 
 def upload_tax_for_order(self, order_id: int, wait_seconds: int = 30) -> bool:
@@ -874,16 +1440,37 @@ def upload_tax_for_order(self, order_id: int, wait_seconds: int = 30) -> bool:
             None
         )
         if not tax_doc:
-            print(f"[WARN] No Tax document found for order {order_id}")
+            # print(f"[WARN] No Tax document found for order {order_id}")
+            logger.log(
+                module="SingleSource-upload_tax_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"No Tax document found for order {order_id}",
+                severity="INFO"
+            )
             return True
 
         file_path = tax_doc.get("path")
         if not file_path or not os.path.exists(file_path):
-            print(f"[ERROR] Tax file not found: {file_path}")
+            # print(f"[ERROR] Tax file not found: {file_path}")
+            logger.log(
+                module="SingleSource-upload_tax_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Tax file not found: {file_path}",
+                severity="INFO"
+            )
             return False
 
         # Step 2: Clear old sheets
-        print("[INFO] Starting removal phase...")
+        # print("[INFO] Starting removal phase...")
+        logger.log(
+            module="SingleSource-upload_tax_for_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks="Starting removal phase...",
+            severity="INFO"
+        )
         remove_all_subject_tax_sheets(self)
 
         # Step 3: Performance Upload
@@ -891,7 +1478,14 @@ def upload_tax_for_order(self, order_id: int, wait_seconds: int = 30) -> bool:
         self.driver.switch_to.default_content()
         self.driver.switch_to.frame("_MAIN")
         
-        print(f"[INFO] Preparing to upload new Tax Sheet: {file_path}")
+        # print(f"[INFO] Preparing to upload new Tax Sheet: {file_path}")
+        logger.log(
+            module="SingleSource-upload_tax_for_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Preparing to upload new Tax Sheet: {file_path}",
+            severity="INFO"
+        )
         try:
             file_input = WebDriverWait(self.driver, 15).until(
                 EC.presence_of_element_located((By.ID, "fname_Photos"))
@@ -914,10 +1508,24 @@ def upload_tax_for_order(self, order_id: int, wait_seconds: int = 30) -> bool:
             # Last check: verify the Type/Description values stuck
             type_val = self.driver.execute_script("return document.getElementById('fname_Photos_Type').value;")
             desc_val = self.driver.execute_script("return document.getElementById('fname_Photos_Description').value;")
-            print(f"[INFO] Selected Type: {type_val}, Description: {desc_val}")
+            # print(f"[INFO] Selected Type: {type_val}, Description: {desc_val}")
+            logger.log(
+                module="SingleSource-upload_tax_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Selected Type: {type_val}, Description: {desc_val}",
+                severity="INFO"
+            )
 
             # Save the form
-            print("[INFO] Clicking Save for Tax Sheet upload...")
+            # print("[INFO] Clicking Save for Tax Sheet upload...")
+            logger.log(
+                module="SingleSource-upload_tax_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="Clicking Save for Tax Sheet upload...",
+                severity="INFO"
+            )
             single_source_save_form(self.driver)
             
         except Exception as e:
@@ -925,7 +1533,14 @@ def upload_tax_for_order(self, order_id: int, wait_seconds: int = 30) -> bool:
             return False
 
         # Step 4: Verification
-        print("[INFO] Verifying upload success...")
+        # print("[INFO] Verifying upload success...")
+        logger.log(
+            module="SingleSource-upload_tax_for_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks="Verifying upload success...",
+            severity="INFO"
+        )
         self.driver.switch_to.default_content()
         self.driver.switch_to.frame("_MAIN")
         
@@ -934,19 +1549,54 @@ def upload_tax_for_order(self, order_id: int, wait_seconds: int = 30) -> bool:
             WebDriverWait(self.driver, wait_seconds).until(
                 EC.presence_of_element_located((By.XPATH, tax_description_xpath))
             )
-            print(f"[SUCCESS] Subject Tax Sheet verified for order {order_id}")
+            # print(f"[SUCCESS] Subject Tax Sheet verified for order {order_id}")
+            logger.log(
+                module="SingleSource-upload_tax_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Subject Tax Sheet verified for order {order_id}",
+                severity="INFO"
+            )
             return True
         except Exception as e:
-            print(f"[ERROR] Verification failed for Subject Tax Sheet after upload attempt: {e}")
+            # print(f"[ERROR] Verification failed for Subject Tax Sheet after upload attempt: {e}")
+            logger.log(
+                module="SingleSource-upload_tax_for_order",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Verification failed for Subject Tax Sheet after upload attempt: {e}",
+                severity="INFO"
+            )
             # Log what we see instead
             all_descriptions = self.driver.find_elements(By.XPATH, "//input[contains(@id,'@Description')]")
-            print(f"[DEBUG] Found {len(all_descriptions)} total descriptions on page.")
+            # print(f"[DEBUG] Found {len(all_descriptions)} total descriptions on page.")
+            logger.log(
+                module="SingleSource-upload_tax_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Found {len(all_descriptions)} total descriptions on page.",
+                severity="INFO"
+            )
             for d in all_descriptions:
-                print(f"[DEBUG] Description ID: {d.get_attribute('id')}, Value: {d.get_attribute('value')}")
+                # print(f"[DEBUG] Description ID: {d.get_attribute('id')}, Value: {d.get_attribute('value')}")
+                logger.log(
+                    module="SingleSource-upload_tax_for_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Description ID: {d.get_attribute('id')}, Value: {d.get_attribute('value')}",
+                    severity="INFO"
+                )
             return False
 
     except Exception as e:
-        print(f"[ERROR] Critical failure in upload_tax_for_order: {e}")
+        # print(f"[ERROR] Critical failure in upload_tax_for_order: {e}")
+        logger.log(
+            module="SingleSource-upload_tax_for_order",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Critical failure in upload_tax_for_order: {e}",
+            severity="ERROR"
+        )
         return False
 
 
@@ -1087,10 +1737,24 @@ def remove_existing_comparable_photos(self):
         photo_desc_inputs = self.driver.find_elements(By.XPATH, photo_desc_xpath)
 
         if not photo_desc_inputs:
-            print("[INFO] No existing Listing/Sale photos found.")
+            # print("[INFO] No existing Listing/Sale photos found.")
+            logger.log(
+                module="SingleSource-remove_existing_comparable_photos",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="No existing Listing/Sale photos found.",
+                severity="INFO"
+            )
             return
 
-        print(f"[INFO] Found {len(photo_desc_inputs)} existing photos. Identifying checkboxes...")
+        # print(f"[INFO] Found {len(photo_desc_inputs)} existing photos. Identifying checkboxes...")
+        logger.log(
+            module="SingleSource-remove_existing_comparable_photos",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Found {len(photo_desc_inputs)} existing photos. Identifying checkboxes...",
+            severity="INFO"
+        )
 
         files_marked_for_removal = 0
         for desc_input in photo_desc_inputs:
@@ -1133,13 +1797,34 @@ def remove_existing_comparable_photos(self):
                     
                     if self.driver.execute_script("return arguments[0].checked;", remove_checkbox):
                         files_marked_for_removal += 1
-                        print(f"[INFO] Marked for removal: {desc_input.get_attribute('value')}")
+                        # print(f"[INFO] Marked for removal: {desc_input.get_attribute('value')}")
+                        logger.log(
+                            module="SingleSource-remove_existing_comparable_photos",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"Marked for removal: {desc_input.get_attribute('value')}",
+                            severity="INFO"
+                        )
                 else:
                     files_marked_for_removal += 1
-                    print(f"[INFO] Already marked for removal: {desc_input.get_attribute('value')}")
+                    # print(f"[INFO] Already marked for removal: {desc_input.get_attribute('value')}")
+                    logger.log(
+                        module="SingleSource-remove_existing_comparable_photos",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks=f"Already marked for removal: {desc_input.get_attribute('value')}",
+                        severity="INFO"
+                    )
 
             except Exception as e:
-                print(f"[WARN] Failed to mark removal for {desc_input.get_attribute('value')}: {e}")
+                # print(f"[WARN] Failed to mark removal for {desc_input.get_attribute('value')}: {e}")
+                logger.log(
+                    module="SingleSource-remove_existing_comparable_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Failed to mark removal for {desc_input.get_attribute('value')}: {e}",
+                    severity="INFO"
+                )
                 continue
 
         if files_marked_for_removal > 0:
@@ -1154,14 +1839,42 @@ def remove_existing_comparable_photos(self):
                 WebDriverWait(self.driver, 15).until_not(
                     EC.presence_of_element_located((By.XPATH, photo_desc_xpath))
                 )
-                print("[SUCCESS] All existing Listing/Sale photos removed.")
+                # print("[SUCCESS] All existing Listing/Sale photos removed.")
+                logger.log(
+                    module="SingleSource-remove_existing_comparable_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks="All existing Listing/Sale photos removed.",
+                    severity="INFO"
+                )
             except:
-                print("[WARN] Some photos might still be visible after removal attempt.")
+                # print("[WARN] Some photos might still be visible after removal attempt.")
+                logger.log(
+                    module="SingleSource-remove_existing_comparable_photos",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks="Some photos might still be visible after removal attempt.",
+                    severity="INFO"
+                )
         else:
-            print("[INFO] No photos were marked for removal.")
+            # print("[INFO] No photos were marked for removal.")
+            logger.log(
+                module="SingleSource-remove_existing_comparable_photos",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="No photos were marked for removal.",
+                severity="INFO"
+            )
 
     except Exception as e:
-        print(f"[ERROR] Critical failure in remove_existing_comparable_photos: {e}")
+        # print(f"[ERROR] Critical failure in remove_existing_comparable_photos: {e}")
+        logger.log(
+            module="SingleSource-remove_existing_comparable_photos",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Critical failure in remove_existing_comparable_photos: {e}",
+            severity="ERROR"
+        )
 
 
 def upload_photos_to_order(self, comparables_folder):
@@ -1176,7 +1889,14 @@ def upload_photos_to_order(self, comparables_folder):
         close_validation_popup(self.driver)
 
         if not os.path.exists(comparables_folder):
-            print("⚠ Comparables folder missing.")
+            # print("⚠ Comparables folder missing.")
+            logger.log(
+                module="SingleSource-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="Comparables folder missing.",
+                severity="INFO"
+            )
             return False
 
         # Step 1: Remove any existing Listing/Sale photos
@@ -1198,7 +1918,14 @@ def upload_photos_to_order(self, comparables_folder):
                 files_to_upload[fname] = input_id
 
         if not files_to_upload:
-            print("⚠ No matching Listing or Sale photos found in folder.")
+            # print("⚠ No matching Listing or Sale photos found in folder.")
+            logger.log(
+                module="SingleSource-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="No matching Listing or Sale photos found in folder.",
+                severity="INFO"
+            )
             return False
 
         # Step 3: Upload photos
@@ -1217,11 +1944,25 @@ def upload_photos_to_order(self, comparables_folder):
                 self.driver.execute_script("arguments[0].style.display='block'; arguments[0].style.visibility='visible';", file_input)
                 
                 file_input.send_keys(file_path)
-                print(f"[INFO] Uploaded {fname} → {input_id}")
+                # print(f"[INFO] Uploaded {fname} → {input_id}")
+                logger.log(
+                    module="SingleSource-upload_photos_to_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Uploaded {fname} → {input_id}",
+                    severity="INFO"
+                )
                 uploaded_photos[fname] = True
                 time.sleep(1) # Extra stability
             except Exception as e:
-                print(f"[ERROR] Failed to upload {fname} → {input_id}: {e}")
+                # print(f"[ERROR] Failed to upload {fname} → {input_id}: {e}")
+                logger.log(
+                    module="SingleSource-upload_photos_to_order",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Failed to upload {fname} → {input_id}: {e}",
+                    severity="INFO"
+                )
                 uploaded_photos[fname] = False
 
         single_source_save_form(self.driver)
@@ -1244,7 +1985,14 @@ def upload_photos_to_order(self, comparables_folder):
                     v_xpath = f"//input[@id='{input_id}']/ancestor::tr//input[@type='checkbox' and @name='remove_file']"
                     checkbox = self.driver.find_element(By.XPATH, v_xpath)
                     if checkbox.is_displayed():
-                        print(f"[SUCCESS] Verified uploaded: {fname}")
+                        # print(f"[SUCCESS] Verified uploaded: {fname}")
+                        logger.log(
+                            module="SingleSource-upload_photos_to_order",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"Verified uploaded: {fname}",
+                            severity="INFO"
+                        )
                         verified = True
                         break
                 except:
@@ -1253,16 +2001,339 @@ def upload_photos_to_order(self, comparables_folder):
                 elapsed += poll_interval
 
             if not verified:
-                print(f"[ERROR] Verification failed for: {fname}")
+                # print(f"[ERROR] Verification failed for: {fname}")
+                logger.log(
+                    module="SingleSource-upload_photos_to_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Verification failed for: {fname}",
+                    severity="INFO"
+                )
                 all_uploaded = False
 
         if all_uploaded:
-            print("[SUCCESS] All Listing and Sale photos uploaded and verified.")
+            # print("[SUCCESS] All Listing and Sale photos uploaded and verified.")
+            logger.log(
+                module="SingleSource-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="All Listing and Sale photos uploaded and verified.",
+                severity="INFO"
+            )
         else:
-            print("[WARN] Some photos failed verification.")
+            # print("[WARN] Some photos failed verification.")
+            logger.log(
+                module="SingleSource-upload_photos_to_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="Some photos failed verification.",
+                severity="INFO"
+            )
         
         return all_uploaded
 
     except Exception as e:
-        print(f"[ERROR] Critical failure in upload_photos_to_order: {e}")
+        # print(f"[ERROR] Critical failure in upload_photos_to_order: {e}")
+        logger.log(
+            module="SingleSource-upload_photos_to_order",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Critical failure in upload_photos_to_order: {e}",
+            severity="ERROR"
+        )
+        return False
+
+
+def remove_existing_signatures(self):
+    """
+    Removes all existing signatures.
+    Uses JS logic for state verification.
+    """
+    try:
+        self.driver.switch_to.default_content()
+        self.driver.switch_to.frame("_MAIN")
+        close_validation_popup(self.driver)
+
+        # The input is id="fname_sig". We look for checkboxes in its parent td or next td.
+        try:
+            sig_input = self.driver.find_element(By.ID, "fname_sig")
+            # Usually the remove checkbox is in the same row or a neighboring cell
+            sig_row_cell = sig_input.find_element(By.XPATH, "./ancestor::td[1]/following-sibling::td[1]")
+            sig_checkboxes = sig_row_cell.find_elements(By.XPATH, ".//input[@type='checkbox' and @name='remove_file']")
+        except Exception as e:
+            # print(f"[WARN] Error finding targeted signature cell boxes: {e}")
+            logger.log(
+                module="SingleSource-remove_existing_signatures",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Error finding targeted signature cell boxes: {e}",
+                severity="INFO"
+            )
+            sig_checkboxes = []
+
+        if not sig_checkboxes:
+            # print("[INFO] No existing signature found for removal.")
+            logger.log(
+                module="SingleSource-remove_existing_signatures",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="No existing signature found for removal.",
+                severity="INFO"
+            )
+            return
+
+        # print(f"[INFO] Found {len(sig_checkboxes)} signature(s) for removal. Identifying checkboxes...")
+        logger.log(
+            module="SingleSource-remove_existing_signatures",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Found {len(sig_checkboxes)} signature(s) for removal. Identifying checkboxes...",
+            severity="INFO"
+        )
+
+        files_marked_for_removal = 0
+        for box in sig_checkboxes:
+            is_checked = self.driver.execute_script("return arguments[0].checked;", box)
+            if not is_checked:
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", box)
+                self.driver.execute_script("""
+                    var el = arguments[0];
+                    el.checked = true;
+                    el.click(); // Trigger portal JS
+                    el.checked = true; // Stay checked
+                    el.dispatchEvent(new Event('change', { bubbles: true }));
+                """, box)
+                files_marked_for_removal += 1
+
+        if files_marked_for_removal > 0:
+            # print(f"[INFO] Saving form to apply {files_marked_for_removal} signature removals...")
+            logger.log(
+                module="SingleSource-remove_existing_signatures",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Saving form to apply {files_marked_for_removal} signature removals...",
+                severity="INFO"
+            )
+            single_source_save_form(self.driver)
+            
+            # Re-ensure frame after save
+            self.driver.switch_to.default_content()
+            self.driver.switch_to.frame("_MAIN")
+            
+            # Wait for checkboxes to disappear
+            try:
+                # We reuse the sig_row_cell logic to wait
+                def signatures_cleared(driver):
+                    try:
+                        sig_input = driver.find_element(By.ID, "fname_sig")
+                        sig_row_cell = sig_input.find_element(By.XPATH, "./ancestor::td[1]/following-sibling::td[1]")
+                        sig_checkboxes = sig_row_cell.find_elements(By.XPATH, ".//input[@type='checkbox' and @name='remove_file']")
+                        return len(sig_checkboxes) == 0
+                    except:
+                        return True
+                
+                WebDriverWait(self.driver, 15).until(signatures_cleared)
+                # print("[SUCCESS] Existing signatures removed.")
+                logger.log(
+                    module="SingleSource-remove_existing_signatures",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks="Existing signatures removed.",
+                    severity="INFO"
+                )
+            except:
+                # print("[WARN] Timeout waiting for signatures to disappear from UI.")
+                logger.log(
+                    module="SingleSource-remove_existing_signatures",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks="Timeout waiting for signatures to disappear from UI.",
+                    severity="INFO"
+                )
+        else:
+            # print("[INFO] No signatures were marked for removal (already marked or none found).")
+            logger.log(
+                module="SingleSource-remove_existing_signatures",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="No signatures were marked for removal (already marked or none found).",
+                severity="INFO"
+            )
+
+    except Exception as e:
+        # print(f"[ERROR] Failed in remove_existing_signatures: {e}")
+        logger.log(
+            module="SingleSource-remove_existing_signatures",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Failed in remove_existing_signatures: {e}",
+            severity="ERROR"
+        )
+
+
+def upload_signature_for_order(self, order_id: int) -> bool:
+    """
+    Uploads signature file after removing any existing ones.
+    """
+    try:
+        # Step 0: Ensure we are in _MAIN frame and clear overlays
+        self.driver.switch_to.default_content()
+        self.driver.switch_to.frame("_MAIN")
+        close_validation_popup(self.driver)
+
+        # Fetch upload data
+        data = fetch_upload_data(self, order_id)
+        if not data:
+            print(f"[ERROR] No upload data found for order {order_id}")
+            return False
+
+        signature_path = data.get("signature_folder")
+        if not signature_path:
+            # print(f"[WARN] No signature path specified for order {order_id}")
+            logger.log(
+                module="SingleSource-upload_signature_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"No signature path specified for order {order_id}",
+                severity="INFO"
+            )
+            return True
+
+        if not os.path.exists(signature_path):
+            # print(f"[WARN] Signature path does not exist: {signature_path}")
+            logger.log(
+                module="SingleSource-upload_signature_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks=f"Signature path does not exist: {signature_path}",
+                severity="INFO"
+            )
+            return True
+
+        file_path = None
+        if os.path.isfile(signature_path):
+            if signature_path.lower().endswith((".jpg", ".jpeg", ".png")):
+                file_path = signature_path
+            else:
+                # print(f"[WARN] Signature path is a file but not a valid image: {signature_path}")
+                logger.log(
+                    module="SingleSource-upload_signature_for_order",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Signature path is a file but not a valid image: {signature_path}",
+                    severity="INFO"
+                )
+                return True
+        else:
+            # It's a directory, pick the first valid image file
+            try:
+                sig_files = os.listdir(signature_path)
+                sig_fname = next((f for f in sig_files if f.lower().endswith((".jpg", ".jpeg", ".png"))), None)
+                if sig_fname:
+                    file_path = os.path.join(signature_path, sig_fname)
+                else:
+                    # print(f"[WARN] No valid image signature file found in folder {signature_path}")
+                    logger.log(
+                        module="SingleSource-upload_signature_for_order",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks=f"No valid image signature file found in folder {signature_path}",
+                        severity="INFO"
+                    )
+                    return True
+            except Exception as e:
+                # print(f"[ERROR] Failed to list signature directory {signature_path}: {e}")
+                logger.log(
+                    module="SingleSource-upload_signature_for_order",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Failed to list signature directory {signature_path}: {e}",
+                    severity="ERROR"
+                )
+                return False
+        
+        # -------------------------------------------------
+        # STEP 1: Remove existing signatures
+        # -------------------------------------------------
+        remove_existing_signatures(self)
+
+        # Re-ensure frame
+        self.driver.switch_to.default_content()
+        self.driver.switch_to.frame("_MAIN")
+
+        # -------------------------------------------------
+        # STEP 2: Upload signature file
+        # -------------------------------------------------
+        # print(f"[INFO] Uploading new signature file: {file_path}")
+        logger.log(
+            module="SingleSource-upload_signature_for_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Uploading new signature file: {file_path}",
+            severity="INFO"
+        )
+        input_elem = self.driver.find_element(By.ID, "fname_sig")
+        self.driver.execute_script("""
+            arguments[0].style.display = 'block';
+            arguments[0].style.visibility = 'visible';
+        """, input_elem)
+
+        input_elem.send_keys(file_path)
+        # print(f"[INFO] Signature uploaded: {file_path}. Saving form...")
+        logger.log(
+            module="SingleSource-upload_signature_for_order",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Signature uploaded: {file_path}. Saving form...",
+            severity="INFO"
+        )
+
+        single_source_save_form(self.driver)
+
+        # -------------------------------------------------
+        # STEP 3: VERIFY SIGNATURE UPLOAD
+        # -------------------------------------------------
+        def sig_uploaded(driver):
+            try:
+                # After save/refresh, we need to be in the right frame
+                # Note: single_source_save_form ends in _MAIN, but let's be safe
+                elem = driver.find_element(By.ID, "fname_sig")
+                remove_checkbox = elem.find_element(By.XPATH, "./ancestor::tr//input[@type='checkbox' and @name='remove_file']")
+                return remove_checkbox.is_displayed()
+            except:
+                return False
+
+        try:
+            self.driver.switch_to.default_content()
+            self.driver.switch_to.frame("_MAIN")
+            WebDriverWait(self.driver, 20).until(sig_uploaded)
+            # print("[SUCCESS] Signature upload verified successfully")
+            logger.log(
+                module="SingleSource-upload_signature_for_order",
+                order_id=hybrid_orderid,
+                action_type="Condition-check",
+                remarks="Signature upload verified successfully",
+                severity="INFO"
+            )
+            return True
+        except:
+            # print("[ERROR] Signature upload verification failed or timed out.")
+            logger.log(
+                module="SingleSource-upload_signature_for_order",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks="Signature upload verification failed or timed out.",
+                severity="ERROR"
+            )
+            return False
+
+    except Exception as e:
+        # print(f"[ERROR] Failed to upload signature: {e}")
+        logger.log(
+            module="SingleSource-upload_signature_for_order",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Failed to upload signature: {e}",
+            severity="ERROR"
+        )
         return False

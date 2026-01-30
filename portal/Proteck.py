@@ -18,7 +18,7 @@ from utils.helper import clean_address, handle_login_status, setup_driver, updat
 # Load environment variables from the .env file
 load_dotenv()
 class Proteck:
-    def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id):
+    def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id, portal_key):
 
         logging.basicConfig(level=logging.INFO)
         self.username = username
@@ -28,6 +28,7 @@ class Proteck:
         self.proxy = proxy
         self.session = session
         self.driver = None  # Initialize driver to None
+        self.portal_key = portal_key
 
     # def initialize_driver(self):
     #     """Initialize Selenium WebDriver without version dependency."""
@@ -42,7 +43,7 @@ class Proteck:
     #         logging.error(f"Error initializing WebDriver: {e}")
     #         return None
      
-    def login_to_portal(self,username, password, portal_url, portal_name,proxy,session):
+    def login_to_portal(self):
         """Login to a generic portal (extendable)."""
         try:
             self.driver =  setup_driver(self)

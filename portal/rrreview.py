@@ -34,7 +34,7 @@ logging.info(f"type,orderid,token,{process_type},{hybrid_orderid},{hybrid_token}
 # Load environment variables from the .env file
 load_dotenv()
 class rrreview:
-    def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id):
+    def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id, portal_key):
         self.username = username
         self.password = password
         self.portal_url = portal_url
@@ -43,6 +43,7 @@ class rrreview:
         self.driver = None
         self.session=session
         self.login_status = "Not started"
+        self.portal_key = portal_key
         logging.basicConfig(level=logging.INFO)
 
 

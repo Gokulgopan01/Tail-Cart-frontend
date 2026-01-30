@@ -861,6 +861,7 @@ class EcesisLoginScreen(tk.Frame):
         self.selected_sub_client_id = None
         self.selected_portal_id = None
         self.selected_portal_url = None
+        self.selected_portal_key = None
 
         if selected_client:
             client_id = selected_client["id"]
@@ -906,6 +907,7 @@ class EcesisLoginScreen(tk.Frame):
             self.account_dropdown.set_color_mode('gray')
             
             self.selected_portal_id = None
+            self.selected_portal_key = None
             self.selected_portal_url = None
             threading.Thread(target=self.load_portals, args=(self.selected_sub_client_id, selected_name), daemon=True).start()
 
@@ -937,6 +939,7 @@ class EcesisLoginScreen(tk.Frame):
         if selected_portal:
             self.selected_portal_id = selected_portal["portal_id"]
             self.selected_portal_url = selected_portal["portal_url"]
+            self.selected_portal_key = selected_portal.get("portal_key")
             # Reset account dropdown
             self.account_var.set("Select Account")
             self.account_dropdown["values"] = []
@@ -1029,7 +1032,8 @@ class EcesisLoginScreen(tk.Frame):
                 portal,
                 selected_account["proxy"],
                 selected_account["session"],
-                selected_account["account_id"]
+                selected_account["account_id"],
+                self.selected_portal_key
             )
             if portal_instance:
                 self.active_portal_instances.append(portal_instance)

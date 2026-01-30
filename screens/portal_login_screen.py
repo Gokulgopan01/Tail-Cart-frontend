@@ -74,8 +74,8 @@ class PortalLoginScreen(tk.Frame):
     @staticmethod
     
 
-    def portals(username, password, portal_url, portal_name, proxy, session,account_id):
-        portal_name = portal_name.strip()
+    def portals(username, password, portal_url, portal_name, proxy, session,account_id,portal_key):
+        portal_name = portal_key.strip()
         
 
         # # Load portal class map from JSON
@@ -102,7 +102,7 @@ class PortalLoginScreen(tk.Frame):
         portal_class = globals().get(class_name)
 
         if portal_class:
-            return portal_class(username, password, portal_url, portal_name, proxy, session,account_id)
+            return portal_class(username, password, portal_url, portal_name, proxy, session,account_id,portal_key)
         else:
             print(f"[!] Class {class_name} not found in global scope.")
             return None
@@ -110,7 +110,7 @@ class PortalLoginScreen(tk.Frame):
 
           
 
-    def login_to_portals(self, username, password, portal_url, portal_name, proxy=None, session=None,account_id=None):
+    def login_to_portals(self, username, password, portal_url, portal_name, proxy=None, session=None,account_id=None, portal_key=None):
         """Generic login dispatcher that calls appropriate portal logic."""
 
         from screens.portal_login_screen import PortalLoginScreen  # Import inside if circular import
@@ -122,7 +122,8 @@ class PortalLoginScreen(tk.Frame):
             portal_name=portal_name,
             proxy=proxy,
             session=session,
-            account_id=account_id
+            account_id=account_id,
+            portal_key=portal_key
         )
 
         if portal_instance:

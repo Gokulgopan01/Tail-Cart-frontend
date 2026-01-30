@@ -43,7 +43,7 @@ def params_check():
           # Returns auto for manualy opening Autologin  
 
         return "AutoLogin",None,None
-        #return "SmartEntry","2560","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjQ1LCJlbWFpbCI6ImFyYXRoeV9hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3Njg0NTQyMzIsImV4cCI6MTc2ODU0MDYzMn0.YDVqgiA4eQBvGA_I8hrQrdNtVq6fvaB6KfhEYJYW3Go"
+        #return "SmartEntry","2814","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjksImVtYWlsIjoic2lkc21AZ21haWwuY29tIiwicm9sZSI6MywiaWF0IjoxNzY5NDk4ODE3LCJleHAiOjE3Njk1ODUyMTd9.aCI2zyvkxcYI8XF3ct6v2SAsRMgO8Xl9FAvaZ3B9xaI"
    
 
 process_type, hybrid_orderid,hybrid_token = params_check()
@@ -524,7 +524,7 @@ def javascript_excecuter_filling(driver, data, elementlocator, selector):
         return
 
     # Escape single quotes in data to prevent JS syntax errors
-    safe_data = str(data).replace("'", "\\'")
+    safe_data = str(data).strip().replace("'", "\\'")
 
     script = f"""
         var el = document.evaluate("{elementlocator}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -540,6 +540,8 @@ def javascript_excecuter_filling(driver, data, elementlocator, selector):
 
    
 def adj_click(driver, data, element_identifier, element_type):
+    data = str(data).strip()
+    element_identifier = element_identifier.strip()
     selector_map = selector_mapping(element_type)
     elements = driver.find_elements(selector_map, element_identifier)
     for x in elements:
@@ -563,7 +565,8 @@ def radio_btn_click(driver, btn_value, element_identifier, element_type):
     selector_map = selector_mapping(element_type)
     elements = driver.find_elements(selector_map, element_identifier)
     # Always convert input to string before normalization
-    btn_value_normalized = re.sub(r"\s+", " ", str(btn_value).strip().lower())
+    btn_value = str(btn_value).strip()
+    btn_value_normalized = re.sub(r"\s+", " ", btn_value.lower())
 
     # Deselect all first
     for elem in elements:
@@ -609,7 +612,7 @@ def data_filling_text(driver, data, elementlocator, selector):
     if data in [None, ""]:
         return  # Skip empty data
 
-    data = str(data)
+    data = str(data).strip()
     selector_map = selector_mapping(selector)
     element = find_elem(driver, selector_map, elementlocator)
 
@@ -664,7 +667,7 @@ def data_filling_text(driver, data, elementlocator, selector):
 
 def select_field(driver, data, elementlocator, selector):
     try:
-        data = data.strip().lower()
+        data = str(data).strip().lower()
         selector_map = selector_mapping(selector)
         element = find_elem(driver, selector_map, elementlocator)
         
@@ -716,9 +719,9 @@ def select_field(driver, data, elementlocator, selector):
         )
 
 
-def find_elem(driver,selector,elementlocator):
-    
-    element=driver.find_element(selector,elementlocator)
+def find_elem(driver, selector, elementlocator):
+    elementlocator = elementlocator.strip()
+    element = driver.find_element(selector, elementlocator)
     return element
 
 def selector_mapping(selector_type):
@@ -764,6 +767,7 @@ def select_checkboxes_from_list(driver, values_list, id_prefix):
 
     for value in values_list:
         try:
+            value = str(value).strip()
             sanitized = sanitize(value)
             checkbox_id = f"{id_prefix}_{sanitized}"
             checkbox = WebDriverWait(driver, 10).until(
@@ -811,24 +815,62 @@ def select_checkboxes_from_list(driver, values_list, id_prefix):
            
         )
 
-# def fill_repair_details(driver, repair_list):
-#     for idx, repair in enumerate(repair_list):
-#         try:
-#             comment_xpath = f"//input[@id='ExteriorRepairList_{idx}__RepairComment']"
-#             cost_xpath = f"//input[@id='ExteriorRepairList_{idx}__Amount']"
+def checkbox_click(driver, data, element_identifier, element_type):
+    element_identifier = element_identifier.strip()
+    """
+    Clicks a checkbox safely.
+    - Checks only if data indicates TRUE / YES
+    - Handles overlays
+    """
 
-#             # Fill comments
-#             comment_elem = driver.find_element(By.XPATH, comment_xpath)
-#             comment_elem.clear()
-#             comment_elem.send_keys(repair.get("comments", ""))    
+    # Normalize data → decide check/uncheck
+    should_check = False
+    if isinstance(data, bool):
+        should_check = data
+    elif str(data).strip().lower() in ["yes", "true", "1", "checked"]:
+        should_check = True
 
-#             # Fill estimated cost
-#             cost_elem = driver.find_element(By.XPATH, cost_xpath)
-#             cost_elem.clear()
-#             cost_elem.send_keys(str(repair.get("estimated_cost", "")))
+    selector_map = selector_mapping(element_type)
+    elements = driver.find_elements(selector_map, element_identifier)
 
-#         except Exception as e:
-#             logging.error(f"Error filling repair at index {idx} ({repair.get('repair_type')}): {e}")
+    for elem in elements:
+        try:
+            driver.execute_script(
+                "arguments[0].scrollIntoView({block:'center', inline:'nearest'});",
+                elem
+            )
+
+            # Only click if state change is required
+            if should_check and not elem.is_selected():
+                elem.click()
+            elif not should_check and elem.is_selected():
+                elem.click()
+
+        except Exception as e:
+            print(f"[checkbox_click] Click intercepted, attempting JS fallback: {e}")
+            close_validation_popup(driver)
+
+            # JS fallback with correct state
+            driver.execute_script(
+                "arguments[0].checked = arguments[1];",
+                elem,
+                should_check
+            )
+            driver.execute_script(
+                "arguments[0].dispatchEvent(new Event('change'));",
+                elem
+            )
+
+        return  # checkbox handled
+
+    logger.log(
+        module="checkbox_click",
+        order_id=hybrid_orderid,
+        action_type="Condition-check",
+        remarks=f"No checkbox found for identifier: {element_identifier}",
+        severity="INFO"
+    )
+
 
 # Mapping to normalize repair type differences between JSON and form text
 repair_type_mapping = {
@@ -873,8 +915,8 @@ def fill_repair_details(driver, repair_list):
         )
             continue
 
-        comments = repair.get("comments", "")
-        cost = str(repair.get("estimated_cost", ""))
+        comments = str(repair.get("comments", "")).strip()
+        cost = str(repair.get("estimated_cost", "")).strip()
 
         matched = False
 
@@ -970,7 +1012,7 @@ def SS_fill_repair_details(driver, repair_details):
             )
             driver.execute_script("arguments[0].removeAttribute('readonly')", total_elem)
             total_elem.clear()
-            total_elem.send_keys(str(total_cost_from_json))
+            total_elem.send_keys(str(total_cost_from_json).strip())
             logging.info(f"Updated Total_Estimated_Repairs with: {total_cost_from_json}")
         except Exception as e:
             logging.error(f"Error updating Total_Estimated_Repairs: {e}")
@@ -1012,8 +1054,8 @@ def rrr_fill_repair_details(driver, repair_list):
         if r_type not in normalized_portal:
             continue  # skip items not relevant to portal
 
-        desc_value = item.get("comments", "")
-        cost_value = item.get("estimated_cost", "")
+        desc_value = str(item.get("comments", "")).strip()
+        cost_value = str(item.get("estimated_cost", "")).strip()
 
         desc_id, cost_id = normalized_portal[r_type]
 
@@ -1237,12 +1279,14 @@ def fetch_upload_data(self, order_id: int):
     documents = content.get("documents", [])
     comparables_folder = content.get("comparables", "")
     rental_folder = content.get("rental", "")
+    signature_folder=content.get("signature","")
     item_id = content.get("itemId")
 
     return {
         "documents": documents,
         "comparables_folder": comparables_folder,
         "rental_folder": rental_folder,
+        "signature_folder":signature_folder,
         "item_id": item_id
     }
 
@@ -1539,71 +1583,68 @@ import logging
 import time
 
 
-def tfs_statuschange(tfs_order_id,bpo_statusid,tfs_status,tfs_status_reason):
+def tfs_statuschange(tfs_order_id, bpo_statusid, tfs_status, tfs_status_reason):
+    tfs_order_id = str(tfs_order_id).strip()
+    bpo_statusid = str(bpo_statusid).strip()
+    tfs_status = str(tfs_status).strip()
+    tfs_status_reason = str(tfs_status_reason).strip()
    
     try:
-        
-                
-                data={
-                    "strSessionID":"",
-                    "ProcParameters":["type","sTFStatusData","stfsOrderId"],
-                    "ProcInputData":[1,f"{tfs_status}~{tfs_status_reason}~",tfs_order_id]
-                    }
+        data = {
+            "strSessionID": "",
+            "ProcParameters": ["type", "sTFStatusData", "stfsOrderId"],
+            "ProcInputData": [1, f"{tfs_status}~{tfs_status_reason}~", tfs_order_id]
+        }
 
-                data1={
-                    "strSessionID":"",
-                    "ProcInputData": [f"{bpo_statusid}~Na~Na~",tfs_order_id],
-                    "ProcParameters": ["sAutoBPOdata", "sOrderId"]
-                    }
+        data1 = {
+            "strSessionID": "",
+            "ProcInputData": [f"{bpo_statusid}~Na~Na~", tfs_order_id],
+            "ProcParameters": ["sAutoBPOdata", "sOrderId"]
+        }
                 
-                # response2=requests.post("https://bpotrackers.com/bvupcqp/home/ProcUpdateTFSstatusEntry",data=data)
-                response2=requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateTFSstatusEntry",data=data)                
-                #logging.info(f"response2 :{response2.text} , ordID {tfs_order_id}")
-                logger.log(
-                    module="tfs_statuschange",
-                    order_id=hybrid_orderid,
-                    action_type="Status-change",
-                    remarks=f"response2 :{response2.text} , ordID {tfs_order_id}",
-                    severity="INFO"
-           
+        # response2=requests.post("https://bpotrackers.com/bvupcqp/home/ProcUpdateTFSstatusEntry",data=data)
+        response2 = requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateTFSstatusEntry", data=data)                
+        #logging.info(f"response2 :{response2.text} , ordID {tfs_order_id}")
+        logger.log(
+            module="tfs_statuschange",
+            order_id=hybrid_orderid,
+            action_type="Status-change",
+            remarks=f"response2 :{response2.text} , ordID {tfs_order_id}",
+            severity="INFO"
         )
 
-                # response1 =requests.post("https://bpotrackers.com/bvupcqp/Home/ProcUpdateAutoEntry",data=data1)
-                response1 =requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateAutoEntry",data=data1)
+        # response1 =requests.post("https://bpotrackers.com/bvupcqp/Home/ProcUpdateAutoEntry",data=data1)
+        response1 = requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateAutoEntry", data=data1)
           
-                #logging.info(f"response1 :{response1.text} , ordID: {tfs_order_id}")
-                logger.log(
-                    module="tfs_statuschange",
-                    order_id=hybrid_orderid,
-                    action_type="Status-change",
-                    remarks=f"response1 :{response1.text} , ordID: {tfs_order_id}",
-                    severity="INFO"
-           
+        #logging.info(f"response1 :{response1.text} , ordID: {tfs_order_id}")
+        logger.log(
+            module="tfs_statuschange",
+            order_id=hybrid_orderid,
+            action_type="Status-change",
+            remarks=f"response1 :{response1.text} , ordID: {tfs_order_id}",
+            severity="INFO"
         )
 
             
-                #print("Status changed succesfully")
-                #logging.info("Status changed succesfully")
-                logger.log(
-                    module="tfs_statuschange",
-                    order_id=hybrid_orderid,
-                    action_type="Status-change",
-                    remarks=f"Status changed succesfully",
-                    severity="INFO"
-           
+        #print("Status changed succesfully")
+        #logging.info("Status changed succesfully")
+        logger.log(
+            module="tfs_statuschange",
+            order_id=hybrid_orderid,
+            action_type="Status-change",
+            remarks="Status changed succesfully",
+            severity="INFO"
         )
-
 
             
     except Exception as error:
         #logging.info(f"Exception occured on sttaus change {error}")
         logger.log(
-                    module="tfs_statuschange",
-                    order_id=hybrid_orderid,
-                    action_type="Exception",
-                    remarks=f"Status changed succesfully",
-                    severity="INFO"
-           
+            module="tfs_statuschange",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks="Status changed succesfully",
+            severity="INFO"
         )
 
 def update_portal_login_confirmation_status(order_id):

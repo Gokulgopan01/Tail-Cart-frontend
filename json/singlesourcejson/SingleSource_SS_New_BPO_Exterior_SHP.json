@@ -24,6 +24,11 @@
                      "sub_data['BorrowerName']",
                      "PS_FORM/SUBJECT_PROPERTY/Borrower_Name",
                      "id"
+                  ],
+                  [
+                     "sub_data['BrokerDistance']",
+                     "PS_FORM/SUBJECT_PROPERTY/Broker_Miles",
+                     "id"
                   ]
                ]
             },
@@ -68,11 +73,6 @@
                   [
                      "sub_data['Condition']",
                      "PS_FORM/GENERAL_CONDITIONS/Property_Condition[@Field_Type='checkbox']",
-                     "id"
-                  ],
-                  [
-                     "sub_data['PopulationDensity']",
-                     "PS_FORM/MARKET_DATA/Location[@Field_Type='checkbox']",
                      "id"
                   ],
                   [
@@ -121,7 +121,7 @@
                "filedtype": "radiobutton_data",
                "values": [
                   [
-                     "Fee Simple",
+                     "sub_data['TypeOfOwnership']",
                      "PS_FORM/GENERAL_CONDITIONS/Type_of_Ownership[@Field_Type='checkbox']",
                      "id"
                   ],
@@ -187,8 +187,18 @@
                "values": [
                   [
                      "sub_data['HOAFeesInclude']",
-                     "HOAInsurance",
+                     "Fees_Include",
                      "id_prefix"
+                  ]
+               ]
+            },
+            {
+               "filedtype": "Textbox",
+               "values": [
+                  [
+                     "sub_data['HOAFeesOther']",
+                     "//*[@id='PS_FORM/GENERAL_CONDITIONS/Fees_Other']",
+                     "xpath"
                   ]
                ]
             },
@@ -271,7 +281,7 @@
                "filedtype": "radiobutton_data",
                "values": [
                   [
-                     "sub_data['Location']",
+                     "sub_data['PopulationDensity']",
                      "PS_FORM/MARKET_DATA/Location[@Field_Type='checkbox']",
                      "id"
                   ],
@@ -300,6 +310,16 @@
             {
                "filedtype": "Textbox",
                "values": [
+                  [
+                     "sub_data['6MGrowth%']",
+                     "//*[@id='PS_FORM/MARKET_DATA/Percent_Increased']",
+                     "xpath"
+                  ],
+                  [
+                     "sub_data['6MDecline%']",
+                     "//*[@id='PS_FORM/MARKET_DATA/Percent_Decreased']",
+                     "xpath"
+                  ],
                   [
                      "sub_data['REO %']",
                      "//*[@id='PS_FORM/MARKET_DATA/REO_percent']",
@@ -331,12 +351,12 @@
                      "xpath"
                   ],
                   [
-                     "sub_data['ComparablePriceRangeAverage']",
+                     "sub_data['ComparablePriceRangeHigh']",
                      "//*[@id='PS_FORM/MARKET_DATA/Area_High_Value']",
                      "xpath"
                   ],
                   [
-                     "sub_data['ComparablePriceRangeHigh']",
+                     "sub_data['ComparablePriceRangeAverage']",
                      "//*[@id='PS_FORM/MARKET_DATA/Area_Average_Value']",
                      "xpath"
                   ]
@@ -469,7 +489,22 @@
                      "sub_data['Gla']",
                      "//*[@id='PS_FORM/SUBJECT_PROPERTY/Living_Square_Feet']",
                      "xpath"
-                  ],
+                  ]
+               ]
+            },
+            {
+               "filedtype": "adjustment_click",
+               "values": [
+                  [
+                     "sub_data['Bedrooms']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/Bedrooms']",
+                     "xpath"
+                  ]
+               ]
+            },
+            {
+               "filedtype": "Textbox",
+               "values": [
                   [
                      "sub_data['Bed']",
                      "//*[@id='PS_FORM/SUBJECT_PROPERTY/Bedrooms']",
@@ -481,7 +516,7 @@
                      "xpath"
                   ],
                   [
-                     "sub_data['Half_Bath']",
+                     "sub_data['HalfBath']",
                      "//*[@id='PS_FORM/SUBJECT_PROPERTY/Half_Baths']",
                      "xpath"
                   ]
@@ -2146,7 +2181,7 @@
                      "xpath"
                   ],
                   [
-                     "sub_data['SubjectComment']",
+                     "sub_data['Comments']",
                      "//*[@id='PS_FORM/MARKETING_STRATEGY/Comments']",
                      "xpath"
                   ]

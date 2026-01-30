@@ -26,7 +26,7 @@ ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")
                    
 
 class Ascribe:
-    def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id):
+    def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id, portal_key):
         self.username = username
         self.password = password
         self.portal_url = portal_url
@@ -36,6 +36,7 @@ class Ascribe:
         self.driver = None
         self.order_details = None
         self.order_id = None
+        self.portal_key = portal_key
         logging.basicConfig(level=logging.INFO)
 
     def login_to_portal(self):

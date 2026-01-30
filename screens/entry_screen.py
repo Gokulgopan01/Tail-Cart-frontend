@@ -39,7 +39,7 @@ class EntryScreen(tk.Frame):
 
         # Determine which process to run based on parameters
         #arg1, arg2 = params_check()
-        arg1="SmartEntry"
+        #arg1="SmartEntry"
         #arg1="PortalLogin"
         #arg1="AutoLogin"
         self.handle_argument(arg1, arg2,arg3)
@@ -117,6 +117,7 @@ class EntryScreen(tk.Frame):
                 session = order.get("session", None)
                 order_id = order.get("order_id", "")
                 account_id=None
+                portal_key=order.get("portal_key", None)
                 #order_details = get_order_address_from_assigned_order(order_id,arg3)
 
                 if not portal_name:
@@ -127,7 +128,7 @@ class EntryScreen(tk.Frame):
                 print("Entry")
                 portal_login_screen.PortalLoginScreen.login_to_portals(
                     self, username, password, portal_url,
-                    portal_name, proxy, session,account_id
+                    portal_name, proxy, session,account_id,portal_key
                 )
 
         except Exception as e:
