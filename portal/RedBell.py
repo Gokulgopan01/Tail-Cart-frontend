@@ -19,7 +19,7 @@ from condtions.all_portal_conditions import generate_condition_data
 
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.glogger import GLogger
-from utils.helper import clean_address, data_filling_text, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, tfs_statuschange, update_client_account_status, update_order_status, update_portal_login_confirmation_status
+from utils.helper import clean_address, data_filling_text, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, update_client_account_status, update_order_status, update_portal_login_confirmation_status
 from config import env
 logger = GLogger()
 
@@ -300,7 +300,7 @@ class RedBell:
                     severity="INFO"
                 )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-            tfs_statuschange(tfs_orderid, "27", "3", "14")
+            #tfs_statuschange(tfs_orderid, "27", "3", "14")
             return
 
         matched, order, status = self.find_matching_order(orders, target_genorderid, form_types, order_id,tfs_orderid)
@@ -329,7 +329,7 @@ class RedBell:
                     severity="INFO"
                 )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-            tfs_statuschange(tfs_orderid, "27", "3", "14")
+            #tfs_statuschange(tfs_orderid, "27", "3", "14")
 
     def find_matching_order(self, orders, target_genorderid, form_types, order_id,tfs_orderid):
         address_found = False
@@ -387,7 +387,7 @@ class RedBell:
                     severity="INFO"
                     )
                     update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-                    tfs_statuschange(tfs_orderid, "27", "3", "14")
+                    #tfs_statuschange(tfs_orderid, "27", "3", "14")
                     return False, None, "form_not_matched"
                     
 
@@ -403,7 +403,7 @@ class RedBell:
                     )
                 address_list.append(order_genid)
         update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-        tfs_statuschange(tfs_orderid, "27", "3", "14")
+        #tfs_statuschange(tfs_orderid, "27", "3", "14")
         return False, None, "address_not_found"
         
 
@@ -515,7 +515,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
                     severity="INFO"
                     )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-            tfs_statuschange(tfs_orderid, "27", "3", "14")
+            #tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False
 
         condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3)
@@ -821,7 +821,7 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderi
     data = fetch_upload_data(self, order_id)
     if not data:
         update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-        tfs_statuschange(tfs_orderid, "27", "3", "14")
+        #tfs_statuschange(tfs_orderid, "27", "3", "14")
         
         return False
 
@@ -846,7 +846,7 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderi
                 file_paths[f"MLSPdfIdListedComp{match.group(1)}"] = full_path
     else:
         update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-        tfs_statuschange(tfs_orderid, "27", "3", "14")
+        #tfs_statuschange(tfs_orderid, "27", "3", "14")
         #print("Comparables folder not found!")
         logger.log(
         module="Redbell-upload_files_for_order",
@@ -882,13 +882,13 @@ def upload_files_for_order(self, order_id: int, upload_page_url: str ,tfs_orderi
             severity="INFO"
             )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-            tfs_statuschange(tfs_orderid, "27", "3", "14")
+            #tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False
         
         success = upload_file_js(self.driver, input_id, file_path)
         if not success:
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-            tfs_statuschange(tfs_orderid, "27", "3", "14")
+            #tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False
         
         time.sleep(0.5)
@@ -1489,7 +1489,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
 
 
         update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-        tfs_statuschange(tfs_orderid, "27", "3", "14")
+        #tfs_statuschange(tfs_orderid, "27", "3", "14")
         return
     form_config, merged_json = load_form_config_and_data(
         order_id=order_id,
@@ -1589,7 +1589,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 severity="INFO"
                 )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-            tfs_statuschange(tfs_orderid, "27", "3", "14")
+            #tfs_statuschange(tfs_orderid, "27", "3", "14")
             return
 
         comparables_folder = data.get("comparables_folder")
@@ -1608,7 +1608,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 severity="INFO"
                 )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-            tfs_statuschange(tfs_orderid, "27", "3", "14")
+            #tfs_statuschange(tfs_orderid, "27", "3", "14")
         # Check if all 3 are True
         if form_fill and uploda_files and upload_photos:
 
@@ -1620,7 +1620,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 severity="INFO"
                 )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
-            tfs_statuschange(tfs_orderid, "26", "3", "14")
+            #tfs_statuschange(tfs_orderid, "26", "3", "14")
         else:
 
             logger.log(
@@ -1631,7 +1631,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 severity="INFO"
                 )
             update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
-            tfs_statuschange(tfs_orderid, "27", "3", "14")
+            #tfs_statuschange(tfs_orderid, "27", "3", "14")
     except Exception as e:
 
         logger.log(
@@ -1642,6 +1642,6 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 severity="INFO"
                 )
         update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-        tfs_statuschange(tfs_orderid, "27", "3", "14")
+        #tfs_statuschange(tfs_orderid, "27", "3", "14")
         return
 
