@@ -3,11 +3,7 @@
   <div class="nav-container">
     <!-- Logo on Left -->
     <div class="nav-logo">
-      <img src="assets/images/Tail_cart_logo.jpg" alt="Tail Cart Logo" />
-      <div class="logo-text">
-        <h1>Tail Cart</h1>
-        <p>Pet Safety & Care</p>
-      </div>
+      <img src="assets/images/tail_cart_luxury_logo.svg" alt="Tail Cart Luxury Logo" class="luxury-logo" />
     </div>
 
     <!-- Center Links -->
@@ -45,14 +41,13 @@
   <div class="mobile-menu" [class.active]="isMobileMenuOpen">
     <div class="mobile-header">
       <div class="mobile-logo">
-        <img src="assets/images/Tail_cart_logo.jpg" alt="Tail Cart Logo" />
-        <h2>Tail Cart</h2>
+        <img src="assets/images/tail_cart_luxury_logo.svg" alt="Tail Cart Luxury Logo" class="luxury-logo-mobile" />
       </div>
       <button class="close-menu" (click)="closeMobileMenu()">
         <i class="fas fa-times"></i>
       </button>
     </div>
-    
+
     <div class="mobile-links">
       <a class="mobile-link" routerLink="/home" routerLinkActive="active" (click)="closeMobileMenu()">
         <i class="fas fa-home"></i> HOME

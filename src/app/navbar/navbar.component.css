@@ -40,7 +40,6 @@
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: 1rem;
   transition: all 0.3s ease;
 }
 
@@ -48,51 +47,26 @@
   transform: translateY(-2px);
 }
 
-.nav-logo img {
-  height: 55px;
-  width: 55px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--accent-gold);
-  padding: 3px;
-  background: var(--white);
-  box-shadow: 0 4px 15px rgba(201, 161, 74, 0.2);
+.nav-logo img.luxury-logo {
+  height: 70px;
+  /* Increased height for better visibility of the SVG details */
+  width: auto;
+  /* Maintain aspect ratio */
+  filter: drop-shadow(0 4px 6px rgba(201, 161, 74, 0.3));
+  /* Soft gold shadow */
   transition: all 0.3s ease;
+  background: transparent;
+  /* Ensure SVG transparency is respected */
+  border: none;
+  /* Remove border from old image style */
+  padding: 0;
+  box-shadow: none;
+  /* Reset old box-shadow */
 }
 
-.nav-logo:hover img {
-  border-color: var(--accent-gold-dark);
-  box-shadow: 0 8px 25px rgba(201, 161, 74, 0.35);
-  transform: scale(1.02);
-}
-
-.logo-text h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  font-family: 'Cormorant Garamond', serif;
-  background: linear-gradient(135deg, var(--primary-dark-green) 0%, #006653 50%, var(--primary-dark-green) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  letter-spacing: 0.5px;
-  margin: 0;
-  line-height: 1.2;
-  text-shadow: 0 2px 4px rgba(0, 60, 48, 0.1);
-}
-
-.navbar.scrolled .logo-text h1 {
-  background: linear-gradient(135deg, var(--primary-dark-green) 0%, var(--accent-gold) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
-.logo-text p {
-  font-size: 0.75rem;
-  color: var(--gray);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin: 3px 0 0 0;
-  font-weight: 500;
+.nav-logo:hover img.luxury-logo {
+  filter: drop-shadow(0 6px 12px rgba(201, 161, 74, 0.5));
+  transform: scale(1.05);
 }
 
 /* Center Navigation Links - Gold Accents */
@@ -237,6 +211,7 @@
     transform: translateY(-100%);
     opacity: 0;
   }
+
   100% {
     transform: translateY(0);
     opacity: 1;
@@ -253,6 +228,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -276,9 +252,11 @@
   0% {
     box-shadow: 0 0 0 0 rgba(201, 161, 74, 0.4);
   }
+
   70% {
     box-shadow: 0 0 0 6px rgba(201, 161, 74, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(201, 161, 74, 0);
   }
@@ -289,6 +267,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -350,19 +329,23 @@
 .mobile-menu {
   position: fixed;
   top: 0;
-  left: -100%;  /* Changed from right to left */
+  left: -100%;
+  /* Changed from right to left */
   width: 85%;
   max-width: 400px;
   height: 100vh;
   background: var(--white);
   z-index: 1002;
   padding: 2rem 1.5rem;
-  box-shadow: 10px 0 50px rgba(0, 60, 48, 0.15);  /* Shadow on right side */
-  transition: left 0.5s cubic-bezier(0.23, 1, 0.32, 1);  /* Changed from right to left */
+  box-shadow: 10px 0 50px rgba(0, 60, 48, 0.15);
+  /* Shadow on right side */
+  transition: left 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  /* Changed from right to left */
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  border-right: 3px solid var(--accent-gold);  /* Changed from border-left to border-right */
+  border-right: 3px solid var(--accent-gold);
+  /* Changed from border-left to border-right */
 }
 
 
@@ -379,7 +362,8 @@
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
-  color: #001f18 !important; /* Your text-dark color */
+  color: #001f18 !important;
+  /* Your text-dark color */
   background: #FCFAF7 !important;
   border: 1px solid rgba(201, 161, 74, 0.1) !important;
 }
@@ -400,7 +384,8 @@
   display: inline-block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  color: #c9a14a !important; /* Your accent-gold color */
+  color: #c9a14a !important;
+  /* Your accent-gold color */
 }
 
 
@@ -409,6 +394,7 @@
     left: -100%;
     opacity: 0.5;
   }
+
   to {
     left: 0;
     opacity: 1;
@@ -430,30 +416,22 @@
 .mobile-logo {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  /* Center the logo */
+  width: 100%;
+  /* Ensure full width for centering if needed */
 }
 
-.mobile-logo img {
-  height: 55px;
-  width: 55px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--accent-gold);
-  padding: 3px;
-  background: var(--white);
-  box-shadow: 0 4px 15px rgba(201, 161, 74, 0.25);
-}
-
-.mobile-logo h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  font-family: 'Cormorant Garamond', serif;
-  background: linear-gradient(135deg, var(--primary-dark-green) 0%, var(--accent-gold) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin: 0;
-  letter-spacing: 0.5px;
+.mobile-logo img.luxury-logo-mobile {
+  height: 60px;
+  width: auto;
+  filter: drop-shadow(0 4px 6px rgba(201, 161, 74, 0.3));
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+  /* Remove circular radius */
 }
 
 
@@ -529,14 +507,37 @@
 
 
 /* Staggered animation delays */
-.mobile-link:nth-child(1) { animation-delay: 0.1s; }
-.mobile-link:nth-child(2) { animation-delay: 0.15s; }
-.mobile-link:nth-child(3) { animation-delay: 0.2s; }
-.mobile-link:nth-child(4) { animation-delay: 0.25s; }
-.mobile-link:nth-child(5) { animation-delay: 0.3s; }
-.mobile-link:nth-child(6) { animation-delay: 0.35s; }
-.mobile-link:nth-child(7) { animation-delay: 0.4s; }
-.mobile-link:nth-child(8) { animation-delay: 0.45s; }
+.mobile-link:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.mobile-link:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.mobile-link:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.mobile-link:nth-child(4) {
+  animation-delay: 0.25s;
+}
+
+.mobile-link:nth-child(5) {
+  animation-delay: 0.3s;
+}
+
+.mobile-link:nth-child(6) {
+  animation-delay: 0.35s;
+}
+
+.mobile-link:nth-child(7) {
+  animation-delay: 0.4s;
+}
+
+.mobile-link:nth-child(8) {
+  animation-delay: 0.45s;
+}
 
 @keyframes slideInLink {
   to {
@@ -673,21 +674,21 @@
   .nav-links {
     display: none !important;
   }
-  
+
   .nav-icons .nav-icon:not(.cart-icon),
   .nav-icons .logout-icon {
     display: none !important;
   }
-  
+
   .mobile-toggle {
     display: flex !important;
   }
-  
+
   .nav-icons {
     display: flex !important;
     gap: 0.8rem !important;
   }
-  
+
   .cart-icon {
     display: flex !important;
   }
@@ -702,7 +703,7 @@
     justify-content: space-between !important;
     width: 100% !important;
   }
-  
+
   /* LEFT CORNER: Menu button */
   .mobile-toggle {
     order: 1 !important;
@@ -710,7 +711,7 @@
     margin-left: 0 !important;
     flex-shrink: 0;
   }
-  
+
   /* LEFT CORNER: Cart icon next to menu */
   .nav-icons {
     order: 2 !important;
@@ -719,7 +720,7 @@
     display: flex !important;
     gap: 0.8rem !important;
   }
-  
+
   /* RIGHT CORNER: Logo - ALIGNED TO RIGHT */
   .nav-logo {
     order: 3 !important;
@@ -727,47 +728,35 @@
     margin-right: 0 !important;
     justify-content: flex-end !important;
   }
-  
-  /* Hide logo text on smaller devices if needed */
-  .logo-text p {
-    display: none;
+
+  /* Luxury logo adjustment for tablet */
+  .nav-logo img.luxury-logo {
+    height: 55px;
+    width: auto;
   }
-  
-  .nav-logo img {
-    height: 45px;
-    width: 45px;
-  }
-  
-  .logo-text h1 {
-    font-size: 1.4rem;
-  }
-  
+
   .mobile-toggle {
     width: 30px;
     height: 24px;
   }
-  
+
   .nav-icon {
     width: 42px;
     height: 42px;
   }
-  
+
   /* Adjust mobile menu for smaller screens */
   .mobile-menu {
     width: 85%;
     max-width: 380px;
     padding: 1.5rem;
   }
-  
-  .mobile-logo img {
-    height: 45px;
-    width: 45px;
+
+  .mobile-logo img.luxury-logo-mobile {
+    height: 50px;
+    width: auto;
   }
-  
-  .mobile-logo h2 {
-    font-size: 1.5rem;
-  }
-  
+
   .close-menu {
     width: 40px;
     height: 40px;
@@ -779,42 +768,38 @@
   .nav-container {
     padding: 0 1rem !important;
   }
-  
+
   .nav-icons {
     gap: 0.6rem !important;
     margin-left: 0.8rem !important;
   }
-  
+
   .nav-icon {
     width: 40px;
     height: 40px;
   }
-  
-  .nav-logo img {
-    height: 42px;
-    width: 42px;
+
+  .nav-logo img.luxury-logo {
+    height: 48px;
+    width: auto;
   }
-  
-  .logo-text h1 {
-    font-size: 1.3rem;
-  }
-  
+
   .mobile-toggle {
     width: 28px;
     height: 22px;
   }
-  
+
   .cart-badge {
     width: 18px;
     height: 18px;
     font-size: 0.65rem;
   }
-  
+
   .mobile-menu {
     width: 90%;
     padding: 1.2rem;
   }
-  
+
   .mobile-link {
     padding: 0.8rem 1rem;
     font-size: 0.9rem;

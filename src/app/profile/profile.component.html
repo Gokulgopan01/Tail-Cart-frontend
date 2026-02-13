@@ -11,55 +11,62 @@
       <button class="tab-btn" [class.active]="activeTab === 'owner'" (click)="switchTab('owner')">
         Owner Profile
       </button>
+
       <button class="tab-btn" [class.active]="activeTab === 'pets'" (click)="switchTab('pets')">
         My Pets
       </button>
     </div>
   </div>
 
+
   <!-- Owner Profile Tab -->
   <div class="tab-content" [class.active]="activeTab === 'owner'">
+
     <!-- View Mode -->
     <div *ngIf="hasProfile && !isEditMode" class="profile-view">
-      <!-- Profile Header with Photo, Name, Location -->
+
+      <!-- Profile Header with Photo + Name + Location -->
       <div class="profile-header">
         <div class="profile-photo-section">
           <div class="photo-display">
-            <!-- Wait until profile is loaded -->
-            <img *ngIf="profile" [src]="getOwnerPhotoUrl()" alt="Owner" class="owner-photo" />
-
+            <img *ngIf="profile" [src]="getOwnerPhotoUrl()" alt="Owner profile photo" class="owner-photo" />
+            <div *ngIf="!profile" class="photo-placeholder">No Photo</div>
           </div>
-          <div class="profile-name-location">
-            <h2 class="owner-name">{{ profile.owner_name || 'No Name' }}</h2>
+
+          <div class="profile-info">
+            <h2 class="owner-name">{{ profile.owner_name || 'No Name Set' }}</h2>
             <p class="owner-location">{{ profile.owner_city || 'No City' }}</p>
           </div>
         </div>
       </div>
 
-      <!-- About Me Card -->
+      <!-- About Card -->
       <div class="about-card">
         <div class="card-header">
           <h3 class="about-title">ABOUT ME</h3>
         </div>
         <div class="card-content">
-          <div class="about-section">
-            <!-- Display address -->
+          <div class="about-list">
+
             <div *ngIf="profile.owner_address" class="about-item">
-              <div class="about-icon">📍</div>
-              <div class="about-text">{{ profile.owner_address }}</div>
+              <span class="about-icon">📍</span>
+              <span class="about-text">{{ profile.owner_address }}</span>
             </div>
-            
-            <!-- Display phone -->
+
             <div *ngIf="profile.owner_phone" class="about-item">
-              <div class="about-icon">📞</div>
-              <div class="about-text">{{ profile.owner_phone }}</div>
+              <span class="about-icon">📞</span>
+              <span class="about-text">{{ profile.owner_phone }}</span>
             </div>
-            
-            <!-- Display state -->
+
             <div *ngIf="profile.owner_state" class="about-item">
-              <div class="about-icon">🏛️</div>
-              <div class="about-text">{{ profile.owner_state }}</div>
+              <span class="about-icon">🏛️</span>
+              <span class="about-text">{{ profile.owner_state }}</span>
             </div>
+
+            <div *ngIf="!profile.owner_address && !profile.owner_phone && !profile.owner_state" class="no-info">
+              No additional information added yet.
+            </div>
+
           </div>
         </div>
       </div>
@@ -68,82 +75,77 @@
       <div class="edit-button-container">
         <button class="edit-btn" (click)="toggleEditMode()">Edit Profile</button>
       </div>
+
     </div>
 
-    <!-- Edit Mode -->
+    <!-- ────────────────────────────────────────────────
+        Edit Mode
+    ──────────────────────────────────────────────── -->
     <div *ngIf="isEditMode" class="profile-edit">
+
       <div class="edit-header">
         <h2>{{ hasProfile ? 'Edit Your Profile' : 'Create Your Profile' }}</h2>
       </div>
 
-      <!-- Photo Upload Section -->
+      <!-- Photo Upload -->
       <div class="photo-upload-section">
         <h4>Profile Photo</h4>
         <div class="photo-upload-container">
           <div class="current-photo">
-            <img *ngIf="profile" [src]="getOwnerPhotoUrl()" alt="Owner" class="owner-photo" />
+            <img *ngIf="profile && !ownerPhotoPreview" [src]="getOwnerPhotoUrl()" alt="Current photo"
+              class="owner-photo" />
+            <img *ngIf="ownerPhotoPreview" [src]="ownerPhotoPreview" alt="Preview" class="owner-photo preview" />
+            <div *ngIf="!profile && !ownerPhotoPreview" class="photo-placeholder">No Photo</div>
           </div>
+
           <div class="upload-controls">
             <label class="upload-btn">
-              <input type="file" accept="image/*" (change)="onOwnerPhotoSelected($event)" hidden>
+              <input type="file" accept="image/*" (change)="onOwnerPhotoSelected($event)" hidden />
               {{ ownerPhotoPreview ? 'Change Photo' : 'Upload Photo' }}
             </label>
+
             <button *ngIf="ownerPhotoPreview" class="remove-btn" (click)="removeOwnerPhoto()">
               Remove
             </button>
-            <p class="upload-hint">Click to upload a profile photo</p>
+
+            <p class="upload-hint">Recommended: square image, max 2MB</p>
           </div>
         </div>
       </div>
 
-      <!-- Edit Form -->
+      <!-- Form -->
       <form (ngSubmit)="onSubmit()" #profileForm="ngForm" class="edit-form">
-        <!-- Display Name -->
+
         <div class="form-field">
-          <label for="owner_name">Display Name *</label>
-          <input type="text" id="owner_name" name="owner_name" 
-                 [(ngModel)]="profile.owner_name" required
-                 placeholder="Enter your name"
-                 class="form-input">
+          <label for="owner_name">Display Name <span class="required">*</span></label>
+          <input type="text" id="owner_name" name="owner_name" [(ngModel)]="profile.owner_name" required
+            placeholder="Your display name" class="form-input" />
         </div>
 
-        <!-- City -->
         <div class="form-field">
-          <label for="owner_city">City *</label>
-          <input type="text" id="owner_city" name="owner_city" 
-                 [(ngModel)]="profile.owner_city" required
-                 placeholder="Enter your city"
-                 class="form-input">
+          <label for="owner_city">City <span class="required">*</span></label>
+          <input type="text" id="owner_city" name="owner_city" [(ngModel)]="profile.owner_city" required
+            placeholder="Your city" class="form-input" />
         </div>
 
-        <!-- Address -->
         <div class="form-field">
-          <label for="owner_address">Address *</label>
-          <textarea id="owner_address" name="owner_address" 
-                    [(ngModel)]="profile.owner_address" required
-                    placeholder="Enter your address"
-                    class="form-textarea"></textarea>
+          <label for="owner_address">Address <span class="required">*</span></label>
+          <textarea id="owner_address" name="owner_address" [(ngModel)]="profile.owner_address" required rows="3"
+            placeholder="Full address" class="form-textarea"></textarea>
         </div>
 
-        <!-- State -->
         <div class="form-field">
-          <label for="owner_state">State *</label>
-          <input type="text" id="owner_state" name="owner_state" 
-                 [(ngModel)]="profile.owner_state" required
-                 placeholder="Enter your state"
-                 class="form-input">
+          <label for="owner_state">State <span class="required">*</span></label>
+          <input type="text" id="owner_state" name="owner_state" [(ngModel)]="profile.owner_state" required
+            placeholder="Your state" class="form-input" />
         </div>
 
-        <!-- Phone -->
         <div class="form-field">
           <label for="owner_phone">Phone Number</label>
-          <input type="tel" id="owner_phone" name="owner_phone" 
-                 [(ngModel)]="profile.owner_phone"
-                 placeholder="Enter your phone number"
-                 class="form-input">
+          <input type="tel" id="owner_phone" name="owner_phone" [(ngModel)]="profile.owner_phone"
+            placeholder="+91 98765 43210" class="form-input" />
         </div>
 
-        <!-- Form Actions -->
         <div class="form-actions">
           <button *ngIf="hasProfile" type="button" class="cancel-btn" (click)="cancelEdit()">
             Cancel
@@ -152,309 +154,173 @@
             {{ isLoading ? 'Saving...' : 'Save Profile' }}
           </button>
         </div>
+
       </form>
+
     </div>
+
   </div>
 
   <!-- Pets Tab -->
   <div class="tab-content" [class.active]="activeTab === 'pets'">
+
     <div class="pets-container">
-      <!-- Header with Tabs -->
+
+      <!-- Header + Filter Tabs -->
       <div class="pets-header">
-        <h2>My Pets</h2>
-        <div class="pets-tabs">
-          <button class="pet-tab-btn active" (click)="showAllPets()">All Pets</button>
-          <button class="pet-tab-btn" (click)="showOnlyDogs()">Dogs</button>
-          <button class="pet-tab-btn" (click)="showOnlyCats()">Cats</button>
-          <button class="pet-tab-btn" (click)="showOtherPets()">Other</button>
+        <h2 class="pets-title">My Pets</h2>
+
+        <div class="pets-filter-tabs">
+          <button class="pet-tab-btn" [class.active]="activePetFilter === 'all'" (click)="showAllPets()">
+            All
+          </button>
+          <button class="pet-tab-btn" [class.active]="activePetFilter === 'dogs'" (click)="showOnlyDogs()">
+            Dogs
+          </button>
+          <button class="pet-tab-btn" [class.active]="activePetFilter === 'cats'" (click)="showOnlyCats()">
+            Cats
+          </button>
+          <button class="pet-tab-btn" [class.active]="activePetFilter === 'other'" (click)="showOtherPets()">
+            Other
+          </button>
         </div>
       </div>
 
-      <!-- Add Pet Button -->
-      <div class="add-pet-container">
-        <button class="add-pet-btn-top" (click)="startAddPet()">
+      <!-- Add Pet Button (top) -->
+      <div class="add-pet-top">
+        <button class="add-pet-btn" (click)="startAddPet()">
           + Add New Pet
         </button>
       </div>
 
-      <!-- Pets Grid -->
-<div *ngIf="!loadingPets && pets.length > 0" class="pets-grid">
-  <div class="pet-card" *ngFor="let pet of pets">
-    <!-- Pet Photo -->
-    <div class="pet-photo-large">
-      <div class="photo-display-large">
-        <img
-          [src]="getPetPhotoUrl(pet)"
-          alt="Pet Photo"
-          class="pet-photo-img"
-        />
-      </div>
-    </div>
+      <!-- Loading / Empty / Grid -->
+      <div class="pets-content-area">
 
-    <!-- Pet Info -->
-    <div class="pet-card-content">
-      <div class="pet-name-section">
-        <h3 class="pet-name">{{ pet.pet_name || 'Unnamed Pet' }}</h3>
-        <span class="pet-badge" [class.lost]="pet.is_lost">
-          {{ pet.is_lost ? 'Lost' : pet.species }}
-        </span>
-      </div>
-
-      <div class="pet-details">
-        <div class="pet-breed">{{ pet.breed || 'Mixed Breed' }}</div>
-        
-        <!-- Age -->
-        <div class="pet-age">
-          <span class="age-label">Age:</span>
-          <span class="age-value">{{ pet.age || 0 }} years</span>
+        <!-- Loading state (optional – add if you have loadingPets flag) -->
+        <div *ngIf="loadingPets" class="loading-state">
+          <div class="spinner">Loading pets...</div>
         </div>
 
-        <!-- Bio and Buttons -->
-        <div class="pet-bio">
-          <div class="button-row">
-            <button class="btn preview-btn" (click)="openPreviewModal(pet, $event)">Preview</button>
-            <button *ngIf="!pet.is_lost" class="btn mark-lost-btn" (click)="markAsLost(pet, $event)">Mark Lost</button>
-            <button *ngIf="pet.is_lost" class="btn found-btn">Lost</button>
-          </div>
-          <div class="button-row">
-            <button class="btn alert-btn" (click)="openAlertModal(pet, $event)">
-              View Alerts ({{ pet.alerts?.length ?? 0 }})
-            </button>
-            <button class="btn edit-btn" (click)="editPet(pet, $event)">Edit</button>
-            <button class="btn delete-btn" (click)="deletePet(pet, $event)">Delete</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-      <!-- No Pets -->
-      <div *ngIf="!loadingPets && pets.length === 0" class="no-pets">
-        <div class="no-pets-icon">🐾</div>
-        <h3>No pets yet!</h3>
-        <p>Add your first furry friend to get started</p>
-        <button class="add-pet-btn-main" (click)="startAddPet()">
-          + Add Your First Pet
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Add/Edit Pet Modal -->
-<div *ngIf="isPetFormVisible" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>{{ editingPet ? 'Edit Pet' : 'Add New Pet' }}</h2>
-      <span class="close-btn" (click)="cancelPetForm()">×</span>
-    </div>
-    
-    <form (ngSubmit)="savePet()" #petForm="ngForm" class="pet-form">
-      <!-- Pet Photo Upload -->
-      <div class="form-field">
-        <label>Pet Photo</label>
-        <div class="photo-upload-container">
-          <div class="current-photo">
-            <img [src]="petPhotoPreview || getPetPhotoUrl(currentPet)" alt="Pet Photo" class="photo-preview" />
-          </div>
-          <div class="upload-controls">
-            <label class="upload-btn">
-              <input type="file" accept="image/*" (change)="onPetPhotoSelected($event)" hidden>
-              {{ petPhotoPreview ? 'Change Photo' : 'Upload Photo' }}
-            </label>
-            <button *ngIf="petPhotoPreview" class="remove-btn" (click)="removePetPhoto()">
-              Remove
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Avatar Selection (only if no photo) -->
-      <div *ngIf="!petPhotoPreview" class="form-field">
-        <label>Choose Avatar (if no photo)</label>
-        <div class="avatar-grid">
-          <div class="avatar-option" [class.selected]="currentPetAvatar === 'pet1'" (click)="selectPetAvatar('pet1')">
-            <img src="assets/icons/pet1.svg" alt="Dog" class="avatar-icon" />
-            <span class="avatar-label">Dog</span>
-          </div>
-          <div class="avatar-option" [class.selected]="currentPetAvatar === 'cat-play'" (click)="selectPetAvatar('cat-play')">
-            <img src="assets/icons/cat-play.svg" alt="Cat" class="avatar-icon" />
-            <span class="avatar-label">Cat</span>
-          </div>
-          <div class="avatar-option" [class.selected]="currentPetAvatar === 'bird'" (click)="selectPetAvatar('bird')">
-            <img src="assets/icons/bird.svg" alt="Bird" class="avatar-icon" />
-            <span class="avatar-label">Bird</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pet Type -->
-      <div class="form-field">
-        <label for="species">Pet Type *</label>
-        <select id="species" name="species" [(ngModel)]="currentPet.species" required class="form-select">
-          <option value="">Select type</option>
-          <option value="Dog">Dog</option>
-          <option value="Cat">Cat</option>
-          <option value="Horse">Horse</option>
-          <option value="Bird">Bird</option>
-          <option value="Fish">Fish</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-
-      <!-- Pet Name -->
-      <div class="form-field">
-        <label for="pet_name">Pet Name *</label>
-        <input type="text" id="pet_name" name="pet_name" 
-               [(ngModel)]="currentPet.pet_name" required
-               placeholder="Enter pet name"
-               class="form-input">
-      </div>
-
-      <!-- Breed -->
-      <div class="form-field">
-        <label for="breed">Breed</label>
-        <input type="text" id="breed" name="breed" 
-               [(ngModel)]="currentPet.breed"
-               placeholder="Enter breed"
-               class="form-input">
-      </div>
-
-      <!-- Age -->
-      <div class="form-field">
-        <label for="age">Age (in years)</label>
-        <input type="number" id="age" name="age" 
-               [(ngModel)]="currentPet.age" min="0" max="50"
-               placeholder="Enter age"
-               class="form-input">
-      </div>
-
-      <!-- Status -->
-      <div class="form-field" *ngIf="editingPet">
-        <label for="is_lost">Status</label>
-        <select id="is_lost" name="is_lost" [(ngModel)]="currentPet.is_lost" class="form-select">
-          <option [value]="false">Safe</option>
-          <option [value]="true">Lost</option>
-        </select>
-      </div>
-
-      <!-- Form Actions -->
-      <div class="form-actions">
-        <button type="button" class="cancel-btn" (click)="cancelPetForm()">
-          Cancel
-        </button>
-        <button type="submit" class="add-pet-btn" [disabled]="petForm.invalid || loadingPets">
-          {{ loadingPets ? 'Saving...' : (editingPet ? 'Update Pet' : 'Add Pet') }}
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-  <!-- Modal for Viewing Alerts -->
-  <div class="alert-modal-overlay" *ngIf="isAlertModalOpen">
-    <div class="alert-modal-content">
-      <div class="modal-header">
-        <h3>Alerts for {{ selectedPet?.pet_name }}</h3>
-        <span class="close-btn" (click)="closeAlertModal()">×</span>
-      </div>
-      
-      <div class="alerts-list">
-        <div *ngIf="selectedPet?.alerts?.length === 0" class="no-alerts">
-          <p>No alerts found for this pet.</p>
+        <!-- No pets -->
+        <div *ngIf="!loadingPets && pets.length === 0" class="no-pets">
+          <div class="no-pets-icon">🐾</div>
+          <h3>No Pets Added Yet</h3>
+          <p>Start building your pet family</p>
+          <button class="add-pet-btn-main" (click)="startAddPet()">
+            + Add Your First Pet
+          </button>
         </div>
 
-        <div *ngFor="let alert of selectedPet?.alerts" class="alert-item">
-          <div class="alert-header">
-            <div class="alert-sender">
-              <strong>{{ alert.sender_name }}</strong>
-              <span class="alert-time">{{ alert.created_at | date:'medium' }}</span>
+        <!-- Pets Grid -->
+        <div *ngIf="!loadingPets && pets.length > 0" class="pets-grid">
+          <div class="pet-card" *ngFor="let pet of pets">
+            <div class="pet-photo-wrapper">
+              <img [src]="getPetPhotoUrl(pet)" alt="{{ pet.pet_name || 'Pet' }}" class="pet-photo" />
             </div>
-            <button class="resolve-btn" (click)="resolveAlert(alert.id)">Resolve</button>
+
+            <div class="pet-info">
+              <div class="pet-header-row">
+                <h3 class="pet-name">{{ pet.pet_name || 'Unnamed' }}</h3>
+                <span class="pet-badge" [class.lost]="pet.is_lost">
+                  {{ pet.is_lost ? 'Lost' : (pet.species || 'Unknown') }}
+                </span>
+              </div>
+
+              <div class="pet-breed">{{ pet.breed || 'Mixed / Unknown breed' }}</div>
+
+              <div class="pet-age">
+                <span class="age-label">Age:</span>
+                <span>{{ pet.age != null ? pet.age + ' yrs' : 'Unknown' }}</span>
+              </div>
+
+              <div class="pet-actions">
+                <button class="btn action-btn preview" (click)="openPreviewModal(pet, $event)">
+                  Preview
+                </button>
+
+                <button *ngIf="!pet.is_lost" class="btn action-btn lost" (click)="markAsLost(pet, $event)">
+                  Mark Lost
+                </button>
+
+                <button *ngIf="pet.is_lost" class="btn action-btn found disabled">
+                  Reported Lost
+                </button>
+
+                <button class="btn action-btn alert" (click)="openAlertModal(pet, $event)">
+                  Alerts ({{ pet.alerts?.length ?? 0 }})
+                </button>
+
+                <button class="btn action-btn edit" (click)="editPet(pet, $event)">
+                  Edit
+                </button>
+
+                <button class="btn action-btn delete" (click)="deletePet(pet, $event)">
+                  Delete
+                </button>
+              </div>
+            </div>
           </div>
-          <p class="alert-message">{{ alert.message }}</p>
-          <div class="alert-details">
-            <p><strong>Phone:</strong> <a href="tel:{{ alert.phone }}">{{ alert.phone }}</a></p>
-            <p><strong>Location:</strong> {{ alert.location }}</p>
-          </div>
-          <button class="map-btn" (click)="viewOnMap(alert.location)">View on Map</button>
         </div>
       </div>
+
     </div>
+
   </div>
 
-  <!-- Preview Modal -->
-  <div class="preview-modal-overlay" *ngIf="isPreviewModalOpen">
-    <div class="preview-modal-content">
-      <div class="modal-header">
-        <h3>Pet Preview: {{ selectedPet?.pet_name }}</h3>
-        <span class="close-btn" (click)="closePreviewModal()">×</span>
-      </div>
-      
-      <div class="preview-content">
-        <div class="preview-photo">
-          <img [src]="getPetPhotoUrl(selectedPet!)" alt="Pet" class="preview-img" />
-        </div>
-        
-        <div class="preview-details">
-          <div class="detail-row">
-            <span class="detail-label">Name:</span>
-            <span class="detail-value">{{ selectedPet?.pet_name }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Species:</span>
-            <span class="detail-value">{{ selectedPet?.species }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Breed:</span>
-            <span class="detail-value">{{ selectedPet?.breed }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Age:</span>
-            <span class="detail-value">{{ selectedPet?.age }} years</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Status:</span>
-            <span class="detail-value status-badge" [class.lost]="selectedPet?.is_lost">
-              {{ selectedPet?.is_lost ? 'Lost' : 'Safe' }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Add/Edit Pet Modal -->
   <div *ngIf="isPetFormVisible" class="modal-overlay">
     <div class="modal-content">
+
       <div class="modal-header">
         <h2>{{ editingPet ? 'Edit Pet' : 'Add New Pet' }}</h2>
-        <span class="close-btn" (click)="cancelPetForm()">×</span>
+        <button type="button" class="close-btn" (click)="cancelPetForm()" aria-label="Close">×</button>
       </div>
-      
+
       <form (ngSubmit)="savePet()" #petForm="ngForm" class="pet-form">
+
         <!-- Pet Photo Upload -->
         <div class="form-field">
-          <label>Pet Photo</label>
+          <label>Pet Photo <span class="optional">(optional)</span></label>
           <div class="photo-upload-container">
             <div class="current-photo">
-              <img [src]="petPhotoPreview || getPetPhotoUrl(currentPet)" alt="Pet Photo" class="photo-preview" />
+              <img [src]="petPhotoPreview || getPetPhotoUrl(currentPet)" alt="Pet preview" class="photo-preview" />
             </div>
             <div class="upload-controls">
               <label class="upload-btn">
-                <input type="file" accept="image/*" (change)="onPetPhotoSelected($event)" hidden>
+                <input type="file" accept="image/*" (change)="onPetPhotoSelected($event)" hidden />
                 {{ petPhotoPreview ? 'Change Photo' : 'Upload Photo' }}
               </label>
-              <button *ngIf="petPhotoPreview" class="remove-btn" (click)="removePetPhoto()">
+              <button *ngIf="petPhotoPreview" type="button" class="remove-btn" (click)="removePetPhoto()">
                 Remove
               </button>
             </div>
           </div>
         </div>
 
+        <!-- Avatar Selection – only shown when no photo is set -->
+        <div *ngIf="!petPhotoPreview" class="form-field avatar-field">
+          <label>Choose Avatar (fallback if no photo)</label>
+          <div class="avatar-grid">
+            <div class="avatar-option" [class.selected]="currentPetAvatar === 'pet1'" (click)="selectPetAvatar('pet1')">
+              <img src="assets/icons/pet1.svg" alt="Dog avatar" class="avatar-icon" />
+              <span class="avatar-label">Dog</span>
+            </div>
+            <div class="avatar-option" [class.selected]="currentPetAvatar === 'cat-play'"
+              (click)="selectPetAvatar('cat-play')">
+              <img src="assets/icons/cat-play.svg" alt="Cat avatar" class="avatar-icon" />
+              <span class="avatar-label">Cat</span>
+            </div>
+            <div class="avatar-option" [class.selected]="currentPetAvatar === 'bird'" (click)="selectPetAvatar('bird')">
+              <img src="assets/icons/bird.svg" alt="Bird avatar" class="avatar-icon" />
+              <span class="avatar-label">Bird</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Pet Type -->
         <div class="form-field">
-          <label for="species">Pet Type *</label>
+          <label for="species">Pet Type <span class="required">*</span></label>
           <select id="species" name="species" [(ngModel)]="currentPet.species" required class="form-select">
             <option value="">Select type</option>
             <option value="Dog">Dog</option>
@@ -468,50 +334,146 @@
 
         <!-- Pet Name -->
         <div class="form-field">
-          <label for="pet_name">Pet Name *</label>
-          <input type="text" id="pet_name" name="pet_name" 
-                 [(ngModel)]="currentPet.pet_name" required
-                 placeholder="Enter pet name"
-                 class="form-input">
+          <label for="pet_name">Pet Name <span class="required">*</span></label>
+          <input type="text" id="pet_name" name="pet_name" [(ngModel)]="currentPet.pet_name" required
+            placeholder="Enter pet name" class="form-input" />
         </div>
 
         <!-- Breed -->
         <div class="form-field">
           <label for="breed">Breed</label>
-          <input type="text" id="breed" name="breed" 
-                 [(ngModel)]="currentPet.breed"
-                 placeholder="Enter breed"
-                 class="form-input">
+          <input type="text" id="breed" name="breed" [(ngModel)]="currentPet.breed" placeholder="e.g. Labrador, Siamese"
+            class="form-input" />
         </div>
 
         <!-- Age -->
         <div class="form-field">
           <label for="age">Age (in years)</label>
-          <input type="number" id="age" name="age" 
-                 [(ngModel)]="currentPet.age" min="0" max="50"
-                 placeholder="Enter age"
-                 class="form-input">
+          <input type="number" id="age" name="age" [(ngModel)]="currentPet.age" min="0" max="50" placeholder="e.g. 3"
+            class="form-input" />
         </div>
 
-        <!-- Status -->
+        <!-- Status – only when editing -->
         <div class="form-field" *ngIf="editingPet">
           <label for="is_lost">Status</label>
           <select id="is_lost" name="is_lost" [(ngModel)]="currentPet.is_lost" class="form-select">
-            <option [value]="false">Safe</option>
-            <option [value]="true">Lost</option>
+            <option [value]="false">Safe / At Home</option>
+            <option [value]="true">Lost / Missing</option>
           </select>
         </div>
 
         <!-- Form Actions -->
         <div class="form-actions">
-          <button type="button" class="cancel-btn" (click)="cancelPetForm()">
-            Cancel
-          </button>
+          <button type="button" class="cancel-btn" (click)="cancelPetForm()">Cancel</button>
           <button type="submit" class="add-pet-btn" [disabled]="petForm.invalid || loadingPets">
             {{ loadingPets ? 'Saving...' : (editingPet ? 'Update Pet' : 'Add Pet') }}
           </button>
         </div>
+
       </form>
+    </div>
+  </div>
+
+  <!-- Modal for Viewing Alerts -->
+  <div class="alert-modal-overlay" *ngIf="isAlertModalOpen">
+    <div class="alert-modal-content">
+
+      <div class="modal-header">
+        <h3>Alerts for {{ selectedPet?.pet_name || 'this pet' }}</h3>
+        <button type="button" class="close-btn" (click)="closeAlertModal()" aria-label="Close modal">×</button>
+      </div>
+
+      <div class="alerts-list">
+        <!-- No alerts case -->
+        <div *ngIf="selectedPet?.alerts?.length === 0" class="no-alerts">
+          <p>No alerts reported for this pet yet.</p>
+        </div>
+
+        <!-- Alert items -->
+        <div *ngFor="let alert of selectedPet?.alerts" class="alert-item">
+          <div class="alert-header">
+            <div class="alert-sender-info">
+              <strong class="sender-name">{{ alert.sender_name || 'Anonymous' }}</strong>
+              <span class="alert-time">{{ alert.created_at | date:'mediumDate' }} • {{ alert.created_at |
+                date:'shortTime' }}</span>
+            </div>
+            <button class="resolve-btn" (click)="resolveAlert(alert.id)" [disabled]="alert.resolved"
+              title="Mark this alert as resolved">
+              {{ alert.resolved ? 'Resolved' : 'Resolve' }}
+            </button>
+          </div>
+
+          <p class="alert-message">{{ alert.message || 'No message provided' }}</p>
+
+          <div class="alert-details">
+            <div class="detail-row">
+              <span class="detail-label">Phone:</span>
+              <a href="tel:{{ alert.phone }}" class="detail-value phone-link">{{ alert.phone || 'Not provided' }}</a>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Location:</span>
+              <span class="detail-value">{{ alert.location || 'Location not specified' }}</span>
+            </div>
+          </div>
+
+          <button class="map-btn" (click)="viewOnMap(alert.location)" [disabled]="!alert.location">
+            View on Map
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pet Preview Modal -->
+  <div class="preview-modal-overlay" *ngIf="isPreviewModalOpen">
+    <div class="preview-modal-content">
+
+      <div class="modal-header">
+        <h3>Pet Preview: {{ selectedPet?.pet_name || 'Unnamed Pet' }}</h3>
+        <button type="button" class="close-btn" (click)="closePreviewModal()" aria-label="Close preview">×</button>
+      </div>
+
+      <div class="preview-content">
+
+        <!-- Pet Photo -->
+        <div class="preview-photo-section">
+          <img [src]="getPetPhotoUrl(selectedPet!)" alt="{{ selectedPet?.pet_name || 'Pet' }}" class="preview-img"
+            (error)="handleImageError($event)" />
+        </div>
+
+        <!-- Pet Details -->
+        <div class="preview-details">
+          <div class="detail-row">
+            <span class="detail-label">Name</span>
+            <span class="detail-value">{{ selectedPet?.pet_name || 'Not set' }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">Species</span>
+            <span class="detail-value">{{ selectedPet?.species || 'Unknown' }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">Breed</span>
+            <span class="detail-value">{{ selectedPet?.breed || 'Not specified' }}</span>
+          </div>
+
+          <!-- <div class="detail-row">
+            <span class="detail-label">Age</span>
+            <span class="detail-value">{{ selectedPet?.age != null ? selectedPet.age + ' years' : 'Unknown' }}</span>
+          </div> -->
+
+          <div class="detail-row">
+            <span class="detail-label">Status</span>
+            <span class="detail-value status-badge" [class.safe]="!selectedPet?.is_lost"
+              [class.lost]="selectedPet?.is_lost">
+              {{ selectedPet?.is_lost ? 'Lost' : 'Safe / At Home' }}
+            </span>
+          </div>
+        </div>
+
+      </div>
+
     </div>
   </div>
 </div>

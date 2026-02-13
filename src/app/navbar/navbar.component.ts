@@ -15,7 +15,7 @@ export class NavbarComponent implements OnInit {
   isMobileMenuOpen = false;
   isScrolled = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   ngOnInit() {
     // Load cart items from localStorage if needed

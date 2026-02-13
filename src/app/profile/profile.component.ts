@@ -12,6 +12,7 @@ export interface Alert {
   location: string;
   message: string;
   created_at: string;
+  resolved?: boolean;
 }
 
 export interface Pet {
@@ -22,8 +23,9 @@ export interface Pet {
   age: number;
   is_lost: boolean;
   pet_photo: string | null;
-  alerts?: Alert[]; 
+  alerts?: Alert[];
   owner?: number;
+
 }
 
 export interface UserProfile {
@@ -60,7 +62,7 @@ export class ProfileComponent implements OnInit {
   selectedPet: Pet | null = null;
   isAlertModalOpen = false;
   isPreviewModalOpen = false;
-  
+
   // File upload
   ownerPhotoFile: File | null = null;
   petPhotoFile: File | null = null;
@@ -69,6 +71,7 @@ export class ProfileComponent implements OnInit {
 
   // UI states
   activeTab: 'owner' | 'pets' = 'owner';
+  activePetFilter: 'all' | 'dogs' | 'cats' | 'other' = 'all';
   isEditMode = false;
   isLoading = false;
   hasProfile = false;
@@ -97,10 +100,10 @@ export class ProfileComponent implements OnInit {
   private resolveAlertApi = 'http://127.0.0.1:8000/api/alerts/resolve/';
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private router: Router,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.userId = localStorage.getItem('user_id');
@@ -138,7 +141,7 @@ export class ProfileComponent implements OnInit {
           this.ownerPhotoPreview = response.owner_photo;
           this.pets = response.pets || [];
           this.allpets = response.pets || [];
-          
+
           // Initialize pet avatars if not already set
           response.pets?.forEach(pet => {
             if (pet.pet_id && !this.petAvatars.has(pet.pet_id)) {
@@ -158,6 +161,11 @@ export class ProfileComponent implements OnInit {
         }
       }
     });
+  }
+
+  handleImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = this.getDefaultPetAvatar(this.selectedPet?.species || '');
   }
 
   toggleEditMode(): void {
@@ -203,7 +211,7 @@ export class ProfileComponent implements OnInit {
 
     this.isLoading = true;
     const token = localStorage.getItem('access_token');
-    
+
     // Create form data for file upload
     const formData = new FormData();
     formData.append('user_id', this.userId || '');
@@ -212,7 +220,7 @@ export class ProfileComponent implements OnInit {
     formData.append('owner_phone', this.profile.owner_phone);
     formData.append('owner_city', this.profile.owner_city);
     formData.append('owner_state', this.profile.owner_state);
-    
+
     if (this.ownerPhotoFile) {
       formData.append('owner_photo', this.ownerPhotoFile);
     }
@@ -263,7 +271,7 @@ export class ProfileComponent implements OnInit {
         this.pets = response || [];
         this.allpets = response || [];
         this.loadingPets = false;
-        
+
         // Initialize pet avatars if not already set
         response?.forEach(pet => {
           if (pet.pet_id && !this.petAvatars.has(pet.pet_id)) {
@@ -280,20 +288,24 @@ export class ProfileComponent implements OnInit {
   }
 
   showOnlyDogs(): void {
+    this.activePetFilter = 'dogs';
     this.pets = this.allpets.filter(
       pet => pet.species?.toLowerCase() === 'dog'
     );
   }
 
   showAllPets(): void {
+    this.activePetFilter = 'all';
     this.pets = this.allpets;
   }
 
   showOnlyCats(): void {
+    this.activePetFilter = 'cats';
     this.pets = this.allpets.filter(pet => pet.species?.toLowerCase() === 'cat')
   }
 
   showOtherPets(): void {
+    this.activePetFilter = 'other';
     this.pets = this.allpets.filter(pet => pet.species?.toLowerCase() !== 'cat' && pet.species?.toLowerCase() !== 'dog')
   }
 
@@ -343,7 +355,7 @@ export class ProfileComponent implements OnInit {
 
   savePet(): void {
     const token = localStorage.getItem('access_token');
-    
+
     // Create form data for pet with photo
     const formData = new FormData();
     formData.append('pet_name', this.currentPet.pet_name);
@@ -352,7 +364,7 @@ export class ProfileComponent implements OnInit {
     formData.append('age', this.currentPet.age.toString());
     formData.append('is_lost', this.currentPet.is_lost.toString());
     formData.append('owner', this.userId || '');
-    
+
     if (this.petPhotoFile) {
       formData.append('pet_photo', this.petPhotoFile);
     }
@@ -379,12 +391,12 @@ export class ProfileComponent implements OnInit {
       next: (response: any) => {
         this.loadingPets = false;
         this.isPetFormVisible = false;
-        
+
         // Save avatar locally if no photo uploaded
         if (response?.pet_id && !this.petPhotoFile) {
           this.petAvatars.set(response.pet_id, this.currentPetAvatar);
         }
-        
+
         this.loadPets();
         this.showSnackbar(this.editingPet ? 'Pet updated successfully' : 'Pet added successfully');
       },
@@ -396,7 +408,7 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-    deletePet(pet: Pet, event: Event): void {
+  deletePet(pet: Pet, event: Event): void {
     event.stopPropagation();
 
     if (!pet.pet_id || !this.userId) return;
@@ -461,7 +473,7 @@ export class ProfileComponent implements OnInit {
     window.open(`https://www.google.com/maps/search/?api=1&query=${encodedLocation}`, '_blank');
   }
 
-    markAsLost(pet: Pet, event: Event): void {
+  markAsLost(pet: Pet, event: Event): void {
     event.stopPropagation();
     if (!pet.pet_id || !this.userId) return;
 
@@ -505,7 +517,7 @@ export class ProfileComponent implements OnInit {
     this.http.put(this.resolveAlertApi, payload, { headers }).subscribe({
       next: () => {
         if (this.selectedPet) {
-          this.selectedPet.alerts =this.selectedPet.alerts?.filter(alert => alert.id !== alertId) ?? [];
+          this.selectedPet.alerts = this.selectedPet.alerts?.filter(alert => alert.id !== alertId) ?? [];
         }
         this.showSnackbar('Alert resolved successfully');
       },
@@ -531,7 +543,7 @@ export class ProfileComponent implements OnInit {
 
   // Get default avatar based on species
   private getDefaultPetAvatar(species: string): string {
-    switch(species?.toLowerCase()) {
+    switch (species?.toLowerCase()) {
       case 'dog': return 'pet1';
       case 'cat': return 'cat-play';
       case 'bird': return 'bird';
@@ -540,12 +552,12 @@ export class ProfileComponent implements OnInit {
   }
 
   getOwnerPhotoUrl(): string {
-  if (!this.profile?.owner_photo) return 'assets/icons/avatar.svg';
-  return 'http://127.0.0.1:8000' + (this.profile.owner_photo.startsWith('/') ? this.profile.owner_photo : '/' + this.profile.owner_photo);
-}
+    if (!this.profile?.owner_photo) return 'assets/icons/avatar.svg';
+    return 'http://127.0.0.1:8000' + (this.profile.owner_photo.startsWith('/') ? this.profile.owner_photo : '/' + this.profile.owner_photo);
+  }
 
 
-// Get pet photo URL with fallback to avatar
+  // Get pet photo URL with fallback to avatar
   getPetPhotoUrl(pet: Pet): string {
     if (pet.pet_photo) {
       // If backend returns relative path, prefix backend URL
