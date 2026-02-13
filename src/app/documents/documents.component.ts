@@ -138,7 +138,15 @@ export class DocumentsComponent implements OnInit {
       }
     });
   }
-
+  
+  scrollToAlerts(): void {
+    setTimeout(() => {
+      document.getElementById('alerts-section')?.scrollIntoView({
+        behavior: 'smooth'
+      });
+    }, 50);
+  }
+  
   // Data Loading
   loadDocuments(): void {
     const token = localStorage.getItem('access_token');

@@ -1,68 +1,148 @@
-<section class="about-section py-5 py-lg-7 position-relative overflow-hidden">
+<section class="about-section py-5 py-lg-7 position-relative overflow-hidden" style="min-height: 100vh; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    
+    <!-- Enhanced Particle Background Canvas -->
+    <canvas #particleCanvas class="position-absolute top-0 start-0 w-100 h-100" style="z-index: 1; opacity: 0.6;"></canvas>
+    
     <!-- Floating Cart Background Animation -->
-    <div class="floating-cart-bg position-absolute top-0 start-0 w-100 h-100 opacity-5">
-        <div class="position-absolute" style="right: 10%; top: 20%; animation: float 15s infinite ease-in-out;">
-            <i class="fas fa-shopping-cart fa-3x text-primary"></i>
+    <div class="floating-cart-bg position-absolute top-0 start-0 w-100 h-100" style="z-index: 2; pointer-events: none;">
+        <div class="position-absolute" style="right: 5%; top: 15%; animation: float 12s infinite ease-in-out;">
+            <i class="fas fa-shopping-cart fa-4x" style="color: rgba(0, 109, 91, 0.15);"></i>
         </div>
-        <div class="position-absolute" style="left: 15%; bottom: 30%; animation: float 18s infinite ease-in-out reverse;">
-            <i class="fas fa-shopping-bag fa-3x text-accent"></i>
+        <div class="position-absolute" style="left: 8%; bottom: 20%; animation: float 15s infinite ease-in-out reverse;">
+            <i class="fas fa-shopping-bag fa-4x" style="color: rgba(201, 161, 74, 0.15);"></i>
+        </div>
+        <div class="position-absolute" style="right: 15%; bottom: 30%; animation: float 18s infinite ease-in-out;">
+            <i class="fas fa-credit-card fa-4x" style="color: rgba(0, 166, 140, 0.15);"></i>
+        </div>
+        <div class="position-absolute" style="left: 20%; top: 40%; animation: float 14s infinite ease-in-out reverse;">
+            <i class="fas fa-truck fa-4x" style="color: rgba(201, 161, 74, 0.15);"></i>
         </div>
     </div>
 
-    <div class="container position-relative z-2">
+    <!-- Animated Gradient Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Floating Geometric Shapes -->
+    <div class="floating-shape shape-1">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+            <circle cx="40" cy="40" r="40" fill="url(#grad1)" opacity="0.1"/>
+        </svg>
+    </div>
+    <div class="floating-shape shape-2">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+            <rect x="10" y="10" width="80" height="80" rx="15" fill="url(#grad2)" opacity="0.1"/>
+        </svg>
+    </div>
+    <div class="floating-shape shape-3">
+        <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <path d="M30 0L60 30L30 60L0 30L30 0Z" fill="url(#grad3)" opacity="0.1"/>
+        </svg>
+    </div>
+
+    <!-- SVG Gradients -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00a68c"/>
+                <stop offset="100%" stop-color="#006d5b"/>
+            </linearGradient>
+            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#c9a14a"/>
+                <stop offset="100%" stop-color="#006d5b"/>
+            </linearGradient>
+            <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#006d5b"/>
+                <stop offset="100%" stop-color="#00a68c"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div class="container position-relative" style="z-index: 10;">
         <!-- Header Section -->
-        <div class="about-header text-center mb-5 mb-lg-8">
-            <span class="badge bg-primary bg-gradient px-4 py-2 rounded-pill fs-6 mb-4 animate__animated animate__fadeIn">
-                <i class="fas fa-cart-plus me-2"></i>
-                About Tail Cart
-            </span>
-            <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeInUp animate__delay-1s">
-                The Shopping Cart That <span class="text-primary">Follows You Everywhere</span>
+        <div class="about-header text-center mb-5 mb-lg-8" data-aos="fade-down" data-aos-duration="1000">
+            <div class="badge-container mb-4">
+                <div class="luxury-badge">
+                    <span class="badge-glow"></span>
+                    <i class="fas fa-cart-plus me-2"></i>
+                    About Tail Cart
+                </div>
+            </div>
+            
+            <h1 class="display-4 fw-bold mb-3">
+                The Shopping Cart That <span class="gradient-text">Follows You Everywhere</span>
             </h1>
-            <p class="lead text-muted max-w-lg mx-auto animate__animated animate__fadeInUp animate__delay-2s">
+            
+            <p class="lead text-muted mx-auto" style="max-width: 700px;">
                 Smart, secure, and surprisingly delightful. Shopping has never felt this good.
             </p>
             
-            <!-- Interactive Button -->
-            <button class="btn btn-primary btn-lg px-5 py-3 rounded-pill mt-4 animate__animated animate__pulse animate__delay-3s"
-                    id="startShoppingBtn">
-                <i class="fas fa-shopping-cart me-2"></i> Start Shopping
-                <small class="d-block mt-1 fs-7 opacity-75">Try clicking multiple times!</small>
+            <!-- Interactive Button with Ripple Effect -->
+            <button class="luxury-button btn-lg px-5 py-3 rounded-pill mt-4" id="startShoppingBtn">
+                <span class="button-text"><i class="fas fa-shopping-cart me-2"></i> Start Shopping</span>
+                <span class="button-icon"><i class="fas fa-arrow-right"></i></span>
+                <div class="button-shine"></div>
+                <div class="ripple-effect"></div>
             </button>
+            
+            <!-- Click Counter Animation -->
+            <div class="click-counter mt-3" id="clickCounter" style="display: none;">
+                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                    <i class="fas fa-mouse-pointer me-2"></i>
+                    <span id="clickCount">0</span> clicks
+                </span>
+            </div>
         </div>
 
-        <!-- Stats Section -->
-        <div class="stats-section mb-6 mb-lg-8 animate__animated animate__fadeInUp animate__delay-4s">
+        <!-- Stats Section with Animated Numbers -->
+        <div class="stats-section mb-6 mb-lg-8" data-aos="fade-up" data-aos-delay="200">
             <div class="row g-4">
                 <div class="col-6 col-md-3">
-                    <div class="stat-card card border-0 shadow-sm hover-lift rounded-4 text-center bg-gradient-primary">
-                        <div class="card-body p-4">
-                            <span class="stat-number display-5 fw-bold text-white d-block mb-2">2M+</span>
-                            <span class="stat-label text-white text-opacity-90 text-uppercase fw-semibold">Happy Shoppers</span>
+                    <div class="stat-card glass-card" onmouseover="animateNumber(this, 2.5, 'M+')">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-number" data-target="2.5">0</div>
+                        <div class="stat-label">Happy Shoppers</div>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i> +25%
                         </div>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <div class="stat-card card border-0 shadow-sm hover-lift rounded-4 text-center bg-gradient-accent">
-                        <div class="card-body p-4">
-                            <span class="stat-number display-5 fw-bold text-white d-block mb-2">50K+</span>
-                            <span class="stat-label text-white text-opacity-90 text-uppercase fw-semibold">Products</span>
+                    <div class="stat-card glass-card" onmouseover="animateNumber(this, 75, 'K+')">
+                        <div class="stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-number" data-target="75">0</div>
+                        <div class="stat-label">Products</div>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i> +15%
                         </div>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <div class="stat-card card border-0 shadow-sm hover-lift rounded-4 text-center bg-gradient-success">
-                        <div class="card-body p-4">
-                            <span class="stat-number display-5 fw-bold text-white d-block mb-2">99.9%</span>
-                            <span class="stat-label text-white text-opacity-90 text-uppercase fw-semibold">Uptime</span>
+                    <div class="stat-card glass-card" onmouseover="animateNumber(this, 99.9, '%')">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-number" data-target="99.9">0</div>
+                        <div class="stat-label">Uptime</div>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-check-circle"></i> 99.9%
                         </div>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <div class="stat-card card border-0 shadow-sm hover-lift rounded-4 text-center bg-gradient-warning">
-                        <div class="card-body p-4">
-                            <span class="stat-number display-5 fw-bold text-white d-block mb-2">4.9★</span>
-                            <span class="stat-label text-white text-opacity-90 text-uppercase fw-semibold">App Rating</span>
+                    <div class="stat-card glass-card" onmouseover="animateNumber(this, 4.9, '★')">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-number" data-target="4.9">0</div>
+                        <div class="stat-label">App Rating</div>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-star"></i> 4.9★
                         </div>
                     </div>
                 </div>
@@ -71,114 +151,121 @@
 
         <!-- Main Content -->
         <div class="row g-5 g-lg-8 mb-5 mb-lg-8">
-            <!-- Left Column: Why You'll Love Us -->
+            <!-- Left Column: Features -->
             <div class="col-12 col-lg-8">
                 <!-- Why You'll Love Us Section -->
-                <div class="card border-0 shadow-sm rounded-4 mb-5 animate__animated animate__fadeInLeft animate__delay-3s">
-                    <div class="card-body p-4 p-lg-5">
-                        <h2 class="h1 fw-bold text-dark mb-4">
+                <div class="content-card mb-5" data-aos="fade-right" data-aos-delay="300">
+                    <div class="card-inner">
+                        <h2 class="section-title">
                             Why You'll Love Us
-                            <div class="bg-primary" style="width: 60px; height: 4px; border-radius: 2px; margin-top: 10px;"></div>
+                            <div class="title-underline"></div>
                         </h2>
-                        <p class="fs-5 lh-lg text-muted mb-5">
+                        
+                        <p class="lead-text">
                             We obsess over every detail so you can focus on what matters — finding amazing products.
                         </p>
                         
                         <div class="row g-4">
                             <div class="col-12 col-md-6">
-                                <div class="feature-card card border-0 shadow-sm h-100 hover-lift rounded-4">
-                                    <div class="card-body p-4">
-                                        <div class="icon-wrapper bg-primary bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
-                                            <i class="fas fa-bolt fs-2 text-primary"></i>
-                                        </div>
-                                        <h4 class="h5 fw-bold mb-2">Lightning Fast</h4>
-                                        <p class="text-muted mb-0">Checkout in seconds, not minutes. Because your time matters.</p>
+                                <div class="feature-card glass-card-hover">
+                                    <div class="feature-icon-wrapper" style="background: linear-gradient(135deg, #00a68c20, #006d5b20);">
+                                        <i class="fas fa-bolt" style="color: #00a68c;"></i>
                                     </div>
+                                    <h4>Lightning Fast</h4>
+                                    <p>Checkout in seconds, not minutes. Because your time matters.</p>
+                                    <div class="feature-hover-effect"></div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
-                                <div class="feature-card card border-0 shadow-sm h-100 hover-lift rounded-4">
-                                    <div class="card-body p-4">
-                                        <div class="icon-wrapper bg-accent bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
-                                            <i class="fas fa-robot fs-2 text-accent"></i>
-                                        </div>
-                                        <h4 class="h5 fw-bold mb-2">Smart Suggestions</h4>
-                                        <p class="text-muted mb-0">AI-powered recommendations that actually get you.</p>
+                                <div class="feature-card glass-card-hover">
+                                    <div class="feature-icon-wrapper" style="background: linear-gradient(135deg, #c9a14a20, #b38b3f20);">
+                                        <i class="fas fa-robot" style="color: #c9a14a;"></i>
                                     </div>
+                                    <h4>Smart Suggestions</h4>
+                                    <p>AI-powered recommendations that actually get you.</p>
+                                    <div class="feature-hover-effect"></div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
-                                <div class="feature-card card border-0 shadow-sm h-100 hover-lift rounded-4">
-                                    <div class="card-body p-4">
-                                        <div class="icon-wrapper bg-success bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
-                                            <i class="fas fa-shield-alt fs-2 text-success"></i>
-                                        </div>
-                                        <h4 class="h5 fw-bold mb-2">Secure & Safe</h4>
-                                        <p class="text-muted mb-0">Bank-level encryption keeps your shopping worry-free.</p>
+                                <div class="feature-card glass-card-hover">
+                                    <div class="feature-icon-wrapper" style="background: linear-gradient(135deg, #28a74520, #1e7e3420);">
+                                        <i class="fas fa-shield-alt" style="color: #28a745;"></i>
                                     </div>
+                                    <h4>Secure & Safe</h4>
+                                    <p>Bank-level encryption keeps your shopping worry-free.</p>
+                                    <div class="feature-hover-effect"></div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
-                                <div class="feature-card card border-0 shadow-sm h-100 hover-lift rounded-4">
-                                    <div class="card-body p-4">
-                                        <div class="icon-wrapper bg-info bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
-                                            <i class="fas fa-heart fs-2 text-info"></i>
-                                        </div>
-                                        <h4 class="h5 fw-bold mb-2">Save Favorites</h4>
-                                        <p class="text-muted mb-0">Wishlist everything. Buy when you're ready.</p>
+                                <div class="feature-card glass-card-hover">
+                                    <div class="feature-icon-wrapper" style="background: linear-gradient(135deg, #17a2b820, #117a8b20);">
+                                        <i class="fas fa-heart" style="color: #17a2b8;"></i>
                                     </div>
+                                    <h4>Save Favorites</h4>
+                                    <p>Wishlist everything. Buy when you're ready.</p>
+                                    <div class="feature-hover-effect"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- How It Works -->
-                <div class="animate__animated animate__fadeInUp animate__delay-4s">
-                    <h3 class="h2 fw-bold text-dark mb-4">How Tail Cart Works</h3>
-                    <div class="row g-4">
-                        <div class="col-12">
-                            <div class="process-card card border-0 shadow-sm hover-lift rounded-4">
-                                <div class="card-body p-4">
-                                    <div class="d-flex align-items-start">
-                                        <div class="step-number bg-primary rounded-circle p-3 d-inline-flex me-4 text-white fw-bold">
-                                            1
-                                        </div>
-                                        <div>
-                                            <h4 class="h5 fw-bold mb-2">Add to Cart</h4>
-                                            <p class="text-muted mb-0">Browse products and add them to your smart cart that follows you across devices</p>
-                                        </div>
-                                    </div>
+                <!-- How It Works with Progress Animation -->
+                <div data-aos="fade-up" data-aos-delay="400">
+                    <h2 class="section-title mb-4">
+                        How Tail Cart Works
+                        <div class="title-underline"></div>
+                    </h2>
+                    
+                    <div class="process-timeline">
+                        <!-- Step 1 -->
+                        <div class="process-step">
+                            <div class="step-indicator">
+                                <div class="step-number">1</div>
+                                <div class="step-progress"></div>
+                            </div>
+                            <div class="step-content glass-card">
+                                <h4>Add to Cart</h4>
+                                <p>Browse products and add them to your smart cart that follows you across devices</p>
+                                <div class="step-demo">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span class="step-plus">+</span>
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span class="step-equals">=</span>
+                                    <i class="fas fa-sync-alt fa-spin"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <div class="process-card card border-0 shadow-sm hover-lift rounded-4">
-                                <div class="card-body p-4">
-                                    <div class="d-flex align-items-start">
-                                        <div class="step-number bg-accent rounded-circle p-3 d-inline-flex me-4 text-white fw-bold">
-                                            2
-                                        </div>
-                                        <div>
-                                            <h4 class="h5 fw-bold mb-2">Smart Suggestions</h4>
-                                            <p class="text-muted mb-0">Get personalized recommendations based on your shopping behavior</p>
-                                        </div>
-                                    </div>
+                        
+                        <!-- Step 2 -->
+                        <div class="process-step">
+                            <div class="step-indicator">
+                                <div class="step-number">2</div>
+                                <div class="step-progress"></div>
+                            </div>
+                            <div class="step-content glass-card">
+                                <h4>Smart Suggestions</h4>
+                                <p>Get personalized recommendations based on your shopping behavior</p>
+                                <div class="step-demo">
+                                    <i class="fas fa-robot"></i>
+                                    <span class="step-arrow">→</span>
+                                    <i class="fas fa-lightbulb"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <div class="process-card card border-0 shadow-sm hover-lift rounded-4">
-                                <div class="card-body p-4">
-                                    <div class="d-flex align-items-start">
-                                        <div class="step-number bg-success rounded-circle p-3 d-inline-flex me-4 text-white fw-bold">
-                                            3
-                                        </div>
-                                        <div>
-                                            <h4 class="h5 fw-bold mb-2">Secure Checkout</h4>
-                                            <p class="text-muted mb-0">Complete your purchase with bank-level security in just seconds</p>
-                                        </div>
-                                    </div>
+                        
+                        <!-- Step 3 -->
+                        <div class="process-step">
+                            <div class="step-indicator">
+                                <div class="step-number">3</div>
+                            </div>
+                            <div class="step-content glass-card">
+                                <h4>Secure Checkout</h4>
+                                <p>Complete your purchase with bank-level security in just seconds</p>
+                                <div class="step-demo">
+                                    <i class="fas fa-lock"></i>
+                                    <span class="step-check">✓</span>
+                                    <i class="fas fa-check-circle"></i>
                                 </div>
                             </div>
                         </div>
@@ -186,135 +273,186 @@
                 </div>
             </div>
 
-            <!-- Right Column: Visual Content -->
+            <!-- Right Column: Team & Visual Content -->
             <div class="col-12 col-lg-4">
                 <div class="sticky-lg-top" style="top: 20px;">
-                    <div class="visual-card card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeInRight animate__delay-3s">
-                        <div class="card-body p-0">
-                            <div class="image-container position-relative bg-gradient-primary" style="height: 300px;">
-                                <div class="position-absolute top-50 start-50 translate-middle text-center">
-                                    <i class="fas fa-shopping-cart fa-5x text-white opacity-75"></i>
+                    <!-- Team Member Card - Gokul Gopan -->
+                    <div class="team-card glass-card mb-4" data-aos="fade-left" data-aos-delay="300">
+                        <div class="team-card-inner">
+                            <div class="team-image-wrapper">
+                                <div class="team-image-placeholder">
+                                    <i class="fas fa-user-circle"></i>
                                 </div>
-                                
-                                <!-- Floating Cards -->
-                                <div class="floating-card stats-card position-absolute top-0 end-0 m-4 animate__animated animate__bounceIn animate__delay-4s">
-                                    <span class="h3 fw-bold text-primary d-block">2M+</span>
-                                    <small class="text-muted">Users</small>
-                                </div>
-                                
-                                <div class="floating-card products-card position-absolute bottom-0 start-0 m-4 animate__animated animate__bounceIn animate__delay-5s">
-                                    <span class="h3 fw-bold text-accent d-block">50K+</span>
-                                    <small class="text-muted">Products</small>
+                                <div class="team-social">
+                                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
                                 </div>
                             </div>
-                            
-                            <div class="p-4 text-center">
-                                <h4 class="h5 fw-bold mb-3">Smart Shopping Experience</h4>
-                                <p class="text-muted small mb-0">
-                                    Your cart follows you everywhere with AI-powered suggestions and seamless checkout
+                            <div class="team-info">
+                                <h3 class="team-name">Gokul Gopan</h3>
+                                <div class="team-title">
+                                    <span class="title-badge">Founder & Lead Software Engineer</span>
+                                </div>
+                                <p class="team-bio">
+                                    Visionary technologist with 8+ years in e-commerce innovation. 
+                                    Previously led engineering at major tech firms, now building 
+                                    the future of smart shopping.
                                 </p>
+                                <div class="team-expertise">
+                                    <span class="expertise-tag">Full Stack</span>
+                                    <span class="expertise-tag">AI/ML</span>
+                                    <span class="expertise-tag">Cloud Arch</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- CTA Card -->
-                    <div class="cta-card card border-0 shadow-sm rounded-4 mt-4 bg-gradient-primary text-white">
-                        <div class="card-body p-4 text-center">
-                            <h4 class="h5 fw-bold mb-3">Ready to Shop?</h4>
-                            <p class="small opacity-90 mb-4">Experience the future of shopping today</p>
-                            <button class="btn btn-light btn-sm px-4 rounded-pill">
-                                <i class="fas fa-play-circle me-2"></i> Watch Demo
-                            </button>
+                    <!-- Team Member Card - Gowripriya SR -->
+                    <div class="team-card glass-card mb-4" data-aos="fade-left" data-aos-delay="400">
+                        <div class="team-card-inner">
+                            <div class="team-image-wrapper">
+                                <div class="team-image-placeholder">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="team-social">
+                                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                                </div>
+                            </div>
+                            <div class="team-info">
+                                <h3 class="team-name">Gowripriya SR</h3>
+                                <div class="team-title">
+                                    <span class="title-badge">Chief Operating Officer</span>
+                                </div>
+                                <p class="team-bio">
+                                    Marketing strategist and operations expert. Driving growth 
+                                    and customer satisfaction with innovative campaigns and 
+                                    service excellence.
+                                </p>
+                                <div class="team-expertise">
+                                    <span class="expertise-tag">Marketing</span>
+                                    <span class="expertise-tag">Operations</span>
+                                    <span class="expertise-tag">Strategy</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Card with Animation -->
+                    <div class="visual-card glass-card" data-aos="fade-left" data-aos-delay="500">
+                        <div class="visual-card-inner">
+                            <div class="animated-showcase">
+                                <div class="floating-cart-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div class="pulse-ring"></div>
+                                
+                                <!-- Floating Stats -->
+                                <div class="mini-stat top-right">
+                                    <span class="stat-value">2.5M+</span>
+                                </div>
+                                <div class="mini-stat bottom-left">
+                                    <span class="stat-value">75K+</span>
+                                </div>
+                                
+                                <!-- Animated Products -->
+                                <div class="product-flow">
+                                    <i class="fas fa-box product-1"></i>
+                                    <i class="fas fa-box product-2"></i>
+                                    <i class="fas fa-box product-3"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <h4>Smart Shopping Experience</h4>
+                                <p class="small text-muted">
+                                    Your cart follows you everywhere with AI-powered suggestions 
+                                    and seamless checkout
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Testimonials -->
-        <div class="testimonials-section mt-6 animate__animated animate__fadeInUp animate__delay-6s">
+        <!-- Testimonials Section -->
+        <div class="testimonials-section mt-6" data-aos="fade-up" data-aos-delay="600">
             <div class="text-center mb-5">
-                <h3 class="h2 fw-bold text-dark mb-3">What Our Shoppers Say</h3>
+                <h2 class="section-title">What Our Shoppers Say</h2>
                 <p class="text-muted">Join millions of happy customers worldwide</p>
             </div>
+            
             <div class="row g-4">
                 <div class="col-12 col-md-4">
-                    <div class="testimonial-card card border-0 shadow-sm hover-lift rounded-4">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="rating-stars text-warning">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
+                    <div class="testimonial-card glass-card-hover">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "Tail Cart made shopping so much easier! The AI suggestions are spot on."
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user-circle"></i>
                             </div>
-                            <p class="text-muted mb-3">"Tail Cart made shopping so much easier! The AI suggestions are spot on."</p>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar bg-primary bg-opacity-10 rounded-circle p-2">
-                                        <i class="fas fa-user text-primary"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="fw-bold mb-0">Sarah M.</h6>
-                                    <small class="text-muted">Frequent Shopper</small>
-                                </div>
+                            <div class="author-info">
+                                <h6>Sarah M.</h6>
+                                <small>Frequent Shopper</small>
                             </div>
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-12 col-md-4">
-                    <div class="testimonial-card card border-0 shadow-sm hover-lift rounded-4">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="rating-stars text-warning">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                </div>
+                    <div class="testimonial-card glass-card-hover">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "The checkout is lightning fast. I save so much time shopping now!"
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user-circle"></i>
                             </div>
-                            <p class="text-muted mb-3">"The checkout is lightning fast. I save so much time shopping now!"</p>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar bg-accent bg-opacity-10 rounded-circle p-2">
-                                        <i class="fas fa-user text-accent"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="fw-bold mb-0">James L.</h6>
-                                    <small class="text-muted">Tech Enthusiast</small>
-                                </div>
+                            <div class="author-info">
+                                <h6>James L.</h6>
+                                <small>Tech Enthusiast</small>
                             </div>
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-12 col-md-4">
-                    <div class="testimonial-card card border-0 shadow-sm hover-lift rounded-4">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="rating-stars text-warning">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
+                    <div class="testimonial-card glass-card-hover">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "My cart follows me everywhere. No more losing items between devices!"
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <i class="fas fa-user-circle"></i>
                             </div>
-                            <p class="text-muted mb-3">"My cart follows me everywhere. No more losing items between devices!"</p>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar bg-success bg-opacity-10 rounded-circle p-2">
-                                        <i class="fas fa-user text-success"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="fw-bold mb-0">Maria G.</h6>
-                                    <small class="text-muted">Online Shopper</small>
-                                </div>
+                            <div class="author-info">
+                                <h6>Maria G.</h6>
+                                <small>Online Shopper</small>
                             </div>
                         </div>
                     </div>

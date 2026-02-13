@@ -22,26 +22,26 @@
     <!-- Right Icons -->
     <div class="nav-icons">
       <a class="nav-icon" routerLink="/profile" title="Profile">
-        <i class="fas fa-user"></i>
+        <i class="fas fa-crown"></i>
       </a>
       <a class="nav-icon cart-icon" routerLink="/cart" title="Cart">
-        <i class="fas fa-shopping-bag"></i>
+        <i class="fas fa-bag-shopping"></i>
         <span class="cart-badge" *ngIf="cartItems > 0">{{ cartItems }}</span>
       </a>
       <button class="nav-icon logout-icon" (click)="logout()" title="Logout">
-        <i class="fas fa-sign-out-alt"></i>
+        <i class="fas fa-leaf"></i>
       </button>
     </div>
 
     <!-- Mobile Menu Button -->
-    <button class="mobile-toggle" (click)="toggleMobileMenu()">
+    <button class="mobile-toggle" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()">
       <span></span>
       <span></span>
       <span></span>
     </button>
   </div>
 
-  <!-- Mobile Menu -->
+  <!-- Mobile Menu - Opens from LEFT side -->
   <div class="mobile-menu" [class.active]="isMobileMenuOpen">
     <div class="mobile-header">
       <div class="mobile-logo">
@@ -54,14 +54,30 @@
     </div>
     
     <div class="mobile-links">
-      <a class="mobile-link" routerLink="/home" (click)="closeMobileMenu()">HOME</a>
-      <a class="mobile-link" routerLink="/shop" (click)="closeMobileMenu()">KEYCHAINS</a>
-      <a class="mobile-link" routerLink="/document" (click)="closeMobileMenu()">DOCUMENTS</a>
-      <a class="mobile-link" routerLink="/doctor-ai" (click)="closeMobileMenu()">DOCTOR AI</a>
-      <a class="mobile-link" routerLink="/contact" (click)="closeMobileMenu()">REACH US</a>
-      <a class="mobile-link" routerLink="/profile" (click)="closeMobileMenu()">PROFILE</a>
-      <a class="mobile-link" routerLink="/cart" (click)="closeMobileMenu()">CART</a>
-      <button class="mobile-link logout-btn" (click)="logout(); closeMobileMenu()">LOGOUT</button>
+      <a class="mobile-link" routerLink="/home" routerLinkActive="active" (click)="closeMobileMenu()">
+        <i class="fas fa-home"></i> HOME
+      </a>
+      <a class="mobile-link" routerLink="/shop" routerLinkActive="active" (click)="closeMobileMenu()">
+        <i class="fas fa-key"></i> KEYCHAINS
+      </a>
+      <a class="mobile-link" routerLink="/document" routerLinkActive="active" (click)="closeMobileMenu()">
+        <i class="fas fa-file-alt"></i> DOCUMENTS
+      </a>
+      <a class="mobile-link" routerLink="/doctor-ai" routerLinkActive="active" (click)="closeMobileMenu()">
+        <i class="fas fa-robot"></i> DOCTOR AI
+      </a>
+      <a class="mobile-link" routerLink="/contact" routerLinkActive="active" (click)="closeMobileMenu()">
+        <i class="fas fa-envelope"></i> REACH US
+      </a>
+      <a class="mobile-link" routerLink="/profile" routerLinkActive="active" (click)="closeMobileMenu()">
+        <i class="fas fa-crown"></i> PROFILE
+      </a>
+      <a class="mobile-link" routerLink="/cart" routerLinkActive="active" (click)="closeMobileMenu()">
+        <i class="fas fa-bag-shopping"></i> CART
+      </a>
+      <button class="mobile-link logout-btn" (click)="logout(); closeMobileMenu()">
+        <i class="fas fa-leaf"></i> LOGOUT
+      </button>
     </div>
   </div>
 </nav>

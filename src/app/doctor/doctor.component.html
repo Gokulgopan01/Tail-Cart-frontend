@@ -1,199 +1,138 @@
 <div class="pet-care-assistant-container">
-  <!-- Welcome Screen -->
-  <div class="welcome-screen" *ngIf="showWelcomeScreen">
-    <div class="welcome-container">
-      <!-- Features -->
-      
 
-      <!-- Example Prompts -->
-      <div class="prompts-section">
-        <h3 class="prompts-title">Try asking about...</h3>
+  <!-- Welcome / Landing Screen -->
+  <div class="welcome-screen" *ngIf="showWelcomeScreen">
+    <div class="welcome-content">
+      <div class="welcome-header">
+        <div class="welcome-logo">
+          <i class="fas fa-paw"></i>
+          <span>Pet AI Doctor</span>
+        </div>
+        <h1>Ask anything about your pet</h1>
+        <p class="welcome-subtitle">
+          Get helpful insights from an AI veterinary assistant — anytime, anywhere.
+        </p>
+      </div>
+
+      <div class="example-prompts">
+        <h3>Try asking about...</h3>
         <div class="prompts-grid">
           <button *ngFor="let prompt of examplePrompts" 
-                  class="prompt-card" 
+                  class="prompt-chip" 
                   (click)="useExamplePrompt(prompt)">
-            <div class="prompt-content">
-              <h4 class="prompt-main">{{ prompt.title }}</h4>
-              <p class="prompt-desc">{{ prompt.subtitle }}</p>
-            </div>
+            {{ prompt.title }}
           </button>
         </div>
       </div>
 
-      <!-- Input Section -->
-      <div class="welcome-input-section">
-        <div class="input-container">
-          <div class="input-wrapper">
-            <textarea 
-              #chatInput
-              [(ngModel)]="userInput"
-              (keydown)="onKeyPress($event)"
-              (input)="adjustTextareaHeight()"
-              placeholder="Ask about your pet's health..."
-              class="chat-input"
-              rows="1"
-              maxlength="1000"
-            ></textarea>
-            <button class="send-btn" (click)="askDoctor()" [disabled]="!userInput.trim()">
-              <i class="fas fa-paper-plane"></i>
-            </button>
-          </div>
-          <div class="input-hint">
-            <i class="fas fa-info-circle"></i>
-            <span>Not a substitute for professional veterinary care</span>
-          </div>
+      <div class="welcome-input-area">
+        <div class="chat-input-wrapper">
+          <textarea 
+            #chatInput
+            [(ngModel)]="userInput"
+            (keydown)="onKeyPress($event)"
+            (input)="adjustTextareaHeight()"
+            placeholder="Ask about your pet's health, diet, behavior..."
+            class="modern-chat-input"
+            rows="1"
+          ></textarea>
+          <button class="send-button" 
+                  (click)="askDoctor()" 
+                  [disabled]="!userInput.trim()">
+            <i class="fas fa-arrow-up"></i>
+          </button>
+        </div>
+        <div class="disclaimer">
+          <i class="fas fa-info-circle"></i>
+          <span>Not a substitute for professional veterinary care</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Chat Interface -->
-  <div class="chat-screen" *ngIf="!showWelcomeScreen">
-    <div class="chat-container">
-      <!-- Chat Messages Area -->
-      <div #chatContainer class="messages-container" (scroll)="onChatScroll()">
-        <!-- Welcome Message in Chat -->
-        <div class="welcome-message-container" *ngIf="showWelcomeInChat">
-          <div class="welcome-message">
-            <div class="welcome-message-header">
-              <h2 class="welcome-message-title">Hello, Pet Parent!</h2>
-              <p class="welcome-message-subtitle">
-                I'm your AI veterinary assistant. Ask me anything about your<br>
-                furry, feathery, or scaly friends!
-              </p>
-            </div>
-            
-            <div class="features-section chat-features">
-              <div class="feature-item">
-                <div class="feature-checkbox">
-                  <i class="fas fa-square"></i>
-                </div>
-                <span class="feature-text">Safe & Confidential</span>
-              </div>
-              <div class="feature-item">
-                <div class="feature-checkbox active">
-                  <i class="fas fa-check-square"></i>
-                </div>
-                <span class="feature-text">24/7 Available</span>
-              </div>
-              <div class="feature-item">
-                <div class="feature-checkbox active">
-                  <i class="fas fa-check-square"></i>
-                </div>
-                <span class="feature-text">Pet-First Care</span>
-              </div>
-            </div>
+  <!-- Main Chat View -->
+  <div class="chat-view" *ngIf="!showWelcomeScreen">
+    <!-- Messages -->
+    <div class="messages-container" #chatContainer (scroll)="onChatScroll()">
+      <!-- Initial welcome message (only first time) -->
+      <div class="message ai-message initial-welcome" *ngIf="showWelcomeInChat">
+        <div class="avatar ai-avatar">
+          <i class="fas fa-stethoscope"></i>
+        </div>
+        <div class="message-content">
+          <div class="message-bubble">
+            <h3>Hello! 👋 I'm your Pet AI Doctor</h3>
+            <p>Ask me anything about your pet's health, nutrition, behavior, vaccinations, or general care.</p>
+            <small>I'm not a vet — always consult a professional for serious concerns.</small>
           </div>
         </div>
+      </div>
 
-        <!-- Chat Messages -->
-        <ng-container *ngFor="let message of messages">
-          <div *ngIf="message.sender === 'ai'" class="message-wrapper ai-message-wrapper">
-            <div class="message ai-message">
-              <div class="message-avatar ai-avatar">
-                <div class="avatar-icon">
-                  <i class="fas fa-stethoscope"></i>
-                </div>
-              </div>
-              
-              <div class="message-content">
-                <div class="message-bubble ai-bubble" [innerHTML]="formatMessage(message.text)"></div>
-                <div class="message-time">
-                  {{ message.timestamp | date:'h:mm a' }}
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- Chat messages -->
+      <ng-container *ngFor="let msg of messages; let i = index">
+        <div class="message" 
+             [ngClass]="{'user-message': msg.sender === 'user', 'ai-message': msg.sender === 'ai'}"
+             [@messageAnimation]>
           
-          <div *ngIf="message.sender === 'user'" class="message-wrapper user-message-wrapper">
-            <div class="message user-message">
-              <div class="message-content">
-                <div class="message-bubble user-bubble">
-                  {{ message.text }}
-                </div>
-                <div class="message-time">
-                  {{ message.timestamp | date:'h:mm a' }}
-                </div>
-              </div>
-              <div class="message-avatar user-avatar">
-                <div class="avatar-icon">
-                  <i class="fas fa-user"></i>
-                </div>
-              </div>
-            </div>
+          <div class="avatar" [ngClass]="msg.sender === 'user' ? 'user-avatar' : 'ai-avatar'">
+            <i class="fas" [ngClass]="msg.sender === 'user' ? 'fa-user' : 'fa-stethoscope'"></i>
           </div>
-        </ng-container>
 
-        <!-- Typing Indicator -->
-        <div *ngIf="isAiTyping" class="message-wrapper ai-message-wrapper">
-          <div class="message ai-message">
-            <div class="message-avatar ai-avatar">
-              <div class="avatar-icon">
-                <i class="fas fa-stethoscope"></i>
-              </div>
+          <div class="message-content">
+            <div class="message-bubble" 
+                 [innerHTML]="msg.sender === 'ai' ? formatMessage(msg.text) : msg.text">
             </div>
-            <div class="message-content">
-              <div class="message-bubble typing-indicator">
-                <div class="thinking-text">Pet AI Doctor is thinking</div>
-                <div class="dots-container">
-                  <span class="thinking-dot"></span>
-                  <span class="thinking-dot"></span>
-                  <span class="thinking-dot"></span>
-                </div>
-              </div>
+            <div class="message-time">
+              {{ msg.timestamp | date:'shortTime' }}
             </div>
           </div>
         </div>
+      </ng-container>
 
-        <!-- Incomplete Message Notice -->
-        <div *ngIf="showIncompleteNotice" class="message-wrapper ai-message-wrapper">
-          <div class="message ai-message">
-            <div class="message-avatar ai-avatar">
-              <div class="avatar-icon">
-                <i class="fas fa-stethoscope"></i>
-              </div>
-            </div>
-            <div class="message-content">
-              <div class="message-bubble ai-bubble">
-                <p>It looks like your message didn't come through completely, but I'm here to help! If you have a question about your pet's health, behavior, nutrition, or care, please feel free to share it, and I'll do my best to assist you!</p>
-              </div>
-            </div>
-          </div>
+      <!-- Typing indicator -->
+      <div class="message ai-message" *ngIf="isAiTyping" [@messageAnimation]>
+        <div class="avatar ai-avatar">
+          <i class="fas fa-stethoscope"></i>
         </div>
-      </div>
-
-      <!-- Clear Chat Button - Fixed to bottom -->
-      <div class="clear-chat-container" *ngIf="messages.length > 1">
-        <button class="clear-chat-btn" (click)="clearChat()">
-          <i class="fas fa-trash-alt"></i>
-          <span>Clear Chat</span>
-        </button>
-      </div>
-
-      <!-- Input Area - Always visible -->
-      <div class="input-area">
-        <div class="input-container">
-          <div class="input-wrapper">
-            <textarea 
-              #chatInput
-              [(ngModel)]="userInput"
-              (keydown)="onKeyPress($event)"
-              (input)="adjustTextareaHeight()"
-              placeholder="Ask about your pet's health..."
-              class="chat-input"
-              rows="1"
-              maxlength="1000"
-            ></textarea>
-            <button class="send-btn" (click)="askDoctor()" [disabled]="!userInput.trim() || isAiTyping">
-              <i class="fas fa-paper-plane"></i>
-            </button>
-          </div>
-          <div class="input-hint">
-            <i class="fas fa-info-circle"></i>
-            <span>Not a substitute for professional veterinary care</span>
+        <div class="message-content">
+          <div class="message-bubble typing">
+            <div class="typing-dots">
+              <span></span><span></span><span></span>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Input area (fixed at bottom) -->
+    <div class="chat-input-area">
+      <div class="chat-input-wrapper">
+        <textarea 
+          #chatInput
+          [(ngModel)]="userInput"
+          (keydown)="onKeyPress($event)"
+          (input)="adjustTextareaHeight()"
+          placeholder="Ask anything about your pet..."
+          class="modern-chat-input"
+          rows="1"
+        ></textarea>
+        <button class="send-button" 
+                (click)="askDoctor()" 
+                [disabled]="!userInput.trim() || isAiTyping">
+          <i class="fas fa-arrow-up"></i>
+        </button>
+      </div>
+      <div class="disclaimer bottom">
+        <i class="fas fa-shield-alt"></i>
+        <span>AI-generated • Not veterinary advice</span>
+      </div>
+    </div>
+
+    <!-- Clear chat button -->
+    <button class="clear-chat-floating" 
+            *ngIf="messages.length > 2"
+            (click)="clearChat()">
+      <i class="fas fa-trash-can"></i>
+    </button>
   </div>
 </div>

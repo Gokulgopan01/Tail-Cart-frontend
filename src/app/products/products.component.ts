@@ -16,6 +16,7 @@ interface Product {
   image: string;
   reviews: string;
   deals: string;
+  showHover?: boolean;
 }
 
 interface Pet {
