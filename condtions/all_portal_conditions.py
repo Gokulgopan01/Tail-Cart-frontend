@@ -1,7 +1,7 @@
 from utility.redbell import best_sold_or_active_address, date_conversion, yesterday_date_conversion
 
 
-def generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3):
+def generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3, prior1=None, prior2=None, prior3=None):
     """
     Generate condition data dictionary based on extracted sections.
     """
@@ -60,7 +60,21 @@ def generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sol
             else:
                 condition_data['BestSoldcomp'] = ''
         else:
-            condition_data['BestSoldcomp'] = ''                
+            condition_data['BestSoldcomp'] = ''
+
+    # Subject Prior History dates
+    if prior1:
+        condition_data["prior1_OriginalListDate"] = date_conversion(prior1.get("PriorOriginalListDate"))
+        condition_data["prior1_ListDate"] = date_conversion(prior1.get("PriorListDate"))
+        condition_data["prior1_SaleDate"] = date_conversion(prior1.get("PriorSaleDate"))
+    if prior2:
+        condition_data["prior2_OriginalListDate"] = date_conversion(prior2.get("PriorOriginalListDate"))
+        condition_data["prior2_ListDate"] = date_conversion(prior2.get("PriorListDate"))
+        condition_data["prior2_SaleDate"] = date_conversion(prior2.get("PriorSaleDate"))
+    if prior3:
+        condition_data["prior3_OriginalListDate"] = date_conversion(prior3.get("PriorOriginalListDate"))
+        condition_data["prior3_ListDate"] = date_conversion(prior3.get("PriorListDate"))
+        condition_data["prior3_SaleDate"] = date_conversion(prior3.get("PriorSaleDate"))
     if list1:
         current_list1date=list1.get("CurrentListingDate")
         orginal_list1_date=list1.get("OriginalListDateListing") 
@@ -111,8 +125,8 @@ def generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sol
         if orginal_sold3_date:
             condition_data["orginal_sold3_date"]=date_conversion(orginal_sold3_date) 
         if sale_sold3_date:
-            condition_data['sale_sold3_date']=date_conversion(sale_sold3_date)      
+            condition_data['sale_sold3_date']=date_conversion(sale_sold3_date) 
 
-      
-
+ 
+    
     return condition_data

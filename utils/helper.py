@@ -43,10 +43,10 @@ def params_check():
           # Returns auto for manualy opening Autologin  
 
         return "AutoLogin",None,None
-        #return "SmartEntry","2814","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjksImVtYWlsIjoic2lkc21AZ21haWwuY29tIiwicm9sZSI6MywiaWF0IjoxNzY5NDk4ODE3LCJleHAiOjE3Njk1ODUyMTd9.aCI2zyvkxcYI8XF3ct6v2SAsRMgO8Xl9FAvaZ3B9xaI"
+        #return "SmartEntry","1861","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjYyLCJlbWFpbCI6InJhdGhpX3JAZWNlc2lzZ3JvdXBzLmNvbSIsInJvbGUiOjIsImlhdCI6MTc3MTQzMzU0Nn0.NicvPKeETxUQSJ3Aly4DI9iNmWbHCTdhFLRl0d58Noc"
    
 
-process_type, hybrid_orderid,hybrid_token = params_check()
+process_type, hybrid_orderid, hybrid_token = params_check()
 
 
 
@@ -145,77 +145,77 @@ def handle_exception(self, e):
 #         return None  # Invalid JSON content
 
 
-def get_saved_token():
-    app_data_dir = os.path.join(os.getenv("APPDATA") or os.path.expanduser("~"), "HybridBPO")
-    #print(app_data_dir)
-    logger.log(
-                    module="get_saved_token",
-                    order_id=hybrid_orderid,
-                    action_type="Condition-check",
-                    remarks=f"app_data_dir-{app_data_dir}",
-                    severity="INFO"
-                )
-    os.makedirs(app_data_dir, exist_ok=True)  # Make sure the directory exists
+# def get_saved_token():
+#     app_data_dir = os.path.join(os.getenv("APPDATA") or os.path.expanduser("~"), "HybridBPO")
+#     #print(app_data_dir)
+#     logger.log(
+#                     module="get_saved_token",
+#                     order_id=hybrid_orderid,
+#                     action_type="Condition-check",
+#                     remarks=f"app_data_dir-{app_data_dir}",
+#                     severity="INFO"
+#                 )
+#     os.makedirs(app_data_dir, exist_ok=True)  # Make sure the directory exists
 
-    # Final path: C:\Users\<User>\AppData\Roaming\HybridBPO\login_data.json
-    login_data_file = os.path.join(app_data_dir, "login_data.json")
-    try:
-        if not os.path.exists(login_data_file):
-            #print("Token file does not exist.")
-            logger.log(
-                    module="get_saved_token",
-                    order_id=hybrid_orderid,
-                    action_type="Condition-check",
-                    remarks=f"Token file does not exist.",
-                    severity="INFO"
-                )
-            return None
+#     # Final path: C:\Users\<User>\AppData\Roaming\HybridBPO\login_data.json
+#     login_data_file = os.path.join(app_data_dir, "login_data.json")
+#     try:
+#         if not os.path.exists(login_data_file):
+#             #print("Token file does not exist.")
+#             logger.log(
+#                     module="get_saved_token",
+#                     order_id=hybrid_orderid,
+#                     action_type="Condition-check",
+#                     remarks=f"Token file does not exist.",
+#                     severity="INFO"
+#                 )
+#             return None
 
-        with open(login_data_file, "r") as file:
-            content = file.read().strip()
-            if not content:
-                #print("Token file is empty.")
-                logger.log(
-                    module="get_saved_token",
-                    order_id=hybrid_orderid,
-                    action_type="Condition-check",
-                    remarks=f"Token file is empty.",
-                    severity="INFO"
-                )
-                return None
+#         with open(login_data_file, "r") as file:
+#             content = file.read().strip()
+#             if not content:
+#                 #print("Token file is empty.")
+#                 logger.log(
+#                     module="get_saved_token",
+#                     order_id=hybrid_orderid,
+#                     action_type="Condition-check",
+#                     remarks=f"Token file is empty.",
+#                     severity="INFO"
+#                 )
+#                 return None
 
-            data = json.loads(content)
-            token = data.get("token", None)
-            if token:
-                #print("Token loaded successfully.")
-                logger.log(
-                    module="get_saved_token",
-                    order_id=hybrid_orderid,
-                    action_type="Condition-check",
-                    remarks=f"Token loaded successfully.",
-                    severity="INFO"
-                )
-            else:
-                #print("Token missing in file.")
-                logger.log(
-                    module="get_saved_token",
-                    order_id=hybrid_orderid,
-                    action_type="Condition-check",
-                    remarks=f"Token missing in file.",
-                    severity="INFO"
-                )
-            return token
+#             data = json.loads(content)
+#             token = data.get("token", None)
+#             if token:
+#                 #print("Token loaded successfully.")
+#                 logger.log(
+#                     module="get_saved_token",
+#                     order_id=hybrid_orderid,
+#                     action_type="Condition-check",
+#                     remarks=f"Token loaded successfully.",
+#                     severity="INFO"
+#                 )
+#             else:
+#                 #print("Token missing in file.")
+#                 logger.log(
+#                     module="get_saved_token",
+#                     order_id=hybrid_orderid,
+#                     action_type="Condition-check",
+#                     remarks=f"Token missing in file.",
+#                     severity="INFO"
+#                 )
+#             return token
 
-    except (json.JSONDecodeError, ValueError):
-        print(" Corrupted token file.")
-        logger.log(
-                    module="get_saved_token",
-                    order_id=hybrid_orderid,
-                    action_type="Exception",
-                    remarks=f"Corrupted token file.",
-                    severity="INFO"
-                )
-        return None
+#     except (json.JSONDecodeError, ValueError):
+#         print(" Corrupted token file.")
+#         logger.log(
+#                     module="get_saved_token",
+#                     order_id=hybrid_orderid,
+#                     action_type="Exception",
+#                     remarks=f"Corrupted token file.",
+#                     severity="INFO"
+#                 )
+#         return None
 
 
 # Fetch order address using stored token
@@ -750,126 +750,146 @@ def selector_mapping(selector_type):
 def select_checkboxes_from_list(driver, values_list, id_prefix):
     """
     Select checkboxes based on a list of values using an ID prefix.
-    Each checkbox should have an ID like: <id_prefix>_<sanitized_value>
+    Handles both unique ID formats (<id_prefix>_<value>) and shared ID/Name formats.
 
     Args:
         driver: Selenium WebDriver
         values_list: list of checkbox values to select (e.g. ['Insurance', 'Water'])
         id_prefix: prefix of the checkbox ID (e.g. "HOAInsurance")
     """
-    from selenium.common.exceptions import NoSuchElementException
+    from selenium.common.exceptions import NoSuchElementException, TimeoutException
     import re
-    from selenium.common.exceptions import TimeoutException
 
     def sanitize(value):
         # Remove special characters and whitespace
         return re.sub(r'[^a-zA-Z0-9]', '', str(value))
+
+    if not isinstance(values_list, list):
+        if values_list:
+            values_list = [values_list]
+        else:
+            return
 
     for value in values_list:
         try:
             value = str(value).strip()
             sanitized = sanitize(value)
             checkbox_id = f"{id_prefix}_{sanitized}"
-            checkbox = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, checkbox_id))
-            )
-            if not checkbox.is_selected():
-                checkbox.click()
-                #logging.info(f"Checked: {checkbox_id}")
-                logger.log(
-                    module="select_checkboxes_from_list",
-                    order_id=hybrid_orderid,
-                    action_type="Condition-check",
-                    remarks=f"Checked: {checkbox_id}",
-                    severity="INFO"
-           
-        )
-            else:
-                #logging.info(f"Already checked: {checkbox_id}")
-                logger.log(
-                    module="select_checkboxes_from_list",
-                    order_id=hybrid_orderid,
-                    action_type="Condition-check",
-                    remarks=f"Already checked: {checkbox_id}",
-                    severity="INFO"
-           
-        )
-        except TimeoutException:
-            #logging.warning(f"Checkbox not found (timeout): {checkbox_id}")
-            logger.log(
-                    module="select_checkboxes_from_list",
-                    order_id=hybrid_orderid,
-                    action_type="Exception",
-                    remarks=f"Checkbox not found (timeout): {checkbox_id}",
-                    severity="INFO"
-           
-        )
+            
+            checkbox = None
+            # Strategy 1: Attempt to find by prefixed ID (e.g., Insurance_Life)
+            try:
+                checkbox = WebDriverWait(driver, 2).until(
+                    EC.presence_of_element_located((By.ID, checkbox_id))
+                )
+            except TimeoutException:
+                # Strategy 2: Attempt to find by shared ID/Name and value attribute
+                # XPath to find input with matching id/name and value
+                xpath = f"//input[(@type='checkbox' or @role='checkbox') and (@id='{id_prefix}' or @name='{id_prefix}') and (normalize-space(@value)='{value}' or normalize-space(..)='{value}')]"
+                checkbox = WebDriverWait(driver, 5).until(
+                    EC.presence_of_element_located((By.XPATH, xpath))
+                )
+
+            if checkbox:
+                if not checkbox.is_selected():
+                    try:
+                        checkbox.click()
+                    except:
+                        driver.execute_script("arguments[0].click();", checkbox)
+                    
+                    logger.log(
+                        module="select_checkboxes_from_list",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks=f"Checked: {value} (using prefix {id_prefix})",
+                        severity="INFO"
+                    )
+                else:
+                    logger.log(
+                        module="select_checkboxes_from_list",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks=f"Already checked: {value}",
+                        severity="INFO"
+                    )
         except Exception as e:
-            #logging.error(f"Error clicking checkbox {checkbox_id}: {e}")
             logger.log(
-                    module="select_checkboxes_from_list",
-                    order_id=hybrid_orderid,
-                    action_type="Exception",
-                    remarks=f"Error clicking checkbox {checkbox_id}: {e}",
-                    severity="INFO"
-           
-        )
+                module="select_checkboxes_from_list",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Checkbox for '{value}' not found or clickable with prefix '{id_prefix}'",
+                severity="INFO"
+            )
 
-def checkbox_click(driver, data, element_identifier, element_type):
-    element_identifier = element_identifier.strip()
+
+
+def single_checkbox(driver, data, element_locator, selector):
     """
-    Clicks a checkbox safely.
-    - Checks only if data indicates TRUE / YES
-    - Handles overlays
+    Sets a single checkbox state based on boolean-like data.
+    
+    Args:
+        driver: Selenium WebDriver
+        data: Value to decide check/uncheck (True/False, "Yes"/"No", etc.)
+        element_locator: The locator string (ID, XPath, etc.)
+        selector: The type of selector ("id", "xpath", etc.)
     """
+    try:
+        # Normalize data to boolean
+        should_check = False
+        if isinstance(data, bool):
+            should_check = data
+        elif str(data).strip().lower() in ["yes", "true", "1", "checked", "on"]:
+            should_check = True
 
-    # Normalize data → decide check/uncheck
-    should_check = False
-    if isinstance(data, bool):
-        should_check = data
-    elif str(data).strip().lower() in ["yes", "true", "1", "checked"]:
-        should_check = True
-
-    selector_map = selector_mapping(element_type)
-    elements = driver.find_elements(selector_map, element_identifier)
-
-    for elem in elements:
+        selector_map = selector_mapping(selector)
+        
+        checkbox = None
         try:
-            driver.execute_script(
-                "arguments[0].scrollIntoView({block:'center', inline:'nearest'});",
-                elem
-            )
+            checkbox = find_elem(driver, selector_map, element_locator)
+        except Exception:
+            # Fallback: if ID fails, try XPath search for that ID (robust against special chars)
+            if selector == "id":
+                xpath_fallback = f"//*[@id=\"{element_locator}\"]"
+                checkbox = driver.find_element(By.XPATH, xpath_fallback)
+            else:
+                raise
 
-            # Only click if state change is required
-            if should_check and not elem.is_selected():
-                elem.click()
-            elif not should_check and elem.is_selected():
-                elem.click()
+        # Scroll into view
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});", checkbox)
 
-        except Exception as e:
-            print(f"[checkbox_click] Click intercepted, attempting JS fallback: {e}")
-            close_validation_popup(driver)
+        # Only click if state change is needed
+        if checkbox.is_selected() != should_check:
+            try:
+                # Attempt standard click first
+                checkbox.click()
+            except Exception:
+                close_validation_popup(driver)
+                # Comprehensive JS fallback: set state AND dispatch events
+                driver.execute_script("""
+                    var elem = arguments[0];
+                    var val = arguments[1];
+                    elem.checked = val;
+                    elem.dispatchEvent(new Event('change', { bubbles: true }));
+                    elem.dispatchEvent(new Event('input', { bubbles: true }));
+                    elem.dispatchEvent(new Event('click', { bubbles: true }));
+                """, checkbox, should_check)
 
-            # JS fallback with correct state
-            driver.execute_script(
-                "arguments[0].checked = arguments[1];",
-                elem,
-                should_check
-            )
-            driver.execute_script(
-                "arguments[0].dispatchEvent(new Event('change'));",
-                elem
-            )
+        logger.log(
+            module="single_checkbox",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Set checkbox {element_locator} to {should_check}",
+            severity="INFO"
+        )
 
-        return  # checkbox handled
-
-    logger.log(
-        module="checkbox_click",
-        order_id=hybrid_orderid,
-        action_type="Condition-check",
-        remarks=f"No checkbox found for identifier: {element_identifier}",
-        severity="INFO"
-    )
+    except Exception as e:
+        logger.log(
+            module="single_checkbox",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Error setting checkbox {element_locator}: {e}",
+            severity="ERROR"
+        )
 
 
 # Mapping to normalize repair type differences between JSON and form text
@@ -1321,32 +1341,41 @@ def extract_data_sections(merged_json):
     """
     entry_data = merged_json.get("entry_data", [])
     if not entry_data:
-        return None, None, None, None
+        return (None,) * 23
 
     first_entry = entry_data[0]  # usually only one or focus on first
 
-    sub_data = first_entry.get("sub_data")
-    comp_data = first_entry.get("comp_data")
-    adj_data = first_entry.get("adj_data")
-    rental_data = first_entry.get("rental_data")
-    sold1 = comp_data.get("Sold 1")
-    sold2 = comp_data.get("Sold 2")
-    sold3 = comp_data.get("Sold 3")
-    list1 = comp_data.get("List 1")
-    list2 = comp_data.get("List 2")
-    list3 = comp_data.get("List 3")
-    rental_list1=rental_data.get("List 1")
-    rental_list2=rental_data.get("List 2")
-    rental_leased1=rental_data.get("Leased 1") 
-    rental_leased2=rental_data.get("Leased 2") 
-    adj_sold1=adj_data.get("Sold Comp1")
-    adj_sold2=adj_data.get("Sold Comp2")
-    adj_sold3=adj_data.get("Sold Comp3")
-    adj_list1=adj_data.get("Listed Comp1")
-    adj_list2=adj_data.get("Listed Comp2")
-    adj_list3=adj_data.get("Listed Comp3")
+    sub_data = first_entry.get("sub_data", {})
+    comp_data = first_entry.get("comp_data", {})
+    adj_data = first_entry.get("adj_data", {})
+    rental_data = first_entry.get("rental_data", {})
+    
+    # Extract Subject Prior History and flatten first 3 entries
+    history_list = sub_data.get("SubjectPriorHistory", [])
+    prior1 = history_list[0] if len(history_list) > 0 else {}
+    prior2 = history_list[1] if len(history_list) > 1 else {}
+    prior3 = history_list[2] if len(history_list) > 2 else {}
 
-    return sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3
+    sold1 = comp_data.get("Sold 1", {})
+    sold2 = comp_data.get("Sold 2", {})
+    sold3 = comp_data.get("Sold 3", {})
+    list1 = comp_data.get("List 1", {})
+    list2 = comp_data.get("List 2", {})
+    list3 = comp_data.get("List 3", {})
+    rental_list1=rental_data.get("List 1", {})
+    rental_list2=rental_data.get("List 2", {})
+    rental_leased1=rental_data.get("Leased 1", {}) 
+    rental_leased2=rental_data.get("Leased 2", {}) 
+    adj_sold1=adj_data.get("Sold Comp1", {})
+    adj_sold2=adj_data.get("Sold Comp2", {})
+    adj_sold3=adj_data.get("Sold Comp3", {})
+    adj_list1=adj_data.get("Listed Comp1", {})
+    adj_list2=adj_data.get("Listed Comp2", {})
+    adj_list3=adj_data.get("Listed Comp3", {})
+
+    return (sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3, 
+            rental_list1, rental_list2, rental_leased1, rental_leased2, adj_sold1, adj_sold2, adj_sold3, 
+            adj_list1, adj_list2, adj_list3, prior1, prior2, prior3)
 
 
 def resource_path(relative_path):
@@ -1687,3 +1716,4 @@ def update_portal_login_confirmation_status(order_id):
            
         )
         return False
+

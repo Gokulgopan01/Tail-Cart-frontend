@@ -5,15 +5,18 @@ import time
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-from utils.helper import center_window, get_saved_token, params_check
+from utils.helper import center_window, params_check
 from utils.file_util import resource_path
 from tkinter import PhotoImage
-from utils import user_data
+# from utils import user_data
 from screens.Portal_Instruction_Screen import PortalInstructionScreen
 from screens.ecesis_login_screen import EcesisLoginScreen
 from screens.entry_screen import EntryScreen
 from screens.profile_screen import ProfileScreen
+from utils.glogger import GLogger
 import pyi_splash
+
+logger = GLogger()
 
 class Application(tk.Tk):
     def __init__(self):
@@ -69,21 +72,27 @@ class Application(tk.Tk):
 
     def route_startup(self):
         """Decide which screen to show based on input parameters or login status."""
-        arg1, arg2, arg3 = params_check()
-        # arg1="SmartEntry"
-        #arg1="PortalLogin"
-        # arg1="AutoLogin"
-        print(f"Params: arg1={arg1}, arg2={arg2}, arg3={arg3}")
-        login_data = user_data.load_login_data()
-        print("Login data:", login_data)
+        process_type, hybrid_orderid, hybrid_token = params_check()
+        # process_type="SmartEntry"
+        #process_type="PortalLogin"
+        # process_type="AutoLogin"
+        logger.log(
+            module="Application-route_startup",
+            order_id=hybrid_orderid,
+            action_type="Info",
+            remarks=f"Params: process_type={process_type}, hybrid_orderid={hybrid_orderid}",
+            severity="INFO"
+        )
+        # login_data = user_data.load_login_data()
+        # print("Login data:", login_data)
 
-        if arg1 == "SmartEntry":
+        if process_type == "SmartEntry":
             self.show_frame("EntryScreen")
-        elif arg1 == "PortalLogin":
+        elif process_type == "PortalLogin":
             self.show_frame("PortalInstructionScreen")
         # elif login_data.get("logged_in"):
         #     self.show_frame("EcesisLoginScreen")
-        elif arg1 == "AutoLogin":
+        elif process_type == "AutoLogin":
             self.show_frame("EcesisLoginScreen")
         else:
             self.show_frame("EcesisLoginScreen")
@@ -92,7 +101,12 @@ class Application(tk.Tk):
         """Bring the requested screen to the front."""
         frame = self.frames.get(page_name)
         if frame:
-            print(f"Switching to frame: {page_name}")
+            logger.log(
+                module="Application-show_frame",
+                action_type="Navigation",
+                remarks=f"Switching to frame: {page_name}",
+                severity="INFO"
+            )
             frame.tkraise()
     def set_icon(self):
         self.iconphoto(False, self.logo)

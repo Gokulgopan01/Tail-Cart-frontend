@@ -195,15 +195,17 @@
 import tkinter as tk
 import threading
 import logging
+from utils.glogger import GLogger
 import sys
 
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import get_order_address_from_assigned_order, params_check
+from utils.helper import get_order_address_from_assigned_order, params_check, update_order_status
 from utils.pic_pdf_downloads.vpn_connection import vpn_checking
 from screens.portal_login_screen import PortalLoginScreen
 from screens.loaded_screen import LoadedScreen
 
-arg1, arg2, arg3 = params_check()
+process_type, hybrid_orderid, hybrid_token = params_check()
+logger = GLogger()
 
 class PortalInstructionScreen(tk.Frame):
     def __init__(self, parent, controller):
@@ -212,10 +214,10 @@ class PortalInstructionScreen(tk.Frame):
         self.hybridIntegration = HybridBPOApi()
         self.container = tk.Frame(self)
         self.container.pack(expand=True, fill="both")
-        #arg1="SmartEntry"
-        #arg1="PortalLogin"
-        #arg1="AutoLogin"
-        if "PortalLogin" in arg1:
+        #process_type="SmartEntry"
+        #process_type="PortalLogin"
+        #process_type="AutoLogin"
+        if "PortalLogin" in process_type:
             # Initialize LoadedScreen immediately
             title_text = "Portal Login In Progress..."
             status_text = "Preparing login instructions."
@@ -233,7 +235,13 @@ class PortalInstructionScreen(tk.Frame):
 
     def exit_portalinstruction_screen(self):
         """Cleanly exit the entry screen and application."""
-        logging.info("Exit requested from LoadedScreen. Closing application.")
+        logger.log(
+            module="PortalInstructionScreen-exit_portalinstruction_screen",
+            order_id=hybrid_orderid,
+            action_type="Info",
+            remarks="Exit requested from LoadedScreen. Closing application.",
+            severity="INFO"
+        )
         self.controller.destroy()
         sys.exit(0)
 
@@ -242,17 +250,24 @@ class PortalInstructionScreen(tk.Frame):
 
     def update_loaded_screen(self, title, message):
         self.loaded_screen.update_status(title, message)
-        logging.info(f"{title} - {message}")
+        logger.log(
+            module="PortalInstructionScreen-update_loaded_screen",
+            order_id=hybrid_orderid,
+            action_type="Info",
+            remarks=f"{title} - {message}",
+            severity="INFO"
+        )
 
     def check_and_process_order(self):
         try:
+            #update_order_status(hybrid_orderid, "In Progress", "View Portal Instructions", "Initiated", hybrid_token)
             self.update_loaded_screen("VPN Check", "Validating VPN connection...")
             if not vpn_checking():
                 self.update_loaded_screen("VPN Error", "VPN not connected. Please connect and retry.")
                 return
 
             self.update_loaded_screen("Order Check", "Fetching order details...")
-            orders = HybridBPOApi.get_entry_order(arg2)
+            orders = HybridBPOApi.get_entry_order(hybrid_orderid)
 
             if not orders:
                 self.update_loaded_screen("No Orders", "No orders found to process.")
@@ -273,7 +288,13 @@ class PortalInstructionScreen(tk.Frame):
             self.update_loaded_screen("Order ID", f"Order ID: {order_id}")
 
             if not portal_name:
-                logging.warning("Portal name missing in order data.")
+                logger.log(
+                    module="PortalInstructionScreen-check_and_process_order",
+                    order_id=hybrid_orderid,
+                    action_type="Warning",
+                    remarks="Portal name missing in order data.",
+                    severity="WARNING"
+                )
                 self.update_loaded_screen("Error", "Missing portal name in order.")
                 return
 
@@ -290,5 +311,12 @@ class PortalInstructionScreen(tk.Frame):
             self.update_loaded_screen("Success", f"Successfully logged into {portal_name}")
 
         except Exception as e:
-            logging.error("Portal login process failed.", exc_info=True)
+            import traceback
+            logger.log(
+                module="PortalInstructionScreen-check_and_process_order",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Portal login process failed: {traceback.format_exc()}",
+                severity="ERROR"
+            )
             self.update_loaded_screen("Error", f"Login failed: {str(e)}")

@@ -55,30 +55,39 @@
 #             # If loop is already running (e.g., inside asyncio app), create a task instead
 #             asyncio.create_task(self._send(log_entry))
 #Glogger
-import aio_pika, asyncio, json
-from copy import deepcopy
+import aio_pika, asyncio, json, threading
 from datetime import datetime
-import os
 from config import env
 
 RABBIT_URL = env.RABBIT_URL
 QUEUE_NAME = env.QUEUE_NAME
 
-
 class GLogger:
     _instance = None
+    _lock = threading.Lock()
 
     def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-            cls._instance.connection = None
-            cls._instance.channel = None
-            try:
-                cls._instance.loop = asyncio.get_event_loop()
-            except RuntimeError:
-                cls._instance.loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(cls._instance.loop)
+        with cls._lock:
+            if cls._instance is None:
+                cls._instance = super().__new__(cls)
+                cls._instance.connection = None
+                cls._instance.channel = None
+                cls._instance.loop = None
+                cls._instance._start_background_loop()
         return cls._instance
+
+    def _start_background_loop(self):
+        """Starts a background thread to run a dedicated asyncio event loop."""
+        self.ready_event = threading.Event()
+        thread = threading.Thread(target=self._run_loop, daemon=True, name="GLoggerThread")
+        thread.start()
+        self.ready_event.wait() # Wait for loop to be initialized
+
+    def _run_loop(self):
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        self.ready_event.set()
+        self.loop.run_forever()
 
     async def _init_rabbit(self):
         """Initialize RabbitMQ connection and channel."""
@@ -95,7 +104,6 @@ class GLogger:
         try:
             await self._init_rabbit()
             if not self.channel:
-                print("[GLogger] WARN: Channel is not initialized.")
                 return
 
             await self.channel.default_exchange.publish(
@@ -107,7 +115,7 @@ class GLogger:
 
     def log(self, user_id="", module="", order_id="", action_type="",
             old_status="", new_status="", remarks="", severity="INFO"):
-        """Public log function (sync-safe)."""
+        """Public log function (completely non-blocking)."""
         log_entry = {
             "user_id": user_id,
             "module": module,
@@ -120,16 +128,10 @@ class GLogger:
             "timestamp": datetime.now().isoformat()
         }
 
-        try:
-            # Try running async function in sync environment
-            self.loop.run_until_complete(self._send(log_entry))
-
-        except RuntimeError:
-            # In case loop is already running
-            try:
-                asyncio.create_task(self._send(log_entry))
-            except Exception as e:
-                print(f"[GLogger] Failed to create async task: {e}")
-
-        except Exception as e:
-            print(f"[GLogger] General log error: {e}")
+        if self.loop and self.loop.is_running():
+            # Schedule the coroutine in the background loop safely
+            self.loop.call_soon_threadsafe(
+                lambda: asyncio.create_task(self._send(log_entry))
+            )
+        else:
+            print("[GLogger] WARN: Background loop is not running.")

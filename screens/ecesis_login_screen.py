@@ -17,7 +17,7 @@ from PIL import Image, ImageDraw, ImageTk
 
 from screens.portal_login_screen import PortalLoginScreen
 from utils.helper import params_check, setup_driver
-from utils.user_data import save_login_data, load_login_data
+#from utils.user_data import save_login_data, load_login_data
 from config import env
 from utils.glogger import GLogger
 logger = GLogger()
@@ -39,7 +39,7 @@ ACCOUNT_API = f"{BASE_URL}/getAccountInfo"
 print(f"Main Clients API: {MAIN_CLIENTS_API}")
 print(f"Login API: {LOGIN_API}")
 
-arg1, arg2,arg3 = params_check()  # Extract parameters at the top
+process_type, hybrid_orderid, hybrid_token = params_check()  # Extract parameters at the top
 
 
 
@@ -289,9 +289,9 @@ class EcesisLoginScreen(tk.Frame):
                         # self.after(0, lambda: self.show_welcome_message(username))
                         #self.after(0, self.close_login_screen)  
                         # Conditionally show client selection screen
-                        if arg1 not in ["PortalLogin", "SmartEntry"]:
+                        if process_type not in ["PortalLogin", "SmartEntry"]:
                             self.after(0, lambda: self.show_client_login(username))
-                            save_login_data(logged_in, token, user_details)
+                            #save_login_data(logged_in, token, user_details)
                         else:
                                 #  Save token and details
                             #save_login_data(logged_in, token, user_details)

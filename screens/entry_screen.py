@@ -1,17 +1,19 @@
 import importlib
 import logging
+from utils.glogger import GLogger
 import tkinter as tk
 from tkinter import ttk
 from urllib.parse import parse_qs, urlparse
 
 from screens.loaded_screen import LoadedScreen
-from utils.helper import get_order_address_from_assigned_order, params_check
+from utils.helper import get_order_address_from_assigned_order, params_check, update_order_status
 from utils.pic_pdf_downloads.vpn_connection import vpn_checking
 import sys
 import threading
 from integrations import hybrid_bpo_api
 from screens import portal_login_screen
-arg1, arg2,arg3 = params_check()
+process_type, hybrid_orderid, hybrid_token = params_check()
+logger = GLogger()
 class EntryScreen(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
@@ -38,34 +40,35 @@ class EntryScreen(tk.Frame):
         self.loaded_screen.pack(fill="both", expand=True)
 
         # Determine which process to run based on parameters
-        #arg1, arg2 = params_check()
-        #arg1="SmartEntry"
-        #arg1="PortalLogin"
-        #arg1="AutoLogin"
-        self.handle_argument(arg1, arg2,arg3)
+        #process_type, hybrid_orderid = params_check()
+        #process_type="SmartEntry"
+        #process_type="PortalLogin"
+        #process_type="AutoLogin"
+        self.handle_argument(process_type, hybrid_orderid, hybrid_token)
 
 
-    def handle_argument(self, arg1, arg2,arg3):
-        arg1 = arg1 or ""
-        arg2 = arg2 or ""
-        arg3 = arg3 or ""
-        if 'SmartEntry' in arg1:
+    def handle_argument(self, process_type, hybrid_orderid, hybrid_token):
+        process_type = process_type or ""
+        hybrid_orderid = hybrid_orderid or ""
+        hybrid_token = hybrid_token or ""
+        if 'SmartEntry' in process_type:
             # Run the process in a thread to keep GUI responsive
-            threading.Thread(target=self.run_smart_entry_process, args=(arg2,), daemon=True).start()
+            threading.Thread(target=self.run_smart_entry_process, args=(hybrid_orderid,), daemon=True).start()
         else:
             self.loaded_screen.update_status(
                 title="Orders not found",
                 status="No SmartEntry tag detected."
             )
 
-    def run_smart_entry_process(self, arg2):
+    def run_smart_entry_process(self, hybrid_orderid):
         try:
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Initiated", hybrid_token)
             self.loaded_screen.update_status(
                 title="Parsing Order Data...",
                 status="Fetching required details..."
             )
 
-            self.check_if_any_argument_passed(arg2)
+            self.check_if_any_argument_passed(hybrid_orderid)
 
             self.loaded_screen.update_status(
                 title="Validating Data...",
@@ -85,7 +88,14 @@ class EntryScreen(tk.Frame):
                 title="Error",
                 status=f"Something went wrong: {str(e)}"
             )
-            logging.error("SmartEntry process failed", exc_info=True)
+            import traceback
+            logger.log(
+                module="EntryScreen-run_smart_entry_process",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"SmartEntry process failed: {traceback.format_exc()}",
+                severity="ERROR"
+            )
 
     def check_if_any_argument_passed(self, order_id):
         try:
@@ -97,7 +107,7 @@ class EntryScreen(tk.Frame):
                 return
 
             # Retrieve order details
-            orders = hybrid_bpo_api.HybridBPOApi.get_entry_order(arg2)
+            orders = hybrid_bpo_api.HybridBPOApi.get_entry_order(hybrid_orderid)
             if not orders:
                 self.loaded_screen.update_status(
                     title="No Orders",
@@ -121,10 +131,22 @@ class EntryScreen(tk.Frame):
                 #order_details = get_order_address_from_assigned_order(order_id,arg3)
 
                 if not portal_name:
-                    logging.warning("Portal name missing in order data.")
+                    logger.log(
+                        module="EntryScreen-check_if_any_argument_passed",
+                        order_id=hybrid_orderid,
+                        action_type="Warning",
+                        remarks="Portal name missing in order data.",
+                        severity="WARNING"
+                    )
                     continue
 
-                logging.info(f"Logging into portal: {portal_name}")
+                logger.log(
+                    module="EntryScreen-check_if_any_argument_passed",
+                    order_id=hybrid_orderid,
+                    action_type="Info",
+                    remarks=f"Logging into portal: {portal_name}",
+                    severity="INFO"
+                )
                 print("Entry")
                 portal_login_screen.PortalLoginScreen.login_to_portals(
                     self, username, password, portal_url,
@@ -132,7 +154,14 @@ class EntryScreen(tk.Frame):
                 )
 
         except Exception as e:
-            logging.error("Error in check_if_any_argument_passed", exc_info=True)
+            import traceback
+            logger.log(
+                module="EntryScreen-check_if_any_argument_passed",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Error in check_if_any_argument_passed: {traceback.format_exc()}",
+                severity="ERROR"
+            )
             self.loaded_screen.update_status(
                 title="Error",
                 status=f"Order processing failed: {str(e)}"
@@ -146,5 +175,11 @@ class EntryScreen(tk.Frame):
             self.controller.quit()
             self.controller.destroy()
         except Exception as e:
-            logging.error(f"Error closing application: {e}")
+            logger.log(
+                module="EntryScreen-exit_entry_screen",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Error closing application: {e}",
+                severity="ERROR"
+            )
         sys.exit(0)

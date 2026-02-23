@@ -183,6 +183,16 @@
                ]
             },
             {
+               "filedtype": "checkbox",
+               "values": [
+                  [
+                     "Yes",
+                     "PS_FORM/SUBJECT_PROPERTY/Vendor_Authorize[@Field_Type='checkbox']",
+                     "id"
+                  ]
+               ]
+            },
+            {
                "filedtype": "checkbox_list",
                "values": [
                   [
@@ -196,9 +206,18 @@
                "filedtype": "Textbox",
                "values": [
                   [
-                     "sub_data['HOAFeesOther']",
+                     "sub_data['HoaOther']",
                      "//*[@id='PS_FORM/GENERAL_CONDITIONS/Fees_Other']",
                      "xpath"
+                  ]
+               ]
+            },
+            {
+               "filedtype": "radiobutton_data",
+               "values": [
+                  [
+                     "Yes",
+                     "PS_FORM/SUBJECT_PROPERTY/Vendor_Authorize[@Field_Type='checkbox']"
                   ]
                ]
             },
@@ -216,7 +235,7 @@
                "filedtype": "radiobutton_data",
                "values": [
                   [
-                     "sub_data['ListedLast12Month']",
+                     "sub_data['CurrentlyListed']",
                      "PS_FORM/GENERAL_CONDITIONS/Currently_Listed[@Field_Type='checkbox']",
                      "id"
                   ]
@@ -571,7 +590,7 @@
                "filedtype": "Textbox",
                "values": [
                   [
-                     "sub_data['Other']",
+                     "sub_data['OtherComparable']",
                      "//*[@id='PS_FORM/SUBJECT_PROPERTY/Other']",
                      "xpath"
                   ]
@@ -796,7 +815,7 @@
                "filedtype": "Textbox",
                "values": [
                   [
-                     "list1['Other']",
+                     "list1['OtherComparable']",
                      "//*[@id='PS_FORM/COMPARABLE1/Other']",
                      "xpath"
                   ]
@@ -1021,7 +1040,7 @@
                "filedtype": "Textbox",
                "values": [
                   [
-                     "list2['Other']",
+                     "list2['OtherComparable']",
                      "//*[@id='PS_FORM/COMPARABLE2/Other']",
                      "xpath"
                   ]
@@ -1246,7 +1265,7 @@
                "filedtype": "Textbox",
                "values": [
                   [
-                     "list3['Other']",
+                     "list3['OtherComparable']",
                      "//*[@id='PS_FORM/COMPARABLE3/Other']",
                      "xpath"
                   ]
@@ -1596,7 +1615,7 @@
                "filedtype": "Textbox",
                "values": [
                   [
-                     "sold1['Other']",
+                     "sold1['OtherComparable']",
                      "//*[@id='PS_FORM/RECENT_SALE1/Other']",
                      "xpath"
                   ]
@@ -1856,7 +1875,7 @@
                "filedtype": "Textbox",
                "values": [
                   [
-                     "sold2['Other']",
+                     "sold2['OtherComparable']",
                      "//*[@id='PS_FORM/RECENT_SALE2/Other']",
                      "xpath"
                   ]
@@ -2116,7 +2135,7 @@
                "filedtype": "Textbox",
                "values": [
                   [
-                     "sold3['Other']",
+                     "sold3['OtherComparable']",
                      "//*[@id='PS_FORM/RECENT_SALE3/Other']",
                      "xpath"
                   ]
@@ -2144,6 +2163,15 @@
                      "sold3['ComparableComments']",
                      "//*[@id='PS_FORM/RECENT_SALE3/Comments']",
                      "xpath"
+                  ]
+               ]
+            },
+            {
+               "filedtype": "radiobutton_data",
+               "values": [
+                  [
+                     "Yes",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/TX_Digital_Signature[@Field_Type='checkbox']']"
                   ]
                ]
             },
@@ -2183,6 +2211,116 @@
                   [
                      "sub_data['Comments']",
                      "//*[@id='PS_FORM/MARKETING_STRATEGY/Comments']",
+                     "xpath"
+                  ],
+                  [
+                     "prior1['PriorOriginalListPrice']",
+                     "PS_FORM/SUBJECT_PROPERTY/Original_List_Price_prior1",
+                     "id"
+                  ],
+                  [
+                     "prior1['PriorListPrice']",
+                     "PS_FORM/SUBJECT_PROPERTY/List_Price1",
+                     "id"
+                  ],
+                  [
+                     "prior1['PriorSalePrice']",
+                     "PS_FORM/SUBJECT_PROPERTY/Sale_Price1",
+                     "id"
+                  ],
+                  [
+                     "prior1['PriorStatus']",
+                     "PS_FORM/SUBJECT_PROPERTY/Sale_History_Notes1",
+                     "id"
+                  ],
+                  [
+                     "prior2['PriorOriginalListPrice']",
+                     "PS_FORM/SUBJECT_PROPERTY/Original_List_Price_prior2",
+                     "id"
+                  ],
+                  [
+                     "prior2['PriorListPrice']",
+                     "PS_FORM/SUBJECT_PROPERTY/List_Price2",
+                     "id"
+                  ],
+                  [
+                     "prior2['PriorSalePrice']",
+                     "PS_FORM/SUBJECT_PROPERTY/Sale_Price2",
+                     "id"
+                  ],
+                  [
+                     "prior2['PriorStatus']",
+                     "PS_FORM/SUBJECT_PROPERTY/Sale_History_Notes2",
+                     "id"
+                  ],
+                  [
+                     "prior3['PriorOriginalListPrice']",
+                     "PS_FORM/SUBJECT_PROPERTY/Original_List_Price_prior3",
+                     "id"
+                  ],
+                  [
+                     "prior3['PriorListPrice']",
+                     "PS_FORM/SUBJECT_PROPERTY/List_Price3",
+                     "id"
+                  ],
+                  [
+                     "prior3['PriorSalePrice']",
+                     "PS_FORM/SUBJECT_PROPERTY/Sale_Price3",
+                     "id"
+                  ],
+                  [
+                     "prior3['PriorStatus']",
+                     "PS_FORM/SUBJECT_PROPERTY/Sale_History_Notes3",
+                     "id"
+                  ]
+               ]
+            },
+            {
+               "filedtype": "date_fill_javascript",
+               "values": [
+                  [
+                     "condition_data['prior1_OriginalListDate']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/Original_List_Date_prior1']",
+                     "xpath"
+                  ],
+                  [
+                     "condition_data['prior1_ListDate']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/Date_Listed1']",
+                     "xpath"
+                  ],
+                  [
+                     "condition_data['prior1_SaleDate']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/Date_Sold1']",
+                     "xpath"
+                  ],
+                  [
+                     "condition_data['prior2_OriginalListDate']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/Original_List_Date_prior2']",
+                     "xpath"
+                  ],
+                  [
+                     "condition_data['prior2_ListDate']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/Date_Listed2']",
+                     "xpath"
+                  ],
+                  [
+                     "condition_data['prior2_SaleDate']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/Date_Sold2']",
+                     "xpath"
+                  ],
+                  [
+                     "condition_data['prior3_OriginalListDate']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/Original_List_Date_prior3']",
+                     "xpath"
+                  ],
+                  [
+                     "condition_data['prior3_ListDate']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/Date_Listed3']",
+                     "xpath"
+                  ],
+                  [
+                     "condition_data['prior3_SaleDate']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/Date_Sold3']",
                      "xpath"
                   ]
                ]

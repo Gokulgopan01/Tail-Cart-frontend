@@ -24,12 +24,12 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from config import env
 load_dotenv()
 from condtions.all_portal_conditions import generate_condition_data
-from utils.helper import data_filling_text, extract_data_sections, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_repair_details, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, tfs_statuschange, update_client_account_status, update_order_status
+from utils.helper import data_filling_text, extract_data_sections, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_repair_details, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status
 from integrations.hybrid_bpo_api import HybridBPOApi
 # arg1, arg2,arg3 = params_check()
 # print(arg1,arg2,arg3)
 
-process_type, hybrid_orderid,hybrid_token = params_check()
+process_type, hybrid_orderid, hybrid_token = params_check()
 logging.info(f"type,orderid,token,{process_type},{hybrid_orderid},{hybrid_token}")
 # Load environment variables from the .env file
 load_dotenv()
@@ -272,7 +272,7 @@ class rrreview:
             else:
                 logging.warning(f"No matching config path found for form type: {formtype_value}")
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-                tfs_statuschange(tfs_orderid, "27", "3", "14")
+                #tfs_statuschange(tfs_orderid, "27", "3", "14")
                 return
             
             form_config, merged_json = load_form_config_and_data(
@@ -288,8 +288,8 @@ class rrreview:
               return 
         
             # Extract and generate condition_data, attach it inside merged_json for usage if needed
-            sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3 = extract_data_sections(merged_json)
-            condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3)
+            sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3, prior1, prior2, prior3 = extract_data_sections(merged_json)
+            condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3, prior1, prior2, prior3)
             if "entry_data" in merged_json and merged_json["entry_data"]:
                 merged_json["entry_data"][0]["condition_data"] = condition_data
 
@@ -379,7 +379,7 @@ class rrreview:
             "radiobutton_data": radio_btn_click,
             "radiobutton_default": radio_btn_click,
             "date_fill_javascript": javascript_excecuter_filling,
-            "checkbox": select_checkboxes_from_list,
+            "checkbox": single_checkbox,
         }
 
         # --------------------------
@@ -403,12 +403,13 @@ class rrreview:
                 rental_list1, rental_list2,
                 rental_leased1, rental_leased2,
                 adj_sold1, adj_sold2, adj_sold3,
-                adj_list1, adj_list2, adj_list3) = extract_data_sections(merged_json)
+                adj_list1, adj_list2, adj_list3, 
+                prior1, prior2, prior3) = extract_data_sections(merged_json)
 
             if sub_data is None:
                 logging.error("'entry_data' missing or empty in merged_json")
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
-                tfs_statuschange(tfs_orderid, "27", "3", "14")
+                #tfs_statuschange(tfs_orderid, "27", "3", "14")
                 return False
 
             # --- Generate computed conditional data ---
@@ -416,7 +417,8 @@ class rrreview:
                 sub_data, comp_data, adj_data, rental_data,
                 sold1, sold2, sold3, list1, list2, list3,
                 rental_list1, rental_list2, rental_leased1, rental_leased2,
-                adj_sold1, adj_sold2, adj_sold3, adj_list1, adj_list2, adj_list3
+                adj_sold1, adj_sold2, adj_sold3, adj_list1, adj_list2, adj_list3,
+                prior1, prior2, prior3
             )
 
             saved_form = False
@@ -491,19 +493,40 @@ class rrreview:
                         #     continue
 
                         if field_type == "checkbox_list":
-                             for field in values:
+                            for field in values:
                                 if not (isinstance(field, list) and len(field) == 3):
-                                    logging.warning(f"Invalid checkbox_list field: {field}")
+                                    #logging.warning(f"Invalid checkbox_list field: {field}")
+                                    logger.log(
+                                        module="rrreview-fill_form_multi",
+                                        order_id=hybrid_orderid,
+                                        action_type="Condition-check",
+                                        remarks=f"Invalid checkbox_list field: {field}",
+                                        severity="INFO"
+                                        )
                                     continue
                                 key_expr, id_prefix, mode = field
                                 try:
                                     value = extract_value_from_expr(key_expr)
                                     if value:
                                         select_checkboxes_from_list(self.driver, value, id_prefix)
-                                        logging.info(f"Checkboxes selected for {key_expr} with prefix {id_prefix}")
+                                        #logging.info(f"Checkboxes selected for {key_expr} with prefix {id_prefix}")
+                                        logger.log(
+                                        module="rrreview-fill_form_multi",
+                                        order_id=hybrid_orderid,
+                                        action_type="Condition-check",
+                                        remarks=f"Checkboxes selected for {key_expr} with prefix {id_prefix}",
+                                        severity="INFO"
+                                        )
                                 except Exception as e:
-                                    logging.error(f"Error selecting checkboxes for {key_expr}: {e}")
-                                continue
+                                    #logging.error(f"Error selecting checkboxes for {key_expr}: {e}")
+                                    logger.log(
+                                        module="rrreview-fill_form_multi",
+                                        order_id=hybrid_orderid,
+                                        action_type="Exception",
+                                        remarks=f"Error selecting checkboxes for {key_expr}: {e}",
+                                        severity="INFO"
+                                        )
+                            continue
 
                         elif field_type == "repair_details_fill":
                             for value_config in values:
@@ -540,11 +563,11 @@ class rrreview:
             # --- Final Status Update ---
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
             print(hybrid_orderid,"Smart Entry")
-            tfs_statuschange(tfs_orderid, "26", "3", "14")
+            #tfs_statuschange(tfs_orderid, "26", "3", "14")
             return saved_form
 
         except Exception as e:
             logging.error(f"Critical error in fill_form_multi: {e}")
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-            tfs_statuschange(tfs_orderid, "27", "3", "14")
+            #tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False

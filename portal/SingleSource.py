@@ -16,11 +16,11 @@ from selenium.webdriver.common.by import By
 from condtions.all_portal_conditions import generate_condition_data
 from config import env
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import SS_fill_repair_details, adj_click, close_validation_popup, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_source_save_form, update_client_account_status, update_order_status, update_portal_login_confirmation_status
+from utils.helper import SS_fill_repair_details, adj_click, close_validation_popup, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, single_source_save_form, update_client_account_status, update_order_status, update_portal_login_confirmation_status
 load_dotenv()
 from utils.glogger import GLogger
 logger = GLogger()
-process_type, hybrid_orderid,hybrid_token = params_check()
+process_type, hybrid_orderid, hybrid_token = params_check()
 class SingleSource:
     def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id, portal_key):
         self.username = username
@@ -474,6 +474,200 @@ class SingleSource:
                 remarks=f"Exception in singleSource_formopen: {traceback.format_exc()}",
                 severity="ERROR"
             )
+    #####
+    # def singleSource_formopen(self,session, merged_json, order_details, order_id):
+    #     try:
+    #         orders_from_api = HybridBPOApi.get_entry_order(hybrid_orderid) 
+    #         if not orders_from_api:  # Check if the order list is empty
+    #             # print("No orders found.")
+    #             logger.log(
+    #                 module="SingleSource-singleSource_formopen",
+    #                 order_id=hybrid_orderid,
+    #                 action_type="Condition-check",
+    #                 remarks="No orders found.",
+    #                 severity="INFO"
+    #             )
+    #             return
+            
+    #         # Process each order
+    #         for order_from_api in orders_from_api:
+    #             portal_name = order_from_api.get("portal_name", "")
+    #             username = order_from_api.get("username", "")
+    #             password = order_from_api.get("password", "")
+    #             portal_url = order_from_api.get("portal_url", "")
+    #             proxy = order_from_api.get("proxy", None)  # Optional proxy
+    #             sessions=order_from_api.get("session",None)
+    #             order_id=order_from_api.get("order_id","")
+    #             order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(order_id,hybrid_token)
+    #             # print("order_details_from_api:", order_details_from_api)
+    #             logger.log(
+    #                 module="SingleSource-singleSource_formopen",
+    #                 order_id=hybrid_orderid,
+    #                 action_type="Condition-check",
+    #                 remarks=f"order_details_from_api: {order_details_from_api}",
+    #                 severity="INFO"
+    #             )
+    #             # if not order_details_from_api:
+    #             #     messagebox.showerror("Authentication Required", "Please log in again.")
+    #             #     self.controller.show_frame("EcesisLoginScreen")
+    #             #     return
+    #         # logging.info("Starting form open process")
+    #         logger.log(
+    #             module="SingleSource-singleSource_formopen",
+    #             order_id=hybrid_orderid,
+    #             action_type="Condition-check",
+    #             remarks="Starting form open process",
+    #             severity="INFO"
+    #         )
+    #         target_genorderid =order_details_from_api
+
+    #         form_type = [
+    #             'FMC BPO Exterior Evaluation', 'Resolute As Repaired BPO', 'New BPO Exterior',
+    #             'BPO Exterior', 'Exterior Evaluation'
+    #         ]
+
+    #         get_url = self.driver.current_url
+    #         # logging.info(f"Current URL in formopen_fill: {get_url}")
+    #         logger.log(
+    #             module="SingleSource-singleSource_formopen",
+    #             order_id=hybrid_orderid,
+    #             action_type="Condition-check",
+    #             remarks=f"Current URL in formopen_fill: {get_url}",
+    #             severity="INFO"
+    #         )
+
+    #         if 'main' in get_url:
+    #             # print('Refreshing Portal')
+    #             logger.log(
+    #                 module="SingleSource-singleSource_formopen",
+    #                 order_id=hybrid_orderid,
+    #                 action_type="Condition-check",
+    #                 remarks="Refreshing Portal",
+    #                 severity="INFO"
+    #             )
+    #             self.driver.switch_to.parent_frame()
+    #             self.driver.switch_to.frame("_MAIN")
+                
+    #             # More robust row finding - include hybrid order_id for extra robustness
+    #             # Hybrid order_id is the numerical ID from the app, target_genorderid/tfs_orderid are portal IDs
+    #             or_conditions = ' or '.join([f"contains(., '{ft}')" for ft in form_type])
+    #             target_xpath = (
+    #                 f"//tr[(contains(., '{target_genorderid}') or contains(., '{tfs_orderid}') or contains(., '{order_id}')) "
+    #                 f"and ({or_conditions})]"
+    #             )
+
+    #             try:
+    #                 target_row = self.driver.find_element(By.XPATH, target_xpath)
+    #             except:
+    #                 # Optional: Dynamic search attempt if not found initially
+    #                 logger.log(
+    #                     module="SingleSource-singleSource_formopen",
+    #                     order_id=hybrid_orderid,
+    #                     action_type="Condition-check",
+    #                     remarks=f"Order {target_genorderid} not found in current view. Attempting dynamic search...",
+    #                     severity="INFO"
+    #                 )
+    #                 try:
+    #                     self.driver.switch_to.default_content()
+    #                     self.driver.switch_to.frame("_TOP_MENU")
+                        
+    #                     # Look for potential search fields
+    #                     potential_inputs = self.driver.find_elements(By.XPATH, "//input[@type='text' or not(@type)]")
+    #                     search_field = None
+    #                     for inp in potential_inputs:
+    #                         id_name = (inp.get_attribute("id") or "") + (inp.get_attribute("name") or "")
+    #                         if any(k in id_name.lower() for k in ["search", "find", "filter", "order"]):
+    #                             search_field = inp
+    #                             break
+                        
+    #                     if search_field:
+    #                         from selenium.webdriver.common.keys import Keys
+    #                         search_field.clear()
+    #                         search_field.send_keys(target_genorderid)
+    #                         search_field.send_keys(Keys.ENTER)
+    #                         time.sleep(5) # Wait for search results
+                            
+    #                         # Switch back to MAIN to find the row again
+    #                         self.driver.switch_to.default_content()
+    #                         self.driver.switch_to.frame("_MAIN")
+    #                         target_row = self.driver.find_element(By.XPATH, target_xpath)
+    #                     else:
+    #                         raise Exception("No search field identified")
+    #                 except Exception as search_err:
+    #                     logger.log(
+    #                         module="SingleSource-singleSource_formopen",
+    #                         order_id=hybrid_orderid,
+    #                         action_type="Warning",
+    #                         remarks=f"Search attempt failed or order still not found: {search_err}",
+    #                         severity="WARNING"
+    #                     )
+    #                     # Re-raise to trigger the outer except block
+    #                     raise
+
+    #             try:
+    #                 # Target the specific 'Complete Report' link in the row that triggers the event
+    #                 # This specifically looks for the link with 'do_html_event'
+    #                 try:
+    #                     clickable_element = target_row.find_element(By.XPATH, ".//a[contains(@href, 'do_html_event') and (contains(., 'Complete Report') or contains(., 'Report'))]")
+    #                 except:
+    #                     # Fallback: any link containing "Complete Report"
+    #                     try:
+    #                         clickable_element = target_row.find_element(By.XPATH, ".//a[contains(text(), 'Complete Report') or contains(text(), 'Report')]")
+    #                     except Exception as e:
+    #                         logger.log(
+    #                             module="SingleSource-singleSource_formopen",
+    #                             order_id=hybrid_orderid,
+    #                             action_type="Exception",
+    #                             remarks=f"Could not find 'Complete Report' link in row for {target_genorderid}",
+    #                             severity="ERROR"
+    #                         )
+    #                         return
+
+    #                 logger.log(
+    #                     module="SingleSource-singleSource_formopen",
+    #                     order_id=hybrid_orderid,
+    #                     action_type="Condition-check",
+    #                     remarks=f"Order {target_genorderid} matched, clicking 'Complete Report' via JS",
+    #                     severity="INFO"
+    #                 )
+                    
+    #                 # Use JavaScript click for maximum reliability
+    #                 self.driver.execute_script("arguments[0].scrollIntoView({block:'center'});", clickable_element)
+    #                 time.sleep(1)
+    #                 self.driver.execute_script("arguments[0].click();", clickable_element)
+    #                 time.sleep(5) # Wait for form to start loading
+
+    #                 # Identify the form type inside the form to confirm
+    #                 try:
+    #                     element = self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table')
+    #                 except:
+    #                     element = self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[1]/font')
+                    
+    #                 formtype_value = element.text.strip()
+    #                 SingleSource_formopen_fill(self, formtype_value, session, merged_json, order_details, order_id)
+    #                 orderidnotfound = False
+
+    #             except Exception as e:
+    #                 logger.log(
+    #                     module="SingleSource-singleSource_formopen",
+    #                     order_id=hybrid_orderid,
+    #                     action_type="Condition-check",
+    #                     remarks=f"Failed to find or click order {target_genorderid}: {e}",
+    #                     severity="ERROR"
+    #                 )
+    #                 return
+
+    #     except Exception as e:
+    #         # logging.exception(f"Exception in singleSource_formopen: {e}")
+    #         import traceback
+    #         logger.log(
+    #             module="SingleSource-singleSource_formopen",
+    #             order_id=hybrid_orderid,
+    #             action_type="Exception",
+    #             remarks=f"Exception in singleSource_formopen: {traceback.format_exc()}",
+    #             severity="ERROR"
+    #         )
+
 
 def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=None, order_details=None, order_id=None):
 
@@ -509,8 +703,8 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
     if not form_config or not merged_json:
         return
     # Extract and generate condition_data, attach it inside merged_json for usage if needed
-    sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3 = extract_data_sections(merged_json)
-    condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3)
+    sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3, prior1, prior2, prior3 = extract_data_sections(merged_json)
+    condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3, rental_list1, rental_list2, rental_leased1, rental_leased2, adj_sold1, adj_sold2, adj_sold3, adj_list1, adj_list2, adj_list3, prior1, prior2, prior3)
     if "entry_data" in merged_json and merged_json["entry_data"]:
         merged_json["entry_data"][0]["condition_data"] = condition_data
 
@@ -648,18 +842,50 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                 "adj_sold3":adj_sold3,
                 "adj_list1":adj_list1,
                 "adj_list2":adj_list2,
-                "adj_list3":adj_list3
+                "adj_list3":adj_list3,
+                "prior1": prior1,
+                "prior2": prior2,
+                "prior3": prior3
             }
 
-            for prefix, data_source in data_sources.items():
+            # for prefix, data_source in data_sources.items():
+            #     if expr.startswith(prefix):
+            #         suffix = expr[len(prefix):]
+            #         keys = get_keys_cached(suffix) if prefix == "entry_data[0]" else get_keys_cached(expr)
+            #         value = get_nested(data_source, keys, "")
+            #         value_cache[expr] = value
+            #         return value
+
+            # value_cache[expr] = expr
+            # return expr
+
+             # Iterate through data sources to find matching prefix
+            for prefix, source in data_sources.items():
                 if expr.startswith(prefix):
                     suffix = expr[len(prefix):]
-                    keys = get_keys_cached(suffix) if prefix == "entry_data[0]" else get_keys_cached(expr)
-                    value = get_nested(data_source, keys, "")
+                    keys = re.findall(r"\['(.*?)'\]", suffix)
+
+                    # Use get_nested, default to None if not found
+                    value = get_nested(source, keys, None)
+
+                    # Convert numbers to strings for Selenium text input
+                    if isinstance(value, (int, float)):
+                        value = str(value)
+
                     value_cache[expr] = value
+                    if value is None:
+
+                        logger.log(
+                        module="SingleSource-fill_form_multi",
+                        order_id=hybrid_orderid,
+                        action_type="Condition_check",
+                        remarks=f"[extract_value_from_expr] Value for '{expr}' not found, defaulting to None",
+                        severity="INFO"
+                        )
                     return value
 
-            value_cache[expr] = expr
+            # If prefix not found, return None safely
+            value_cache[expr] = None
             return expr
 
         field_actions = {
@@ -670,12 +896,10 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
             "radiobutton_data": radio_btn_click,
             "radiobutton_default": radio_btn_click,
             "date_fill_javascript": javascript_excecuter_filling,
-            "checkbox_list": select_checkboxes_from_list,
-    
         }
 
         try:
-            sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3 ,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3= extract_data_sections(merged_json)
+            sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3 ,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3, prior1, prior2, prior3 = extract_data_sections(merged_json)
             if sub_data is None:
                 # logging.error("'entry_data' missing or empty in merged_json")
                 logger.log(
@@ -688,7 +912,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                 return False
 
-            condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3)
+            condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3, prior1, prior2, prior3)
             saved_form = False
 
             for page in form_config.get("page", []):
@@ -823,7 +1047,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                             key_expr, id_prefix, mode = field
                             try:
                                 value = extract_value_from_expr(key_expr)
-                                if value:
+                                if value not in [None, ""]:
                                     select_checkboxes_from_list(self.driver, value, id_prefix)
                                     #logging.info(f"Checkboxes selected for {key_expr} with prefix {id_prefix}")
                                     logger.log(
@@ -843,7 +1067,41 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                                     severity="INFO"
                                     )
                         continue    
-
+                    if field_type == "checkbox":
+                        for field in values:
+                            if not (isinstance(field, list) and len(field) == 3):
+                                #logging.warning(f"Invalid checkbox_list field: {field}")
+                                logger.log(
+                                    module="SingleSource-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Condition-check",
+                                    remarks=f"Invalid checkbox_list field: {field}",
+                                    severity="INFO"
+                                    )
+                                continue
+                            key_expr, id_prefix, mode = field
+                            try:
+                                value = extract_value_from_expr(key_expr)
+                                if value not in [None, ""]:
+                                    single_checkbox(self.driver, value, id_prefix, mode)
+                                    #logging.info(f"Checkbox selected for {key_expr} with prefix {id_prefix}")
+                                    logger.log(
+                                    module="SingleSource-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Condition-check",
+                                    remarks=f"Checkbox selected for {key_expr} with prefix {id_prefix}",
+                                    severity="INFO"
+                                    )
+                            except Exception as e:
+                                #logging.error(f"Error selecting checkboxes for {key_expr}: {e}")
+                                logger.log(
+                                    module="SingleSource-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Exception",
+                                    remarks=f"Error selecting checkboxes for {key_expr}: {e}",
+                                    severity="INFO"
+                                    )
+                        continue        
                     for field in values:
                         if not (isinstance(field, list) and len(field) == 3):
                             # logging.warning(f"Invalid field format: {field}")

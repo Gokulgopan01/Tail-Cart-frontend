@@ -19,7 +19,7 @@ from condtions.all_portal_conditions import generate_condition_data
 
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.glogger import GLogger
-from utils.helper import clean_address, data_filling_text, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, update_client_account_status, update_order_status, update_portal_login_confirmation_status
+from utils.helper import clean_address, data_filling_text, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status
 from config import env
 logger = GLogger()
 
@@ -29,7 +29,7 @@ load_dotenv()
 # Retrieve API URLs from environment variables
 ASSIGNEDORDERS_URL = os.getenv("ASSIGNEDORDERS_URL")  
                    
-process_type, hybrid_orderid,hybrid_token = params_check()
+process_type, hybrid_orderid, hybrid_token = params_check()
 
 logger.log(
     module="Redbell-global",
@@ -500,11 +500,11 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
         "radiobutton_data": radio_btn_click,
         "radiobutton_default": radio_btn_click,
         "date_fill_javascript": javascript_excecuter_filling,
-        "checkbox": select_checkboxes_from_list,
+        "checkbox": single_checkbox,
     }
 
     try:
-        sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3 ,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3= extract_data_sections(merged_json)
+        sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3 ,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3, prior1, prior2, prior3= extract_data_sections(merged_json)
         if sub_data is None:
 
             logger.log(
@@ -518,7 +518,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
             #tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False
 
-        condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3)
+        condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data, sold1, sold2, sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3, prior1, prior2, prior3)
         saved_form = False
 
         for page in form_config.get("page", []):
@@ -1502,8 +1502,8 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
     if not form_config or not merged_json:
         return
     # Extract and generate condition_data, attach it inside merged_json for usage if needed
-    sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3 = extract_data_sections(merged_json)
-    condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3)
+    sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3, prior1, prior2, prior3 = extract_data_sections(merged_json)
+    condition_data = generate_condition_data(sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3, prior1, prior2, prior3)
     if "entry_data" in merged_json and merged_json["entry_data"]:
         merged_json["entry_data"][0]["condition_data"] = condition_data
 
