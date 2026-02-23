@@ -16,11 +16,16 @@ from selenium.webdriver.common.by import By
 from condtions.all_portal_conditions import generate_condition_data
 from config import env
 from integrations.hybrid_bpo_api import HybridBPOApi
-from utils.helper import SS_fill_repair_details, adj_click, close_validation_popup, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, single_source_save_form, update_client_account_status, update_order_status, update_portal_login_confirmation_status
+from utils.helper import (SS_fill_repair_details, adj_click, close_validation_popup, data_filling_text, extract_data_sections, fetch_upload_data, 
+get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, 
+params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, single_source_save_form, update_client_account_status, 
+update_order_status, update_portal_login_confirmation_status,tfs_statuschange)
+
 load_dotenv()
 from utils.glogger import GLogger
 logger = GLogger()
 process_type, hybrid_orderid, hybrid_token = params_check()
+
 class SingleSource:
     def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id, portal_key):
         self.username = username
@@ -34,6 +39,8 @@ class SingleSource:
         self.order_id = None
         self.account_id=account_id
         self.portal_key = portal_key
+        self.tfs_orderid = None
+
         # logging.basicConfig(level=logging.INFO)
     def login_to_portal(self):
         try:
@@ -259,6 +266,7 @@ class SingleSource:
                 sessions=order_from_api.get("session",None)
                 order_id=order_from_api.get("order_id","")
                 order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(order_id,hybrid_token)
+                self.tfs_orderid = tfs_orderid
                 # print("order_details_from_api:", order_details_from_api)
                 logger.log(
                     module="SingleSource-singleSource_formopen",
@@ -380,7 +388,7 @@ class SingleSource:
                                     remarks=f"Form type inside the form: {formtype_value}",
                                     severity="INFO"
                                 )
-                                SingleSource_formopen_fill(self, formtype_value, session, merged_json, order_details, order_id)
+                                SingleSource_formopen_fill(self, formtype_value, session, merged_json, order_details, order_id,tfs_orderid)
                                 break
                                 # element = session.find_element(By.ID, "PS_FORM/RECENT_SALE1/Street_Address1")
                                 # listing_address = element.get_attribute('value')
@@ -669,7 +677,7 @@ class SingleSource:
     #         )
 
 
-def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=None, order_details=None, order_id=None):
+def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=None, order_details=None, order_id=None,tfs_orderid=None):
 
     researchpad_data_retrival_url=env.RESEARCHPAD_DATA_URL
     # Normalize form type
@@ -781,7 +789,10 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
                 remarks="All form filling and upload functions completed successfully.",
                 severity="INFO"
             )
+
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
+            tfs_statuschange(tfs_orderid , "26", "3", "14")
+            
         else:
             # logging.warning(f"One or more functions failed: form_fill={form_fill}, upload_photos={upload_photos}, signature_result={signature_result}")
             logger.log(

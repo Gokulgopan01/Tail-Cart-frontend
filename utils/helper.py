@@ -1607,74 +1607,43 @@ def close_validation_popup(driver, timeout=5):
         print(f" Error in close_validation_popup: {e}")
         return False
     
-import requests
-import logging
-import time
 
+def tfs_statuschange(tfs_order_id, bpo_statusid, tfs_status, tfs_status_reason):
+    '''Status change on TFS'''
 
-# def tfs_statuschange(tfs_order_id, bpo_statusid, tfs_status, tfs_status_reason):
-#     tfs_order_id = str(tfs_order_id).strip()
-#     bpo_statusid = str(bpo_statusid).strip()
-#     tfs_status = str(tfs_status).strip()
-#     tfs_status_reason = str(tfs_status_reason).strip()
+    tfs_order_id = str(tfs_order_id).strip()
+    bpo_statusid = str(bpo_statusid).strip()
+    tfs_status = str(tfs_status).strip()
+    tfs_status_reason = str(tfs_status_reason).strip()
    
-#     try:
-#         data = {
-#             "strSessionID": "",
-#             "ProcParameters": ["type", "sTFStatusData", "stfsOrderId"],
-#             "ProcInputData": [1, f"{tfs_status}~{tfs_status_reason}~", tfs_order_id]
-#         }
+    try:
+        tfs_status_data = {
+            "strSessionID": "",
+            "ProcParameters": ["type", "sTFStatusData", "stfsOrderId"],
+            "ProcInputData": [1, f"{tfs_status}~{tfs_status_reason}~", tfs_order_id]
+        }
 
-#         data1 = {
-#             "strSessionID": "",
-#             "ProcInputData": [f"{bpo_statusid}~Na~Na~", tfs_order_id],
-#             "ProcParameters": ["sAutoBPOdata", "sOrderId"]
-#         }
-                
-#         # response2=requests.post("https://bpotrackers.com/bvupcqp/home/ProcUpdateTFSstatusEntry",data=data)
-#         response2 = requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateTFSstatusEntry", data=data)                
-#         #logging.info(f"response2 :{response2.text} , ordID {tfs_order_id}")
-#         logger.log(
-#             module="tfs_statuschange",
-#             order_id=hybrid_orderid,
-#             action_type="Status-change",
-#             remarks=f"response2 :{response2.text} , ordID {tfs_order_id}",
-#             severity="INFO"
-#         )
+        bpo_status_data = {
+            "strSessionID": "",
+            "ProcInputData": [f"{bpo_statusid}~Na~Na~", tfs_order_id],
+            "ProcParameters": ["sAutoBPOdata", "sOrderId"]
+        }
+        
+        tfs_statuschange_url = env.tfs_statuschange_url
+        tfs_status_resp = requests.post(tfs_statuschange_url,data=tfs_status_data)
+        logger.log(module="tfs_statuschange", order_id=hybrid_orderid, action_type="Status-change", remarks=f"tfs_statuschange_response :{tfs_status_resp.text} , ordID {tfs_order_id}",severity="INFO")
 
-#         # response1 =requests.post("https://bpotrackers.com/bvupcqp/Home/ProcUpdateAutoEntry",data=data1)
-#         response1 = requests.post("http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateAutoEntry", data=data1)
-          
-#         #logging.info(f"response1 :{response1.text} , ordID: {tfs_order_id}")
-#         logger.log(
-#             module="tfs_statuschange",
-#             order_id=hybrid_orderid,
-#             action_type="Status-change",
-#             remarks=f"response1 :{response1.text} , ordID: {tfs_order_id}",
-#             severity="INFO"
-#         )
+        bpo_statuschange_url = env.bpo_statuschange_url
+        bpo_status_resp = requests.post(bpo_statuschange_url,data=bpo_status_data)
+        logger.log(module="tfs_statuschange", order_id=hybrid_orderid, action_type="Status-change", remarks=f"bpo_statuschange_response :{bpo_status_resp.text} , ordID: {tfs_order_id}",severity="INFO")
 
-            
-#         #print("Status changed succesfully")
-#         #logging.info("Status changed succesfully")
-#         logger.log(
-#             module="tfs_statuschange",
-#             order_id=hybrid_orderid,
-#             action_type="Status-change",
-#             remarks="Status changed succesfully",
-#             severity="INFO"
-#         )
+        logger.log(module="tfs_statuschange", order_id=hybrid_orderid, action_type="Status-change",remarks="Status changed succesfully",severity="INFO")
+        return
 
-            
-#     except Exception as error:
-#         #logging.info(f"Exception occured on sttaus change {error}")
-#         logger.log(
-#             module="tfs_statuschange",
-#             order_id=hybrid_orderid,
-#             action_type="Exception",
-#             remarks="Status changed succesfully",
-#             severity="INFO"
-#         )
+    except Exception as error:
+        logger.log(module="tfs_statuschange", order_id=hybrid_orderid, action_type="Exception", remarks=f"Exception on status changing: {error}",severity="INFO")
+        return
+
 
 def update_portal_login_confirmation_status(order_id):
     try:
