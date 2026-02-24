@@ -683,7 +683,7 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
     # Normalize form type
     norm_formtype = formtype_value.strip()
 
-    if norm_formtype in ["Resolute As Repaired BPO" ,"Resolute As Repaired BPO Needs Corrections."]:
+    if norm_formtype in ["Resolute As Repaired BPO" ,"Resolute As Repaired BPO Needs Corrections.","Resolute As Repaired BPO Addendum Requested."]:
         config_path = 'json/singlesourcejson/SingleSource_Resolute_As_Repaired_bpo.json'
     elif norm_formtype in["SS New BPO Exterior-SHP" ,"SS New BPO Exterior-SHP Needs Corrections."]:
         config_path = 'json/singlesourcejson/SingleSource_SS_New_BPO_Exterior_SHP.json'
@@ -789,9 +789,9 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
                 remarks="All form filling and upload functions completed successfully.",
                 severity="INFO"
             )
-
+            
+            # tfs_statuschange(tfs_orderid , "26", "3", "14")
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
-            tfs_statuschange(tfs_orderid , "26", "3", "14")
             
         else:
             # logging.warning(f"One or more functions failed: form_fill={form_fill}, upload_photos={upload_photos}, signature_result={signature_result}")

@@ -1611,7 +1611,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 severity="INFO"
                 )
             
-            tfs_statuschange(tfs_orderid, "26", "3", "14")
+            # tfs_statuschange(tfs_orderid, "26", "3", "14")
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
             
         else:
