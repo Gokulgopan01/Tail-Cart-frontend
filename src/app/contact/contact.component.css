@@ -1,23 +1,62 @@
-/* About Section Styles */
-.about-section {
+/* Contact - Immersive Particle Experience */
+
+:host {
+  display: block;
+}
+
+.contact-immersive-page {
   position: relative;
-  margin-top: 80px; 
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  background: #fbfcfd;
+  color: var(--text-dark);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.particle-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.content-overlay {
+  position: relative;
+  z-index: 2;
+  padding: 120px 0 80px;
+  width: 100%;
+}
+
+.container-luxury {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.testimonials-section {
+  padding: 60px 20px;
+  margin-top: 80px;
+  border-top: 1px solid rgba(201, 161, 74, 0.1);
 }
 
 /* Glassmorphism Effects */
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 24px;
-  padding: 1.5rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 161, 74, 0.2);
+  border-radius: 35px;
+  padding: 2.5rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lead-text{
-    color: #003c30;
+.lead-text {
+  color: #003c30;
 }
 
 .glass-card-hover {
@@ -79,9 +118,23 @@
   animation: float 15s infinite ease-in-out;
 }
 
-.shape-1 { top: 15%; left: 10%; animation-delay: 0s; }
-.shape-2 { bottom: 20%; right: 10%; animation-delay: -3s; }
-.shape-3 { top: 40%; right: 15%; animation-delay: -7s; }
+.shape-1 {
+  top: 15%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  bottom: 20%;
+  right: 10%;
+  animation-delay: -3s;
+}
+
+.shape-3 {
+  top: 40%;
+  right: 15%;
+  animation-delay: -7s;
+}
 
 /* Luxury Badge */
 .badge-container {
@@ -119,6 +172,7 @@
 .gradient-text {
   background: linear-gradient(135deg, #00a68c, #c9a14a, #006d5b);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% 200%;
   animation: gradientFlow 5s ease infinite;
@@ -212,7 +266,10 @@
   color: #00a68c;
 }
 
-.stat-trend.positive { background: rgba(40, 167, 69, 0.1); color: #28a745; }
+.stat-trend.positive {
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
 
 /* Section Title */
 .section-title {
@@ -491,8 +548,15 @@
   color: #006d5b;
 }
 
-.top-right { top: 20px; right: 20px; }
-.bottom-left { bottom: 20px; left: 20px; }
+.top-right {
+  top: 20px;
+  right: 20px;
+}
+
+.bottom-left {
+  bottom: 20px;
+  left: 20px;
+}
 
 .product-flow {
   position: absolute;
@@ -502,13 +566,20 @@
   gap: 10px;
 }
 
-.product-1, .product-2, .product-3 {
+.product-1,
+.product-2,
+.product-3 {
   animation: slideIn 3s infinite;
   color: #c9a14a;
 }
 
-.product-2 { animation-delay: 0.5s; }
-.product-3 { animation-delay: 1s; }
+.product-2 {
+  animation-delay: 0.5s;
+}
+
+.product-3 {
+  animation-delay: 1s;
+}
 
 /* Testimonial Cards */
 .testimonial-card {
@@ -559,48 +630,117 @@
 
 /* Animations */
 @keyframes floatOrb {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(50px, -50px) scale(1.1); }
-  50% { transform: translate(-30px, 30px) scale(0.9); }
-  75% { transform: translate(-50px, -30px) scale(1.05); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(50px, -50px) scale(1.1);
+  }
+
+  50% {
+    transform: translate(-30px, 30px) scale(0.9);
+  }
+
+  75% {
+    transform: translate(-50px, -30px) scale(1.05);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  33% { transform: translate(30px, -30px) rotate(120deg); }
-  66% { transform: translate(-30px, 30px) rotate(240deg); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  33% {
+    transform: translate(30px, -30px) rotate(120deg);
+  }
+
+  66% {
+    transform: translate(-30px, 30px) rotate(240deg);
+  }
 }
 
 @keyframes floatIcon {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 @keyframes pulse {
-  0% { transform: scale(0.8); opacity: 1; }
-  100% { transform: scale(1.5); opacity: 0; }
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
 }
 
 @keyframes slideIn {
-  0% { transform: translateX(0); opacity: 1; }
-  50% { transform: translateX(20px); opacity: 0.5; }
-  100% { transform: translateX(0); opacity: 1; }
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateX(20px);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes gradientFlow {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes badgeShine {
-  0% { transform: translateX(-100%) rotate(45deg); }
-  20%, 100% { transform: translateX(100%) rotate(45deg); }
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+
+  20%,
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
 }
 
 @keyframes buttonShine {
-  0% { transform: translateX(-100%) rotate(45deg); }
-  20% { transform: translateX(100%) rotate(45deg); }
-  100% { transform: translateX(100%) rotate(45deg); }
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+
+  20% {
+    transform: translateX(100%) rotate(45deg);
+  }
+
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
 }
 
 /* Ripple Effect */
@@ -614,15 +754,29 @@
 }
 
 @keyframes ripple {
-  to { transform: scale(4); opacity: 0; }
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .section-title { font-size: 1.75rem; }
-  .stat-number { font-size: 2rem; }
-  .team-card { padding: 1.5rem; }
-  .process-timeline { padding-left: 40px; }
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .team-card {
+    padding: 1.5rem;
+  }
+
+  .process-timeline {
+    padding-left: 40px;
+  }
 }
 
 
@@ -630,310 +784,366 @@
 
 /* Step Number Colors */
 .step-number {
-    background: linear-gradient(135deg, #00a68c, #006d5b);  /* Teal to dark teal gradient */
-    color: #ffffff;  /* White text */
-    box-shadow: 0 4px 10px rgba(0, 166, 140, 0.3);  /* Soft teal shadow */
+  background: linear-gradient(135deg, #00a68c, #006d5b);
+  /* Teal to dark teal gradient */
+  color: #ffffff;
+  /* White text */
+  box-shadow: 0 4px 10px rgba(0, 166, 140, 0.3);
+  /* Soft teal shadow */
 }
 
 /* Step Progress Line */
 .step-progress {
-    background: linear-gradient(180deg, #00a68c, rgba(0, 166, 140, 0.2));  /* Teal gradient fade */
+  background: linear-gradient(180deg, #00a68c, rgba(0, 166, 140, 0.2));
+  /* Teal gradient fade */
 }
 
 /* Glass Card Background */
 .step-content.glass-card {
-    background: rgba(255, 255, 255, 0.85);  /* Semi-transparent white */
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 166, 140, 0.15);  /* Subtle teal border */
-    box-shadow: 0 8px 25px rgba(0, 109, 91, 0.08);  /* Soft dark teal shadow */
+  background: rgba(255, 255, 255, 0.85);
+  /* Semi-transparent white */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 166, 140, 0.15);
+  /* Subtle teal border */
+  box-shadow: 0 8px 25px rgba(0, 109, 91, 0.08);
+  /* Soft dark teal shadow */
 }
 
 /* Step Content Hover Effect */
 .step-content.glass-card:hover {
-    border-color: rgba(0, 166, 140, 0.4);  /* Brighter teal border on hover */
-    box-shadow: 0 15px 35px rgba(0, 166, 140, 0.15);  /* Enhanced teal shadow */
+  border-color: rgba(0, 166, 140, 0.4);
+  /* Brighter teal border on hover */
+  box-shadow: 0 15px 35px rgba(0, 166, 140, 0.15);
+  /* Enhanced teal shadow */
 }
 
 /* Step Title */
 .step-content h4 {
-    color: #003c30;  /* Deep forest green */
-    font-weight: 600;
+  color: #003c30;
+  /* Deep forest green */
+  font-weight: 600;
 }
 
 /* Step Description */
 .step-content p {
-    color: #4a635d;  /* Muted teal-gray */
+  color: #4a635d;
+  /* Muted teal-gray */
 }
 
 /* Demo Icons Container */
 .step-demo {
-    background: rgba(0, 166, 140, 0.05);  /* Very light teal background */
-    border-radius: 12px;
-    padding: 12px;
+  background: rgba(0, 166, 140, 0.05);
+  /* Very light teal background */
+  border-radius: 12px;
+  padding: 12px;
 }
 
 /* Demo Icons */
 .step-demo i {
-    color: #00a68c;  /* Primary teal */
+  color: #00a68c;
+  /* Primary teal */
 }
 
 .step-demo i.fa-sync-alt {
-    color: #c9a14a;  /* Gold accent for sync icon */
+  color: #c9a14a;
+  /* Gold accent for sync icon */
 }
 
 .step-demo i.fa-robot {
-    color: #c9a14a;  /* Gold accent for robot */
+  color: #c9a14a;
+  /* Gold accent for robot */
 }
 
 .step-demo i.fa-lightbulb {
-    color: #ffc107;  /* Bright yellow for lightbulb */
+  color: #ffc107;
+  /* Bright yellow for lightbulb */
 }
 
 .step-demo i.fa-lock {
-    color: #28a745;  /* Green for security */
+  color: #28a745;
+  /* Green for security */
 }
 
 .step-demo i.fa-check-circle {
-    color: #00a68c;  /* Teal for success */
+  color: #00a68c;
+  /* Teal for success */
 }
 
 /* Step Separators */
 .step-demo span {
-    color: #c9a14a;  /* Gold for arrows and symbols */
-    font-weight: 500;
+  color: #c9a14a;
+  /* Gold for arrows and symbols */
+  font-weight: 500;
 }
 
 /* Step Indicator Container */
 .step-indicator {
-    filter: drop-shadow(0 4px 6px rgba(0, 109, 91, 0.15));  /* Subtle shadow */
+  filter: drop-shadow(0 4px 6px rgba(0, 109, 91, 0.15));
+  /* Subtle shadow */
 }
 
 /* Active/Hover State for Steps */
 .process-step:hover .step-number {
-    background: linear-gradient(135deg, #c9a14a, #b38b3f);  /* Gold gradient on hover */
-    box-shadow: 0 6px 15px rgba(201, 161, 74, 0.4);  /* Gold shadow */
+  background: linear-gradient(135deg, #c9a14a, #b38b3f);
+  /* Gold gradient on hover */
+  box-shadow: 0 6px 15px rgba(201, 161, 74, 0.4);
+  /* Gold shadow */
 }
 
 .process-step:hover .step-content.glass-card {
-    border-left: 4px solid #c9a14a;  /* Gold left border on hover */
+  border-left: 4px solid #c9a14a;
+  /* Gold left border on hover */
 }
 
 /* Progress Line Animation Color */
 @keyframes progressGlow {
-    0% { background: linear-gradient(180deg, #00a68c, rgba(0, 166, 140, 0.2)); }
-    50% { background: linear-gradient(180deg, #c9a14a, rgba(201, 161, 74, 0.2)); }
-    100% { background: linear-gradient(180deg, #00a68c, rgba(0, 166, 140, 0.2)); }
+  0% {
+    background: linear-gradient(180deg, #00a68c, rgba(0, 166, 140, 0.2));
+  }
+
+  50% {
+    background: linear-gradient(180deg, #c9a14a, rgba(201, 161, 74, 0.2));
+  }
+
+  100% {
+    background: linear-gradient(180deg, #00a68c, rgba(0, 166, 140, 0.2));
+  }
 }
 
 .step-progress {
-    animation: progressGlow 3s infinite ease-in-out;
+  animation: progressGlow 3s infinite ease-in-out;
 }
 
 .step-number {
-    background: linear-gradient(135deg, var(--primary-teal), var(--primary-dark-teal));
-    color: var(--pure-white);
+  background: linear-gradient(135deg, var(--primary-teal), var(--primary-dark-teal));
+  color: var(--pure-white);
 }
 
 .step-content h4 {
-    color: var(--primary-deep-green);
+  color: var(--primary-deep-green);
 }
 
 .step-content p {
-    color: var(--text-muted);
+  color: var(--text-muted);
 }
 
 .step-demo i.fa-shopping-cart,
 .step-demo i.fa-check-circle {
-    color: var(--primary-teal);
+  color: var(--primary-teal);
 }
 
 .step-demo i.fa-sync-alt,
 .step-demo i.fa-robot {
-    color: var(--accent-gold);
+  color: var(--accent-gold);
 }
 
 .step-demo span {
-    color: var(--accent-gold);
+  color: var(--accent-gold);
 }
 
 
 /* Process Timeline Container */
 .process-timeline {
-    position: relative;
-    padding-left: 60px;
-    margin: 30px 0;
+  position: relative;
+  padding-left: 60px;
+  margin: 30px 0;
 }
 
 /* Individual Step */
 .process-step {
-    position: relative;
-    margin-bottom: 40px;
-    display: flex;
-    align-items: flex-start;
+  position: relative;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: flex-start;
 }
 
 /* Step Indicator */
 .step-indicator {
-    position: absolute;
-    left: -60px;
-    top: 0;
-    width: 45px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  position: absolute;
+  left: -60px;
+  top: 0;
+  width: 45px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Step Number Circle */
 .step-number {
-    width: 45px;
-    height: 45px;
-    background: linear-gradient(135deg, #00a68c, #006d5b);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 700;
-    font-size: 1.3rem;
-    box-shadow: 0 5px 15px rgba(0, 166, 140, 0.3);
-    z-index: 2;
-    position: relative;
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #00a68c, #006d5b);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1.3rem;
+  box-shadow: 0 5px 15px rgba(0, 166, 140, 0.3);
+  z-index: 2;
+  position: relative;
 }
 
 /* Progress Line */
 .step-progress {
-    width: 3px;
-    height: 70px;
-    background: linear-gradient(180deg, #00a68c, rgba(0, 166, 140, 0.2));
-    margin-top: 5px;
+  width: 3px;
+  height: 70px;
+  background: linear-gradient(180deg, #00a68c, rgba(0, 166, 140, 0.2));
+  margin-top: 5px;
 }
 
 /* Remove progress line from last step */
 .process-step:last-child .step-progress {
-    display: none;
+  display: none;
 }
 
 /* Step Content Card */
 .step-content {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 166, 140, 0.2);
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 10px 30px rgba(0, 109, 91, 0.1);
-    transition: all 0.3s ease;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 166, 140, 0.2);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 109, 91, 0.1);
+  transition: all 0.3s ease;
 }
 
 .step-content:hover {
-    transform: translateY(-5px);
-    border-color: #00a68c;
-    box-shadow: 0 15px 40px rgba(0, 166, 140, 0.2);
+  transform: translateY(-5px);
+  border-color: #00a68c;
+  box-shadow: 0 15px 40px rgba(0, 166, 140, 0.2);
 }
 
 /* Step Title */
 .step-content h4 {
-    color: #003c30;
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 10px;
+  color: #003c30;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
 /* Step Description */
 .step-content p {
-    color: #4a635d;
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 20px;
+  color: #4a635d;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
 }
 
 /* Demo Section */
 .step-demo {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: rgba(0, 166, 140, 0.05);
-    padding: 15px 20px;
-    border-radius: 15px;
-    margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(0, 166, 140, 0.05);
+  padding: 15px 20px;
+  border-radius: 15px;
+  margin-top: 15px;
 }
 
 /* Icons in Demo */
 .step-demo i {
-    font-size: 1.5rem;
-    width: 30px;
-    text-align: center;
+  font-size: 1.5rem;
+  width: 30px;
+  text-align: center;
 }
 
 /* Individual Icon Colors */
-.step-demo .fa-shopping-cart { color: #00a68c; }
-.step-demo .fa-mobile-alt { color: #006d5b; }
-.step-demo .fa-sync-alt { color: #c9a14a; }
-.step-demo .fa-robot { color: #c9a14a; }
-.step-demo .fa-lightbulb { color: #ffc107; }
-.step-demo .fa-lock { color: #28a745; }
-.step-demo .fa-check-circle { color: #00a68c; }
+.step-demo .fa-shopping-cart {
+  color: #00a68c;
+}
+
+.step-demo .fa-mobile-alt {
+  color: #006d5b;
+}
+
+.step-demo .fa-sync-alt {
+  color: #c9a14a;
+}
+
+.step-demo .fa-robot {
+  color: #c9a14a;
+}
+
+.step-demo .fa-lightbulb {
+  color: #ffc107;
+}
+
+.step-demo .fa-lock {
+  color: #28a745;
+}
+
+.step-demo .fa-check-circle {
+  color: #00a68c;
+}
 
 /* Symbols (+, =, →, ✓) */
-.step-plus, 
-.step-equals, 
-.step-arrow, 
+.step-plus,
+.step-equals,
+.step-arrow,
 .step-check {
-    color: #c9a14a;
-    font-size: 1.3rem;
-    font-weight: 600;
-    min-width: 20px;
-    text-align: center;
+  color: #c9a14a;
+  font-size: 1.3rem;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
 }
 
 /* Spin Animation for Sync Icon */
 .fa-spin {
-    animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
 }
 
 @keyframes fa-spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Hover Effects */
 .process-step:hover .step-number {
-    background: linear-gradient(135deg, #c9a14a, #b38b3f);
-    transform: scale(1.1);
-    transition: transform 0.3s ease;
+  background: linear-gradient(135deg, #c9a14a, #b38b3f);
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
 }
 
 .process-step:hover .step-progress {
-    background: linear-gradient(180deg, #c9a14a, rgba(201, 161, 74, 0.2));
+  background: linear-gradient(180deg, #c9a14a, rgba(201, 161, 74, 0.2));
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .process-timeline {
-        padding-left: 50px;
-    }
-    
-    .step-indicator {
-        left: -50px;
-        width: 40px;
-    }
-    
-    .step-number {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
-    }
-    
-    .step-progress {
-        height: 60px;
-    }
-    
-    .step-content {
-        padding: 20px;
-    }
-    
-    .step-demo {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
+  .process-timeline {
+    padding-left: 50px;
+  }
+
+  .step-indicator {
+    left: -50px;
+    width: 40px;
+  }
+
+  .step-number {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+
+  .step-progress {
+    height: 60px;
+  }
+
+  .step-content {
+    padding: 20px;
+  }
+
+  .step-demo {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 }

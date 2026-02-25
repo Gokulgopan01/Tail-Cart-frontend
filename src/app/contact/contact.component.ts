@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.css']
 })
-export class ContactComponent  implements AfterViewInit, OnDestroy {
+export class ContactComponent implements AfterViewInit, OnDestroy {
   @ViewChild('particleCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   private ctx!: CanvasRenderingContext2D | null;
@@ -41,24 +41,24 @@ export class ContactComponent  implements AfterViewInit, OnDestroy {
   private resizeCanvas(): void {
     const canvas = this.canvasRef.nativeElement;
     const container = canvas.parentElement;
-    
+
     if (container) {
       canvas.width = container.clientWidth;
       canvas.height = container.clientHeight;
     }
   }
 
-  private setupEventListeners(): void {    
+  private setupEventListeners(): void {
     const canvas = this.canvasRef.nativeElement;
     canvas.addEventListener('mousemove', this.handleMouseMove.bind(this));
     canvas.addEventListener('mouseleave', () => this.mouseX = this.mouseY = -1000);
   }
 
   @HostListener('window:resize')
-    handleResize(): void {
-      this.resizeCanvas();
-      this.createParticles();
-    }
+  handleResize(): void {
+    this.resizeCanvas();
+    this.createParticles();
+  }
 
   private handleMouseMove(e: MouseEvent): void {
     const rect = this.canvasRef.nativeElement.getBoundingClientRect();
@@ -69,7 +69,7 @@ export class ContactComponent  implements AfterViewInit, OnDestroy {
   private createParticles(): void {
     const canvas = this.canvasRef.nativeElement;
     const particleCount = Math.floor((canvas.width * canvas.height) / 6000);
-    
+
     this.particles = [];
 
     for (let i = 0; i < particleCount; i++) {
@@ -95,96 +95,35 @@ export class ContactComponent  implements AfterViewInit, OnDestroy {
   private animate(): void {
     const canvas = this.canvasRef.nativeElement;
     const ctx = this.ctx;
-    
     if (!ctx) return;
 
-    // Clear with fade effect
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Update and draw particles
-    this.particles.forEach(particle => {
-      // Update position
-      particle.x += particle.vx;
-      particle.y += particle.vy;
+    this.particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
 
-      // Boundary collision
-      if (particle.x < 0 || particle.x > canvas.width) {
-        particle.vx *= -1;
-        particle.x = Math.max(0, Math.min(canvas.width, particle.x));
-      }
-      if (particle.y < 0 || particle.y > canvas.height) {
-        particle.vy *= -1;
-        particle.y = Math.max(0, Math.min(canvas.height, particle.y));
-      }
-
-      // Pulse effect
-      particle.pulse += particle.pulseSpeed;
-      const pulseScale = 1 + Math.sin(particle.pulse) * 0.2;
-
-      // Mouse interaction
-      const dx = this.mouseX - particle.x;
-      const dy = this.mouseY - particle.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      if (distance < 100) {
-        const angle = Math.atan2(dy, dx);
-        const force = (100 - distance) / 100 * 0.3;
-        particle.x -= Math.cos(angle) * force;
-        particle.y -= Math.sin(angle) * force;
-      }
+      // Wrap around screen
+      if (p.x > canvas.width) p.x = 0;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.y > canvas.height) p.y = 0;
+      if (p.y < 0) p.y = canvas.height;
 
       // Draw particle
       ctx.beginPath();
-      ctx.arc(particle.x, particle.y, particle.size * pulseScale, 0, Math.PI * 2);
-      
-      const gradient = ctx.createRadialGradient(
-        particle.x, particle.y, 0,
-        particle.x, particle.y, particle.size * 2
-      );
-      gradient.addColorStop(0, `rgba(${this.hexToRgb(particle.color)}, ${particle.opacity})`);
-      gradient.addColorStop(1, `rgba(${this.hexToRgb(particle.color)}, 0)`);
-      
-      ctx.fillStyle = gradient;
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = 0.4;
       ctx.fill();
     });
-
-    // Draw connections
-    this.drawConnections(ctx);
 
     this.animationFrameId = requestAnimationFrame(() => this.animate());
   }
 
-  private drawConnections(ctx: CanvasRenderingContext2D): void {
-    for (let i = 0; i < this.particles.length; i++) {
-      for (let j = i + 1; j < this.particles.length; j++) {
-        const p1 = this.particles[i];
-        const p2 = this.particles[j];
-        const dx = p1.x - p2.x;
-        const dy = p1.y - p2.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < 120) {
-          const opacity = (1 - distance / 120) * 0.15;
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          
-          const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
-          gradient.addColorStop(0, `rgba(0, 166, 140, ${opacity})`);
-          gradient.addColorStop(1, `rgba(201, 161, 74, ${opacity})`);
-          
-          ctx.strokeStyle = gradient;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    }
-  }
-
   private hexToRgb(hex: string): string {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? 
-      `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : 
+    return result ?
+      `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` :
       '0, 166, 140';
   }
 
@@ -198,10 +137,10 @@ export class ContactComponent  implements AfterViewInit, OnDestroy {
         this.clickCount++;
         countSpan.textContent = this.clickCount.toString();
         counter.style.display = 'block';
-        
+
         // Add ripple effect
         this.createRipple(button);
-        
+
         // Hide after 3 seconds
         setTimeout(() => {
           if (this.clickCount === 0) {

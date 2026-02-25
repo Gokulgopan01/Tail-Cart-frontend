@@ -1,0 +1,199 @@
+/* About Us - Luxury Particle Experience */
+
+:host {
+    display: block;
+}
+
+.about-page {
+    position: relative;
+    min-height: 100vh;
+    background: #fbfcfd;
+    color: var(--text-dark);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.particle-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.content-container {
+    position: relative;
+    z-index: 2;
+    padding: 100px 20px 80px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.main-title {
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: var(--primary-dark-green);
+    letter-spacing: -2px;
+    margin-bottom: 10px;
+}
+
+.tagline {
+    font-size: 1.25rem;
+    color: var(--accent-gold);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.luxury-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 80px;
+}
+
+.about-card {
+    padding: 40px;
+    border-radius: 35px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(201, 161, 74, 0.2);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.03);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 25px 60px rgba(201, 161, 74, 0.15);
+    border-color: var(--accent-gold);
+}
+
+.card-icon {
+    font-size: 2.2rem;
+    color: var(--primary-dark-green);
+    margin-bottom: 25px;
+}
+
+.about-card h3 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--primary-dark-green);
+    margin-bottom: 15px;
+}
+
+.about-card p {
+    line-height: 1.8;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.about-footer {
+    text-align: center;
+    padding-top: 40px;
+    border-top: 1px solid rgba(0, 60, 48, 0.1);
+}
+
+.brand-signature {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.logo-text-small {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--primary-dark-green);
+}
+
+.establish-date {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.footer-msg {
+    font-size: 0.95rem;
+    color: var(--gray);
+    font-style: italic;
+}
+
+/* Animations */
+.animate-up {
+    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.delay-1 {
+    animation-delay: 0.2s;
+}
+
+.delay-2 {
+    animation-delay: 0.4s;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 368px Mobile Precision */
+@media (max-width: 500px) {
+    .main-title {
+        font-size: 2.2rem;
+        letter-spacing: -1px;
+    }
+
+    .tagline {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+
+    .content-container {
+        padding-top: 60px;
+    }
+}
+
+@media (max-width: 368px) {
+    .about-page {
+        width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .about-card {
+        padding: 30px 20px;
+        border-radius: 25px;
+    }
+
+    .about-card h3 {
+        font-size: 1.4rem;
+    }
+
+    .about-card p {
+        font-size: 0.95rem;
+    }
+
+    .luxury-grid {
+        gap: 20px;
+    }
+}
