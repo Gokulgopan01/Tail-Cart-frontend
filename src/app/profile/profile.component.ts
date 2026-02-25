@@ -38,12 +38,31 @@ export interface UserProfile {
   pets: Pet[];
 }
 
+import { trigger, transition, style, animate } from '@angular/animations';
+
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
+  animations: [
+    trigger('tabAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(10px)' }),
+        animate('400ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('modalFade', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms ease-out', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class ProfileComponent implements OnInit {
   // Profile data
@@ -166,6 +185,11 @@ export class ProfileComponent implements OnInit {
   handleImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
     img.src = this.getDefaultPetAvatar(this.selectedPet?.species || '');
+  }
+
+  handleOwnerImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/icons/avatar.svg';
   }
 
   toggleEditMode(): void {
@@ -474,7 +498,9 @@ export class ProfileComponent implements OnInit {
   }
 
   markAsLost(pet: Pet, event: Event): void {
-    event.stopPropagation();
+    const checkbox = event.target as HTMLInputElement;
+    const newStatus = checkbox.checked;
+
     if (!pet.pet_id || !this.userId) return;
 
     const token = localStorage.getItem('access_token');
@@ -486,19 +512,28 @@ export class ProfileComponent implements OnInit {
     const payload = {
       user_id: this.userId,
       pet_id: pet.pet_id,
-      is_lost: true
+      is_lost: newStatus
     };
 
     this.http.put(this.petsApi, payload, { headers }).subscribe({
       next: () => {
-        pet.is_lost = true;
-        this.showSnackbar(`${pet.pet_name} marked as lost`);
+        pet.is_lost = newStatus;
+        this.showSnackbar(`${pet.pet_name} status updated to ${newStatus ? 'Lost' : 'Safe'}`);
       },
       error: (error) => {
-        console.error('Mark lost error:', error);
+        console.error('Update status error:', error);
+        checkbox.checked = !newStatus; // Revert checkbox on error
         this.showSnackbar('Error updating pet status');
       }
     });
+  }
+
+  formatLocation(location: any): string {
+    if (!location) return 'Location not specified';
+    if (Array.isArray(location)) {
+      return location.filter(item => !!item).join(', ');
+    }
+    return location;
   }
 
 
