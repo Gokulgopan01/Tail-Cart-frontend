@@ -17,7 +17,10 @@ import { NavbarComponent } from './navbar/navbar.component';
     .main-content {
       min-height: 100vh;
       width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
       background: var(--bg-light);
+      position: relative;
     }
   `]
 })
