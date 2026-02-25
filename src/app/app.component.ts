@@ -1,7 +1,7 @@
 // app.component.ts
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NavbarComponent } from './navbar/navbar.component'; 
+import { NavbarComponent } from './navbar/navbar.component';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -9,28 +9,15 @@ import { NavbarComponent } from './navbar/navbar.component';
   template: `
     <app-navbar></app-navbar>
     
-    <main class="main-content">
+    <main class="main-content page-content-wrapper">
       <router-outlet></router-outlet>
     </main>
       `,
   styles: [`
     .main-content {
-      min-height: calc(100vh - 200px);
+      min-height: 100vh;
       width: 100%;
-      background: #f8fafc;
-      padding-top: 0 !important; /* Remove any default padding */
-      margin-top: 0 !important; /* Let navbar CSS handle this */
-    }
-    
-    /* Ensure content doesn't get hidden behind navbar */
-    .main-content > *:first-child {
-      padding-top: 20px;
-    }
-    
-    @media (min-width: 769px) {
-      .main-content {
-        width: 100%;
-      }
+      background: var(--bg-light);
     }
   `]
 })

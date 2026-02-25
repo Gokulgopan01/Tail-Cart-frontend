@@ -29,13 +29,14 @@ export class DoctorComponent implements OnInit {
   messages: ChatMessage[] = [];
   userInput: string = '';
   isAiTyping: boolean = false;
+  isThinking: boolean = false;
   showWelcomeScreen: boolean = true;
   showWelcomeInChat: boolean = true;
   showIncompleteNotice: boolean = false;
   errorMessage: string | null = null;
   isMobileView: boolean = false;
   isScrolledUp: boolean = false;
-  
+
   // Example prompts (exact from screenshot)
   examplePrompts: ExamplePrompt[] = [
     { id: 1, title: 'My dog is scratching a lot', subtitle: 'Skin & allergy concerns', category: 'health' },
@@ -53,7 +54,7 @@ export class DoctorComponent implements OnInit {
   private geminiApiKey = 'AIzaSyD_DUMMY_API_KEY_REPLACE_ME'; // Replace with your actual API key
   private geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     // Check if mobile view
@@ -74,13 +75,13 @@ export class DoctorComponent implements OnInit {
 
   // Handle chat scroll
   onChatScroll() {
-  if (this.chatContainer?.nativeElement) {
-    const container = this.chatContainer.nativeElement;
-    this.isScrolledUp =
-      container.scrollTop + container.clientHeight <
-      container.scrollHeight - 100;
+    if (this.chatContainer?.nativeElement) {
+      const container = this.chatContainer.nativeElement;
+      this.isScrolledUp =
+        container.scrollTop + container.clientHeight <
+        container.scrollHeight - 100;
+    }
   }
-}
 
   // Main function to handle user questions
   askDoctor(): void {
@@ -90,7 +91,7 @@ export class DoctorComponent implements OnInit {
 
     // Hide welcome screen and switch to chat interface
     this.showWelcomeScreen = false;
-    
+
     // Add user message
     const userMessage: ChatMessage = {
       id: this.messages.length + 1,
@@ -109,13 +110,13 @@ export class DoctorComponent implements OnInit {
     // Reset scroll position for new messages
     this.isScrolledUp = false;
 
-    // Show typing indicator
-    this.isAiTyping = true;
-    
+    // Show thinking indicator while waiting for API
+    this.isThinking = true;
+
     // Scroll to bottom immediately for new message
     setTimeout(() => {
-  this.scrollToBottom(true);
-}, 50);
+      this.scrollToBottom(true);
+    }, 50);
 
     // Call Gemini API
     this.callGeminiAPI(userText);
@@ -179,67 +180,66 @@ export class DoctorComponent implements OnInit {
   }
 
   handleAPIResponse(response: any, userInput: string): void {
-    this.isAiTyping = false;
+    this.isThinking = false;
     this.isScrolledUp = false;
-    
+
     let aiText = '';
-    
-    // Handle Gemini API response
-    if (response.candidates && response.candidates.length > 0 && 
-        response.candidates[0].content.parts.length > 0) {
+    if (response.candidates && response.candidates.length > 0 &&
+      response.candidates[0].content.parts.length > 0) {
       aiText = response.candidates[0].content.parts[0].text;
     } else {
-      // Fallback response
       aiText = this.getFallbackResponse(userInput);
     }
-    
-    // Add AI response to messages
-    this.messages.push({
-      id: this.messages.length + 1,
-      text: aiText,
-      sender: 'ai',
-      timestamp: new Date()
-    });
-    
-    // Hide welcome message in chat after first interaction
+
+    // Simulate typing effect
+    this.simulateTyping(aiText);
+
     if (this.showWelcomeInChat) {
       this.showWelcomeInChat = false;
     }
-    
-    // Scroll to show new message
-    setTimeout(() => {
-      this.scrollToBottom(true);
-    }, 100);
+  }
+
+  simulateTyping(fullText: string): void {
+    this.isAiTyping = true;
+    let currentText = '';
+    const words = fullText.split(' ');
+    let wordIndex = 0;
+
+    const newMessage: ChatMessage = {
+      id: this.messages.length + 1,
+      text: '',
+      sender: 'ai',
+      timestamp: new Date()
+    };
+    this.messages.push(newMessage);
+
+    const interval = setInterval(() => {
+      if (wordIndex < words.length) {
+        currentText += (wordIndex === 0 ? '' : ' ') + words[wordIndex];
+        newMessage.text = currentText;
+        wordIndex++;
+        this.scrollToBottom(true);
+      } else {
+        this.isAiTyping = false;
+        clearInterval(interval);
+      }
+    }, 40); // 40ms per word for a smooth high-speed "pet doctor" feel
   }
 
   handleAPIError(error: any, userInput: string): void {
-    this.isAiTyping = false;
+    this.isThinking = false;
     this.isScrolledUp = false;
-    
-    // Add fallback AI response
     const aiText = this.getFallbackResponse(userInput);
-    
-    this.messages.push({
-      id: this.messages.length + 1,
-      text: aiText,
-      sender: 'ai',
-      timestamp: new Date()
-    });
-    
-    // Hide welcome message in chat after first interaction
+    this.simulateTyping(aiText);
+
     if (this.showWelcomeInChat) {
       this.showWelcomeInChat = false;
     }
-    
-    // Scroll to show new message
-    setTimeout(() => {
-      this.scrollToBottom(true);
-    }, 100);
   }
 
   getFallbackResponse(userInput: string): string {
     const lowerInput = userInput.toLowerCase();
-    
+
     if (lowerInput.includes('scratch') || lowerInput.includes('itch') || lowerInput.includes('skin')) {
       return `For scratching or skin issues:\n\n• Check for fleas or parasites regularly\n• Consider allergies (food or environmental)\n• Try an oatmeal bath for temporary relief\n• Keep your pet's bedding clean\n• Consult your veterinarian for proper diagnosis\n\n*Note: This is general advice. Always consult a professional veterinarian for specific concerns.*`;
     } else if (lowerInput.includes('vaccin') || lowerInput.includes('shot')) {
@@ -253,7 +253,7 @@ export class DoctorComponent implements OnInit {
     } else if (lowerInput.includes('exercise') || lowerInput.includes('activity')) {
       return `**Exercise Needs by Pet Type:**\n\n**Dogs:**\n• 30 minutes to 2 hours daily based on breed/age\n• Mix of walking, playing, and mental stimulation\n• Adjust for age and health conditions\n\n**Cats:**\n• 15-30 minutes of active play daily\n• Interactive toys and climbing structures\n• Food puzzles for mental stimulation\n\n**General Guidelines:**\n• Start slow with new routines\n• Watch for overheating in warm weather\n• Provide plenty of fresh water\n• Adjust based on individual pet's energy level\n\n*Always consult your vet before starting new exercise routines.*`;
     }
-    
+
     return "Hello! I'm your AI veterinary assistant. I'm here to help with questions about your pet's health, behavior, nutrition, or general care. Could you tell me more about what you're concerned about? I'll do my best to provide helpful information and guidance. Remember, for serious or emergency situations, please contact your veterinarian immediately.";
   }
 
@@ -265,7 +265,7 @@ export class DoctorComponent implements OnInit {
       if (this.chatInput) {
         this.chatInput.nativeElement.focus();
         this.chatInput.nativeElement.setSelectionRange(
-          this.userInput.length, 
+          this.userInput.length,
           this.userInput.length
         );
       }
@@ -300,11 +300,11 @@ export class DoctorComponent implements OnInit {
   }
 
   scrollToBottom(force: boolean = false): void {
-  if (this.chatContainer?.nativeElement && (force || !this.isScrolledUp)) {
-    const container = this.chatContainer.nativeElement;
-    container.scrollTop = container.scrollHeight;
+    if (this.chatContainer?.nativeElement && (force || !this.isScrolledUp)) {
+      const container = this.chatContainer.nativeElement;
+      container.scrollTop = container.scrollHeight;
+    }
   }
-}
 
   // Auto-resize textarea
   adjustTextareaHeight(): void {

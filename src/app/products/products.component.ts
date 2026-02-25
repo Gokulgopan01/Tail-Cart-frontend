@@ -77,7 +77,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   loadingPets = false;
   loadingCart = false;
   showCartModal = false;
-  
+
   // Admin variables
   showAddProductModal = false;
   isCreatingProduct = false;
@@ -86,7 +86,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   productToDelete: Product | null = null;
   isDeleting = false;
   isDraggingOver = false;
-  
+
   newProduct = {
     model: '',
     product_info: '',
@@ -97,19 +97,19 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     deals: '',
     image: null as File | null
   };
-  
+
   // Pagination
   currentPage: number = 1;
-  productsPerPage: number = 12;
+  productsPerPage: number = 10;
   totalPages: number = 1;
-  
+
   // Infinite Scroll
   isLoadingMore: boolean = false;
   allProductsLoaded: boolean = false;
-  
+
   // Mobile view
   isMobileView: boolean = false;
-  
+
   // Filters
   filters: Filters = {
     breeds: { dog: false, cat: false },
@@ -120,21 +120,24 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   };
 
   sortOption: string = 'newest';
+  // New UI variables
+  isGridView: boolean = true;
+  searchQuery: string = '';
   isMobileFiltersOpen = false;
-  
+
   // Variables for modal cart inputs
   showPetIdInput = false;
   showQuantityInput = false;
   selectedProductForCart: Product | null = null;
   selectedPetId: string = '';
   quantity: number = 1;
-  
+
   // Quick view modal
   showQuickView = false;
 
   private getHeaders(useFormData: boolean = false) {
     const token = localStorage.getItem('access_token');
-    
+
     if (useFormData) {
       return {
         headers: {
@@ -142,7 +145,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         }
       };
     }
-    
+
     // For JSON requests
     return {
       headers: {
@@ -161,12 +164,12 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       document.body.style.width = '100%';
     } else {
       const scrollY = document.body.style.top;
-      
+
       // Restore styles
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.width = '';
-      
+
       // Restore scroll position
       if (scrollY) {
         window.scrollTo(0, parseInt(scrollY || '0') * -1);
@@ -174,7 +177,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
+  constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
 
   private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
   private productsApi = 'http://127.0.0.1:8000/api/admin/products/';
@@ -186,7 +189,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.loadUserPets();
     this.loadCartItems();
   }
-  
+
   ngAfterViewInit() {
     setTimeout(() => {
       this.initScrollAnimations();
@@ -216,6 +219,29 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       });
   }
 
+  toggleViewMode(isGrid: boolean) {
+    this.isGridView = isGrid;
+  }
+
+  updateSearch() {
+    this.applyFilters();
+  }
+
+  onPetFilterChange(event: any) {
+    const value = event.target.value;
+    if (value === 'all') {
+      this.filters.breeds.dog = false;
+      this.filters.breeds.cat = false;
+    } else if (value === 'Dog') {
+      this.filters.breeds.dog = true;
+      this.filters.breeds.cat = false;
+    } else if (value === 'Cat') {
+      this.filters.breeds.dog = false;
+      this.filters.breeds.cat = true;
+    }
+    this.applyFilters();
+  }
+
   loadCartItems(): void {
     const userId = localStorage.getItem('user_id');
     if (!userId) return;
@@ -237,12 +263,12 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   getCartCount(): number {
     return this.cartItems.reduce((total, item) => total + item.quantity, 0);
   }
-  
+
   @HostListener('window:resize')
   onResize() {
     this.checkMobileView();
   }
-  
+
   checkMobileView() {
     this.isMobileView = window.innerWidth <= 768;
   }
@@ -254,7 +280,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
           entry.target.classList.add('animated');
         }
       });
-    }, { 
+    }, {
       threshold: 0.1,
       rootMargin: '0px 0px -10% 0px'
     });
@@ -301,7 +327,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.showPetIdInput = false;
     this.showQuantityInput = false;
     this.showQuickView = true;
-    
+
     // FIX: Use the new method
     this.toggleBodyScroll(true);
   }
@@ -313,7 +339,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.quantity = 1;
     this.showPetIdInput = false;
     this.showQuantityInput = false;
-    
+
     // FIX: Use the new method
     this.toggleBodyScroll(false);
   }
@@ -339,7 +365,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   onAddToCartClick(product: Product, event: Event): void {
     event.stopPropagation();
     this.selectedProductForCart = product;
-    
+
     // Check if user is logged in
     const userId = localStorage.getItem('user_id');
     if (!userId) {
@@ -373,7 +399,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       this.showSnackbar('Please enter a valid quantity!', 'error');
       return;
     }
-    
+
     this.confirmAddToCart();
   }
 
@@ -384,11 +410,11 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     }
 
     const userId = localStorage.getItem('user_id');
-    const payload = { 
-      owner: userId, 
-      pet: this.selectedPetId, 
-      product: this.selectedProductForCart.id, 
-      quantity: this.quantity 
+    const payload = {
+      owner: userId,
+      pet: this.selectedPetId,
+      product: this.selectedProductForCart.id,
+      quantity: this.quantity
     };
 
     this.http.post(this.cartApi, payload, this.getHeaders()).subscribe({
@@ -445,12 +471,12 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       if (product.price > this.filters.priceRange) return false;
 
       if ((this.filters.breeds.dog || this.filters.breeds.cat) &&
-          !((this.filters.breeds.dog && product.breed === 'Dog') ||
-            (this.filters.breeds.cat && product.breed === 'Cat'))) return false;
+        !((this.filters.breeds.dog && product.breed === 'Dog') ||
+          (this.filters.breeds.cat && product.breed === 'Cat'))) return false;
 
       if ((this.filters.deals.hotSale || this.filters.deals.bestseller) &&
-          !((this.filters.deals.hotSale && product.deals === 'Hot Sale') ||
-            (this.filters.deals.bestseller && product.deals === 'Bestseller'))) return false;
+        !((this.filters.deals.hotSale && product.deals === 'Hot Sale') ||
+          (this.filters.deals.bestseller && product.deals === 'Bestseller'))) return false;
 
       if ((this.filters.materials.glass || this.filters.materials.wood || this.filters.materials.plastic)) {
         const description = product.product_info.toLowerCase();
@@ -461,9 +487,10 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         if (!materialMatch) return false;
       }
 
-      if (this.filters.minRating > 0) {
-        const rating = parseFloat(product.reviews) || 0;
-        if (rating < this.filters.minRating) return false;
+      if (this.searchQuery) {
+        const query = this.searchQuery.toLowerCase();
+        if (!product.model.toLowerCase().includes(query) &&
+          !product.product_info.toLowerCase().includes(query)) return false;
       }
 
       return true;
@@ -474,29 +501,34 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
 
   applySorting() {
-    switch(this.sortOption) {
-      case 'priceLow': 
-        this.filteredProducts.sort((a,b) => a.price - b.price); 
+    switch (this.sortOption) {
+      case 'priceLow':
+        this.filteredProducts.sort((a, b) => a.price - b.price);
         break;
-      case 'priceHigh': 
-        this.filteredProducts.sort((a,b) => b.price - a.price); 
+      case 'priceHigh':
+        this.filteredProducts.sort((a, b) => b.price - a.price);
         break;
-      case 'name': 
-        this.filteredProducts.sort((a,b) => a.model.localeCompare(b.model)); 
+      case 'name':
+        this.filteredProducts.sort((a, b) => a.model.localeCompare(b.model));
         break;
-      case 'newest': 
-      default: 
-        this.filteredProducts.sort((a,b) => b.id - a.id);
+      case 'newest':
+      default:
+        this.filteredProducts.sort((a, b) => b.id - a.id);
         break;
     }
     this.updatePagination();
   }
 
+  loadMore() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
   updatePagination() {
     this.totalPages = Math.ceil(this.filteredProducts.length / this.productsPerPage);
-    this.currentPage = Math.min(this.currentPage, Math.max(1, this.totalPages));
-    const startIndex = (this.currentPage - 1) * this.productsPerPage;
-    const endIndex = startIndex + this.productsPerPage;
+    const endIndex = this.currentPage * this.productsPerPage;
     this.paginatedProducts = this.filteredProducts.slice(0, endIndex);
     this.allProductsLoaded = endIndex >= this.filteredProducts.length;
   }
@@ -506,7 +538,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 >= 0.5 ? 1 : 0;
     const emptyStars = 5 - fullStars - halfStar;
-    
+
     return '★'.repeat(fullStars) + (halfStar ? '½' : '') + '☆'.repeat(emptyStars);
   }
 
@@ -528,28 +560,28 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
 
   toggleMobileFilters() {
-  this.isMobileFiltersOpen = !this.isMobileFiltersOpen;
-  if (this.isMobileFiltersOpen) {
-    document.body.classList.add('is-mobile-filters-open');
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.classList.remove('is-mobile-filters-open');
-    document.body.style.overflow = '';
+    this.isMobileFiltersOpen = !this.isMobileFiltersOpen;
+    if (this.isMobileFiltersOpen) {
+      document.body.classList.add('is-mobile-filters-open');
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.classList.remove('is-mobile-filters-open');
+      document.body.style.overflow = '';
+    }
   }
-}
 
 
   closeMobileFilters() {
-  this.isMobileFiltersOpen = false;
-  document.body.classList.remove('is-mobile-filters-open');
-  document.body.style.overflow = '';
-}
+    this.isMobileFiltersOpen = false;
+    document.body.classList.remove('is-mobile-filters-open');
+    document.body.style.overflow = '';
+  }
 
   onImageLoad(event: Event) {
     const img = event.target as HTMLImageElement;
     img.classList.add('loaded');
   }
-  
+
   onImageError(event: Event) {
     const img = event.target as HTMLImageElement;
     img.src = 'assets/images/default-product.jpg';
@@ -567,13 +599,13 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
   // Existing admin methods remain the same
   openAddProductModal() {
-  this.resetNewProduct();
-  this.showAddProductModal = true;
-  this.editingProduct = null;
-  
-  // Lock body scroll when modal opens
-  this.toggleBodyScroll(true);
-}
+    this.resetNewProduct();
+    this.showAddProductModal = true;
+    this.editingProduct = null;
+
+    // Lock body scroll when modal opens
+    this.toggleBodyScroll(true);
+  }
 
   openEditProductModal(product: Product) {
     this.newProduct = {
@@ -588,7 +620,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     };
     this.editingProduct = product;
     this.showAddProductModal = true;
-    
+
     // FIX: Use the new method
     this.toggleBodyScroll(true);
   }
@@ -597,7 +629,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.showAddProductModal = false;
     this.editingProduct = null;
     this.resetNewProduct();
-    
+
     // FIX: Use the new method
     this.toggleBodyScroll(false);
   }
@@ -638,7 +670,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     event.preventDefault();
     event.stopPropagation();
     this.isDraggingOver = false;
-    
+
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
       const file = files[0];
@@ -671,15 +703,15 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     formData.append('price', this.newProduct.price.toString());
     formData.append('breed', this.newProduct.breed);
     formData.append('quantity', this.newProduct.quantity.toString());
-    
+
     if (this.newProduct.reviews) {
       formData.append('reviews', this.newProduct.reviews);
     }
-    
+
     if (this.newProduct.deals) {
       formData.append('deals', this.newProduct.deals);
     }
-    
+
     if (this.newProduct.image) {
       formData.append('image', this.newProduct.image, this.newProduct.image.name);
     }
@@ -722,27 +754,27 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       this.showSnackbar('Product model is required', 'error');
       return false;
     }
-    
+
     if (!this.newProduct.product_info.trim()) {
       this.showSnackbar('Product description is required', 'error');
       return false;
     }
-    
+
     if (this.newProduct.price <= 0) {
       this.showSnackbar('Price must be greater than 0', 'error');
       return false;
     }
-    
+
     if (!this.newProduct.breed) {
       this.showSnackbar('Please select a pet type', 'error');
       return false;
     }
-    
+
     if (this.newProduct.quantity < 1) {
       this.showSnackbar('Quantity must be at least 1', 'error');
       return false;
     }
-    
+
     if (this.newProduct.reviews && (parseFloat(this.newProduct.reviews) < 1 || parseFloat(this.newProduct.reviews) > 5)) {
       this.showSnackbar('Rating must be between 1 and 5', 'error');
       return false;
@@ -768,22 +800,22 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
 
   editProduct(product: Product, event: Event) {
-  event.stopPropagation();
-  event.preventDefault(); // Add this line
-  this.openEditProductModal(product);
-}
+    event.stopPropagation();
+    event.preventDefault(); // Add this line
+    this.openEditProductModal(product);
+  }
 
-  
+
 
   deleteProduct(productId: number, event: Event) {
-  event.stopPropagation();
-  event.preventDefault(); // Add this line
-  const product = this.products.find(p => p.id === productId);
-  if (product) {
-    this.productToDelete = product;
-    this.showDeleteModal = true;
+    event.stopPropagation();
+    event.preventDefault(); // Add this line
+    const product = this.products.find(p => p.id === productId);
+    if (product) {
+      this.productToDelete = product;
+      this.showDeleteModal = true;
+    }
   }
-}
 
   closeDeleteModal() {
     this.showDeleteModal = false;
@@ -791,13 +823,13 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.isDeleting = false;
     this.toggleBodyScroll(false);
   }
-  
+
 
   confirmDelete() {
     if (!this.productToDelete) return;
 
     this.isDeleting = true;
-    
+
     this.http.delete(`${this.productsApi}${this.productToDelete.id}/`, this.getHeaders())
       .subscribe({
         next: () => {

@@ -52,34 +52,35 @@ export class DocumentsComponent implements OnInit {
   filteredDocuments: Document[] = [];
   filteredAlerts: Alert[] = [];
   userPets: { id: number, name: string }[] = [];
-  
+
   // UI State
   activeTab: 'documents' | 'alerts' = 'documents';
-  viewMode: 'grid' | 'list' = 'grid';
+  docsViewMode: 'grid' | 'list' = 'grid';
+  alertViewMode: 'grid' | 'list' = 'grid';
   searchQuery: string = '';
   alertSearchQuery: string = '';
   selectedType: string = '';
-  
+
   // Modal States
   showUploadModal: boolean = false;
   showEditAlertModal: boolean = false;
   showViewModal: boolean = false;
   showAlertsModal: boolean = false; // Added this from original
-  
+
   // File Upload
   selectedFiles: File[] = [];
   isDragOver: boolean = false;
   isUploading: boolean = false;
   isSavingAlert: boolean = false; // Added this
-  
+
   // Forms
   uploadForm: FormGroup;
   alertForm: FormGroup;
-  
+
   // Selected Items
   selectedDoc: Document | null = null;
   editingAlert: Alert | null = null;
-  
+
   // API Endpoints
   private documentsApi = 'http://127.0.0.1:8000/api/user/documents/';
   private alertsApi = 'http://127.0.0.1:8000/api/user/pet-alerts/';
@@ -108,7 +109,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  this.userId = localStorage.getItem('user_id') || '';
+    this.userId = localStorage.getItem('user_id') || '';
     if (this.userId) {
       this.loadDocuments();
       this.loadAlerts();
@@ -138,7 +139,7 @@ export class DocumentsComponent implements OnInit {
       }
     });
   }
-  
+
   scrollToAlerts(): void {
     setTimeout(() => {
       document.getElementById('alerts-section')?.scrollIntoView({
@@ -146,11 +147,11 @@ export class DocumentsComponent implements OnInit {
       });
     }, 50);
   }
-  
+
   // Data Loading
   loadDocuments(): void {
     const token = localStorage.getItem('access_token');
-    const headers = { Authorization: `Bearer ${token}`};
+    const headers = { Authorization: `Bearer ${token}` };
 
     this.http.get<Document[]>(`${this.documentsApi}?user_id=${this.userId}`, { headers })
       .subscribe({
@@ -191,24 +192,24 @@ export class DocumentsComponent implements OnInit {
   // Filtering
   filterDocuments(): void {
     let filtered = this.documents;
-    
+
     if (this.searchQuery) {
       const query = this.searchQuery.toLowerCase();
       filtered = filtered.filter(doc =>
         doc.document_title.toLowerCase().includes(query)
       );
     }
-    
+
     if (this.selectedType) {
       filtered = filtered.filter(doc => doc.document_type === this.selectedType);
     }
-    
+
     this.filteredDocuments = filtered;
   }
 
   filterAlerts(): void {
     let filtered = this.alerts;
-    
+
     if (this.alertSearchQuery) {
       const query = this.alertSearchQuery.toLowerCase();
       filtered = filtered.filter(alert =>
@@ -216,7 +217,7 @@ export class DocumentsComponent implements OnInit {
         alert.alert_type.toLowerCase().includes(query)
       );
     }
-    
+
     this.filteredAlerts = filtered;
   }
 
@@ -282,7 +283,7 @@ export class DocumentsComponent implements OnInit {
   onDrop(event: DragEvent): void {
     event.preventDefault();
     this.isDragOver = false;
-    
+
     if (event.dataTransfer?.files) {
       this.handleFiles(Array.from(event.dataTransfer.files));
     }
@@ -297,20 +298,20 @@ export class DocumentsComponent implements OnInit {
     const validFiles = files.filter(file => {
       const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
       const maxSize = 10 * 1024 * 1024; // 10MB
-      
+
       if (!validTypes.includes(file.type)) {
         this.showSnackbar(`Invalid file type: ${file.name}`, 'error');
         return false;
       }
-      
+
       if (file.size > maxSize) {
         this.showSnackbar(`File too large: ${file.name}`, 'error');
         return false;
       }
-      
+
       return true;
     });
-    
+
     this.selectedFiles = [...this.selectedFiles, ...validFiles];
   }
 
@@ -325,7 +326,7 @@ export class DocumentsComponent implements OnInit {
     }
 
     this.isUploading = true;
-    
+
     // Upload each file
     this.selectedFiles.forEach((file, index) => {
       const formData = new FormData();
@@ -365,22 +366,22 @@ export class DocumentsComponent implements OnInit {
   }
 
   downloadDocument(doc: Document | null): void {
-  if (!doc) return;
-  
-  const fileUrl = `https://tailcart1.duckdns.org${doc.document_file}`;
-  const link = document.createElement('a');
-  link.href = fileUrl;
-  link.download = doc.document_title;
-  link.target = '_blank';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  this.showSnackbar(`Downloading ${doc.document_title}`, 'info');
-}
+    if (!doc) return;
+
+    const fileUrl = `https://tailcart1.duckdns.org${doc.document_file}`;
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = doc.document_title;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    this.showSnackbar(`Downloading ${doc.document_title}`, 'info');
+  }
 
   deleteDocument(documentId?: number): void {
     if (!documentId) return;
-    
+
     if (confirm('Are you sure you want to delete this document?')) {
       const token = localStorage.getItem('access_token');
       this.http.delete(`${this.documentsApi}${documentId}/`, {
@@ -402,28 +403,28 @@ export class DocumentsComponent implements OnInit {
 
   // Alert Methods
   openCreateAlertModal(): void {
-  this.alertForm.reset({
-    alert_type: 'Vaccination',
-    frequency: 'One-time',
-    is_active: true,   // <-- Add this
-    pet: this.userPets.length > 0 ? this.userPets[0].id : ''
-  });
+    this.alertForm.reset({
+      alert_type: 'Vaccination',
+      frequency: 'One-time',
+      is_active: true,   // <-- Add this
+      pet: this.userPets.length > 0 ? this.userPets[0].id : ''
+    });
 
-  this.editingAlert = null;
-  this.showEditAlertModal = true;
-  document.body.style.overflow = 'hidden';
-}
+    this.editingAlert = null;
+    this.showEditAlertModal = true;
+    document.body.style.overflow = 'hidden';
+  }
 
   editAlert(alert: Alert): void {
     this.editingAlert = alert;
     this.alertForm.patchValue({
-    pet: alert.pet,
-    alert_type: alert.alert_type,
-    title: alert.title,
-    due_date: alert.due_date,
-    frequency: alert.frequency,
-    is_active: alert.is_active
-  });
+      pet: alert.pet,
+      alert_type: alert.alert_type,
+      title: alert.title,
+      due_date: alert.due_date,
+      frequency: alert.frequency,
+      is_active: alert.is_active
+    });
     this.showEditAlertModal = true;
     document.body.style.overflow = 'hidden';
   }
@@ -448,15 +449,15 @@ export class DocumentsComponent implements OnInit {
     const token = localStorage.getItem('access_token');
     const request$ = this.editingAlert
       ? this.http.put(this.alertsApi, {
-          ...alertData,
-          alert_id: this.editingAlert.alert_id,
-          user_id: this.userId
-        }, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
+        ...alertData,
+        alert_id: this.editingAlert.alert_id,
+        user_id: this.userId
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       : this.http.post(this.alertsApi, alertData, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
     request$.subscribe({
       next: () => {
@@ -522,17 +523,18 @@ export class DocumentsComponent implements OnInit {
   }
 
   setAlertForDocument(doc: Document | null): void {
-  if (!doc) return;
-  
-  this.alertForm.patchValue({
-    title: `${doc.document_type} Alert`,
-    alert_type: 'Vaccination'  });
-  this.openCreateAlertModal();
-}
+    if (!doc) return;
+
+    this.alertForm.patchValue({
+      title: `${doc.document_type} Alert`,
+      alert_type: 'Vaccination'
+    });
+    this.openCreateAlertModal();
+  }
 
   // Helper Methods
   extractDocType(title: string): string {
-  const lowerTitle = title.toLowerCase();
+    const lowerTitle = title.toLowerCase();
 
     if (
       lowerTitle.includes('vaccine') ||
@@ -606,39 +608,54 @@ export class DocumentsComponent implements OnInit {
   }
 
   isDocumentExpired(doc: Document | null): boolean {
-  if (!doc || !doc.expiry_date) return false;
-  const expiry = new Date(doc.expiry_date);
-  const today = new Date();
-  return expiry < today;
-}
+    if (!doc || !doc.expiry_date) return false;
+    const expiry = new Date(doc.expiry_date);
+    const today = new Date();
+    return expiry < today;
+  }
 
   isDocumentExpiring(doc: Document | null): boolean {
-  if (!doc || !doc.expiry_date) return false;
-  const expiry = new Date(doc.expiry_date);
-  const today = new Date();
-  const thirtyDaysFromNow = new Date();
-  thirtyDaysFromNow.setDate(today.getDate() + 30);
-  return expiry >= today && expiry <= thirtyDaysFromNow;
-}
+    if (!doc || !doc.expiry_date) return false;
+    const expiry = new Date(doc.expiry_date);
+    const today = new Date();
+    const thirtyDaysFromNow = new Date();
+    thirtyDaysFromNow.setDate(today.getDate() + 30);
+    return expiry >= today && expiry <= thirtyDaysFromNow;
+  }
 
   getOverdueAlerts(): Alert[] {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // Reset time to start of day
-  
-  return this.alerts.filter(alert => {
-    if (!alert.is_active) return false;
-    const dueDate = new Date(alert.due_date);
-    dueDate.setHours(0, 0, 0, 0); // Reset time to start of day
-    return dueDate < today; // Overdue if due date is before today
-  });
-}
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return this.alerts.filter(alert => {
+      if (!alert.is_active) return false;
+      const dueDate = new Date(alert.due_date);
+      dueDate.setHours(0, 0, 0, 0);
+      return dueDate < today;
+    });
+  }
+
+  getUpcomingAlerts(): Alert[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    return this.alerts.filter(alert => {
+      if (!alert.is_active) return false;
+      const dueDate = new Date(alert.due_date);
+      dueDate.setHours(0, 0, 0, 0);
+      return dueDate.getTime() === today.getTime() || dueDate.getTime() === tomorrow.getTime();
+    });
+  }
 
   calculateDaysAgo(dateString: string): string {
     const date = new Date(dateString);
     const today = new Date();
     const diffTime = today.getTime() - date.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) return 'Today';
     if (diffDays === 1) return 'Yesterday';
     return `${diffDays} days ago`;
@@ -654,7 +671,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   openEditModal(doc: Document): void {
-    
+
     console.log('Edit document:', doc);
   }
 

@@ -1,78 +1,91 @@
-<!-- NAVBAR -->
-<nav class="navbar" [class.scrolled]="isScrolled">
-  <div class="nav-container">
-    <!-- Logo on Left -->
-    <div class="nav-logo">
-      <img src="assets/images/tail_cart_luxury_logo.svg" alt="Tail Cart Luxury Logo" class="luxury-logo" />
+<nav class="luxury-navbar" [class.scrolled]="isScrolled">
+  <div class="nav-container container">
+    <!-- MOBILE VIEW: MENU LEFT -->
+    <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Open Menu">
+      <div class="hamburger-icon" [class.open]="isMobileMenuOpen">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </button>
+
+    <!-- LOGO: Left on Desktop, Center on Mobile -->
+    <div class="nav-logo" routerLink="/home">
+      <img src="assets/images/tail_cart_luxury_logo.svg" alt="TailCart Logo" class="logo-image">
     </div>
 
-    <!-- Center Links -->
-    <div class="nav-links">
+    <!-- DESKTOP LINKS: Center -->
+    <div class="desktop-links">
       <a class="nav-link" routerLink="/home" routerLinkActive="active">HOME</a>
       <a class="nav-link" routerLink="/shop" routerLinkActive="active">KEYCHAINS</a>
-      <a class="nav-link" routerLink="/document" routerLinkActive="active">DOCUMENTS</a>
+      <a class="nav-link" routerLink="/document" routerLinkActive="active">DOCS</a>
       <a class="nav-link" routerLink="/doctor-ai" routerLinkActive="active">DOCTOR AI</a>
       <a class="nav-link" routerLink="/contact" routerLinkActive="active">REACH US</a>
     </div>
 
-    <!-- Right Icons -->
+    <!-- ICONS: Right -->
     <div class="nav-icons">
-      <a class="nav-icon" routerLink="/profile" title="Profile">
+      <!-- Desktop Only Profile -->
+      <a class="nav-icon profile-link" routerLink="/profile" title="Profile">
         <i class="fas fa-crown"></i>
       </a>
-      <a class="nav-icon cart-icon" routerLink="/cart" title="Cart">
-        <i class="fas fa-bag-shopping"></i>
-        <span class="cart-badge" *ngIf="cartItems > 0">{{ cartItems }}</span>
+      <!-- Cart (Visible on both) -->
+      <a class="nav-icon cart-link" routerLink="/cart" title="Cart">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="cart-count" *ngIf="cartItems > 0">{{ cartItems }}</span>
       </a>
-      <button class="nav-icon logout-icon" (click)="logout()" title="Logout">
-        <i class="fas fa-leaf"></i>
+      <!-- Desktop Only Logout -->
+      <button class="nav-icon logout-btn-desktop" (click)="logout()" title="Logout">
+        <i class="fas fa-sign-out-alt"></i>
       </button>
     </div>
-
-    <!-- Mobile Menu Button -->
-    <button class="mobile-toggle" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
   </div>
 
-  <!-- Mobile Menu - Opens from LEFT side -->
-  <div class="mobile-menu" [class.active]="isMobileMenuOpen">
-    <div class="mobile-header">
-      <div class="mobile-logo">
-        <img src="assets/images/tail_cart_luxury_logo.svg" alt="Tail Cart Luxury Logo" class="luxury-logo-mobile" />
+  <!-- MOBILE SIDEBAR MENU -->
+  <div class="sidebar-overlay" [class.active]="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
+  <aside class="mobile-sidebar" [class.active]="isMobileMenuOpen">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <img src="assets/images/tail_cart_luxury_logo.svg" alt="TailCart Logo" class="logo-sm">
       </div>
-      <button class="close-menu" (click)="closeMobileMenu()">
+      <button class="sidebar-close" (click)="closeMobileMenu()">
         <i class="fas fa-times"></i>
       </button>
     </div>
 
-    <div class="mobile-links">
-      <a class="mobile-link" routerLink="/home" routerLinkActive="active" (click)="closeMobileMenu()">
-        <i class="fas fa-home"></i> HOME
-      </a>
-      <a class="mobile-link" routerLink="/shop" routerLinkActive="active" (click)="closeMobileMenu()">
-        <i class="fas fa-key"></i> KEYCHAINS
-      </a>
-      <a class="mobile-link" routerLink="/document" routerLinkActive="active" (click)="closeMobileMenu()">
-        <i class="fas fa-file-alt"></i> DOCUMENTS
-      </a>
-      <a class="mobile-link" routerLink="/doctor-ai" routerLinkActive="active" (click)="closeMobileMenu()">
-        <i class="fas fa-robot"></i> DOCTOR AI
-      </a>
-      <a class="mobile-link" routerLink="/contact" routerLinkActive="active" (click)="closeMobileMenu()">
-        <i class="fas fa-envelope"></i> REACH US
-      </a>
-      <a class="mobile-link" routerLink="/profile" routerLinkActive="active" (click)="closeMobileMenu()">
-        <i class="fas fa-crown"></i> PROFILE
-      </a>
-      <a class="mobile-link" routerLink="/cart" routerLinkActive="active" (click)="closeMobileMenu()">
-        <i class="fas fa-bag-shopping"></i> CART
-      </a>
-      <button class="mobile-link logout-btn" (click)="logout(); closeMobileMenu()">
-        <i class="fas fa-leaf"></i> LOGOUT
-      </button>
+    <div class="sidebar-content">
+      <div class="sidebar-section">
+        <span class="section-label">Main Navigation</span>
+        <a class="sidebar-link" routerLink="/home" (click)="closeMobileMenu()" routerLinkActive="active">
+          <i class="fas fa-home"></i> Home
+        </a>
+        <a class="sidebar-link" routerLink="/shop" (click)="closeMobileMenu()" routerLinkActive="active">
+          <i class="fas fa-key"></i> Keychains
+        </a>
+        <a class="sidebar-link" routerLink="/document" (click)="closeMobileMenu()" routerLinkActive="active">
+          <i class="fas fa-file-alt"></i> Documents
+        </a>
+        <a class="sidebar-link" routerLink="/doctor-ai" (click)="closeMobileMenu()" routerLinkActive="active">
+          <i class="fas fa-user-md"></i> Doctor AI
+        </a>
+        <a class="sidebar-link" routerLink="/contact" (click)="closeMobileMenu()" routerLinkActive="active">
+          <i class="fas fa-envelope"></i> Reach Us
+        </a>
+      </div>
+
+      <div class="sidebar-section">
+        <span class="section-label">Account</span>
+        <a class="sidebar-link" routerLink="/profile" (click)="closeMobileMenu()" routerLinkActive="active">
+          <i class="fas fa-crown"></i> My profile
+        </a>
+        <button class="sidebar-link logout-link" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
     </div>
-  </div>
+
+    <div class="sidebar-footer">
+      <p>© 2026 TailCart Luxury</p>
+    </div>
+  </aside>
 </nav>
