@@ -43,7 +43,7 @@ def params_check():
           # Returns auto for manualy opening Autologin  
 
         return "AutoLogin",None,None
-        #return "SmartEntry","1861","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjYyLCJlbWFpbCI6InJhdGhpX3JAZWNlc2lzZ3JvdXBzLmNvbSIsInJvbGUiOjIsImlhdCI6MTc3MTQzMzU0Nn0.NicvPKeETxUQSJ3Aly4DI9iNmWbHCTdhFLRl0d58Noc"
+        # return "SmartEntry","3394","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjYyLCJlbWFpbCI6InJhdGhpX3JAZWNlc2lzZ3JvdXBzLmNvbSIsInJvbGUiOjIsImlhdCI6MTc3MTQzMzU0Nn0.NicvPKeETxUQSJ3Aly4DI9iNmWbHCTdhFLRl0d58Noc"
    
 
 process_type, hybrid_orderid, hybrid_token = params_check()
@@ -260,8 +260,9 @@ def get_order_address_from_assigned_order(order_id, token):
                 order_data = data["content"]["data"]
                 portal_order_id = order_data.get("portal_order_id", "Address Not Found")
                 tfs_orderid = order_data.get("tfs_orderid", "TFS ID Not Found")
+                is_qc = order_data.get("is_qc", "no qc varialble")
                 print("API")
-                return portal_order_id, tfs_orderid
+                return portal_order_id, tfs_orderid, is_qc
                 
             else:
                 logger.log(
@@ -271,7 +272,7 @@ def get_order_address_from_assigned_order(order_id, token):
                     remarks=f"Invalid Response Format.",
                     severity="INFO"
                 )
-                return "Invalid Response Format",None
+                return "Invalid Response Format",None,False
                 
         else:
             logger.log(
@@ -281,7 +282,7 @@ def get_order_address_from_assigned_order(order_id, token):
                     remarks=f"Error: {response.status_code} - {response.text}",
                     severity="INFO"
                 )
-            return f"Error: {response.status_code} - {response.text}",None
+            return f"Error: {response.status_code} - {response.text}",None, False
     
     except Exception as e:
         logger.log(
@@ -291,7 +292,7 @@ def get_order_address_from_assigned_order(order_id, token):
                     remarks=f"Request Failed: {str(e)}",
                     severity="INFO"
                 )
-        return f"Request Failed: {str(e)}",None
+        return f"Request Failed: {str(e)}",None, False
         
 # def get_order_address_from_assigned_order(order_id, token):
 #     url = f"{ASSIGNEDORDERS_URL}{order_id}"

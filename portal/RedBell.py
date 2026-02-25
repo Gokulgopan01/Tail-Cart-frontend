@@ -272,7 +272,7 @@ class RedBell:
             proxy = order_from_api.get("proxy", None)  # Optional proxy
             sessions=order_from_api.get("session",None)
             order_id=order_from_api.get("order_id","")
-            order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(order_id,hybrid_token)
+            order_details_from_api,tfs_orderid,is_qc=get_order_address_from_assigned_order(order_id,hybrid_token)
             print("order_details_from_api:", order_details_from_api)
             logger.log(
                     module="Redbell-redbell_formopen",
@@ -319,7 +319,7 @@ class RedBell:
                 )
             
             self.redbell_launch_browser_and_open_form(order_url, session)
-            redbell_formopen_fill(self, order, session, merged_json, order_details, order_id,tfs_orderid)
+            redbell_formopen_fill(self, order, session, merged_json, order_details, order_id,tfs_orderid,is_qc)
            
         elif not matched:
 
@@ -1420,7 +1420,7 @@ def build_url(base_url, item_id, order_id, page):
 
 
 
-def redbell_formopen_fill(self, order, session=None, merged_json=None, order_details=None, order_id=None,tfs_orderid=None):
+def redbell_formopen_fill(self, order, session=None, merged_json=None, order_details=None, order_id=None,tfs_orderid=None,is_qc=None):
     #order_id="132"
     ProductDesc = order.get('ProductDesc', '').strip()
     item_id = order.get('ItemId')
@@ -1611,7 +1611,11 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 severity="INFO"
                 )
             
-            # tfs_statuschange(tfs_orderid, "26", "3", "14")
+            # if is_qc :   #qc order
+            #     tfs_statuschange(tfs_orderid , "82", "16", "14") 
+            # else:
+            #     tfs_statuschange(tfs_orderid , "26", "3", "14")
+
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
             
         else:

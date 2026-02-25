@@ -24,7 +24,7 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from config import env
 load_dotenv()
 from condtions.all_portal_conditions import generate_condition_data
-from utils.helper import data_filling_text, extract_data_sections, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_repair_details, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status
+from utils.helper import data_filling_text, extract_data_sections, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_repair_details, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status,tfs_statuschange
 from integrations.hybrid_bpo_api import HybridBPOApi
 # arg1, arg2,arg3 = params_check()
 # print(arg1,arg2,arg3)
@@ -126,7 +126,7 @@ class rrreview:
                 session=order_from_api.get("session",None)
                 hyorder_id=order_from_api.get("order_id","")
                 portal_order_id=order_from_api.get("portal_orderid","")
-                order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(hyorder_id,hybrid_token)
+                order_details_from_api,tfs_orderid,is_qc=get_order_address_from_assigned_order(hyorder_id,hybrid_token)
                 print("order_details_from_api:", order_details_from_api)
                 print("tfs",tfs_orderid)
                 print("ID:",portal_order_id)
@@ -182,7 +182,7 @@ class rrreview:
                     self.click_order_by_id(order_id)
                     
                     # Proceed to form fill once open
-                    self.rrreview_formopen_fill(form_type,hyorder_id,self.session,tfs_orderid,merged_json=None)
+                    self.rrreview_formopen_fill(form_type,hyorder_id,self.session,tfs_orderid,is_qc,merged_json=None)
 
                 else:
                     print(f"Skipping order {order_id} with unsupported form type: {form_type}")
@@ -258,7 +258,7 @@ class rrreview:
         except Exception as e:
             logging.exception(f"Could not click order {order_id}: {e}")
       
-    def rrreview_formopen_fill(self,formtype_value,order_id,session,tfs_orderid,merged_json):
+    def rrreview_formopen_fill(self,formtype_value,order_id,session,tfs_orderid,is_qc,merged_json):
         """Handles mapping config, merged_json loading, and form-filling for RRReview SmartEntry."""
         try:
             # Load ResearchPad API endpoint from environment
@@ -298,7 +298,7 @@ class rrreview:
 
             try:
                 # Call fill_form_multi for just this page
-                self.fill_form_multi(merged_json, order_id, form_config, session, tfs_orderid)
+                self.fill_form_multi(merged_json, order_id, form_config, session, tfs_orderid,is_qc)
                 time.sleep(2)
 
             except Exception as e:
@@ -308,7 +308,7 @@ class rrreview:
             logging.exception(f"Exception in rrreview_formopen_fill: {e}")
             pass
 
-    def fill_form_multi(self, merged_json, order_id, form_config, session, tfs_orderid):
+    def fill_form_multi(self, merged_json, order_id, form_config, session, tfs_orderid,is_qc):
         """
          form filling function for RRReview portal.
         """
@@ -561,9 +561,14 @@ class rrreview:
                                 logging.error(f"Exception filling field {key_expr}: {e}")
 
             # --- Final Status Update ---
+            # if is_qc :   #qc order
+            #     tfs_statuschange(tfs_orderid , "82", "16", "14") 
+            # else:
+            #     tfs_statuschange(tfs_orderid , "26", "3", "14")
+
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
             print(hybrid_orderid,"Smart Entry")
-            #tfs_statuschange(tfs_orderid, "26", "3", "14")
+
             return saved_form
 
         except Exception as e:

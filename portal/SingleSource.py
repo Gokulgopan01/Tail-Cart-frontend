@@ -265,7 +265,7 @@ class SingleSource:
                 proxy = order_from_api.get("proxy", None)  # Optional proxy
                 sessions=order_from_api.get("session",None)
                 order_id=order_from_api.get("order_id","")
-                order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(order_id,hybrid_token)
+                order_details_from_api,tfs_orderid,is_qc=get_order_address_from_assigned_order(order_id,hybrid_token)
                 self.tfs_orderid = tfs_orderid
                 # print("order_details_from_api:", order_details_from_api)
                 logger.log(
@@ -388,7 +388,7 @@ class SingleSource:
                                     remarks=f"Form type inside the form: {formtype_value}",
                                     severity="INFO"
                                 )
-                                SingleSource_formopen_fill(self, formtype_value, session, merged_json, order_details, order_id,tfs_orderid)
+                                SingleSource_formopen_fill(self, formtype_value, session, merged_json, order_details, order_id,tfs_orderid,is_qc)
                                 break
                                 # element = session.find_element(By.ID, "PS_FORM/RECENT_SALE1/Street_Address1")
                                 # listing_address = element.get_attribute('value')
@@ -506,7 +506,7 @@ class SingleSource:
     #             proxy = order_from_api.get("proxy", None)  # Optional proxy
     #             sessions=order_from_api.get("session",None)
     #             order_id=order_from_api.get("order_id","")
-    #             order_details_from_api,tfs_orderid=get_order_address_from_assigned_order(order_id,hybrid_token)
+    #             order_details_from_api,tfs_orderid,is_qc=get_order_address_from_assigned_order(order_id,hybrid_token)
     #             # print("order_details_from_api:", order_details_from_api)
     #             logger.log(
     #                 module="SingleSource-singleSource_formopen",
@@ -677,7 +677,7 @@ class SingleSource:
     #         )
 
 
-def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=None, order_details=None, order_id=None,tfs_orderid=None):
+def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=None, order_details=None, order_id=None,tfs_orderid=None,is_qc=None):
 
     researchpad_data_retrival_url=env.RESEARCHPAD_DATA_URL
     # Normalize form type
@@ -790,7 +790,11 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
                 severity="INFO"
             )
             
-            # tfs_statuschange(tfs_orderid , "26", "3", "14")
+            # if is_qc :   #qc order
+            #     tfs_statuschange(tfs_orderid , "82", "16", "14") 
+            # else:
+            #     tfs_statuschange(tfs_orderid , "26", "3", "14")
+
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
             
         else:
