@@ -2454,6 +2454,15 @@ def upload_signature_for_order(self, order_id: int) -> bool:
         self.driver.switch_to.frame("_MAIN")
         close_validation_popup(self.driver)
 
+        #Signature click
+        single_checkbox(self.driver,"Yes", "PS_FORM/SUBJECT_PROPERTY/Vendor_Authorize[@Field_Type='checkbox']", "id" )
+
+        #Intended use
+        single_checkbox(self.driver, "Yes", "PS_FORM/SUBJECT_PROPERTY/NC_BPO_Agreement[@Field_Type='checkbox']", "id")
+        single_checkbox(self.driver, "Yes", "PS_FORM/SUBJECT_PROPERTY/NC_BPO_EL_Agreement[@Field_Type='checkbox']", "id")
+        single_checkbox(self.driver, "Yes", "PS_FORM/SUBJECT_PROPERTY/NC_BPO_Docs_Agreement[@Field_Type='checkbox']", "id")
+        single_checkbox(self.driver, "Yes", "PS_FORM/SUBJECT_PROPERTY/NC_BPO_Val_Agreement[@Field_Type='checkbox']", "id")
+        
         # Fetch upload data
         data = fetch_upload_data(self, order_id)
         if not data:

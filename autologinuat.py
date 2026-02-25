@@ -47,8 +47,9 @@ def register_url_protocol(protocol_name, exe_path):
 
 def launch_app():
     # Step 2: Register protocol (if not already registered)
+    #protocol_name = "hybridbpoautologinv1"
     protocol_name = "UAThybridbpoautologin"
-    # protocol_name = "hybridbpoautologinv1"
+
     # desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
 
     # exe_path = desktop_path + r"\main.exe"
@@ -70,7 +71,7 @@ if __name__ == "__main__":
     # Step 1: Run version check first, then launch_app
     # version_update(lambda: Application().mainloop())
     # launch_app()
-    version_update(launch_app) 
+    version_update(launch_app)
 
 
 
