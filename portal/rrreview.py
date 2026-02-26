@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import threading
 import logging
+from venv import logger
 from dotenv import load_dotenv
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
@@ -561,10 +562,10 @@ class rrreview:
                                 logging.error(f"Exception filling field {key_expr}: {e}")
 
             # --- Final Status Update ---
-            # if is_qc :   #qc order
-            #     tfs_statuschange(tfs_orderid , "82", "16", "14") 
-            # else:
-            #     tfs_statuschange(tfs_orderid , "26", "3", "14")
+            if is_qc :   #qc order
+                logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="QC order no status change needed",severity="INFO")
+            else:
+                tfs_statuschange(tfs_orderid , "26", "5", "20")
 
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
             print(hybrid_orderid,"Smart Entry")

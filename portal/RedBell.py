@@ -1611,10 +1611,10 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 severity="INFO"
                 )
             
-            # if is_qc :   #qc order
-            #     tfs_statuschange(tfs_orderid , "82", "16", "14") 
-            # else:
-            #     tfs_statuschange(tfs_orderid , "26", "3", "14")
+            if is_qc :   #qc order
+                logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="QC order no status change needed",severity="INFO")
+            else:
+                tfs_statuschange(tfs_orderid , "26", "5", "20")
 
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
             
