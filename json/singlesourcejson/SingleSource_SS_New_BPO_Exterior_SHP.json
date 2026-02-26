@@ -193,16 +193,6 @@
                ]
             },
             {
-               "filedtype": "checkbox",
-               "values": [
-                  [
-                     "Yes",
-                     "//*[@id='form_viewer']/tbody/tr/td/table[2]/tbody/tr[1]/td/table[1]/tbody/tr/td/table/tbody/tr[22]/td",
-                     "xpath"
-                  ]
-               ]
-            },
-            {
                "filedtype": "checkbox_list",
                "values": [
                   [
@@ -519,6 +509,11 @@
                      "sub_data['Bedrooms']",
                      "//*[@id='PS_FORM/SUBJECT_PROPERTY/Bedrooms']",
                      "xpath"
+                  ],
+                  [
+                     "sub_data['Gla']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/Living_Square_Feet']",
+                     "xpath"
                   ]
                ]
             },
@@ -538,6 +533,11 @@
                   [
                      "sub_data['HalfBath']",
                      "//*[@id='PS_FORM/SUBJECT_PROPERTY/Half_Baths']",
+                     "xpath"
+                  ],
+                  [
+                     "sub_data['BasementArea']",
+                     "//*[@id='PS_FORM/SUBJECT_PROPERTY/AreaBelowGrade']",
                      "xpath"
                   ]
                ]
@@ -764,6 +764,11 @@
                      "list1['HalfBath']",
                      "//*[@id='PS_FORM/COMPARABLE1/Half_Baths']",
                      "xpath"
+                  ],
+                  [
+                     "list1['BasementArea']",
+                     "//*[@id='PS_FORM/COMPARABLE1/AreaBelowGrade']",
+                     "xpath"
                   ]
                ]
             },
@@ -989,6 +994,11 @@
                      "list2['HalfBath']",
                      "//*[@id='PS_FORM/COMPARABLE2/Half_Baths']",
                      "xpath"
+                  ],
+                  [
+                     "list2['BasementArea']",
+                     "//*[@id='PS_FORM/COMPARABLE2/AreaBelowGrade']",
+                     "xpath"
                   ]
                ]
             },
@@ -1213,6 +1223,11 @@
                   [
                      "list3['HalfBath']",
                      "//*[@id='PS_FORM/COMPARABLE3/Half_Baths']",
+                     "xpath"
+                  ],
+                  [
+                     "list3['BasementArea']",
+                     "//*[@id='PS_FORM/COMPARABLE3/AreaBelowGrade']",
                      "xpath"
                   ]
                ]
@@ -1564,6 +1579,11 @@
                      "sold1['HalfBath']",
                      "//*[@id='PS_FORM/RECENT_SALE1/Half_Baths']",
                      "xpath"
+                  ],
+                  [
+                     "sold1['BasementArea']",
+                     "//*[@id='PS_FORM/RECENT_SALE1/AreaBelowGrade']",
+                     "xpath"
                   ]
                ]
             },
@@ -1823,6 +1843,11 @@
                   [
                      "sold2['HalfBath']",
                      "//*[@id='PS_FORM/RECENT_SALE2/Half_Baths']",
+                     "xpath"
+                  ],
+                  [
+                     "sold2['BasementArea']",
+                     "//*[@id='PS_FORM/RECENT_SALE2/AreaBelowGrade']",
                      "xpath"
                   ]
                ]
@@ -2084,6 +2109,11 @@
                      "sold3['HalfBath']",
                      "//*[@id='PS_FORM/RECENT_SALE3/Half_Baths']",
                      "xpath"
+                  ],
+                  [
+                     "sold3['HalfBath']",
+                     "//*[@id='PS_FORM/RECENT_SALE3/AreaBelowGrade']",
+                     "xpath"
                   ]
                ]
             },
@@ -2170,6 +2200,11 @@
             {
                "filedtype": "Textbox",
                "values": [
+                  [
+                     "sub_data['BorrowerName']",
+                     "PS_FORM/SUBJECT_PROPERTY/State_Brokerage",
+                     "id"
+                  ],
                   [
                      "sub_data['SuggestedListPrice90To120']",
                      "//*[@id='PS_FORM/MARKETING_STRATEGY/Suggested_List_As_Is_Value']",

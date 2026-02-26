@@ -47,7 +47,8 @@ def register_url_protocol(protocol_name, exe_path):
 
 def launch_app():
     # Step 2: Register protocol (if not already registered)
-    protocol_name = "hybridbpoautologinv1"
+    protocol_name = "UAThybridbpoautologin"
+    # protocol_name = "hybridbpoautologinv1"
     # desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
 
     # exe_path = desktop_path + r"\main.exe"
