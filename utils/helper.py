@@ -42,8 +42,8 @@ def params_check():
           #return None,None  
           # Returns auto for manualy opening Autologin  
 
-        return "AutoLogin",None,None
-        #return "SmartEntry","1861","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjYyLCJlbWFpbCI6InJhdGhpX3JAZWNlc2lzZ3JvdXBzLmNvbSIsInJvbGUiOjIsImlhdCI6MTc3MTQzMzU0Nn0.NicvPKeETxUQSJ3Aly4DI9iNmWbHCTdhFLRl0d58Noc"
+        #return "AutoLogin",None,None
+        return "SmartEntry","2072","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjY3LCJlbWFpbCI6ImFzaGlsYS5yQGVjZXNpc3RlY2guY29tIiwicm9sZSI6MywiaWF0IjoxNzcxOTE4OTY4fQ.y2EyMLxxxcC_ZbJn83n0J9PHE7C_uk5kikCHXB1YfC0"
    
 
 process_type, hybrid_orderid, hybrid_token = params_check()

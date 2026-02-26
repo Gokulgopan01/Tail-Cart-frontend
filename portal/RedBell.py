@@ -733,47 +733,6 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
 
 
 
-
-
-
-# def upload_file_js(driver, input_id, file_path):
-#     try:
-#         input_elem = driver.find_element(By.ID, input_id)
-        
-#         # Make input visible via JS (if hidden)
-#         driver.execute_script("""
-#             arguments[0].style.display = 'block'; 
-#             arguments[0].style.visibility = 'visible'; 
-#             arguments[0].style.height = '1px';
-#             arguments[0].style.width = '1px';
-#             arguments[0].style.opacity = 1;
-#         """, input_elem)
-        
-#         # Clear existing value
-#         driver.execute_script("arguments[0].value = '';", input_elem)
-
-#         # Send file path
-#         input_elem.send_keys(file_path)
-
-#         # Wait shortly for input to register file
-#         time.sleep(1)
-
-#         # Check if input value contains file name
-#         input_value = driver.execute_script("return arguments[0].value;", input_elem)
-#         if not input_value or input_value.strip() == "":
-#             print(f"[✗] Input '{input_id}' did not register file after upload.")
-#             return False
-        
-#         # Optionally hide input back
-#         driver.execute_script("arguments[0].style.display = 'none';", input_elem)
-
-#         print(f"[✓] Uploaded file '{file_path}' to input '{input_id}' (value: {input_value})")
-#         return True
-
-#     except Exception as e:
-#         print(f"[✗] Failed to upload '{file_path}' to '{input_id}': {e}")
-#         return False
-
 def upload_file_js(driver, input_id, file_path):
     try:
         #  Trigger portal's JavaScript to open upload field
