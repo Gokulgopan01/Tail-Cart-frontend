@@ -790,10 +790,10 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
                 severity="INFO"
             )
             
-            # if is_qc :   #qc order
-            #     tfs_statuschange(tfs_orderid , "82", "16", "14") 
-            # else:
-            #     tfs_statuschange(tfs_orderid , "26", "3", "14")
+            if is_qc :   #qc order
+                logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="QC order no status change needed",severity="INFO")
+            else:
+                tfs_statuschange(tfs_orderid , "26", "5", "20")
 
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
             
@@ -2449,6 +2449,10 @@ def upload_signature_for_order(self, order_id: int) -> bool:
     Uploads signature file after removing any existing ones.
     """
     try:
+        #GLA Double click on GLA and BED
+        adj_click(self.driver,"sub_data['Gla']","//*[@id='PS_FORM/SUBJECT_PROPERTY/Living_Square_Feet']","xpath")
+        adj_click(self.driver,"sub_data['Bedrooms']", "//*[@id='PS_FORM/SUBJECT_PROPERTY/Bedrooms']","xpath")
+
         # Step 0: Ensure we are in _MAIN frame and clear overlays
         self.driver.switch_to.default_content()
         self.driver.switch_to.frame("_MAIN")

@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['autologin.py'],
+    ['autologinuat.py'],
     pathex=[],
     binaries=[],
     datas=[('assets\\', 'assets'), ('screens/json/portal_map.json', 'json'), ('.env', '.'), ('json\\', 'json'), ('assets\\logo.jpg', 'assets')],
@@ -33,7 +33,7 @@ exe = EXE(
     splash,
     splash.binaries,
     [],
-    name='autologin',
+    name='autologinuat',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

@@ -1,9 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "./check_and_form_open copy",
-        "./config"
-    ],
-    "python-envs.defaultEnvManager": "ms-python.python:system",
-    "python-envs.pythonProjects": [],
-    "postman.settings.dotenv-detection-notification-visibility": false
-}
