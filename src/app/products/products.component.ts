@@ -5,6 +5,7 @@ import { Component, OnInit, AfterViewInit, HostListener } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ViewChild, ElementRef } from '@angular/core';
+import lottie, { AnimationItem } from 'lottie-web';
 
 interface Product {
   id: number;
@@ -72,6 +73,11 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   filteredProducts: Product[] = [];
   paginatedProducts: Product[] = [];
   selectedProduct: Product | null = null;
+
+  // Banner
+  @ViewChild('shopBannerLottie', { static: true })
+  shopBannerLottie!: ElementRef<HTMLDivElement>;
+  private bannerAnimation: AnimationItem | null = null;
   userPets: Pet[] = [];
   cartItems: CartItem[] = [];
   loadingPets = false;
@@ -191,9 +197,21 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.bannerAnimation = lottie.loadAnimation({
+      container: this.shopBannerLottie.nativeElement,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'assets/Shoping_Website.json'
+    });
+
     setTimeout(() => {
       this.initScrollAnimations();
     }, 100);
+  }
+
+  ngOnDestroy(): void {
+    this.bannerAnimation?.destroy();
   }
 
   triggerFileInput() {

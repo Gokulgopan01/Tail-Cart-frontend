@@ -20,8 +20,8 @@ interface LoginResponse {
   message: string;
   user_id: number;
   username: string;
-  access: string;   
-  refresh: string;  
+  access: string;
+  refresh: string;
   role: string;
 }
 
@@ -50,6 +50,7 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
 
   loginData: LoginData = { email_address: '', password: '' };
   registerData: RegisterData = { username: '', email_address: '', password: '' };
+  rememberMe = false;
 
   // running cat
   @ViewChild('lottieContainer', { static: true })
@@ -64,7 +65,7 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   ngAfterViewInit(): void {
     this.bannerAnimation = lottie.loadAnimation({
@@ -72,7 +73,10 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
       renderer: 'svg',
       loop: true,
       autoplay: true,
-      path: 'assets/Login_banner.json'
+      path: 'assets/Login_banner.json',
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+      }
     });
 
     this.animation = lottie.loadAnimation({

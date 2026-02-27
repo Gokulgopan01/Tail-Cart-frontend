@@ -359,19 +359,6 @@
         </div>
       </div>
     </div>
-
-    <!-- CTA -->
-    <div class="process-cta" data-aos="fade-up">
-      <p class="cta-text">Ready to protect your furry friend?</p>
-      <div class="cta-buttons">
-        <button class="btn-primary" (click)="navigateToShop()">
-          GET STARTED NOW
-        </button>
-        <button class="btn-secondary" (click)="watchDemo()">
-          WATCH TUTORIAL
-        </button>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -380,75 +367,79 @@
 
 <!-- Detailed Section pet scanning -->
 <section class="detailed-section fade-in">
+  <div class="detailed-background-visual"></div>
   <div class="container relative">
-    <div class="detailed-background-visual"></div>
-    <div class="detailed-content">
-      <!-- Left Side: Content -->
-      <div class="content-left">
-        <div class="section-tag-premium">
-          <span class="pulse"></span>
-          NEXT-GEN PROTECTION
-        </div>
-        <h2 class="detail-title-large">
-          <span class="light">Smart</span> QR Pet Tags
-        </h2>
-        <p class="detail-subtitle-refined">
-          The ultimate safety net for your pet. Our revolutionary recovery system bridges the gap between a lost pet and
-          a happy reunion.
-        </p>
+    <div class="detailed-header">
+      <div class="section-tag-premium">
+        <span class="pulse"></span>
+        SMART SAFETY SYSTEM
+      </div>
+      <h2 class="detail-title-large">
+        <span class="light">How</span> TailCart Protects
+      </h2>
+      <p class="detail-subtitle-refined">
+        Our revolutionary recovery system is designed for one thing: getting your pet home fast. Watch how it works.
+      </p>
+    </div>
 
-        <!-- Updated: High importance description -->
-        <div class="description-content-premium">
-          <div class="importance-highlight">
-            <svg class="importance-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 15V17M12 7V13M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <div class="detailed-video-wrapper">
+      <div class="video-container-premium">
+        <video #featureVideo class="feature-video" [muted]="isDetailedVideoMuted" playsinline preload="auto">
+          <source src="assets/videos/pet_scan.mp4" type="video/mp4">
+        </video>
+
+        <div class="video-controls-overlay" [class.hidden]="!isDetailedVideoPlaying">
+          <button class="video-control-btn" (click)="toggleDetailedVideo()">
+            <i class="fas" [class.fa-pause]="isDetailedVideoPlaying" [class.fa-play]="!isDetailedVideoPlaying"></i>
+          </button>
+          <button class="video-control-btn" (click)="toggleDetailedMute()">
+            <i class="fas" [class.fa-volume-mute]="isDetailedVideoMuted"
+              [class.fa-volume-up]="!isDetailedVideoMuted"></i>
+          </button>
+        </div>
+
+        <!-- Initial play overlay -->
+        <div class="play-button-overlay-luxury" *ngIf="!isDetailedVideoPlaying" (click)="toggleDetailedVideo()">
+          <div class="luxury-play-circle">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon">
+              <path d="M8 5v14l11-7z" />
             </svg>
-            <p class="description-text">
-              When your pet goes missing, simply mark them as <span class="highlight-gold">LOST</span> in your
-              dashboard.
-              Our network activates instantly. Anyone who finds your pet can <span class="highlight-gold">SCAN THE QR
-                CODE</span> to identify them.
-            </p>
           </div>
-          <p class="description-text secondary">
-            You receive an <span class="highlight-green">IMMEDIATE ALERT</span> with their <span
-              class="highlight-green">EXACT GPS LOCATION</span>.
-            No more waiting, no more uncertainty. Just a clear path back to your furry friend.
-          </p>
-        </div>
-
-        <div class="cta-buttons-row">
-          <button class="btn-premium-gold" (click)="navigateToShop()">
-            GET PROTECTED NOW
-          </button>
-          <button class="btn-premium-outline" (click)="watchDemo()">
-            HOW IT WORKS
-          </button>
+          <span class="play-text-luxury">WATCH THE RECOVERY PROCESS</span>
         </div>
       </div>
+    </div>
 
-      <!-- Right Side: Video/Visual -->
-      <div class="content-right">
-        <div class="video-container-premium">
-          <video #featureVideo class="feature-video" muted playsinline preload="auto">
-            <source src="assets/videos/pet_scan.mp4" type="video/mp4">
-          </video>
-
-          <div class="video-decoration"></div>
-
-          <!-- Custom play button overlay -->
-          <div class="play-button-overlay-luxury" (click)="playVideo($event)">
-            <div class="luxury-play-circle">
-              <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </div>
-            <span class="play-text-luxury">RESTORE PEACE OF MIND</span>
-          </div>
+    <div class="detailed-info-grid">
+      <div class="info-card">
+        <div class="info-icon">
+          <i class="fas fa-qrcode"></i>
         </div>
+        <h3>Instant Scan</h3>
+        <p>No apps needed. Anyone with a smartphone can scan the tag to identify your pet.</p>
       </div>
+      <div class="info-card highlight">
+        <div class="info-icon">
+          <i class="fas fa-location-arrow"></i>
+        </div>
+        <h3>Live GPS Alert</h3>
+        <p>Receive an instant notification with the exact location when your pet's tag is scanned.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">
+          <i class="fas fa-phone-alt"></i>
+        </div>
+        <h3>Direct Contact</h3>
+        <p>Finders can call you immediately through the secure public profile on the tag.</p>
+      </div>
+    </div>
+
+    <div class="detailed-cta-center">
+      <button class="btn-get-protected" (click)="navigateToShop()">
+        GET PROTECTED NOW
+        <i class="fas fa-shield-alt"></i>
+      </button>
+      <p class="cta-subtext">Join thousands of protected pets across the country.</p>
     </div>
   </div>
 </section>
@@ -462,131 +453,131 @@
 
 <!-- Pet Documents Section -->
 <section class="pet-documents-section fade-in">
-  <div class="container">
-    <div class="documents-content">
-      <!-- Left Side: Video -->
-      <div class="documents-video">
-        <div class="video-container">
-          <video #documentsVideo class="documents-feature-video" muted playsinline preload="auto">
-            <source src="assets/videos/Document_Locker.mp4" type="video/mp4">
-          </video>
+  <div class="detailed-background-visual"></div>
+  <div class="container relative">
 
-          <!-- Custom play button overlay -->
-          <div class="play-button-overlay" (click)="playDocumentsVideo($event)">
-            <div class="play-circle">
-              <div class="play-triangle"></div>
-            </div>
-            <span class="play-text">PLAY VIDEO</span>
-          </div>
-        </div>
-      </div>
+    <div class="detailed-video-wrapper">
+      <div class="video-container-premium">
+        <video #documentsVideo class="feature-video documents-feature-video" [muted]="isDocumentsVideoMuted" playsinline
+          preload="auto">
+          <source src="assets/videos/Document_Locker.mp4" type="video/mp4">
+        </video>
 
-      <!-- Right Side: Content -->
-      <div class="documents-text">
-        <div class="documents-tag">PREMIUM SERVICE</div>
-        <h2 class="documents-title">Pet Documents</h2>
-        <p class="documents-description">
-          Upload your pet's important documents and manage them securely, without having a chance to miss out any
-          important paperwork.
-          You can set <span class="highlight">smart alerts</span> for crucial dates like <span
-            class="highlight">vaccination reminders</span>,
-          and customize the <span class="highlight">frequency of alerts</span> you need. Receive notifications via
-          <span class="highlight">email</span>, <span class="highlight">mobile</span>, and <span
-            class="highlight">WhatsApp</span>
-          to stay always updated.
-        </p>
-
-        <div class="cta-buttons">
-          <button class="btn-primary" (click)="navigateToDocuments()">
-            MANAGE DOCUMENTS
+        <div class="video-controls-overlay" [class.hidden]="!isDocumentsVideoPlaying">
+          <button class="video-control-btn" (click)="toggleDocumentsVideo()">
+            <i class="fas" [class.fa-pause]="isDocumentsVideoPlaying" [class.fa-play]="!isDocumentsVideoPlaying"></i>
           </button>
-          <button class="btn-secondary" (click)="navigateToAlerts()">
-            SET ALERTS
+          <button class="video-control-btn" (click)="toggleDocumentsMute()">
+            <i class="fas" [class.fa-volume-mute]="isDocumentsVideoMuted"
+              [class.fa-volume-up]="!isDocumentsVideoMuted"></i>
           </button>
         </div>
 
-        <!-- Features List -->
-        <div class="documents-features">
-          <div class="feature-item">
-            <div class="feature-check">✓</div>
-            <div class="feature-desc">Customizable alert frequencies</div>
+        <!-- Custom play button overlay -->
+        <div class="play-button-overlay-luxury" *ngIf="!isDocumentsVideoPlaying" (click)="playDocumentsVideo($event)">
+          <div class="luxury-play-circle">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon">
+              <path d="M8 5v14l11-7z" />
+            </svg>
           </div>
-          <div class="feature-item">
-            <div class="feature-check">✓</div>
-            <div class="feature-desc">Secure cloud storage for documents</div>
-          </div>
-          <div class="feature-item">
-            <div class="feature-check">✓</div>
-            <div class="feature-desc">Smart reminders for vaccination dates</div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-check">✓</div>
-            <div class="feature-desc">Multi-channel notifications (Email, SMS, WhatsApp)</div>
-          </div>
-
+          <span class="play-text-luxury">PLAY VIDEO</span>
         </div>
       </div>
     </div>
+
+    <div class="detailed-header documents-centered-header">
+      <div class="section-tag-premium documents-tag-centered">
+        <span class="pulse"></span>
+        PREMIUM SERVICE
+      </div>
+      <h2 class="detail-title-large documents-title-centered">
+        Pet Documents
+      </h2>
+      <p class="documents-description-centered">
+        Upload your pet's important documents and manage them securely, without having a chance to miss out any
+        important paperwork. You can set <span class="highlight-gold">smart alerts</span> for crucial dates like <span
+          class="highlight-gold">vaccination reminders</span>,
+        and customize the <span class="highlight-gold">frequency of alerts</span> you need. Receive notifications via
+        <span class="highlight-gold">email</span>, <span class="highlight-gold">mobile</span>, and <span
+          class="highlight-gold">WhatsApp</span>
+        to stay always updated.
+      </p>
+
+      <div class="cta-buttons documents-cta-centered">
+        <button class="btn-get-protected" (click)="navigateToDocuments()">
+          MANAGE DOCUMENTS
+        </button>
+        <button class="btn-premium-outline-dark" (click)="navigateToAlerts()">
+          SET ALERTS
+        </button>
+      </div>
+    </div>
+
   </div>
 </section>
 
 
 <!--Mini FAQ ------------------------------------------------------------------------------------------------------------>
 
-<section class="mini-faq-section fade-in">
-  <div class="container">
+<!-- Premium FAQ Section -->
+<section class="premium-faq-section fade-in">
+  <div class="faq-background-overlay"></div>
+  <div class="container relative">
 
-    <div class="section-header">
-      <div class="premium-tag">FAQ</div>
+    <div class="faq-header-centered">
+      <div class="section-tag-premium faq-tag-centered">
+        <span class="pulse"></span>
+        TRUST & TRANSPARENCY
+      </div>
+      <h2 class="detail-title-large faq-title-centered">
+        Frequently Asked Questions
+      </h2>
     </div>
 
-    <div class="faq-accordion">
+    <div class="faq-accordion-premium">
 
       <!-- FAQ Item 1 -->
-      <div class="faq-item" [class.active]="faqStates[0]">
-        <button class="faq-question" (click)="toggleFaq(0)">
+      <div class="faq-item-premium" [class.active]="faqStates[0]">
+        <button class="faq-question-premium" (click)="toggleFaq(0)">
           How does the QR pet tag work?
-          <span class="faq-icon" [class.open]="faqStates[0]">+</span>
+          <span class="faq-icon-premium" [class.open]="faqStates[0]">+</span>
         </button>
-        <div class="faq-answer" [class.active]="faqStates[0]">
-          Each tag has a unique QR code. When scanned, it opens your pet's
-          profile instantly with owner contact and recovery options.
+        <div class="faq-answer-premium" [class.active]="faqStates[0]">
+          Each tag has a unique QR code. When scanned, it opens your pet's profile instantly with owner contact and
+          recovery options.
         </div>
       </div>
 
       <!-- FAQ Item 2 -->
-      <div class="faq-item" [class.active]="faqStates[1]">
-        <button class="faq-question" (click)="toggleFaq(1)">
-          Do I need to install an app for scan and get owner?
-          <span class="faq-icon" [class.open]="faqStates[1]">+</span>
+      <div class="faq-item-premium" [class.active]="faqStates[1]">
+        <button class="faq-question-premium" (click)="toggleFaq(1)">
+          Do I need to install an app to scan and get the owner?
+          <span class="faq-icon-premium" [class.open]="faqStates[1]">+</span>
         </button>
-        <div class="faq-answer" [class.active]="faqStates[1]">
+        <div class="faq-answer-premium" [class.active]="faqStates[1]">
           No app required. The QR works directly from any smartphone camera.
         </div>
       </div>
 
       <!-- FAQ Item 3 -->
-      <div class="faq-item" [class.active]="faqStates[2]">
-        <button class="faq-question" (click)="toggleFaq(2)">
+      <div class="faq-item-premium" [class.active]="faqStates[2]">
+        <button class="faq-question-premium" (click)="toggleFaq(2)">
           Is my pet's data secure?
-          <span class="faq-icon" [class.open]="faqStates[2]">+</span>
+          <span class="faq-icon-premium" [class.open]="faqStates[2]">+</span>
         </button>
-        <div class="faq-answer" [class.active]="faqStates[2]">
-          Yes. Your data is encrypted and only essential details are shown
-          during a scan.
+        <div class="faq-answer-premium" [class.active]="faqStates[2]">
+          Yes. Your data is encrypted and only essential details are shown during a scan.
         </div>
       </div>
 
       <!-- FAQ Item 4 -->
-      <div class="faq-item" [class.active]="faqStates[3]">
-        <button class="faq-question" (click)="toggleFaq(3)">
+      <div class="faq-item-premium" [class.active]="faqStates[3]">
+        <button class="faq-question-premium" (click)="toggleFaq(3)">
           Can I update details later?
-          <span class="faq-icon" [class.open]="faqStates[3]">+</span>
+          <span class="faq-icon-premium" [class.open]="faqStates[3]">+</span>
         </button>
-        <div class="faq-answer" [class.active]="faqStates[3]">
-          Absolutely. You can update pet info, documents, and alerts anytime
-          from your dashboard.
+        <div class="faq-answer-premium" [class.active]="faqStates[3]">
+          Absolutely. You can update pet info, documents, and alerts anytime from your dashboard.
         </div>
       </div>
 
@@ -597,85 +588,75 @@
 
 
 
+
 <!--Footer final ------------------------------------------------------------------------------------------------------------>
-<!-- Luxury Footer -->
-<footer class="luxury-footer">
+<!-- Premium Luxury Footer -->
+<footer class="premium-luxury-footer">
+  <div class="footer-background-overlay"></div>
   <div class="footer-wave"></div>
 
-  <div class="footer-container">
+  <div class="footer-container relative">
     <!-- Top Section -->
-    <div class="footer-top">
-      <div class="footer-brand">
+    <div class="footer-top-premium">
+      <div class="footer-brand-premium">
         <div class="logo-container">
-          <div class="logo-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:24px;height:24px;">
+          <div class="logo-icon-premium">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:28px;height:28px;">
               <path
                 d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-            </svg></div>
+            </svg>
+          </div>
           <div class="logo-text">
-            <h2 class="logo-title">TailCart</h2>
-            <p class="logo-subtitle">Premium Pet Care Solutions</p>
+            <h2 class="logo-title-premium">TailCart</h2>
+            <p class="logo-subtitle-premium">Premium Pet Care Solutions</p>
           </div>
         </div>
-        <p class="brand-tagline">Keeping your furry friends safe, healthy, and happy with cutting-edge technology.</p>
+        <p class="brand-tagline-premium">Keeping your furry friends safe, healthy, and happy with cutting-edge
+          technology.</p>
 
-        <div class="social-links">
+        <div class="social-links-premium">
           <a href="#" class="social-link" aria-label="Instagram">
-            <div class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
-                <path
-                  d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm10 2c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3h10zM12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm5.5-1.5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z" />
-              </svg></div>
+            <div class="social-icon"><i class="fab fa-instagram"></i></div>
           </a>
           <a href="#" class="social-link" aria-label="Facebook">
-            <div class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-              </svg></div>
+            <div class="social-icon"><i class="fab fa-facebook-f"></i></div>
           </a>
           <a href="#" class="social-link" aria-label="Twitter">
-            <div class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
-                <path
-                  d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.48.75 2.78 1.89 3.55-.7 0-1.35-.2-1.94-.53v.05c0 2.06 1.47 3.78 3.44 4.17-.36.1-.73.15-1.11.15-.27 0-.54-.03-.8-.08.54 1.69 2.11 2.93 3.97 2.96-1.46 1.14-3.3 1.82-5.3 1.82-.34 0-.68-.02-1.01-.06 1.88 1.21 4.11 1.91 6.51 1.91 7.82 0 12.09-6.48 12.09-12.09 0-.19 0-.37-.01-.56.83-.6 1.55-1.35 2.12-2.2z" />
-              </svg></div>
+            <div class="social-icon"><i class="fab fa-twitter"></i></div>
           </a>
           <a href="#" class="social-link" aria-label="YouTube">
-            <div class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
-                <path
-                  d="M23.49 7.31c-.27-1-.9-1.74-1.62-2.18C20.3 4.3 12 4.3 12 4.3s-8.3 0-9.87.83c-.72.44-1.35 1.18-1.62 2.18C.19 8.71 0 12 0 12s.19 3.29.51 4.69c.27 1 .9 1.74 1.62 2.18C3.7 19.7 12 19.7 12 19.7s8.3 0 9.87-.83c.72-.44 1.35-1.18 1.62-2.18.32-1.4.51-4.69.51-4.69s-.19-3.29-.51-4.69zM9.54 15.56V8.44L15.82 12l-6.28 3.56z" />
-              </svg></div>
+            <div class="social-icon"><i class="fab fa-youtube"></i></div>
           </a>
         </div>
       </div>
 
-      <!-- Quick Links - Updated for 2 columns on mobile -->
-      <div class="footer-links">
-        <div class="links-grid">
+      <!-- Quick Links -->
+      <div class="footer-links-premium">
+        <div class="links-grid-premium">
           <div class="link-column">
-            <h3 class="column-title">Products</h3>
+            <h3 class="column-title-premium">Products</h3>
             <ul class="link-list">
               <li><a href="#" class="footer-link">Smart QR Tags</a></li>
               <li><a href="#" class="footer-link">Document Locker</a></li>
               <li><a href="#" class="footer-link">Alert System</a></li>
               <li><a href="#" class="footer-link">AI Pet Doctor</a></li>
-              <li><a href="#" class="footer-link">All Products</a></li>
             </ul>
           </div>
 
           <div class="link-column">
-            <h3 class="column-title">Company</h3>
+            <h3 class="column-title-premium">Company</h3>
             <ul class="link-list">
               <li><a href="#" class="footer-link">About Us</a></li>
               <li><a href="#" class="footer-link">Our Story</a></li>
               <li><a href="#" class="footer-link">Careers</a></li>
-              <li><a href="#" class="footer-link">Press</a></li>
-              <li><a href="#" class="footer-link">Blog</a></li>
+              <li><a href="#" class="footer-link">Contact</a></li>
             </ul>
           </div>
 
           <div class="link-column">
-            <h3 class="column-title">Support</h3>
+            <h3 class="column-title-premium">Support</h3>
             <ul class="link-list">
               <li><a href="#" class="footer-link">Help Center</a></li>
-              <li><a href="#" class="footer-link">Contact Us</a></li>
               <li><a href="#" class="footer-link">FAQs</a></li>
               <li><a href="#" class="footer-link">Shipping</a></li>
               <li><a href="#" class="footer-link">Returns</a></li>
@@ -685,57 +666,38 @@
       </div>
     </div>
 
-    <!-- Middle Section - Newsletter -->
-    <div class="footer-middle">
+    <!-- Newsletter -->
+    <div class="footer-middle-premium">
       <div class="newsletter-section">
         <div class="newsletter-content">
-          <h3 class="newsletter-title">Stay Updated</h3>
-          <p class="newsletter-text">Get exclusive offers, pet care tips, and product updates delivered to your inbox.
-          </p>
+          <h3 class="newsletter-title-premium">Stay Updated</h3>
+          <p class="newsletter-text-premium">Get exclusive offers, pet care tips, and product updates delivered to your
+            inbox.</p>
         </div>
-        <div class="newsletter-form">
-          <input type="email" placeholder="Your email address" class="newsletter-input">
-          <button class="newsletter-button">SUBSCRIBE</button>
+        <div class="newsletter-form-premium">
+          <input type="email" placeholder="Your email address" class="newsletter-input-premium">
+          <button class="newsletter-button-premium">SUBSCRIBE</button>
         </div>
       </div>
     </div>
 
-    <!-- Bottom Section - Removed back-to-top button -->
-    <div class="footer-bottom">
-      <div class="payment-methods">
-        <div class="payment-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
-            <path
-              d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
-          </svg></div>
-        <div class="payment-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
-            <path
-              d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14.5l-2.5-2.5 1.41-1.41L11 12.67l4.59-4.59L17 9.5 11 15.5z" />
-          </svg></div>
-        <div class="payment-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
-            <path d="M4 10h3v7H4zm6.5 0h3v7h-3zM2 19h20v3H2zm15-9h3v7h-3zm-5-9L2 6v2h20V6z" />
-          </svg></div>
-        <div class="payment-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
-            <path
-              d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z" />
-          </svg></div>
+    <!-- Bottom Section -->
+    <div class="footer-bottom-premium">
+      <div class="payment-methods-premium">
+        <i class="fab fa-cc-visa payment-icon-premium"></i>
+        <i class="fab fa-cc-mastercard payment-icon-premium"></i>
+        <i class="fab fa-cc-amex payment-icon-premium"></i>
+        <i class="fab fa-cc-paypal payment-icon-premium"></i>
       </div>
 
-      <div class="copyright">
+      <div class="copyright-premium">
         <p>© 2026 TailCart. All rights reserved.</p>
-        <div class="legal-links">
+        <div class="legal-links-premium">
           <a href="#" class="legal-link">Privacy Policy</a>
           <a href="#" class="legal-link">Terms of Service</a>
-          <a href="#" class="legal-link">Cookie Policy</a>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Decorative Elements -->
-  <div class="footer-decoration">
-    <div class="decoration-dot dot-1"></div>
-    <div class="decoration-dot dot-2"></div>
-    <div class="decoration-dot dot-3"></div>
   </div>
 </footer>
 

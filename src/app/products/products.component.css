@@ -16,6 +16,65 @@
   padding: 0 20px;
 }
 
+/* Lottie Banner Top */
+.shop-banner {
+  background: #063126;
+  /* Dark green matching */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: -20px 0 0 0;
+  /* Offset wrapper padding to bleed to top edge */
+  padding: 40px 15px 0;
+}
+
+.shop-banner .glass-overlay {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  /* Slight indent inside for product spacing */
+  z-index: 10;
+}
+
+.shop-banner .cart-heading {
+  color: #ffffff;
+  font-size: 2.2rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  letter-spacing: 1px;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.shop-banner .brand-tagline {
+  color: var(--accent-gold, #c9a14a);
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 5px;
+  letter-spacing: 1px;
+}
+
+.shop-banner .banner-lottie {
+  width: 100%;
+  max-width: 450px;
+  /* Larger to fit product scene */
+  z-index: 5;
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.1));
+}
+
+.items-found-text {
+  color: #000000;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding-left: 5px;
+  margin-bottom: 15px;
+  margin-top: 25px;
+}
+
 /* Admin Top Bar */
 .admin-top-bar {
   background: var(--primary-dark-green);
@@ -61,23 +120,7 @@
   margin-bottom: 30px;
 }
 
-.title-group {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.main-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 2.5rem;
-  color: var(--primary-dark-green);
-  margin-bottom: 5px;
-  font-weight: 700;
-}
-
-.subtitle {
-  color: var(--text-muted);
-  font-size: 1rem;
-}
+/* Removed original title-group */
 
 .shop-toolbar {
   background: rgba(255, 255, 255, 0.8);

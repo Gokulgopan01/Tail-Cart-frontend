@@ -1,178 +1,154 @@
-<div class="container-fluid px-0" *ngIf="!loading; else loadingTpl">
-  <!-- Main Content -->
-  <section class="cart-main-section py-4">
-    <div class="container">
-      <!-- Cart Header -->
-      <div class="cart-header">
-        <h1 class="cart-title">Cart Items ({{ cartItems.length }})</h1>
-        <p class="cart-subtitle">Products you're about to purchase</p>
-      </div>
+<div class="cart-container">
 
-      <div class="row g-4 g-lg-5">
-        <!-- Cart Items Column -->
-        <div class="col-12 col-lg-8">
-          <div class="cart-items-container">
-            <!-- Empty Cart State -->
-            <div *ngIf="cartItems.length === 0" class="empty-cart-state">
-              <div class="empty-icon">
-                <i class="fas fa-shopping-cart"></i>
+  <!-- Lottie Banner Container -->
+  <div class="auth-lottie-container cart-banner">
+    <div class="glass-overlay">
+      <h2 class="cart-heading">Cart Items</h2>
+    </div>
+    <div #cartBannerLottie class="banner-lottie"></div>
+  </div>
+
+  <ng-container *ngIf="!loading; else loadingTpl">
+    <div class="cart-items-list" *ngIf="cartItems.length > 0; else emptyCart">
+      <div class="cart-product-card" *ngFor="let item of cartItems; let i = index">
+        <div class="product-main-row">
+          <!-- Image Box -->
+          <div class="img-box">
+            <span class="sale-tag" *ngIf="i % 2 === 0">SALE</span>
+            <img [src]="item.product_image" alt="Item" onerror="this.src='assets/images/shop-main.jpg'">
+          </div>
+
+          <!-- Info Column -->
+          <div class="info-col">
+            <div class="title-trash-row">
+              <div class="titles">
+                <h3 class="p-title">{{ item.product_name }}</h3>
+                <p class="p-subtitle">{{ item.pet_name || 'Generic Pet' }}</p>
+                <div class="rating-stars">
+                  <i class="fas fa-star text-gold"></i>
+                  <i class="fas fa-star text-gold"></i>
+                  <i class="fas fa-star text-gold"></i>
+                  <i class="fas fa-star text-gold"></i>
+                  <i class="far fa-star text-gold"></i>
+                </div>
               </div>
-              <h3 class="empty-title">Your Cart is Empty</h3>
-              <p class="empty-text">Looks like you haven't added any items to your cart yet</p>
-              <button class="shop-btn" routerLink="/shop">
-                <i class="fas fa-shopping-bag"></i>
-                Start Shopping
+              <button class="trash-btn" (click)="removeItem(item)">
+                <i class="far fa-trash-alt"></i>
               </button>
             </div>
 
-            <!-- Cart Items List -->
-            <div *ngIf="cartItems.length > 0">
-              <div class="cart-item" *ngFor="let item of cartItems; let i = index">
-                <!-- Product Image - Small square -->
-                <div class="product-image-container">
-                  <img [src]="item.product_image" 
-                       [alt]="item.product_name"
-                       class="product-image"
-                       onerror="this.src='assets/images/shop-main.jpg'" />
-                </div>
-
-                <!-- Product Details -->
-                <div class="product-info">
-                  <!-- Product Name Row -->
-                  <div class="product-name-row">
-                    <h3 class="product-name">{{ item.product_name }}</h3>
-                    <button class="remove-btn" (click)="removeItem(item)" title="Remove item">
-                      ×
-                    </button>
-                  </div>
-
-                  <!-- Product Meta -->
-                  <div class="product-meta">
-                    <span class="meta-item">
-                      <i class="fas fa-paw meta-icon"></i>
-                      <span>{{ item.pet_name || 'Generic Pet' }}</span>
-                    </span>
-                    <span class="separator">•</span>
-                    <span class="status-badge">
-                      <i class="fas fa-check-circle"></i>
-                      In Cart
-                    </span>
-                  </div>
-
-                  <!-- Price and Quantity - Side by side -->
-                  <div class="price-quantity-row">
-                    <!-- Price Display -->
-                    <div class="price-display">
-                      <span class="price">₹{{ item.product_price }}</span>
-                      <span class="price-label">each</span>
-                      <span class="separator">×</span>
-                      <span class="quantity-text">{{ item.quantity }}</span>
-                      <span class="equal">=</span>
-                      <span class="item-total">₹{{ item.product_price * item.quantity }}</span>
-                    </div>
-
-                    <!-- Quantity Controls -->
-                    <div class="quantity-controls">
-                      <button class="quantity-btn" 
-                              (click)="updateQuantity(item, item.quantity - 1)" 
-                              [disabled]="item.quantity <= 1">
-                        <i class="fas fa-minus"></i>
-                      </button>
-                      <span class="quantity-display">{{ item.quantity }}</span>
-                      <button class="quantity-btn" 
-                              (click)="updateQuantity(item, item.quantity + 1)">
-                        <i class="fas fa-plus"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+            <div class="qty-price-row">
+              <div class="qty-pill">
+                <button (click)="updateQuantity(item, item.quantity - 1)" [disabled]="item.quantity <= 1">−</button>
+                <span>{{ item.quantity }}</span>
+                <button (click)="updateQuantity(item, item.quantity + 1)">+</button>
               </div>
+              <div class="price-val">₹{{ item.product_price }}</div>
             </div>
           </div>
         </div>
 
-        <!-- Order Summary Column -->
-        <div class="col-12 col-lg-4" *ngIf="cartItems.length > 0">
-          <div class="order-summary-card">
-            <!-- Header -->
-            <div class="summary-header">
-              <h2 class="summary-title">Order Summary</h2>
-              <i class="fas fa-receipt summary-icon"></i>
+        <div class="status-toggle-wrapper">
+          <button class="btn-see-status" (click)="toggleStatus(item)">
+            See Status
+            <i class="fas fa-chevron-down" [class.rotated]="item.showStatus"></i>
+          </button>
+        </div>
+
+        <div class="status-expansion" *ngIf="item.showStatus">
+          <div class="status-timeline-container" *ngIf="isNormalStatus(item.status); else altStatus">
+            <div class="t-track"></div>
+            <div class="t-track-completed" [style.width]="(getStatusIndex(item.status) * 33.3) + '%'"></div>
+
+            <div class="t-step" [class.completed]="getStatusIndex(item.status) >= 0"
+              [class.active-box]="item.status === 'Ordered' || item.status === 'In Cart' || !item.status">
+              <div class="t-dot-outer">
+                <div class="t-dot">
+                  <i class="fas fa-shopping-cart"
+                    *ngIf="item.status === 'Ordered' || item.status === 'In Cart' || !item.status"></i>
+                </div>
+              </div>
+              <span class="t-label">Order Placed</span>
             </div>
 
-            <!-- Summary Details -->
-            <div class="summary-items">
-              <div class="summary-row">
-                <span class="summary-label">Items ({{ getTotalItems() }})</span>
-                <span class="summary-value">₹{{ getSubtotal() }}</span>
+            <div class="t-step" [class.completed]="getStatusIndex(item.status) >= 1"
+              [class.active-box]="item.status === 'Shipped'">
+              <div class="t-dot-outer">
+                <div class="t-dot">
+                  <i class="fas fa-shopping-cart" *ngIf="item.status === 'Shipped'"></i>
+                </div>
               </div>
-              <div class="summary-row">
-                <span class="summary-label">Shipping</span>
-                <span class="summary-value free-shipping">FREE</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-label">Tax</span>
-                <span class="summary-value">₹{{ getTax() }}</span>
-              </div>
-              
-              <div class="summary-divider"></div>
-              
-              <div class="total-row">
-                <span class="total-label">Total Amount</span>
-                <span class="total-amount">₹{{ totalAmount }}</span>
-              </div>
+              <span class="t-label">Shipped</span>
             </div>
 
-            <!-- Trust Badges -->
-            <div class="trust-badges">
-              <div class="trust-badge">
-                <i class="fas fa-shield-alt"></i>
-                <small>Secure checkout</small>
+            <div class="t-step" [class.completed]="getStatusIndex(item.status) >= 2"
+              [class.active-box]="item.status === 'Out for Delivery'">
+              <div class="t-dot-outer">
+                <div class="t-dot">
+                  <i class="fas fa-shopping-cart" *ngIf="item.status === 'Out for Delivery'"></i>
+                </div>
               </div>
-              <div class="trust-badge">
-                <i class="fas fa-shipping-fast"></i>
-                <small>Free shipping</small>
-              </div>
-              <div class="trust-badge">
-                <i class="fas fa-undo"></i>
-                <small>Free returns</small>
-              </div>
+              <span class="t-label">Out for Delivery</span>
             </div>
 
-            <!-- Checkout Button -->
-            <button class="checkout-btn" (click)="checkout()">
-              <i class="fas fa-lock"></i>
-              Proceed to Checkout
-            </button>
-
-            <!-- Security Note -->
-            <div class="security-note">
-              <i class="fas fa-lock"></i>
-              Your payment information is secure and encrypted
-            </div>
-
-            <!-- Continue Shopping -->
-            <div class="continue-shopping">
-              <h4 class="continue-title">Need more items?</h4>
-              <button class="continue-btn" routerLink="/shop">
-                <i class="fas fa-arrow-left"></i>
-                Continue Shopping
-              </button>
+            <div class="t-step" [class.completed]="getStatusIndex(item.status) >= 3"
+              [class.active-box]="item.status === 'Delivered'">
+              <div class="t-dot-outer">
+                <div class="t-dot">
+                  <i class="fas fa-shopping-cart" *ngIf="item.status === 'Delivered'"></i>
+                </div>
+              </div>
+              <span class="t-label">Delivered</span>
             </div>
           </div>
+          <ng-template #altStatus>
+            <div class="alt-status-badge">Order Status: <strong>{{ item.status }}</strong></div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Modern Summary Details Section Before Checkout Bar -->
+      <div class="modern-summary-block">
+        <h4 class="summary-head">Order Details</h4>
+        <div class="summary-line">
+          <span class="s-label">Items Total ({{ getTotalItems() }})</span>
+          <span class="s-val">₹{{ getSubtotal() | number:'1.2-2' }}</span>
+        </div>
+        <div class="summary-line">
+          <span class="s-label">Tax (18% GST)</span>
+          <span class="s-val">₹{{ getTax() | number:'1.2-2' }}</span>
+        </div>
+        <div class="summary-line highlight-shipping">
+          <span class="s-label"><i class="fas fa-truck text-green"></i> Shipping</span>
+          <span class="s-val text-green">FREE</span>
         </div>
       </div>
     </div>
-  </section>
+
+    <ng-template #emptyCart>
+      <div class="empty-cart-view">
+        <i class="fas fa-shopping-basket"></i>
+        <h3>Your cart is empty</h3>
+        <button class="shop-btn" routerLink="/shop">Start Shopping</button>
+      </div>
+    </ng-template>
+
+    <!-- Sticky Bottom Checkout Console -->
+    <div class="cart-bottom-fixed" *ngIf="cartItems.length > 0">
+      <div class="subtotal-space">
+        <div class="sub-text">Subtotal ({{ getTotalItems() }} items)</div>
+        <div class="sub-price">₹{{ totalAmount | number:'1.2-2' }}</div>
+      </div>
+      <button class="checkout-btn-solid" (click)="checkout()">CHECKOUT</button>
+    </div>
+  </ng-container>
+
 </div>
 
 <ng-template #loadingTpl>
   <div class="loading-container">
-    <div class="text-center">
-      <div class="spinner-border text-black" style="width: 3rem; height: 3rem;" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-      <p class="mt-3 text-muted">Loading your cart...</p>
+    <div class="spinner-border text-dark" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
   </div>
 </ng-template>

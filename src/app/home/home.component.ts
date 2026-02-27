@@ -1,11 +1,11 @@
 import { Component, HostListener, AfterViewInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, NgIf],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -61,6 +61,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   @ViewChild('documentsVideo', { static: false }) documentsVideo!: ElementRef<HTMLVideoElement>;
 
   faqStates: boolean[] = [false, false, false, false];
+  isDetailedVideoMuted = true;
+  isDetailedVideoPlaying = false;
+  isDocumentsVideoMuted = true;
+  isDocumentsVideoPlaying = false;
 
   constructor(private router: Router) { }
 
@@ -158,9 +162,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   // Play documents video when custom button is clicked
   playDocumentsVideo(event: any): void {
-    const container = event.currentTarget.closest('.video-container');
+    const container = event.currentTarget.closest('.video-container-premium');
     const video: HTMLVideoElement = container.querySelector('.documents-feature-video');
-    const overlay = container.querySelector('.play-button-overlay');
+    const overlay = container.querySelector('.play-button-overlay-luxury');
 
     if (!video) return;
 
@@ -170,30 +174,51 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     video.play().then(() => {
       overlay?.classList.add('hidden');
       video.classList.add('playing');
+      this.isDocumentsVideoPlaying = true;
+      this.isDocumentsVideoMuted = false;
     });
   }
 
+
   // Documents video event handlers
   onDocumentsVideoPlay(): void {
-    const playOverlay = document.querySelector('.documents-video .play-button-overlay');
+    const playOverlay = document.querySelector('.pet-documents-section .play-button-overlay-luxury');
     if (playOverlay) {
       playOverlay.classList.add('hidden');
     }
   }
 
   onDocumentsVideoPause(): void {
-    const playOverlay = document.querySelector('.documents-video .play-button-overlay');
+    const playOverlay = document.querySelector('.pet-documents-section .play-button-overlay-luxury');
     if (playOverlay) {
       playOverlay.classList.remove('hidden');
     }
   }
 
   onDocumentsVideoEnded(): void {
-    const playOverlay = document.querySelector('.documents-video .play-button-overlay');
+    const playOverlay = document.querySelector('.pet-documents-section .play-button-overlay-luxury');
     if (playOverlay) {
       playOverlay.classList.remove('hidden');
     }
   }
+
+  toggleDocumentsVideo(): void {
+    const video = this.documentsVideo.nativeElement;
+    if (video.paused) {
+      video.play();
+      this.isDocumentsVideoPlaying = true;
+    } else {
+      video.pause();
+      this.isDocumentsVideoPlaying = false;
+    }
+  }
+
+  toggleDocumentsMute(): void {
+    const video = this.documentsVideo.nativeElement;
+    video.muted = !video.muted;
+    this.isDocumentsVideoMuted = video.muted;
+  }
+
 
   // Existing video methods (keep all existing code below)
   playVideo(event: any): void {
@@ -236,6 +261,23 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   onVideoEnded(): void {
     this.showPlayButton();
+  }
+
+  toggleDetailedVideo(): void {
+    const video = this.featureVideo.nativeElement;
+    if (video.paused) {
+      video.play();
+      this.isDetailedVideoPlaying = true;
+    } else {
+      video.pause();
+      this.isDetailedVideoPlaying = false;
+    }
+  }
+
+  toggleDetailedMute(): void {
+    const video = this.featureVideo.nativeElement;
+    video.muted = !video.muted;
+    this.isDetailedVideoMuted = video.muted;
   }
 
   // Navigation methods

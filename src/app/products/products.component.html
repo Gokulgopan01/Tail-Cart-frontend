@@ -1,4 +1,10 @@
 <div class="shop-wrapper">
+  <!-- Lottie Banner Container -->
+  <div class="auth-lottie-container shop-banner">
+    <h2 class="cart-heading">Luxury Collections</h2>
+    <div #shopBannerLottie class="banner-lottie"></div>
+  </div>
+
   <!-- Admin Controls -->
   <div class="admin-top-bar" *ngIf="isAdmin()">
     <div class="container">
@@ -15,9 +21,8 @@
   <div class="shop-content container">
     <!-- Header Section -->
     <header class="shop-header">
-      <div class="title-group">
-        <h1 class="main-title">Luxury Collections</h1>
-        <p class="subtitle">{{filteredProducts.length}} Premium items found</p>
+      <div class="items-found-text">
+        {{filteredProducts.length}} Premium items found
       </div>
 
       <!-- Toolbar -->

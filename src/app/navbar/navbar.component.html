@@ -11,33 +11,97 @@
 
     <!-- LOGO: Left on Desktop, Center on Mobile -->
     <div class="nav-logo" routerLink="/home">
-      <img src="assets/images/tail_cart_luxury_logo.svg" alt="TailCart Logo" class="logo-image">
+      <svg class="minimal-logo" width="160" height="40" viewBox="0 0 160 40" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 20 C10 10, 20 10, 25 10 C30 10, 35 15, 35 25 C35 30, 25 35, 20 35 C15 35, 10 30, 10 20 Z"
+          stroke="var(--primary-dark-green)" stroke-width="2" fill="none" />
+        <circle cx="27" cy="18" r="2" fill="var(--accent-gold)" />
+        <text x="45" y="26" font-family="'Outfit', sans-serif" font-size="22" font-weight="800"
+          fill="var(--primary-dark-green)" letter-spacing="1">TailCart</text>
+      </svg>
     </div>
 
     <!-- DESKTOP LINKS: Center -->
     <div class="desktop-links">
-      <a class="nav-link" routerLink="/home" routerLinkActive="active">HOME</a>
-      <a class="nav-link" routerLink="/shop" routerLinkActive="active">KEYCHAINS</a>
-      <a class="nav-link" routerLink="/document" routerLinkActive="active">DOCS</a>
-      <a class="nav-link" routerLink="/doctor-ai" routerLinkActive="active">DOCTOR AI</a>
-      <a class="nav-link" routerLink="/contact" routerLinkActive="active">REACH US</a>
-      <a class="nav-link" routerLink="/about" routerLinkActive="active">ABOUT</a>
+      <a class="nav-link" routerLink="/home" routerLinkActive="active">
+        <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg> HOME
+      </a>
+      <a class="nav-link" routerLink="/shop" routerLinkActive="active">
+        <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path
+            d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4">
+          </path>
+        </svg> KEYCHAINS
+      </a>
+      <a class="nav-link" routerLink="/document" routerLinkActive="active">
+        <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg> DOCS
+      </a>
+      <a class="nav-link" routerLink="/doctor-ai" routerLinkActive="active">
+        <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path
+            d="M12 2a4 4 0 0 1 4 4v2h2.5A2.5 2.5 0 0 1 21 10.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-8A2.5 2.5 0 0 1 5.5 8H8V6a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v2h4V6a2 2 0 0 0-2-2z">
+          </path>
+          <line x1="12" y1="12" x2="12" y2="16"></line>
+          <line x1="10" y1="14" x2="14" y2="14"></line>
+        </svg> DOCTOR AI
+      </a>
+      <a class="nav-link" routerLink="/contact" routerLinkActive="active">
+        <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg> REACH US
+      </a>
+      <a class="nav-link" routerLink="/about" routerLinkActive="active">
+        <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg> ABOUT
+      </a>
     </div>
 
     <!-- ICONS: Right -->
     <div class="nav-icons">
       <!-- Desktop Only Profile -->
       <a class="nav-icon profile-link" routerLink="/profile" title="Profile">
-        <i class="fas fa-crown"></i>
+        <svg class="nav-icon-inline-large" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <polygon points="2 4 8 9 12 3 16 9 22 4 19 21 5 21"></polygon>
+        </svg>
       </a>
       <!-- Cart (Visible on both) -->
       <a class="nav-icon cart-link" routerLink="/cart" title="Cart">
-        <i class="fas fa-shopping-bag"></i>
+        <svg class="nav-icon-inline-large" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
         <span class="cart-count" *ngIf="cartItems > 0">{{ cartItems }}</span>
       </a>
       <!-- Desktop Only Logout -->
       <button class="nav-icon logout-btn-desktop" (click)="logout()" title="Logout">
-        <i class="fas fa-sign-out-alt"></i>
+        <svg class="nav-icon-inline-large" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
       </button>
     </div>
   </div>
@@ -47,10 +111,21 @@
   <aside class="mobile-sidebar" [class.active]="isMobileMenuOpen">
     <div class="sidebar-header">
       <div class="sidebar-logo">
-        <img src="assets/images/tail_cart_luxury_logo.svg" alt="TailCart Logo" class="logo-sm">
+        <svg class="minimal-logo logo-sm" width="150" height="36" viewBox="0 0 160 40" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 20 C10 10, 20 10, 25 10 C30 10, 35 15, 35 25 C35 30, 25 35, 20 35 C15 35, 10 30, 10 20 Z"
+            stroke="var(--primary-dark-green)" stroke-width="2" fill="none" />
+          <circle cx="27" cy="18" r="2" fill="var(--accent-gold)" />
+          <text x="45" y="26" font-family="'Outfit', sans-serif" font-size="22" font-weight="800"
+            fill="var(--primary-dark-green)" letter-spacing="1">TailCart</text>
+        </svg>
       </div>
       <button class="sidebar-close" (click)="closeMobileMenu()">
-        <i class="fas fa-times"></i>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
       </button>
     </div>
 
@@ -58,32 +133,72 @@
       <div class="sidebar-section">
         <span class="section-label">Main Navigation</span>
         <a class="sidebar-link" routerLink="/home" (click)="closeMobileMenu()" routerLinkActive="active">
-          <i class="fas fa-home"></i> Home
+          <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg> Home
         </a>
         <a class="sidebar-link" routerLink="/shop" (click)="closeMobileMenu()" routerLinkActive="active">
-          <i class="fas fa-key"></i> Keychains
+          <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4">
+            </path>
+          </svg> Keychains
         </a>
         <a class="sidebar-link" routerLink="/document" (click)="closeMobileMenu()" routerLinkActive="active">
-          <i class="fas fa-file-alt"></i> Documents
+          <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg> Documents
         </a>
         <a class="sidebar-link" routerLink="/doctor-ai" (click)="closeMobileMenu()" routerLinkActive="active">
-          <i class="fas fa-user-md"></i> Doctor AI
+          <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M12 2a4 4 0 0 1 4 4v2h2.5A2.5 2.5 0 0 1 21 10.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-8A2.5 2.5 0 0 1 5.5 8H8V6a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v2h4V6a2 2 0 0 0-2-2z">
+            </path>
+            <line x1="12" y1="12" x2="12" y2="16"></line>
+            <line x1="10" y1="14" x2="14" y2="14"></line>
+          </svg> Doctor AI
         </a>
         <a class="sidebar-link" routerLink="/contact" (click)="closeMobileMenu()" routerLinkActive="active">
-          <i class="fas fa-envelope"></i> Reach Us
+          <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg> Reach Us
         </a>
         <a class="sidebar-link" routerLink="/about" (click)="closeMobileMenu()" routerLinkActive="active">
-          <i class="fas fa-info-circle"></i> About
+          <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg> About
         </a>
       </div>
 
       <div class="sidebar-section">
         <span class="section-label">Account</span>
         <a class="sidebar-link" routerLink="/profile" (click)="closeMobileMenu()" routerLinkActive="active">
-          <i class="fas fa-crown"></i> My profile
+          <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polygon points="2 4 8 9 12 3 16 9 22 4 19 21 5 21"></polygon>
+          </svg> My profile
         </a>
         <button class="sidebar-link logout-link" (click)="logout()">
-          <i class="fas fa-sign-out-alt"></i> Logout
+          <svg class="nav-icon-inline" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg> Logout
         </button>
       </div>
     </div>

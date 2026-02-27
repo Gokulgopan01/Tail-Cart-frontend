@@ -1,139 +1,128 @@
 <div class="auth-page">
-  <!-- Lottie Container -->
+  <!-- Lottie Banner Container -->
   <div class="auth-lottie-container">
     <div #bannerLottie class="banner-lottie"></div>
   </div>
 
-  <!-- Login Form Container (White) -->
+  <!-- Form Container -->
   <div class="auth-form-container">
-    <!-- Header -->
-    <div class="auth-header">
-      <div class="auth-icon">
-        <span>🐾</span>
-      </div>
-      <h2>{{ isLoginMode() ? 'Welcome Back!' : 'Join Tail Cart' }}</h2>
-      <p class="auth-subtitle">
-        {{ isLoginMode() ? 'Sign in to your account' : 'Create your account to get started' }}
-      </p>
-    </div>
-
-    <!-- Toggle -->
-    <div class="auth-toggle">
-      <button type="button" class="toggle-btn" [class.active]="isLoginMode()" (click)="isLoginMode.set(true)">
-        Login
-      </button>
-      <button type="button" class="toggle-btn" [class.active]="!isLoginMode()" (click)="isLoginMode.set(false)">
-        Sign up
-      </button>
-    </div>
-
-    <!-- Messages -->
-    <div class="error-message" *ngIf="errorMessage()">
-      <i class="fas fa-exclamation-circle"></i>
-      <span>{{ errorMessage() }}</span>
-      <button type="button" class="btn-close" (click)="errorMessage.set('')"></button>
-    </div>
-
-    <div class="success-message" *ngIf="successMessage()">
-      <i class="fas fa-check-circle"></i>
-      <span>{{ successMessage() }}</span>
-      <button type="button" class="btn-close" (click)="successMessage.set('')"></button>
-    </div>
-
-    <!-- Form -->
-    <form (ngSubmit)="onSubmit()" #authForm="ngForm" class="auth-form">
-      <!-- Username (Register only) -->
-      <div class="form-group" *ngIf="!isLoginMode()">
-        <div class="input-container">
-          <div class="input-icon">
-            <i class="fas fa-user"></i>
-          </div>
-          <input type="text" id="username" name="username" [(ngModel)]="registerData.username"
-            required minlength="3" maxlength="30" #username="ngModel"
-            [class.invalid]="username.invalid && username.touched" placeholder="Choose a username">
-        </div>
-        <div class="error" *ngIf="username.invalid && username.touched">
-          <i class="fas fa-exclamation-circle error-icon"></i>
-          Username must be 3-30 characters
-        </div>
+    <div class="auth-box">
+      <!-- Toggle Header -->
+      <div class="auth-toggle-pill">
+        <button type="button" class="toggle-btn" [class.active]="isLoginMode()" (click)="isLoginMode.set(true)">
+          Sign In
+        </button>
+        <button type="button" class="toggle-btn" [class.active]="!isLoginMode()" (click)="isLoginMode.set(false)">
+          Register
+        </button>
       </div>
 
-      <!-- Email -->
-      <div class="form-group">
-        <div class="input-container">
-          <div class="input-icon">
-            <i class="fas fa-envelope"></i>
+      <div class="auth-headings">
+        <h2>{{ isLoginMode() ? 'Welcome Back.' : 'Join TailCart.' }}</h2>
+        <p>{{ isLoginMode() ? 'Enter your details to access your luxury account.' : 'Create an account for personalized
+          pet services.' }}</p>
+      </div>
+
+      <!-- Messages -->
+      <div class="modern-alert error-alert" *ngIf="errorMessage()">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>{{ errorMessage() }}</span>
+        <button type="button" class="btn-close" (click)="errorMessage.set('')"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="modern-alert success-alert" *ngIf="successMessage()">
+        <i class="fas fa-check-circle"></i>
+        <span>{{ successMessage() }}</span>
+        <button type="button" class="btn-close" (click)="successMessage.set('')"><i class="fas fa-times"></i></button>
+      </div>
+
+      <!-- Main Form -->
+      <form (ngSubmit)="onSubmit()" #authForm="ngForm" class="modern-form">
+
+        <!-- Username (Register only) -->
+        <div class="input-float-group" *ngIf="!isLoginMode()">
+          <input type="text" id="username" name="username" [(ngModel)]="registerData.username" required minlength="3"
+            maxlength="30" #username="ngModel" [class.invalid]="username.invalid && username.touched" placeholder=" "
+            autocomplete="off">
+          <label for="username">Choose a username</label>
+          <i class="fas fa-user input-icon"></i>
+
+          <div class="validation-msg" *ngIf="username.invalid && username.touched">
+            Username must be 3-30 characters.
           </div>
+        </div>
+
+        <!-- Email -->
+        <div class="input-float-group">
           <input type="email" id="email" name="email"
             [ngModel]="isLoginMode() ? loginData.email_address : registerData.email_address"
             (ngModelChange)="isLoginMode() ? loginData.email_address = $event : registerData.email_address = $event"
             required email #emailInput="ngModel" [class.invalid]="emailInput.invalid && emailInput.touched"
-            placeholder="you@example.com">
-        </div>
-        <div class="error" *ngIf="emailInput.invalid && emailInput.touched">
-          <i class="fas fa-exclamation-circle error-icon"></i>
-          Please enter a valid email address
-        </div>
-      </div>
+            placeholder=" " autocomplete="off">
+          <label for="email">Email Address</label>
+          <i class="fas fa-envelope input-icon"></i>
 
-      <!-- Password -->
-      <div class="form-group">
-        <div class="input-container">
-          <div class="input-icon">
-            <i class="fas fa-lock"></i>
+          <div class="validation-msg" *ngIf="emailInput.invalid && emailInput.touched">
+            Please enter a valid email.
           </div>
+        </div>
+
+        <!-- Password -->
+        <div class="input-float-group">
           <input [type]="showPassword ? 'text' : 'password'" id="password" name="password"
             [ngModel]="isLoginMode() ? loginData.password : registerData.password"
-            (ngModelChange)="isLoginMode() ? loginData.password = $event : registerData.password = $event"
-            required minlength="6" #password="ngModel" [class.invalid]="password.invalid && password.touched"
-            placeholder="••••••••">
+            (ngModelChange)="isLoginMode() ? loginData.password = $event : registerData.password = $event" required
+            minlength="6" #password="ngModel" [class.invalid]="password.invalid && password.touched" placeholder=" "
+            autocomplete="off">
+          <label for="password">Password</label>
+          <i class="fas fa-lock input-icon"></i>
+
           <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
             <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
           </button>
-        </div>
-        <div class="error" *ngIf="password.invalid && password.touched">
-          <i class="fas fa-exclamation-circle error-icon"></i>
-          Password must be at least 6 characters
-        </div>
-      </div>
 
-      <!-- Remember Me & Forgot Password -->
-      <div class="form-options" *ngIf="isLoginMode()">
-        <label class="checkbox-label">
-          <input type="checkbox" id="rememberMe" class="checkbox-input">
-          <span class="checkbox-custom"></span>
-          <span class="checkbox-text">Remember me</span>
-        </label>
-        <a href="#" class="forgot-password">Forgot password?</a>
-      </div>
-
-      <!-- Submit -->
-      <button type="submit" class="submit-btn" [disabled]="authForm.invalid || isLoading()" [class.loading]="isLoading()">
-        <div class="btn-content">
-          <span *ngIf="!isLoading()">
-            <i class="fas" [class.fa-sign-in-alt]="isLoginMode()" [class.fa-user-plus]="!isLoginMode()"></i>
-          </span>
-          <div class="btn-spinner" *ngIf="isLoading()">
-            <div class="spinner"></div>
+          <div class="validation-msg" *ngIf="password.invalid && password.touched">
+            Password must be at least 6 characters.
           </div>
-          <span>
-            {{ isLoading() ? 'Processing...' : (isLoginMode() ? 'Sign In' : 'Create Account') }}
-          </span>
         </div>
-      </button>
 
-      <!-- Social Login -->
-      <div class="social-login">
-        <p class="divider-text">or continue with</p>
-        <div class="social-buttons">
-          <button type="button" class="social-btn google-btn">
-            <i class="fab fa-google"></i>
+        <!-- Remember Me & Forgot Password -->
+        <div class="form-options" *ngIf="isLoginMode()">
+          <label class="modern-checkbox">
+            <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe">
+            <span class="checkmark">
+              <i class="fas fa-check"></i>
+            </span>
+            <span class="check-text">Remember me</span>
+          </label>
+          <a href="javascript:void(0)" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="modern-submit-btn" [disabled]="authForm.invalid || isLoading()"
+          [class.is-loading]="isLoading()">
+          <span class="btn-text" *ngIf="!isLoading()">
+            {{ isLoginMode() ? 'Sign In to Account' : 'Create TailCart Account' }}
+          </span>
+          <div class="loader-ring" *ngIf="isLoading()"></div>
+        </button>
+
+        <!-- Social Separator -->
+        <div class="social-divider">
+          <span>or continue with</span>
+        </div>
+
+        <div class="social-grid">
+          <button type="button" class="social-btn google">
+            <img src="https://cdn.iconscout.com/icon/free/png-256/free-google-1772223-1507807.png" alt="Google">
+            Google
           </button>
-          <button type="button" class="social-btn facebook-btn">
-            <i class="fab fa-facebook"></i>
+          <button type="button" class="social-btn apple">
+            <i class="fab fa-apple"></i>
+            Apple
           </button>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>

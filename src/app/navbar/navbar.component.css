@@ -52,6 +52,19 @@
   transform: scale(1.05);
 }
 
+.minimal-logo {
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(201, 161, 74, 0.2));
+}
+
+.minimal-logo text {
+  transition: fill 0.3s ease;
+}
+
+.nav-logo:hover .minimal-logo text {
+  fill: var(--accent-gold);
+}
+
 .logo-image {
   height: 60px;
   width: auto;
@@ -75,6 +88,21 @@
   position: relative;
   padding: 5px 0;
   transition: color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nav-icon-inline {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover .nav-icon-inline,
+.nav-link.active .nav-icon-inline {
+  transform: scale(1.1) translateY(-1px);
 }
 
 .nav-link::after {
@@ -127,8 +155,11 @@
   transform: translateY(-2px);
 }
 
-.nav-icon i {
-  font-size: 1.1rem;
+.nav-icon .nav-icon-inline-large {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  transform: none;
 }
 
 .cart-count {
@@ -286,9 +317,10 @@
   text-align: left;
 }
 
-.sidebar-link i {
+.sidebar-link .nav-icon-inline {
   width: 20px;
-  color: var(--accent-gold);
+  height: 20px;
+  stroke: var(--accent-gold);
 }
 
 .sidebar-link:hover,
@@ -301,8 +333,8 @@
   color: #ef4444 !important;
 }
 
-.logout-link i {
-  color: #ef4444 !important;
+.logout-link .nav-icon-inline {
+  stroke: #ef4444 !important;
 }
 
 .sidebar-footer {
