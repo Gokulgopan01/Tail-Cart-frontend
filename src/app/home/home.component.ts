@@ -1,24 +1,71 @@
-import { Component, HostListener, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, HostListener, AfterViewInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { NgFor } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
+  imports: [NgFor],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements AfterViewInit {
-  
+export class HomeComponent implements AfterViewInit, OnDestroy {
+
+  // ── Hero Carousel ──────────────────────────────────────────────
+  heroSlide = 0;
+  heroSlides = [0, 1, 2, 3];
+  heroAutoPlay = true;
+  heroAutoPlayDuration = 5000;
+  private heroTimer: any;
+
+  nextHeroSlide(): void {
+    this.heroSlide = (this.heroSlide + 1) % 4;
+    this.restartTimer();
+  }
+
+  prevHeroSlide(): void {
+    this.heroSlide = (this.heroSlide + 3) % 4;
+    this.restartTimer();
+  }
+
+  goToHeroSlide(index: number): void {
+    this.heroSlide = index;
+    this.restartTimer();
+  }
+
+  private startTimer(): void {
+    this.heroTimer = setInterval(() => this.nextHeroSlide(), this.heroAutoPlayDuration);
+  }
+
+  private restartTimer(): void {
+    clearInterval(this.heroTimer);
+    this.startTimer();
+  }
+
+  // Touch swipe support
+  private touchStartX = 0;
+  onHeroTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.touches[0].clientX;
+  }
+  onHeroTouchEnd(event: TouchEvent): void {
+    const diff = this.touchStartX - event.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      diff > 0 ? this.nextHeroSlide() : this.prevHeroSlide();
+    }
+  }
+  // ───────────────────────────────────────────────────────────────
+
   isScrolled = false;
-  
+
   @ViewChild('featureVideo', { static: false }) featureVideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('documentsVideo', { static: false }) documentsVideo!: ElementRef<HTMLVideoElement>;
 
   faqStates: boolean[] = [false, false, false, false];
-  
-  constructor(private router: Router) {}
-  
+
+  constructor(private router: Router) { }
+
   ngAfterViewInit(): void {
+    this.startTimer();
     // Wait a bit for video to load
     this.initializeVideo();
     this.initializeDocumentsVideo();
@@ -29,7 +76,7 @@ export class HomeComponent implements AfterViewInit {
     //how it works section scroll animation
     const cards = document.querySelectorAll('.step-card');
 
-      const observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -49,7 +96,7 @@ export class HomeComponent implements AfterViewInit {
 
   private hasAutoPlayed = false;
   private documentsHasAutoPlayed = false;
-  
+
   // Initialize first video
   private initializeVideo(): void {
     const video = this.featureVideo?.nativeElement;
@@ -79,7 +126,7 @@ export class HomeComponent implements AfterViewInit {
     video.addEventListener('pause', () => this.onVideoPause());
     video.addEventListener('ended', () => this.onVideoEnded());
   }
-  
+
   // Initialize documents video
   private initializeDocumentsVideo(): void {
     const video = this.documentsVideo?.nativeElement;
@@ -108,7 +155,7 @@ export class HomeComponent implements AfterViewInit {
     video.addEventListener('pause', () => this.onDocumentsVideoPause());
     video.addEventListener('ended', () => this.onDocumentsVideoEnded());
   }
-  
+
   // Play documents video when custom button is clicked
   playDocumentsVideo(event: any): void {
     const container = event.currentTarget.closest('.video-container');
@@ -125,7 +172,7 @@ export class HomeComponent implements AfterViewInit {
       video.classList.add('playing');
     });
   }
-  
+
   // Documents video event handlers
   onDocumentsVideoPlay(): void {
     const playOverlay = document.querySelector('.documents-video .play-button-overlay');
@@ -133,21 +180,21 @@ export class HomeComponent implements AfterViewInit {
       playOverlay.classList.add('hidden');
     }
   }
-  
+
   onDocumentsVideoPause(): void {
     const playOverlay = document.querySelector('.documents-video .play-button-overlay');
     if (playOverlay) {
       playOverlay.classList.remove('hidden');
     }
   }
-  
+
   onDocumentsVideoEnded(): void {
     const playOverlay = document.querySelector('.documents-video .play-button-overlay');
     if (playOverlay) {
       playOverlay.classList.remove('hidden');
     }
   }
-  
+
   // Existing video methods (keep all existing code below)
   playVideo(event: any): void {
     const container = event.currentTarget.closest('.video-container');
@@ -164,7 +211,7 @@ export class HomeComponent implements AfterViewInit {
       video.classList.add('playing');
     });
   }
-  
+
   showPlayButton(): void {
     const videoElement = this.featureVideo?.nativeElement;
     if (videoElement) {
@@ -175,43 +222,43 @@ export class HomeComponent implements AfterViewInit {
       videoElement.classList.remove('playing');
     }
   }
-  
+
   onVideoPlay(): void {
     const playOverlay = document.querySelector('.play-button-overlay');
     if (playOverlay) {
       playOverlay.classList.add('hidden');
     }
   }
-  
+
   onVideoPause(): void {
     this.showPlayButton();
   }
-  
+
   onVideoEnded(): void {
     this.showPlayButton();
   }
-  
+
   // Navigation methods
   navigateToShop(): void {
     this.router.navigate(['/shop']);
   }
-  
+
   watchDemo(): void {
     console.log('Opening demo video...');
   }
-  
+
   navigateToDocuments(): void {
     this.router.navigate(['/documents']);
   }
-  
+
   navigateToAlerts(): void {
     this.router.navigate(['/alerts']);
   }
-  
+
   navigateToDoctor(): void {
     this.router.navigate(['/doctor-ai']);
   }
-  
+
   // Scroll to top function
   scrollToTop(): void {
     window.scrollTo({
@@ -219,23 +266,23 @@ export class HomeComponent implements AfterViewInit {
       behavior: 'smooth'
     });
   }
-  
+
   // Listen to scroll events to show/hide scroll-to-top button
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
     const scrollPosition = window.scrollY;
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
-    
+
     // Show button when scrolled down 300px
     this.isScrolled = scrollPosition > 300;
-    
+
     // Hide button when near footer
     const footer = document.querySelector('.luxury-footer');
     if (footer) {
       const footerRect = footer.getBoundingClientRect();
       const footerTop = footerRect.top + scrollPosition;
-      
+
       // If we're within 200px of the footer, hide the button
       if (scrollPosition + windowHeight > footerTop - 200) {
         this.isScrolled = false;
@@ -256,15 +303,19 @@ export class HomeComponent implements AfterViewInit {
       }
     });
   }
-  
+
   // Card hover effects
   onCardHover(event: any): void {
     const card = event.currentTarget;
     card.style.transform = 'translateY(-8px)';
   }
-  
+
   onCardLeave(event: any): void {
     const card = event.currentTarget;
     card.style.transform = 'translateY(0)';
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.heroTimer);
   }
 }

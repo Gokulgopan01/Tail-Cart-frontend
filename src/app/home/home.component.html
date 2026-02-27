@@ -1,32 +1,162 @@
-<!--Home First section--------------------------------------------------------------------------------------------------------------------------->
-<section class="hero-section">
-  <!-- Full Background Image -->
-  <div class="hero-background"></div>
-  
-  <!-- Hero Content - Clean text on background -->
-  <div class="hero-content">
-    <!-- Main Title -->
-    <h1 class="main-title">
-      Keep Your<br>
-      <span class="highlight">Furry Friends</span><br>
-      Safe & Healthy
-    </h1>
-    
-    <!-- Subtitle -->
-    <p class="subtitle">
-      Revolutionary QR pet tags, AI-powered health assistance, and smart document management—all in one platform designed for modern pet parents.
-    </p>
-    
-    <!-- Buttons -->
-    <div class="button-group">
-      <button class="btn-primary" (click)="navigateToShop()">
-        SHOP NOW
-      </button>
-      <button class="btn-secondary" (click)="watchDemo()">
-        WATCH DEMO
-      </button>
+﻿<!--Home First section----------------------------------------------------------------------------------------------------------------------------->
+<section class="hero-section" id="heroSection" (touchstart)="onHeroTouchStart($event)"
+  (touchend)="onHeroTouchEnd($event)">
+
+  <!-- Carousel Track -->
+  <div class="hero-carousel" [style.transform]="'translateX(-' + (heroSlide * 25) + '%)'">
+
+    <!-- Slide 1: QR Keychain -->
+    <div class="hero-slide slide-qr" [class.active]="heroSlide === 0">
+      <div class="slide-bg" style="background-image: url('assets/images/hero_qr_keychain.png')"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <div class="slide-tag">
+          <svg class="tag-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="width:14px;height:14px;margin-right:6px;">
+            <path
+              d="M5 5h4v4H5V5zm10 0h4v4h-4V5zM5 15h4v4H5v-4zm10 0h4v4h-4v-4zM7 7h0m0 10h0m10-10h0M7 7v0m0 10v0m10-10v0m0 10v0"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          Smart Protection
+        </div>
+        <h1 class="slide-title">QR Tagged<br><span class="slide-accent">Pet Keychains</span></h1>
+        <p class="slide-desc">Buy a smart QR keychain for your dog&apos;s collar. Anyone who finds them can scan &amp;
+          instantly get your details, call you, or share live location.</p>
+        <div class="slide-actions">
+          <button class="btn-hero-primary" (click)="navigateToShop()">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"
+              style="width:16px;height:16px;margin-right:8px;">
+              <path
+                d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
+            </svg>
+            Shop Now
+          </button>
+          <button class="btn-hero-ghost" (click)="navigateToShop()">Learn More &#8594;</button>
+        </div>
+      </div>
     </div>
+
+    <!-- Slide 2: Document Locker -->
+    <div class="hero-slide slide-docs" [class.active]="heroSlide === 1">
+      <div class="slide-bg" style="background-image: url('assets/images/hero_document_locker.png')"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <div class="slide-tag">
+          <svg class="tag-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="width:14px;height:14px;margin-right:6px;">
+            <path
+              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Secure Vault
+        </div>
+        <h1 class="slide-title">Pet Document<br><span class="slide-accent">Locker</span></h1>
+        <p class="slide-desc">Store your pet&apos;s vaccination records, prescriptions &amp; certificates securely in
+          the cloud. Download or view anytime, anywhere.</p>
+        <div class="slide-actions">
+          <button class="btn-hero-primary" (click)="navigateToDocuments()">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+              style="width:16px;height:16px;margin-right:8px;">
+              <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Upload Document
+          </button>
+          <button class="btn-hero-ghost" (click)="navigateToDocuments()">View Docs &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Alert System -->
+    <div class="hero-slide slide-alerts" [class.active]="heroSlide === 2">
+      <div class="slide-bg" style="background-image: url('assets/images/hero_alert_system.png')"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <div class="slide-tag">
+          <svg class="tag-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="width:14px;height:14px;margin-right:6px;">
+            <path
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Never Miss a Date
+        </div>
+        <h1 class="slide-title">Smart<br><span class="slide-accent">Alert System</span></h1>
+        <p class="slide-desc">Set vaccination reminders and medical appointments. Get notified via Email &amp; Mobile so
+          your pet never misses a critical care date.</p>
+        <div class="slide-actions">
+          <button class="btn-hero-primary" (click)="navigateToAlerts()">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+              style="width:16px;height:16px;margin-right:8px;">
+              <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Set Reminders
+          </button>
+          <button class="btn-hero-ghost" (click)="navigateToAlerts()">Learn More &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: AI Doctor -->
+    <div class="hero-slide slide-ai" [class.active]="heroSlide === 3">
+      <div class="slide-bg" style="background-image: url('assets/images/hero_ai_doctor.png')"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <div class="slide-tag">
+          <svg class="tag-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="width:14px;height:14px;margin-right:6px;">
+            <path
+              d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          AI Powered
+        </div>
+        <h1 class="slide-title">AI Pet<br><span class="slide-accent">Doctor</span></h1>
+        <p class="slide-desc">Ask anything about your pet&apos;s health, diet, or behavior. Our specially trained AI
+          model acts as a 24/7 veterinary doctor for your pet.</p>
+        <div class="slide-actions">
+          <button class="btn-hero-primary" (click)="navigateToDoctor()">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+              style="width:16px;height:16px;margin-right:8px;">
+              <path
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Ask Doctor
+          </button>
+          <button class="btn-hero-ghost" (click)="navigateToDoctor()">Learn More &#8594;</button>
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  <!-- Navigation Arrows -->
+  <button class="hero-nav hero-prev" (click)="prevHeroSlide()" aria-label="Previous">&#8249;</button>
+  <button class="hero-nav hero-next" (click)="nextHeroSlide()" aria-label="Next">&#8250;</button>
+
+  <!-- Progress Bar -->
+  <div class="hero-progress">
+    <div class="hero-progress-bar running" [attr.key]="heroSlide"
+      [style.animation-duration]="heroAutoPlayDuration + 'ms'"></div>
+  </div>
+
+  <!-- Dots -->
+  <div class="hero-dots">
+    <button *ngFor="let s of heroSlides; let i = index" class="hero-dot" [class.active]="heroSlide === i"
+      (click)="goToHeroSlide(i)">
+    </button>
+  </div>
+
+  <!-- Slide Counter -->
+  <div class="hero-counter">
+    <span class="counter-current">0{{ heroSlide + 1 }}</span>
+    <span class="counter-sep"> / </span>
+    <span class="counter-total">04</span>
+  </div>
+
 </section>
 
 
@@ -38,7 +168,7 @@
       <h2 class="section-title">Pet Services</h2>
       <p class="section-subtitle">Everything you need for your pet's safety and well-being</p>
     </div>
-    
+
     <div class="features-grid fade-in">
       <!-- Card 1: Pet QR Code Shop -------------------------->
       <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
@@ -50,11 +180,15 @@
             Scan the QR code to get location info of the pet and find them instantly.
           </p>
           <button class="card-button" (click)="navigateToShop()">
-            SHOP QR TAGS <span class="arrow">→</span>
+            SHOP QR TAGS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+              style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
+              <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
           </button>
         </div>
       </div>
-      
+
       <!-- Card 2: Pet Document Locker ----------------------------->
       <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
         <div class="card-bg" style="background-image: url('assets/images/photo3.jpg')"></div>
@@ -65,11 +199,15 @@
             Upload and securely save all your pet documents in one safe place.
           </p>
           <button class="card-button" (click)="navigateToDocuments()">
-            VIEW DOCUMENTS <span class="arrow">→</span>
+            VIEW DOCUMENTS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+              style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
+              <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
           </button>
         </div>
       </div>
-      
+
       <!-- Card 3: Important Alerts -->
       <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
         <div class="card-bg" style="background-image: url('assets/images/photo4.jpg')"></div>
@@ -80,11 +218,15 @@
             Get notifications on your pets vaccination dates and important other alerts.
           </p>
           <button class="card-button" (click)="navigateToAlerts()">
-            SET UP ALERTS <span class="arrow">→</span>
+            SET UP ALERTS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+              style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
+              <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
           </button>
         </div>
       </div>
-      
+
       <!-- Card 4: AI Pet Doctor -->
       <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
         <div class="card-bg" style="background-image: url('assets/images/photo5.jpg')"></div>
@@ -95,7 +237,11 @@
             Get 24/7 support from our AI doctor for your pet's health.
           </p>
           <button class="card-button" (click)="navigateToDoctor()">
-            CONSULT AI DOCTOR <span class="arrow">→</span>
+            CONSULT AI DOCTOR <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+              style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
+              <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
           </button>
         </div>
       </div>
@@ -118,7 +264,7 @@
       <h2 class="process-title">How TailCart Works</h2>
       <p class="process-subtitle">Four simple steps to ensure your pet's safety and your peace of mind</p>
     </div>
-    
+
     <!-- Process Steps -->
     <div class="process-steps">
       <!-- Step 1 -->
@@ -127,7 +273,10 @@
           <span>01</span>
         </div>
         <div class="step-icon">
-          🛍️
+          <svg class="process-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
         </div>
         <div class="step-content">
           <h3 class="step-title">Purchase & Register</h3>
@@ -135,16 +284,24 @@
             Buy your smart QR tag and register your pet on our platform with their details and your contact information.
           </p>
         </div>
-        <div class="step-arrow">→</div>
+        <div class="step-arrow"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="width:20px;height:20px;">
+            <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg></div>
       </div>
-      
+
       <!-- Step 2 -->
       <div class="step-card" data-aos="fade-up" data-aos-delay="200">
         <div class="step-number">
           <span>02</span>
         </div>
         <div class="step-icon">
-          🐕
+          <svg class="process-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M12 4v4m0 0a2.5 2.5 0 002.5-2.5V4m-2.5 4a2.5 2.5 0 01-2.5-2.5V4M5 12h14M5 12c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3m0 0c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3m0 0c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3M5 12V10a2 2 0 012-2h10a2 2 0 012 2v2m-14 0l1 7a2 2 0 002 2h8a2 2 0 002-2l1-7"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
         </div>
         <div class="step-content">
           <h3 class="step-title">Attach to Collar</h3>
@@ -152,16 +309,23 @@
             Securely attach the waterproof QR tag to your pet's collar. It's lightweight, durable, and pet-friendly.
           </p>
         </div>
-        <div class="step-arrow">→</div>
+        <div class="step-arrow"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="width:20px;height:20px;">
+            <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg></div>
       </div>
-      
+
       <!-- Step 3 -->
       <div class="step-card" data-aos="fade-up" data-aos-delay="300">
         <div class="step-number">
           <span>03</span>
         </div>
         <div class="step-icon">
-          📱
+          <svg class="process-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
         </div>
         <div class="step-content">
           <h3 class="step-title">Scan When Found</h3>
@@ -169,28 +333,40 @@
             If your pet gets lost, anyone can scan the QR code with their phone to see owner details and exact location.
           </p>
         </div>
-        <div class="step-arrow">→</div>
+        <div class="step-arrow"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="width:20px;height:20px;">
+            <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg></div>
       </div>
-      
+
       <!-- Step 4 -->
       <div class="step-card" data-aos="fade-up" data-aos-delay="400">
         <div class="step-number">
           <span>04</span>
         </div>
         <div class="step-icon">
-          🎉
+          <svg class="process-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 19L11 21M15 19L13 21M4.5 16.5L6 18M19.5 16.5L18 18M12 13V3M12 3L9 6M12 3L15 6M7 13a5 5 0 1010 0"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
         </div>
         <div class="step-content">
           <h3 class="step-title">Instant Reunion</h3>
           <p class="step-description">
-            You receive immediate alerts with the finder's location. Contact them directly and reunite with your pet quickly.
+            You receive immediate alerts with the finder's location. Contact them directly and reunite with your pet
+            quickly.
           </p>
         </div>
-        <div class="step-arrow end">✓</div>
+        <div class="step-arrow end"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="width:20px;height:20px;">
+            <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg></div>
       </div>
     </div>
-    
-    
+
+
     <!-- CTA -->
     <div class="process-cta" data-aos="fade-up" data-aos-delay="500">
       <p class="cta-text">Ready to protect your furry friend?</p>
@@ -220,22 +396,24 @@
         <p class="detail-subtitle">
           Revolutionary QR tags that ensure your pet never stays lost. Instant recovery system.
         </p>
-        
+
         <!-- Updated: Paragraph description instead of feature boxes -->
         <div class="description-content">
           <p class="description-text">
-            When your pet goes missing, simply mark them as <span class="highlight">lost</span> on our website. 
-            Anyone who finds your pet can <span class="highlight">scan the QR code</span> on their tag to access 
-            your contact information and send an immediate alert with their <span class="highlight">exact map location.</span>
+            When your pet goes missing, simply mark them as <span class="highlight">lost</span> on our website.
+            Anyone who finds your pet can <span class="highlight">scan the QR code</span> on their tag to access
+            your contact information and send an immediate alert with their <span class="highlight">exact map
+              location.</span>
           </p>
           <p class="description-text">
-            You'll receive <span class="highlight">instant notifications</span> on your phone with the pet's whereabouts. 
-            Log into your account to view the location on a map, contact the finder directly, 
-            and quickly reunite with your beloved pet. It's the fastest, most reliable way 
+            You'll receive <span class="highlight">instant notifications</span> on your phone with the pet's
+            whereabouts.
+            Log into your account to view the location on a map, contact the finder directly,
+            and quickly reunite with your beloved pet. It's the fastest, most reliable way
             to ensure your furry friend's safe return.
           </p>
         </div>
-        
+
         <div class="cta-buttons">
           <button class="btn-primary" (click)="navigateToShop()">
             GET QR TAG
@@ -245,21 +423,15 @@
           </button>
         </div>
       </div>
-      
+
       <!-- Right Side: Video -->
       <div class="content-right">
         <div class="video-container">
-          <video
-            #featureVideo
-            class="feature-video"
-            muted
-            playsinline
-            preload="auto"
-          >
+          <video #featureVideo class="feature-video" muted playsinline preload="auto">
             <source src="assets/videos/pet_scan.mp4" type="video/mp4">
           </video>
 
-          
+
           <!-- Custom play button overlay -->
           <div class="play-button-overlay" (click)="playVideo($event)">
             <div class="play-circle">
@@ -287,16 +459,10 @@
       <!-- Left Side: Video -->
       <div class="documents-video">
         <div class="video-container">
-          <video
-            #documentsVideo
-            class="documents-feature-video"
-            muted
-            playsinline
-            preload="auto"
-          >
+          <video #documentsVideo class="documents-feature-video" muted playsinline preload="auto">
             <source src="assets/videos/Document_Locker.mp4" type="video/mp4">
           </video>
-          
+
           <!-- Custom play button overlay -->
           <div class="play-button-overlay" (click)="playDocumentsVideo($event)">
             <div class="play-circle">
@@ -306,16 +472,19 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Right Side: Content -->
       <div class="documents-text">
         <div class="documents-tag">PREMIUM SERVICE</div>
         <h2 class="documents-title">Pet Documents</h2>
         <p class="documents-description">
-          Upload your pet's important documents and manage them securely, without having a chance to miss out any important paperwork. 
-          You can set <span class="highlight">smart alerts</span> for crucial dates like <span class="highlight">vaccination reminders</span>, 
-          and customize the <span class="highlight">frequency of alerts</span> you need. Receive notifications via 
-          <span class="highlight">email</span>, <span class="highlight">mobile</span>, and <span class="highlight">WhatsApp</span> 
+          Upload your pet's important documents and manage them securely, without having a chance to miss out any
+          important paperwork.
+          You can set <span class="highlight">smart alerts</span> for crucial dates like <span
+            class="highlight">vaccination reminders</span>,
+          and customize the <span class="highlight">frequency of alerts</span> you need. Receive notifications via
+          <span class="highlight">email</span>, <span class="highlight">mobile</span>, and <span
+            class="highlight">WhatsApp</span>
           to stay always updated.
         </p>
 
@@ -327,7 +496,7 @@
             SET ALERTS
           </button>
         </div>
-        
+
         <!-- Features List -->
         <div class="documents-features">
           <div class="feature-item">
@@ -342,12 +511,12 @@
             <div class="feature-check">✓</div>
             <div class="feature-desc">Smart reminders for vaccination dates</div>
           </div>
-          
+
           <div class="feature-item">
             <div class="feature-check">✓</div>
             <div class="feature-desc">Multi-channel notifications (Email, SMS, WhatsApp)</div>
           </div>
-          
+
         </div>
       </div>
     </div>
@@ -373,7 +542,7 @@
           <span class="faq-icon" [class.open]="faqStates[0]">+</span>
         </button>
         <div class="faq-answer" [class.active]="faqStates[0]">
-          Each tag has a unique QR code. When scanned, it opens your pet’s
+          Each tag has a unique QR code. When scanned, it opens your pet's
           profile instantly with owner contact and recovery options.
         </div>
       </div>
@@ -392,7 +561,7 @@
       <!-- FAQ Item 3 -->
       <div class="faq-item" [class.active]="faqStates[2]">
         <button class="faq-question" (click)="toggleFaq(2)">
-          Is my pet’s data secure?
+          Is my pet's data secure?
           <span class="faq-icon" [class.open]="faqStates[2]">+</span>
         </button>
         <div class="faq-answer" [class.active]="faqStates[2]">
@@ -424,32 +593,47 @@
 <!-- Luxury Footer -->
 <footer class="luxury-footer">
   <div class="footer-wave"></div>
-  
+
   <div class="footer-container">
     <!-- Top Section -->
     <div class="footer-top">
       <div class="footer-brand">
         <div class="logo-container">
-          <div class="logo-icon">🐾</div>
+          <div class="logo-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:24px;height:24px;">
+              <path
+                d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+            </svg></div>
           <div class="logo-text">
             <h2 class="logo-title">TailCart</h2>
             <p class="logo-subtitle">Premium Pet Care Solutions</p>
           </div>
         </div>
         <p class="brand-tagline">Keeping your furry friends safe, healthy, and happy with cutting-edge technology.</p>
-        
+
         <div class="social-links">
           <a href="#" class="social-link" aria-label="Instagram">
-            <div class="social-icon">📷</div>
+            <div class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
+                <path
+                  d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm10 2c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3h10zM12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm5.5-1.5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z" />
+              </svg></div>
           </a>
           <a href="#" class="social-link" aria-label="Facebook">
-            <div class="social-icon">👍</div>
+            <div class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+              </svg></div>
           </a>
           <a href="#" class="social-link" aria-label="Twitter">
-            <div class="social-icon">🐦</div>
+            <div class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
+                <path
+                  d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.48.75 2.78 1.89 3.55-.7 0-1.35-.2-1.94-.53v.05c0 2.06 1.47 3.78 3.44 4.17-.36.1-.73.15-1.11.15-.27 0-.54-.03-.8-.08.54 1.69 2.11 2.93 3.97 2.96-1.46 1.14-3.3 1.82-5.3 1.82-.34 0-.68-.02-1.01-.06 1.88 1.21 4.11 1.91 6.51 1.91 7.82 0 12.09-6.48 12.09-12.09 0-.19 0-.37-.01-.56.83-.6 1.55-1.35 2.12-2.2z" />
+              </svg></div>
           </a>
           <a href="#" class="social-link" aria-label="YouTube">
-            <div class="social-icon">▶️</div>
+            <div class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
+                <path
+                  d="M23.49 7.31c-.27-1-.9-1.74-1.62-2.18C20.3 4.3 12 4.3 12 4.3s-8.3 0-9.87.83c-.72.44-1.35 1.18-1.62 2.18C.19 8.71 0 12 0 12s.19 3.29.51 4.69c.27 1 .9 1.74 1.62 2.18C3.7 19.7 12 19.7 12 19.7s8.3 0 9.87-.83c.72-.44 1.35-1.18 1.62-2.18.32-1.4.51-4.69.51-4.69s-.19-3.29-.51-4.69zM9.54 15.56V8.44L15.82 12l-6.28 3.56z" />
+              </svg></div>
           </a>
         </div>
       </div>
@@ -467,7 +651,7 @@
               <li><a href="#" class="footer-link">All Products</a></li>
             </ul>
           </div>
-          
+
           <div class="link-column">
             <h3 class="column-title">Company</h3>
             <ul class="link-list">
@@ -478,7 +662,7 @@
               <li><a href="#" class="footer-link">Blog</a></li>
             </ul>
           </div>
-          
+
           <div class="link-column">
             <h3 class="column-title">Support</h3>
             <ul class="link-list">
@@ -498,7 +682,8 @@
       <div class="newsletter-section">
         <div class="newsletter-content">
           <h3 class="newsletter-title">Stay Updated</h3>
-          <p class="newsletter-text">Get exclusive offers, pet care tips, and product updates delivered to your inbox.</p>
+          <p class="newsletter-text">Get exclusive offers, pet care tips, and product updates delivered to your inbox.
+          </p>
         </div>
         <div class="newsletter-form">
           <input type="email" placeholder="Your email address" class="newsletter-input">
@@ -510,12 +695,23 @@
     <!-- Bottom Section - Removed back-to-top button -->
     <div class="footer-bottom">
       <div class="payment-methods">
-        <div class="payment-icon">💳</div>
-        <div class="payment-icon">🔒</div>
-        <div class="payment-icon">🏦</div>
-        <div class="payment-icon">📱</div>
+        <div class="payment-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
+            <path
+              d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
+          </svg></div>
+        <div class="payment-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
+            <path
+              d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14.5l-2.5-2.5 1.41-1.41L11 12.67l4.59-4.59L17 9.5 11 15.5z" />
+          </svg></div>
+        <div class="payment-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
+            <path d="M4 10h3v7H4zm6.5 0h3v7h-3zM2 19h20v3H2zm15-9h3v7h-3zm-5-9L2 6v2h20V6z" />
+          </svg></div>
+        <div class="payment-icon"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;">
+            <path
+              d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z" />
+          </svg></div>
       </div>
-      
+
       <div class="copyright">
         <p>© 2026 TailCart. All rights reserved.</p>
         <div class="legal-links">
@@ -526,7 +722,7 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Decorative Elements -->
   <div class="footer-decoration">
     <div class="decoration-dot dot-1"></div>
@@ -537,5 +733,8 @@
 
 <!-- Scroll to Top Button -->
 <button class="scroll-top-btn" (click)="scrollToTop()" [class.visible]="isScrolled">
-    ↑
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:24px;height:24px;">
+    <path d="M12 19V5m0 0l-7 7m7-7l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" />
+  </svg>
 </button>
