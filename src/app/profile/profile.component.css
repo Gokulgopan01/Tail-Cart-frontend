@@ -485,23 +485,48 @@ input:checked+.slider:before {
 }
 
 .pet-card-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* 2 columns for better labels */
   gap: 10px;
 }
 
 .action-btn {
-  flex: 1;
-  height: 44px;
+  width: 100%;
+  height: auto;
+  min-height: 48px;
+  padding: 10px 12px;
   border-radius: 12px;
   border: 1px solid #f1f5f9;
   background: white;
   color: #64748b;
   cursor: pointer;
   display: flex;
+  flex-direction: column;
+  /* Stack icon and label */
   align-items: center;
   justify-content: center;
-  transition: all 0.3s;
+  gap: 4px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  text-decoration: none;
+}
+
+.action-btn.public-link {
+  grid-column: span 2;
+  /* Make public profile more prominent */
+  flex-direction: row;
+  /* Keep it horizontal for the wide spot */
+  gap: 10px;
+  background: #f8fafb;
+  border: 1px solid var(--accent-gold);
+}
+
+.btn-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .action-btn i {
@@ -530,6 +555,12 @@ input:checked+.slider:before {
   background: #ef4444;
   color: white;
   border-color: #ef4444;
+}
+
+.action-btn.public-link:hover {
+  background: var(--primary-dark-green);
+  color: white;
+  border-color: var(--primary-dark-green);
 }
 
 .alert-count {
@@ -628,8 +659,11 @@ input:checked+.slider:before {
   }
 
   .action-btn {
-    flex: unset;
-    width: calc(50% - 5px);
+    width: 100%;
+  }
+
+  .action-btn.public-link {
+    grid-column: span 2;
   }
 
   .luxury-divider span {

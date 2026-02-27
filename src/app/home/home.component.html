@@ -162,87 +162,96 @@
 
 <!-- Features services Section-------------------------------------------------------------------------------------------------------------------------------- -->
 
-<section class="features-section">
+<section class="features-section fade-in">
   <div class="container">
     <div class="section-header">
       <h2 class="section-title">Pet Services</h2>
       <p class="section-subtitle">Everything you need for your pet's safety and well-being</p>
     </div>
 
-    <div class="features-grid fade-in">
+    <div class="features-stack-container fade-in">
       <!-- Card 1: Pet QR Code Shop -------------------------->
-      <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
-        <div class="card-bg" style="background-image: url('assets/images/photo2.jpg')"></div>
-        <div class="card-overlay"></div>
-        <div class="card-content">
-          <h3 class="card-title">Smart QR Pet Tags</h3>
-          <p class="card-description">
-            Scan the QR code to get location info of the pet and find them instantly.
-          </p>
-          <button class="card-button" (click)="navigateToShop()">
-            SHOP QR TAGS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-              style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
-              <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-          </button>
+      <div class="feature-card-wrapper" style="--index: 1;">
+        <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
+          <div class="card-bg" style="background-image: url('assets/images/photo2.jpg')"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <h3 class="card-title">Smart QR Pet Tags</h3>
+            <p class="card-description">
+              Scan the QR code to get location info of the pet and find them instantly.
+            </p>
+            <button class="card-button" (click)="navigateToShop()">
+              SHOP QR TAGS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
+                <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Card 2: Pet Document Locker ----------------------------->
-      <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
-        <div class="card-bg" style="background-image: url('assets/images/photo3.jpg')"></div>
-        <div class="card-overlay"></div>
-        <div class="card-content">
-          <h3 class="card-title">Pet Document Locker</h3>
-          <p class="card-description">
-            Upload and securely save all your pet documents in one safe place.
-          </p>
-          <button class="card-button" (click)="navigateToDocuments()">
-            VIEW DOCUMENTS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-              style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
-              <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-          </button>
+      <div class="feature-card-wrapper" style="--index: 2;">
+        <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
+          <div class="card-bg" style="background-image: url('assets/images/photo3.jpg')"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <h3 class="card-title">Pet Document Locker</h3>
+            <p class="card-description">
+              Upload and securely save all your pet documents in one safe place.
+            </p>
+            <button class="card-button" (click)="navigateToDocuments()">
+              VIEW DOCUMENTS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
+                <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Card 3: Important Alerts -->
-      <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
-        <div class="card-bg" style="background-image: url('assets/images/photo4.jpg')"></div>
-        <div class="card-overlay"></div>
-        <div class="card-content">
-          <h3 class="card-title">Remainder System</h3>
-          <p class="card-description">
-            Get notifications on your pets vaccination dates and important other alerts.
-          </p>
-          <button class="card-button" (click)="navigateToAlerts()">
-            SET UP ALERTS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-              style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
-              <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-          </button>
+      <div class="feature-card-wrapper" style="--index: 3;">
+        <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
+          <div class="card-bg" style="background-image: url('assets/images/photo4.jpg')"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <h3 class="card-title">Remainder System</h3>
+            <p class="card-description">
+              Get notifications on your pets vaccination dates and important other alerts.
+            </p>
+            <button class="card-button" (click)="navigateToAlerts()">
+              SET UP ALERTS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
+                <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Card 4: AI Pet Doctor -->
-      <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
-        <div class="card-bg" style="background-image: url('assets/images/photo5.jpg')"></div>
-        <div class="card-overlay"></div>
-        <div class="card-content">
-          <h3 class="card-title">AI Pet Doctor</h3>
-          <p class="card-description">
-            Get 24/7 support from our AI doctor for your pet's health.
-          </p>
-          <button class="card-button" (click)="navigateToDoctor()">
-            CONSULT AI DOCTOR <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-              style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
-              <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-          </button>
+      <div class="feature-card-wrapper" style="--index: 4;">
+        <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
+          <div class="card-bg" style="background-image: url('assets/images/photo5.jpg')"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <h3 class="card-title">AI Pet Doctor</h3>
+            <p class="card-description">
+              Get 24/7 support from our AI doctor for your pet's health.
+            </p>
+            <button class="card-button" (click)="navigateToDoctor()">
+              CONSULT AI DOCTOR <svg class="arrow-icon" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
+                <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -258,7 +267,8 @@
 <!--How it works section ----------------------------------------------------------------------------------------------------------------------->
 
 <!-- How It Works Section -->
-<section class="how-it-works-section">
+<section class="how-it-works-section fade-in">
+  <div class="particle-background"></div>
   <div class="container">
     <div class="section-header">
       <h2 class="process-title">How TailCart Works</h2>
@@ -266,109 +276,92 @@
     </div>
 
     <!-- Process Steps -->
-    <div class="process-steps">
+    <div class="process-steps-staggered">
       <!-- Step 1 -->
-      <div class="step-card" data-aos="fade-up" data-aos-delay="100">
-        <div class="step-number">
-          <span>01</span>
-        </div>
-        <div class="step-icon">
-          <svg class="process-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div class="step-card-staggered" data-aos="fade-right">
+        <div class="step-number-pill">01</div>
+        <div class="step-icon-box">
+          <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </div>
-        <div class="step-content">
-          <h3 class="step-title">Purchase & Register</h3>
-          <p class="step-description">
-            Buy your smart QR tag and register your pet on our platform with their details and your contact information.
-          </p>
+        <div class="step-info">
+          <h3 class="step-heading">Purchase & Register</h3>
+          <p class="step-text">Buy your smart QR tag and register your pet on our platform with their details and your
+            contact information.</p>
         </div>
-        <div class="step-arrow"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-            style="width:20px;height:20px;">
-            <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round" />
-          </svg></div>
       </div>
 
       <!-- Step 2 -->
-      <div class="step-card" data-aos="fade-up" data-aos-delay="200">
-        <div class="step-number">
-          <span>02</span>
-        </div>
-        <div class="step-icon">
-          <svg class="process-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div class="step-card-staggered" data-aos="fade-left">
+        <div class="step-number-pill">02</div>
+        <div class="step-icon-box">
+          <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M12 4v4m0 0a2.5 2.5 0 002.5-2.5V4m-2.5 4a2.5 2.5 0 01-2.5-2.5V4M5 12h14M5 12c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3m0 0c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3m0 0c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3M5 12V10a2 2 0 012-2h10a2 2 0 012 2v2m-14 0l1 7a2 2 0 002 2h8a2 2 0 002-2l1-7"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </div>
-        <div class="step-content">
-          <h3 class="step-title">Attach to Collar</h3>
-          <p class="step-description">
-            Securely attach the waterproof QR tag to your pet's collar. It's lightweight, durable, and pet-friendly.
-          </p>
+        <div class="step-info">
+          <h3 class="step-heading">Attach to Collar</h3>
+          <p class="step-text">Securely attach the waterproof QR tag to your pet's collar. It's lightweight, durable,
+            and pet-friendly.</p>
         </div>
-        <div class="step-arrow"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-            style="width:20px;height:20px;">
-            <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round" />
-          </svg></div>
       </div>
 
-      <!-- Step 3 -->
-      <div class="step-card" data-aos="fade-up" data-aos-delay="300">
-        <div class="step-number">
-          <span>03</span>
+      <!-- Step 3: NEW -->
+      <div class="step-card-staggered" data-aos="fade-right">
+        <div class="step-number-pill">03</div>
+        <div class="step-icon-box">
+          <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="7" width="18" height="10" rx="5" stroke="currentColor" stroke-width="2" />
+            <circle cx="16" cy="12" r="3" fill="currentColor" />
+          </svg>
         </div>
-        <div class="step-icon">
-          <svg class="process-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div class="step-info">
+          <h3 class="step-heading">When Lost</h3>
+          <p class="step-text">Switch on the "is lost" button in the website to turn on access to your details in the QR
+            code.</p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card-staggered" data-aos="fade-left">
+        <div class="step-number-pill">04</div>
+        <div class="step-icon-box">
+          <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" stroke="currentColor"
               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </div>
-        <div class="step-content">
-          <h3 class="step-title">Scan When Found</h3>
-          <p class="step-description">
-            If your pet gets lost, anyone can scan the QR code with their phone to see owner details and exact location.
-          </p>
+        <div class="step-info">
+          <h3 class="step-heading">Scan When Found</h3>
+          <p class="step-text">If your pet gets lost, anyone can scan the QR code with their phone to see owner details
+            and exact location.</p>
         </div>
-        <div class="step-arrow"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-            style="width:20px;height:20px;">
-            <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round" />
-          </svg></div>
       </div>
 
-      <!-- Step 4 -->
-      <div class="step-card" data-aos="fade-up" data-aos-delay="400">
-        <div class="step-number">
-          <span>04</span>
-        </div>
-        <div class="step-icon">
-          <svg class="process-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 19L11 21M15 19L13 21M4.5 16.5L6 18M19.5 16.5L18 18M12 13V3M12 3L9 6M12 3L15 6M7 13a5 5 0 1010 0"
+      <!-- Step 5 -->
+      <div class="step-card-staggered" data-aos="fade-right">
+        <div class="step-number-pill">05</div>
+        <div class="step-icon-box">
+          <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </div>
-        <div class="step-content">
-          <h3 class="step-title">Instant Reunion</h3>
-          <p class="step-description">
-            You receive immediate alerts with the finder's location. Contact them directly and reunite with your pet
-            quickly.
-          </p>
+        <div class="step-info">
+          <h3 class="step-heading">Instant Reunion</h3>
+          <p class="step-text">You receive immediate alerts with the finder's location. Contact them directly and
+            reunite with your pet quickly.</p>
         </div>
-        <div class="step-arrow end"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-            style="width:20px;height:20px;">
-            <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round" />
-          </svg></div>
       </div>
     </div>
 
-
     <!-- CTA -->
-    <div class="process-cta" data-aos="fade-up" data-aos-delay="500">
+    <div class="process-cta" data-aos="fade-up">
       <p class="cta-text">Ready to protect your furry friend?</p>
       <div class="cta-buttons">
         <button class="btn-primary" (click)="navigateToShop()">
@@ -387,57 +380,72 @@
 
 <!-- Detailed Section pet scanning -->
 <section class="detailed-section fade-in">
-  <div class="container">
+  <div class="container relative">
+    <div class="detailed-background-visual"></div>
     <div class="detailed-content">
       <!-- Left Side: Content -->
       <div class="content-left">
-        <div class="section-tag">INNOVATION</div>
-        <h2 class="detail-title">Smart QR Pet Tags</h2>
-        <p class="detail-subtitle">
-          Revolutionary QR tags that ensure your pet never stays lost. Instant recovery system.
+        <div class="section-tag-premium">
+          <span class="pulse"></span>
+          NEXT-GEN PROTECTION
+        </div>
+        <h2 class="detail-title-large">
+          <span class="light">Smart</span> QR Pet Tags
+        </h2>
+        <p class="detail-subtitle-refined">
+          The ultimate safety net for your pet. Our revolutionary recovery system bridges the gap between a lost pet and
+          a happy reunion.
         </p>
 
-        <!-- Updated: Paragraph description instead of feature boxes -->
-        <div class="description-content">
-          <p class="description-text">
-            When your pet goes missing, simply mark them as <span class="highlight">lost</span> on our website.
-            Anyone who finds your pet can <span class="highlight">scan the QR code</span> on their tag to access
-            your contact information and send an immediate alert with their <span class="highlight">exact map
-              location.</span>
-          </p>
-          <p class="description-text">
-            You'll receive <span class="highlight">instant notifications</span> on your phone with the pet's
-            whereabouts.
-            Log into your account to view the location on a map, contact the finder directly,
-            and quickly reunite with your beloved pet. It's the fastest, most reliable way
-            to ensure your furry friend's safe return.
+        <!-- Updated: High importance description -->
+        <div class="description-content-premium">
+          <div class="importance-highlight">
+            <svg class="importance-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 15V17M12 7V13M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <p class="description-text">
+              When your pet goes missing, simply mark them as <span class="highlight-gold">LOST</span> in your
+              dashboard.
+              Our network activates instantly. Anyone who finds your pet can <span class="highlight-gold">SCAN THE QR
+                CODE</span> to identify them.
+            </p>
+          </div>
+          <p class="description-text secondary">
+            You receive an <span class="highlight-green">IMMEDIATE ALERT</span> with their <span
+              class="highlight-green">EXACT GPS LOCATION</span>.
+            No more waiting, no more uncertainty. Just a clear path back to your furry friend.
           </p>
         </div>
 
-        <div class="cta-buttons">
-          <button class="btn-primary" (click)="navigateToShop()">
-            GET QR TAG
+        <div class="cta-buttons-row">
+          <button class="btn-premium-gold" (click)="navigateToShop()">
+            GET PROTECTED NOW
           </button>
-          <button class="btn-secondary" (click)="watchDemo()">
-            SEE DEMO
+          <button class="btn-premium-outline" (click)="watchDemo()">
+            HOW IT WORKS
           </button>
         </div>
       </div>
 
-      <!-- Right Side: Video -->
+      <!-- Right Side: Video/Visual -->
       <div class="content-right">
-        <div class="video-container">
+        <div class="video-container-premium">
           <video #featureVideo class="feature-video" muted playsinline preload="auto">
             <source src="assets/videos/pet_scan.mp4" type="video/mp4">
           </video>
 
+          <div class="video-decoration"></div>
 
           <!-- Custom play button overlay -->
-          <div class="play-button-overlay" (click)="playVideo($event)">
-            <div class="play-circle">
-              <div class="play-triangle"></div>
+          <div class="play-button-overlay-luxury" (click)="playVideo($event)">
+            <div class="luxury-play-circle">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon">
+                <path d="M8 5v14l11-7z" />
+              </svg>
             </div>
-            <span class="play-text">PLAY VIDEO</span>
+            <span class="play-text-luxury">RESTORE PEACE OF MIND</span>
           </div>
         </div>
       </div>

@@ -1,0 +1,461 @@
+/* Public Pet Profile - Mobile First Design (369px Priority) */
+
+:host {
+    --primary: var(--theme-color, #D4AF37);
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --danger: #ef4444;
+}
+
+.public-profile-container {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 40px;
+}
+
+/* Back Button Styling */
+.header-actions {
+    padding: 100px 20px 15px;
+    /* Added large top padding to clear the fixed navbar */
+    display: flex;
+    justify-content: flex-start;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: white;
+    border-radius: 12px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.75rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.btn-back:hover {
+    transform: translateX(-5px);
+    background: #fff;
+}
+
+.btn-back i {
+    color: var(--primary);
+}
+
+/* Loading/Error States */
+.state-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.loader {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hero Section Adjustments */
+.hero-section {
+    position: relative;
+    background: #000;
+    color: #fff;
+    padding-bottom: 30px;
+    margin-top: 0;
+    border-radius: 30px;
+    /* Make it more card-like instead of full top */
+    margin: 0 20px 30px;
+    overflow: hidden;
+}
+
+.pet-photo-wrapper {
+    position: relative;
+    width: 100%;
+    height: 350px;
+}
+
+.pet-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+}
+
+.lost-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--danger);
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    z-index: 10;
+}
+
+.pulse {
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    animation: badge-pulse 1.5s infinite;
+}
+
+@keyframes badge-pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+}
+
+.hero-content {
+    padding: 20px 20px 0;
+    text-align: center;
+}
+
+.pet-name {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.pet-meta {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* Alert Banner */
+.alert-banner {
+    margin: -20px 20px 20px;
+    background: #fff;
+    border: 2px solid var(--danger);
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    position: relative;
+    z-index: 20;
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.15);
+}
+
+.alert-text {
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.4;
+}
+
+/* Quick Actions */
+.action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 20px;
+}
+
+.btn-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    border-radius: 16px;
+    border: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-action.primary {
+    background: var(--primary);
+    color: #fff;
+}
+
+.btn-action.secondary {
+    background: #000;
+    color: #fff;
+}
+
+.btn-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    /* Mobile friendly bottom sheet feel */
+    justify-content: center;
+}
+
+.location-modal {
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    border-radius: 30px 30px 0 0;
+    padding: 30px;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header h3 {
+    margin: 0 0 10px;
+    color: var(--primary);
+    font-size: 1.4rem;
+}
+
+.modal-header p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+}
+
+.modal-input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-modal {
+    flex: 1;
+    padding: 15px;
+    border-radius: 15px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-modal.cancel {
+    background: #f1f5f9;
+    color: var(--text);
+}
+
+.btn-modal.submit {
+    background: var(--primary);
+    color: #fff;
+}
+
+.btn-modal.submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Desktop Adjustment for Modal */
+@media (min-width: 600px) {
+    .modal-overlay {
+        align-items: center;
+    }
+
+    .location-modal {
+        border-radius: 30px;
+    }
+}
+
+/* Animations */
+.slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Cards */
+.details-section {
+    padding: 0 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 15px;
+}
+
+.owner-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.owner-mini-photo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.owner-mini-photo-fallback {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.owner-card .label {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.info-row i {
+    color: var(--primary);
+    margin-top: 3px;
+}
+
+.info-row p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+.message-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-light);
+}
+
+.profile-footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-light);
+    font-size: 0.8rem;
+}
+
+/* Animations */
+.slide-up {
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 369px Optimization */
+@media (max-width: 369px) {
+    .pet-photo-wrapper {
+        height: 280px;
+    }
+
+    .pet-name {
+        font-size: 1.6rem;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .action-btn {
+        padding: 12px;
+    }
+}

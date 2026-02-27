@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, ExtraOptions } from '@angular/router';
-import { AuthComponent } from './auth/auth.component';   
+import { AuthComponent } from './auth/auth.component';
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProductsComponent } from './products/products.component';
@@ -10,11 +10,12 @@ import { ContactComponent } from './contact/contact.component';
 import { AboutComponent } from './about/about.component';
 import { CartComponent } from './cart/cart.component';
 import { adminGuard } from './guards/admin.guard';
+import { PetPublicComponent } from './pet-public/pet-public.component';
 
 
 export const routes: Routes = [
-  
-  { path: 'auth', component: AuthComponent },   
+
+  { path: 'auth', component: AuthComponent },
   { path: 'home', component: HomeComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'shop', component: ProductsComponent },
@@ -24,24 +25,26 @@ export const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: '', component: AuthComponent },
   { path: 'cart', component: CartComponent },
+  { path: 'pet-public', component: PetPublicComponent },
+  { path: 'pet/:uuid', component: PetPublicComponent },
   { path: '**', component: AuthComponent },
   {
-  path: 'admin/products',
-  component: ProductsComponent,
-  canActivate: [adminGuard]
-}
+    path: 'admin/products',
+    component: ProductsComponent,
+    canActivate: [adminGuard]
+  }
 ];
 
 
 const routerOptions: ExtraOptions = {
   scrollPositionRestoration: 'enabled',
-  anchorScrolling: 'enabled',     
+  anchorScrolling: 'enabled',
 };
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, routerOptions)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
 
 

@@ -1,0 +1,137 @@
+<div class="public-profile-container" [style.--theme-color]="themeColor" [style.font-family]="fontFamily">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="state-container">
+        <div class="loader"></div>
+        <p>Retrieving Pet Details...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="state-container">
+        <div class="error-icon">⚠️</div>
+        <p>{{ error }}</p>
+    </div>
+
+    <!-- Main Profile -->
+    <div *ngIf="!loading && !error && selectedPet" class="profile-layout slide-up">
+
+        <!-- Back Button -->
+        <div class="header-actions">
+            <a *ngIf="!uuid" routerLink="/profile" [queryParams]="{tab: 'pets'}" class="btn-back">
+                <i class="fas fa-chevron-left"></i>
+                <span>Back to Dashboard</span>
+            </a>
+            <a *ngIf="uuid" routerLink="/home" class="btn-back">
+                <i class="fas fa-home"></i>
+                <span>Go to Home</span>
+            </a>
+        </div>
+
+        <!-- Hero Section (Pet Photo) -->
+        <header class="hero-section">
+            <div class="pet-photo-wrapper">
+                <img [src]="'http://127.0.0.1:8000' + selectedPet.pet_photo" [alt]="selectedPet.pet_name"
+                    class="pet-photo">
+                <div *ngIf="selectedPet.is_lost" class="lost-badge">
+                    <span class="pulse"></span> IS LOST
+                </div>
+            </div>
+            <div class="hero-content">
+                <h1 class="pet-name">{{ selectedPet.pet_name }}</h1>
+                <p class="pet-meta">{{ selectedPet.species }} • {{ selectedPet.breed }} • {{
+                    selectedPet.age }} Years Old</p>
+            </div>
+        </header>
+
+        <!-- Alert Banner for Lost Pets -->
+        <div *ngIf="selectedPet.is_lost" class="alert-banner">
+            <div class="alert-icon">📣</div>
+            <div class="alert-text">
+                <strong>EMERGENCY:</strong> This pet is reported lost. Please help us rescue them!
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="action-grid card">
+            <button (click)="callOwner(profileData.owner_phone)" class="btn-action primary">
+                <i class="fas fa-phone-alt"></i>
+                <span>Call Owner</span>
+            </button>
+            <button (click)="openLocationModal()" class="btn-action secondary">
+                <i class="fas fa-location-arrow"></i>
+                <span>Share Location</span>
+            </button>
+        </div>
+
+        <!-- Location Modal -->
+        <div class="modal-overlay" *ngIf="isLocationModalOpen" (click)="closeLocationModal()">
+            <div class="location-modal slide-up" (click)="$event.stopPropagation()">
+                <div class="modal-header">
+                    <h3>Help {{ selectedPet.pet_name }} get home!</h3>
+                    <p>Please enter your details so the owner can contact you.</p>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Your Name *</label>
+                        <input type="text" [(ngModel)]="finderName" placeholder="Enter your name" class="modal-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number (Optional)</label>
+                        <input type="text" [(ngModel)]="finderPhone" placeholder="Enter your phone" class="modal-input">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn-modal cancel" (click)="closeLocationModal()">Cancel</button>
+                    <button class="btn-modal submit" (click)="submitLocationShare()"
+                        [disabled]="isSubmitting || !finderName">
+                        <i class="fas" [class.fa-spinner]="isSubmitting" [class.fa-spin]="isSubmitting"
+                            [class.fa-paper-plane]="!isSubmitting"></i>
+                        {{ isSubmitting ? 'Sharing...' : 'Share Live Location' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Section -->
+        <main class="details-section">
+            <!-- Owner Info Card -->
+            <div class="card owner-card">
+                <div class="card-header">
+                    <img *ngIf="profileData.owner_photo" [src]="'http://127.0.0.1:8000' + profileData.owner_photo"
+                        [alt]="profileData.owner_name" class="owner-mini-photo">
+                    <div *ngIf="!profileData.owner_photo" class="owner-mini-photo-fallback">
+                        {{ profileData.owner_name.charAt(0) }}
+                    </div>
+                    <div>
+                        <h3>{{ profileData.owner_name }}</h3>
+                        <span class="label">Owner & Guardian</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <i class="fas fa-map-pin"></i>
+                        <p>{{ profileData.owner_address }}, {{ profileData.owner_city }}, {{ profileData.owner_state }}
+                        </p>
+                    </div>
+                    <div class="info-row">
+                        <i class="fas fa-phone-alt"></i>
+                        <p>{{ profileData.owner_phone }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Message -->
+            <div class="card message-card">
+                <h3>About {{ selectedPet.pet_name }}</h3>
+                <p>I am a friendly {{ selectedPet.breed }}. My family is waiting for me to come home. If you found me,
+                    please use the contact buttons above to let my family know I am safe!</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="profile-footer">
+            <p>Powered by <strong>TailCart</strong> Smart QR Systems</p>
+        </footer>
+    </div>
+</div>

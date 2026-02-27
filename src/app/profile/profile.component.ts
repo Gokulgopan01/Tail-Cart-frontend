@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -43,7 +43,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
   animations: [
@@ -121,6 +121,7 @@ export class ProfileComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private route: ActivatedRoute,
     private snackBar: MatSnackBar
   ) { }
 
@@ -131,6 +132,13 @@ export class ProfileComponent implements OnInit {
       return;
     }
     this.loadProfile();
+
+    // Check for tab query parameter
+    this.route.queryParams.subscribe(params => {
+      if (params['tab'] === 'pets') {
+        this.switchTab('pets');
+      }
+    });
   }
 
   switchTab(tab: 'owner' | 'pets'): void {

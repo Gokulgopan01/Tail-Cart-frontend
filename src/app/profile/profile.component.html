@@ -121,17 +121,26 @@
             <div class="pet-card-actions">
               <button class="action-btn preview" (click)="openPreviewModal(pet, $event)" title="Preview">
                 <i class="fas fa-eye"></i>
+                <span class="btn-label">View</span>
               </button>
               <button class="action-btn alert" (click)="openAlertModal(pet, $event)" title="Alerts">
                 <i class="fas fa-bell"></i>
+                <span class="btn-label">Alerts</span>
                 <span class="alert-count" *ngIf="pet.alerts && pet.alerts.length > 0">{{ pet.alerts.length }}</span>
               </button>
               <button class="action-btn edit" (click)="editPet(pet, $event)" title="Edit">
                 <i class="fas fa-pen"></i>
+                <span class="btn-label">Edit</span>
               </button>
               <button class="action-btn delete" (click)="deletePet(pet, $event)" title="Delete">
                 <i class="fas fa-trash-alt"></i>
+                <span class="btn-label">Remove</span>
               </button>
+              <a [routerLink]="['/pet-public']" [queryParams]="{user_id: userId, pet_id: pet.pet_id}"
+                class="action-btn public-link" title="Public Profile" (click)="$event.stopPropagation()">
+                <i class="fas fa-external-link-alt"></i>
+                <span class="btn-label">Public Profile</span>
+              </a>
             </div>
           </div>
         </div>
