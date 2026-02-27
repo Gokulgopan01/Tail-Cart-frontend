@@ -6,406 +6,135 @@
     <main class="content-overlay">
         <div class="container container-luxury position-relative">
             <!-- Header Section -->
-            <div class="about-header text-center mb-5 mb-lg-8" data-aos="fade-down" data-aos-duration="1000">
+            <div class="contact-header text-center mb-5">
                 <div class="badge-container mb-4">
                     <div class="luxury-badge">
                         <span class="badge-glow"></span>
-                        <i class="fas fa-cart-plus me-2"></i>
-                        About Tail Cart
+                        <i class="fas fa-envelope-open-text me-2"></i>
+                        Get In Touch
                     </div>
                 </div>
 
                 <h1 class="display-4 fw-bold mb-3">
-                    The Shopping Cart That <span class="gradient-text">Follows You Everywhere</span>
+                    Let's Build Something <span class="gradient-text">Beautiful Together</span>
                 </h1>
 
-                <p class="lead text-muted mx-auto" style="max-width: 700px;">
-                    Smart, secure, and surprisingly delightful. Shopping has never felt this good.
+                <p class="lead text-muted mx-auto" style="max-width: 600px;">
+                    Whether you have a question about a product, need support, or just want to say hello - we're here
+                    for you.
                 </p>
-
-                <!-- Interactive Button with Ripple Effect -->
-                <button class="luxury-button btn-lg px-5 py-3 rounded-pill mt-4" id="startShoppingBtn">
-                    <span class="button-text"><i class="fas fa-shopping-cart me-2"></i> Start Shopping</span>
-                    <span class="button-icon"><i class="fas fa-arrow-right"></i></span>
-                    <div class="button-shine"></div>
-                    <div class="ripple-effect"></div>
-                </button>
-
-                <!-- Click Counter Animation -->
-                <div class="click-counter mt-3" id="clickCounter" style="display: none;">
-                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
-                        <i class="fas fa-mouse-pointer me-2"></i>
-                        <span id="clickCount">0</span> clicks
-                    </span>
-                </div>
             </div>
 
-            <!-- Stats Section with Animated Numbers -->
-            <div class="stats-section mb-6 mb-lg-8" data-aos="fade-up" data-aos-delay="200">
-                <div class="row g-4 text-center">
-                    <div class="col-6 col-md-3">
-                        <div class="stat-card glass-card" onmouseover="animateNumber(this, 2.5, 'M+')">
-                            <div class="stat-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="stat-number" data-target="2.5">0</div>
-                            <div class="stat-label">Happy Shoppers</div>
-                            <div class="stat-trend positive">
-                                <i class="fas fa-arrow-up"></i> +25%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="stat-card glass-card" onmouseover="animateNumber(this, 75, 'K+')">
-                            <div class="stat-icon">
-                                <i class="fas fa-box"></i>
-                            </div>
-                            <div class="stat-number" data-target="75">0</div>
-                            <div class="stat-label">Products</div>
-                            <div class="stat-trend positive">
-                                <i class="fas fa-arrow-up"></i> +15%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="stat-card glass-card" onmouseover="animateNumber(this, 99.9, '%')">
-                            <div class="stat-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="stat-number" data-target="99.9">0</div>
-                            <div class="stat-label">Uptime</div>
-                            <div class="stat-trend positive">
-                                <i class="fas fa-check-circle"></i> 99.9%
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <div class="stat-card glass-card" onmouseover="animateNumber(this, 4.9, '★')">
-                            <div class="stat-icon">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="stat-number" data-target="4.9">0</div>
-                            <div class="stat-label">App Rating</div>
-                            <div class="stat-trend positive">
-                                <i class="fas fa-star"></i> 4.9★
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Main Content Grid -->
+            <div class="contact-grid">
 
-            <!-- Main Content -->
-            <div class="row g-5 g-lg-8 mb-5 mb-lg-8">
-                <!-- Left Column: Features -->
-                <div class="col-12 col-lg-8">
-                    <!-- Why You'll Love Us Section -->
-                    <div class="content-card mb-5" data-aos="fade-right" data-aos-delay="300">
-                        <div class="card-inner">
-                            <h2 class="section-title">
-                                Why You'll Love Us
-                                <div class="title-underline"></div>
-                            </h2>
-
-                            <p class="lead-text">
-                                We obsess over every detail so you can focus on what matters — finding amazing products.
-                            </p>
-
-                            <div class="row g-4">
-                                <div class="col-12 col-md-6">
-                                    <div class="feature-card glass-card-hover">
-                                        <div class="feature-icon-wrapper"
-                                            style="background: linear-gradient(135deg, #00a68c20, #006d5b20);">
-                                            <i class="fas fa-bolt" style="color: #00a68c;"></i>
-                                        </div>
-                                        <h4>Lightning Fast</h4>
-                                        <p>Checkout in seconds, not minutes. Because your time matters.</p>
-                                        <div class="feature-hover-effect"></div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="feature-card glass-card-hover">
-                                        <div class="feature-icon-wrapper"
-                                            style="background: linear-gradient(135deg, #c9a14a20, #b38b3f20);">
-                                            <i class="fas fa-robot" style="color: #c9a14a;"></i>
-                                        </div>
-                                        <h4>Smart Suggestions</h4>
-                                        <p>AI-powered recommendations that actually get you.</p>
-                                        <div class="feature-hover-effect"></div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="feature-card glass-card-hover">
-                                        <div class="feature-icon-wrapper"
-                                            style="background: linear-gradient(135deg, #28a74520, #1e7e3420);">
-                                            <i class="fas fa-shield-alt" style="color: #28a745;"></i>
-                                        </div>
-                                        <h4>Secure & Safe</h4>
-                                        <p>Bank-level encryption keeps your shopping worry-free.</p>
-                                        <div class="feature-hover-effect"></div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="feature-card glass-card-hover">
-                                        <div class="feature-icon-wrapper"
-                                            style="background: linear-gradient(135deg, #17a2b820, #117a8b20);">
-                                            <i class="fas fa-heart" style="color: #17a2b8;"></i>
-                                        </div>
-                                        <h4>Save Favorites</h4>
-                                        <p>Wishlist everything. Buy when you're ready.</p>
-                                        <div class="feature-hover-effect"></div>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Left Column: Contact Information -->
+                <div class="contact-info-col">
+                    <div class="contact-card glass-card">
+                        <div class="contact-icon-wrapper mail-icon">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                        <div class="contact-card-text">
+                            <h3>Chat with Us</h3>
+                            <p>Our friendly team is here to help.</p>
+                            <a href="mailto:[EMAIL_ADDRESS]" class="contact-link">[EMAIL_ADDRESS]</a>
                         </div>
                     </div>
 
-                    <!-- How It Works with Progress Animation -->
-                    <div data-aos="fade-up" data-aos-delay="400">
-                        <h2 class="section-title mb-4">
-                            How Tail Cart Works
-                            <div class="title-underline"></div>
-                        </h2>
+                    <div class="contact-card glass-card">
+                        <div class="contact-icon-wrapper location-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-card-text">
+                            <h3>Visit Us</h3>
+                            <p>Come say hello at our premium office.</p>
+                            <span class="contact-link">100 Luxury Avenue, Suite 400<br>New York, NY 10001</span>
+                        </div>
+                    </div>
 
-                        <div class="process-timeline">
-                            <!-- Step 1 -->
-                            <div class="process-step">
-                                <div class="step-indicator">
-                                    <div class="step-number">1</div>
-                                    <div class="step-progress"></div>
-                                </div>
-                                <div class="step-content glass-card">
-                                    <h4>Add to Cart</h4>
-                                    <p>Browse products and add them to your smart cart that follows you across devices
-                                    </p>
-                                    <div class="step-demo">
-                                        <i class="fas fa-shopping-cart"></i>
-                                        <span class="step-plus">+</span>
-                                        <i class="fas fa-mobile-alt"></i>
-                                        <span class="step-equals">=</span>
-                                        <i class="fas fa-sync-alt fa-spin"></i>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="contact-card glass-card">
+                        <div class="contact-icon-wrapper phone-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-card-text">
+                            <h3>Call Us</h3>
+                            <p>Mon-Fri from 8am to 5pm.</p>
+                            <a href="tel:+15551234567" class="contact-link">+1 (555) 123-4567</a>
+                        </div>
+                    </div>
 
-                            <!-- Step 2 -->
-                            <div class="process-step">
-                                <div class="step-indicator">
-                                    <div class="step-number">2</div>
-                                    <div class="step-progress"></div>
-                                </div>
-                                <div class="step-content glass-card">
-                                    <h4>Smart Suggestions</h4>
-                                    <p>Get personalized recommendations based on your shopping behavior</p>
-                                    <div class="step-demo">
-                                        <i class="fas fa-robot"></i>
-                                        <span class="step-arrow">→</span>
-                                        <i class="fas fa-lightbulb"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Step 3 -->
-                            <div class="process-step">
-                                <div class="step-indicator">
-                                    <div class="step-number">3</div>
-                                </div>
-                                <div class="step-content glass-card">
-                                    <h4>Secure Checkout</h4>
-                                    <p>Complete your purchase with bank-level security in just seconds</p>
-                                    <div class="step-demo">
-                                        <i class="fas fa-lock"></i>
-                                        <span class="step-check">✓</span>
-                                        <i class="fas fa-check-circle"></i>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- Social Links -->
+                    <div class="social-connect mt-4 text-center">
+                        <h4 class="mb-3" style="color: var(--primary-dark-green); font-weight: 700;">Connect Globally
+                        </h4>
+                        <div class="social-flex">
+                            <a href="#" class="social-pill"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-pill"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-pill"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-pill"><i class="fab fa-facebook-f"></i></a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column: Team & Visual Content -->
-                <div class="col-12 col-lg-4">
-                    <div class="sticky-lg-top" style="top: 20px;">
-                        <!-- Team Member Card - Gokul Gopan -->
-                        <div class="team-card glass-card mb-4" data-aos="fade-left" data-aos-delay="300">
-                            <div class="team-card-inner">
-                                <div class="team-image-wrapper">
-                                    <div class="team-image-placeholder">
-                                        <i class="fas fa-user-circle"></i>
-                                    </div>
-                                    <div class="team-social">
-                                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                                        <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
-                                    </div>
-                                </div>
-                                <div class="team-info">
-                                    <h3 class="team-name">Gokul Gopan</h3>
-                                    <div class="team-title">
-                                        <span class="title-badge">Founder & Lead Software Engineer</span>
-                                    </div>
-                                    <p class="team-bio">
-                                        Visionary technologist with 8+ years in e-commerce innovation.
-                                        Previously led engineering at major tech firms, now building
-                                        the future of smart shopping.
-                                    </p>
-                                    <div class="team-expertise">
-                                        <span class="expertise-tag">Full Stack</span>
-                                        <span class="expertise-tag">AI/ML</span>
-                                        <span class="expertise-tag">Cloud Arch</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Right Column: Contact Form -->
+                <div class="contact-form-col">
+                    <div class="form-wrapper glass-card-hover">
+                        <h2 class="form-title">Send us a Message</h2>
+                        <p class="form-subtitle">We typically reply within 2 hours during business hours.</p>
 
-                        <!-- Team Member Card - Gowripriya SR -->
-                        <div class="team-card glass-card mb-4" data-aos="fade-left" data-aos-delay="400">
-                            <div class="team-card-inner">
-                                <div class="team-image-wrapper">
-                                    <div class="team-image-placeholder">
-                                        <i class="fas fa-user-circle"></i>
-                                    </div>
-                                    <div class="team-social">
-                                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                                    </div>
-                                </div>
-                                <div class="team-info">
-                                    <h3 class="team-name">Gowripriya SR</h3>
-                                    <div class="team-title">
-                                        <span class="title-badge">Chief Operating Officer</span>
-                                    </div>
-                                    <p class="team-bio">
-                                        Marketing strategist and operations expert. Driving growth
-                                        and customer satisfaction with innovative campaigns and
-                                        service excellence.
-                                    </p>
-                                    <div class="team-expertise">
-                                        <span class="expertise-tag">Marketing</span>
-                                        <span class="expertise-tag">Operations</span>
-                                        <span class="expertise-tag">Strategy</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <form (ngSubmit)="onSubmitForm()" #contactForm="ngForm" class="luxury-contact-form mt-4">
 
-                        <!-- Visual Card with Animation -->
-                        <div class="visual-card glass-card" data-aos="fade-left" data-aos-delay="500">
-                            <div class="visual-card-inner">
-                                <div class="animated-showcase">
-                                    <div class="floating-cart-icon">
-                                        <i class="fas fa-shopping-cart"></i>
-                                    </div>
-                                    <div class="pulse-ring"></div>
-
-                                    <!-- Floating Stats -->
-                                    <div class="mini-stat top-right">
-                                        <span class="stat-value">2.5M+</span>
-                                    </div>
-                                    <div class="mini-stat bottom-left">
-                                        <span class="stat-value">75K+</span>
-                                    </div>
-
-                                    <!-- Animated Products -->
-                                    <div class="product-flow">
-                                        <i class="fas fa-box product-1"></i>
-                                        <i class="fas fa-box product-2"></i>
-                                        <i class="fas fa-box product-3"></i>
-                                    </div>
-                                </div>
-
-                                <div class="text-center mt-4">
-                                    <h4>Smart Shopping Experience</h4>
-                                    <p class="small text-muted">
-                                        Your cart follows you everywhere with AI-powered suggestions
-                                        and seamless checkout
-                                    </p>
-                                </div>
+                            <!-- Name Input -->
+                            <div class="input-float-group" [class.invalid]="nameRef.invalid && nameRef.touched">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="contactName" name="name" [(ngModel)]="contactData.name"
+                                    #nameRef="ngModel" required minlength="2" placeholder=" ">
+                                <label for="contactName">Full Name</label>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Testimonials Section -->
-            <div class="testimonials-section mt-6" data-aos="fade-up" data-aos-delay="600">
-                <div class="text-center mb-5">
-                    <h2 class="section-title">What Our Shoppers Say</h2>
-                    <p class="text-muted">Join millions of happy customers worldwide</p>
-                </div>
+                            <!-- Email Input -->
+                            <div class="input-float-group" [class.invalid]="emailRef.invalid && emailRef.touched">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="contactEmail" name="email" [(ngModel)]="contactData.email"
+                                    #emailRef="ngModel" required email placeholder=" ">
+                                <label for="contactEmail">Email Address</label>
+                            </div>
 
-                <div class="row g-4">
-                    <div class="col-12 col-md-4">
-                        <div class="testimonial-card glass-card-hover">
-                            <div class="testimonial-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                            <!-- Subject Input -->
+                            <div class="input-float-group">
+                                <i class="fas fa-tag input-icon"></i>
+                                <input type="text" id="contactSubject" name="subject" [(ngModel)]="contactData.subject"
+                                    placeholder=" ">
+                                <label for="contactSubject">Subject (Optional)</label>
                             </div>
-                            <p class="testimonial-text">
-                                "Tail Cart made shopping so much easier! The AI suggestions are spot on."
-                            </p>
-                            <div class="testimonial-author">
-                                <div class="author-avatar">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
-                                <div class="author-info">
-                                    <h6>Sarah M.</h6>
-                                    <small>Frequent Shopper</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-12 col-md-4">
-                        <div class="testimonial-card glass-card-hover">
-                            <div class="testimonial-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
+                            <!-- Message Textarea -->
+                            <div class="input-float-group textarea-group"
+                                [class.invalid]="msgRef.invalid && msgRef.touched">
+                                <i class="fas fa-comment-alt input-icon"></i>
+                                <textarea id="contactMessage" name="message" [(ngModel)]="contactData.message"
+                                    #msgRef="ngModel" required minlength="10" placeholder=" " rows="4"></textarea>
+                                <label for="contactMessage">Your Message</label>
                             </div>
-                            <p class="testimonial-text">
-                                "The checkout is lightning fast. I save so much time shopping now!"
-                            </p>
-                            <div class="testimonial-author">
-                                <div class="author-avatar">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
-                                <div class="author-info">
-                                    <h6>James L.</h6>
-                                    <small>Tech Enthusiast</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-12 col-md-4">
-                        <div class="testimonial-card glass-card-hover">
-                            <div class="testimonial-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                            <!-- Error/Success Alerts -->
+                            <div class="modern-alert error-alert" *ngIf="submitError">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ submitError }}</span>
                             </div>
-                            <p class="testimonial-text">
-                                "My cart follows me everywhere. No more losing items between devices!"
-                            </p>
-                            <div class="testimonial-author">
-                                <div class="author-avatar">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
-                                <div class="author-info">
-                                    <h6>Maria G.</h6>
-                                    <small>Online Shopper</small>
-                                </div>
+                            <div class="modern-alert success-alert" *ngIf="submitSuccess">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Thanks for reaching out! We'll be in touch soon.</span>
                             </div>
-                        </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="modern-submit-btn mt-2"
+                                [disabled]="contactForm.invalid || isSubmitting">
+                                <span *ngIf="!isSubmitting">Send Message <i class="fas fa-paper-plane ms-2"></i></span>
+                                <div class="loader-ring" *ngIf="isSubmitting"></div>
+                            </button>
+
+                        </form>
                     </div>
                 </div>
             </div>

@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, ElementRef, ViewChild, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.css']
 })
@@ -17,6 +19,17 @@ export class ContactComponent implements AfterViewInit, OnDestroy {
   private mouseY = 0;
   private animationFrameId: number | null = null;
   private clickCount = 0;
+
+  // Form State
+  contactData = {
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  };
+  isSubmitting = false;
+  submitError = '';
+  submitSuccess = false;
 
   ngAfterViewInit(): void {
     this.initCanvas();
@@ -165,6 +178,37 @@ export class ContactComponent implements AfterViewInit, OnDestroy {
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
     }
+  }
+
+  // --- Form Logic ---
+  onSubmitForm(): void {
+    if (!this.contactData.name || !this.contactData.email || !this.contactData.message) {
+      this.submitError = 'Please fill out all required fields.';
+      return;
+    }
+
+    this.submitError = '';
+    this.submitSuccess = false;
+    this.isSubmitting = true;
+
+    // Simulate API call delay
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.submitSuccess = true;
+
+      // Reset form
+      this.contactData = {
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      };
+
+      // Hide success message after 5 seconds
+      setTimeout(() => {
+        this.submitSuccess = false;
+      }, 5000);
+    }, 1500);
   }
 }
 

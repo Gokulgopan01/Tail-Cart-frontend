@@ -107,16 +107,13 @@ export class CartComponent implements OnInit, AfterViewInit {
 
 
   /** Show snackbar notification */
-  private showSnackBar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
-    const config: MatSnackBarConfig = {
-      duration: type === 'error' || type === 'warning' ? 5000 : 3000,
+  private showSnackBar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', action: string = 'Close'): void {
+    this.snackBar.open(message, action, {
+      duration: type === 'success' ? 4000 : 3000,
       horizontalPosition: 'right',
       verticalPosition: 'top',
-      panelClass: [`snackbar-${type}`],
-      politeness: 'polite'
-    };
-
-    this.snackBar.open(message, 'Close', config);
+      panelClass: [`snackbar-${type}`]
+    });
   }
 
   /** Load cart items */

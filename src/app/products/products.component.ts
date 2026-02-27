@@ -437,12 +437,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
     this.http.post(this.cartApi, payload, this.getHeaders()).subscribe({
       next: (res: any) => {
-        this.showSnackbar(`${this.selectedProductForCart!.model} added to your cart!`, 'success');
+        this.showSnackbar(`${this.selectedProductForCart!.model} added to your cart!`, 'success', 'VIEW CART');
         this.loadCartItems();
         this.closeModal();
-        this.selectedProductForCart = null;
-        this.selectedPetId = '';
-        this.quantity = 1;
       },
       error: (error) => {
         console.error('Error adding to cart:', error);
@@ -606,13 +603,19 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     img.classList.add('loaded');
   }
 
-  showSnackbar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info') {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
+  showSnackbar(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', action: string = 'Close') {
+    const snackBarRef = this.snackBar.open(message, action, {
+      duration: type === 'success' ? 5000 : 3000,
       horizontalPosition: 'right',
       verticalPosition: 'top',
       panelClass: [`snackbar-${type}`]
     });
+
+    if (action === 'VIEW CART') {
+      snackBarRef.onAction().subscribe(() => {
+        window.location.href = '/cart';
+      });
+    }
   }
 
   // Existing admin methods remain the same
