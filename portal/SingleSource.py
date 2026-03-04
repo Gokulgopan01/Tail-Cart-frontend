@@ -417,6 +417,7 @@ class SingleSource:
                                 remarks="No orders in the portal",
                                 severity="INFO"
                             )
+                            #update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
 
                     if not orderidnotfound:
                         # print("portal_orderid_portal not found")
@@ -428,6 +429,7 @@ class SingleSource:
                             remarks=f"portal_orderid_portal not found {portal_orderid_portal}",
                             severity="INFO"
                         )
+                        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                         #statuschange(order_details, "29", "3" if order_desc == "X-Completed" else "16", "14")
                     else:
                         # print("address completed")
@@ -451,6 +453,7 @@ class SingleSource:
                             severity="INFO"
                         )
                         #statuschange(order_details, "28", "3" if order_desc == "X-Completed" else "16", "14")
+                        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                     else:
                         # logging.info("Exception Form type outside the form")
                         logger.log(
@@ -470,6 +473,7 @@ class SingleSource:
                         remarks=f"No orders in the portal Address Not Found {order_details['subject_address']}",
                         severity="INFO"
                     )
+                    update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                     #statuschange(order_details, "29", "3" if order_desc == "X-Completed" else "16", "14")
 
         except Exception as e:
