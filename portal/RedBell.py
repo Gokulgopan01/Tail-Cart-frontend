@@ -773,42 +773,97 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
 #         return False
 
 def upload_file_js(driver, input_id, file_path):
+    """
+    Uploads a file using two methods:
+    Method 1: Direct Selenium send_keys after making input visible.
+    Method 2: Fallback to portal's internal uploadDocument JS function.
+    """
+    # --- Method 1: Direct Selenium Upload ---
     try:
-        #  Trigger portal's JavaScript to open upload field
-        driver.execute_script(f"uploadDocument('{input_id}')")
-        time.sleep(1)
-
-        #  Find the now-visible file input
         input_elem = driver.find_element(By.ID, input_id)
-
-        #  Send file path
+        
+        # Make input visible via JS
+        driver.execute_script("""
+            arguments[0].style.display = 'block'; 
+            arguments[0].style.visibility = 'visible'; 
+            arguments[0].style.height = '1px';
+            arguments[0].style.width = '1px';
+            arguments[0].style.opacity = 1;
+            arguments[0].style.position = 'absolute';
+        """, input_elem)
+        
+        # Clear and Send Keys
+        driver.execute_script("arguments[0].value = '';", input_elem)
         input_elem.send_keys(file_path)
         time.sleep(2)
 
-        #  Wait for upload completion (check if download link updates)
-        download_id = input_elem.get_attribute("data-downloadid")
-        if download_id:
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, download_id))
+        # Quick check if it registered
+        input_value = driver.execute_script("return arguments[0].value;", input_elem)
+        if input_value and input_value.strip() != "":
+            logger.log(
+                module="Redbell-upload_file_js",
+                order_id=hybrid_orderid,
+                action_type="Document-upload-success",
+                remarks=f"[✓] Method 1: Uploaded {file_path} to {input_id}",
+                severity="INFO"
             )
-        #print(f"[✓] Uploaded {file_path} to {input_id}")
+            return True
+            
         logger.log(
-        module="Redbell-upload_file_js",
-        order_id=hybrid_orderid,
-        action_type="Document-upload-success",
-        remarks=f"[✓] Uploaded {file_path} to {input_id}",
-        severity="INFO"
+            module="Redbell-upload_file_js",
+            order_id=hybrid_orderid,
+            action_type="Warning",
+            remarks=f"Method 1 did not register value for {input_id}. Trying Method 2 fallback.",
+            severity="INFO"
         )
-        return True
 
     except Exception as e:
-        #print(f"[✗] Upload failed for {input_id}: {e}")
         logger.log(
-        module="Redbell-upload_file_js",
-        order_id=hybrid_orderid,
-        action_type="Document-upload-failure",
-        remarks=f"[✗] Upload failed for {input_id}: {e}",
-        severity="INFO"
+            module="Redbell-upload_file_js",
+            order_id=hybrid_orderid,
+            action_type="Warning",
+            remarks=f"Method 1 exception for {input_id}: {e}. Trying Method 2 fallback.",
+            severity="INFO"
+        )
+
+    # # --- Method 2: Fallback to Portal JS ---
+    try:
+        # Attempt to trigger portal's internal function
+        driver.execute_script(f"if(typeof uploadDocument === 'function') {{ uploadDocument('{input_id}'); }}")
+        time.sleep(1)
+
+        input_elem = driver.find_element(By.ID, input_id)
+        input_elem.send_keys(file_path)
+        time.sleep(2)
+
+        # Final verification
+        input_value = driver.execute_script("return arguments[0].value;", input_elem)
+        if input_value and input_value.strip() != "":
+            logger.log(
+                module="Redbell-upload_file_js",
+                order_id=hybrid_orderid,
+                action_type="Document-upload-success",
+                remarks=f"[✓] Method 2: Uploaded {file_path} to {input_id}",
+                severity="INFO"
+            )
+            return True
+        else:
+            logger.log(
+                module="Redbell-upload_file_js",
+                order_id=hybrid_orderid,
+                action_type="Document-upload-failure",
+                remarks=f"[✗] Both upload methods failed for {input_id}.",
+                severity="INFO"
+            )
+            return False
+
+    except Exception as e:
+        logger.log(
+            module="Redbell-upload_file_js",
+            order_id=hybrid_orderid,
+            action_type="Document-upload-failure",
+            remarks=f"[✗] Method 2 exception for {input_id}: {e}",
+            severity="INFO"
         )
         return False
 
