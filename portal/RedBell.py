@@ -97,7 +97,7 @@ class RedBell:
                             order_id=self.order_id
                         )
                         #input()
-                        #print("Completed")
+                        #print("Filled")
                         # redbell_formopen_fill(self, orders, session,  merged_json=None,
                         #     order_details=self.order_details,
                         #     order_id=self.order_id)
@@ -689,7 +689,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session, page_urls
 
 
         if saved_form:
-            #update_order_status(order_id, "In Progress", "Entry", "Completed")
+            #update_order_status(order_id, "In Progress", "Entry", "Filled")
             logger.log(
                             module="Redbell-fill_form_multi",
                             order_id=hybrid_orderid,
@@ -1671,7 +1671,7 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
             else:
                 tfs_statuschange(tfs_orderid , "26", "5", "20")
 
-            update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
             
         else:
 

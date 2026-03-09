@@ -567,7 +567,7 @@ class rrreview:
             else:
                 tfs_statuschange(tfs_orderid , "26", "5", "20")
 
-            update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
             print(hybrid_orderid,"Smart Entry")
 
             return saved_form

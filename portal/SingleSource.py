@@ -799,7 +799,7 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
             else:
                 tfs_statuschange(tfs_orderid , "26", "5", "20")
 
-            update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
             
         else:
             # logging.warning(f"One or more functions failed: form_fill={form_fill}, upload_photos={upload_photos}, signature_result={signature_result}")
@@ -1168,7 +1168,7 @@ def fill_form_multi(self, merged_json, order_id, form_config, session):
                             )
 
             if saved_form:
-                #update_order_status(order_id, "In Progress", "Entry", "Completed")
+                #update_order_status(order_id, "In Progress", "Entry", "Filled")
                 return True
             else:
                 #update_order_status(order_id, "In Progress", "Entry", "Failed")
