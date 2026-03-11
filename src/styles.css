@@ -31,16 +31,14 @@ body {
   font-family: 'Outfit', 'Inter', sans-serif;
 }
 
-/* Global Content Container to avoid navbar overlap */
+/* Global Content Container - Navbar now floats OVER content */
 .page-content-wrapper {
-  padding-top: 100px;
-  /* Base padding for mobile */
+  padding-top: 0;
 }
 
 @media (min-width: 769px) {
   .page-content-wrapper {
-    padding-top: 120px;
-    /* Header offset for desktop */
+    padding-top: 0;
   }
 }
 

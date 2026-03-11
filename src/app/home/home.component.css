@@ -1,4 +1,4 @@
-﻿/* ── Fonts ─────────────────────────────────────────────────────── */
+/* ── Fonts ─────────────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Playfair+Display:wght@700&display=swap');
 
 /* ── Section shell ──────────────────────────────────────────────── */
@@ -7,9 +7,9 @@
   width: 100%;
   overflow: hidden;
   /* mobile: taller viewport */
-  height: 100svh;
-  min-height: 560px;
-  max-height: 900px;
+  height: 70svh;
+  min-height: 400px; /* Reduced min-height */
+  max-height: 700px; /* Reduced max-height */
   background: #0a1a0f;
   /* fallback dark green */
 }
@@ -318,9 +318,9 @@
 /* 368px – 480px (primary mobile) */
 @media (max-width: 480px) {
   .hero-section {
-    height: 100svh;
-    min-height: 580px;
-    max-height: 750px;
+    height: 70svh;
+    min-height: 400px;
+    max-height: 600px;
   }
 
   .slide-content {
@@ -464,9 +464,16 @@
 /* 1025px+ (desktop) */
 @media (min-width: 1025px) {
   .hero-section {
-    height: 100vh;
-    min-height: 600px;
+    height: 70vh;
+    min-height: 500px;
     max-height: none;
+    background: #050a06; /* Darker green specifically for gap filling */
+  }
+
+  .slide-bg {
+    background-size: contain; /* Ensure full image is visible */
+    background-position: center;
+    background-repeat: no-repeat;
   }
 
   .slide-content {
@@ -564,129 +571,139 @@
 
 /*Fetures------------------------------------------------------------------------------------------------------------------------------------*/
 
-/* ── Features Stack Section ───────────────────────────────────────── */
-.features-section {
-  padding: 80px 20px 40px;
-  background: #fdfdfd;
-  overflow: visible;
+/* ── Services Sticker Section ───────────────────────────────────────── */
+.services-sticker-section {
+  padding: 80px 0;
+  background: #ffffff;
+  overflow: hidden;
 }
 
-.features-stack-container {
+.services-sticker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.service-sticker-card {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  /* Gap is managed by sticky offsets */
-  max-width: 900px;
-  margin: 0 auto;
-  padding-bottom: 50px;
-}
-
-.feature-card-wrapper {
-  position: sticky;
-  top: 15vh;
-  /* Distance from top when sticking */
-  padding-bottom: 40px;
-  /* Space for the next card to peek */
-  width: 100%;
-  transition: transform 0.5s ease;
-}
-
-/* Dynamic stacking offset */
-.feature-card-wrapper[style*="--index: 2"] {
-  top: calc(15vh + 30px);
-}
-
-.feature-card-wrapper[style*="--index: 3"] {
-  top: calc(15vh + 60px);
-}
-
-.feature-card-wrapper[style*="--index: 4"] {
-  top: calc(15vh + 90px);
-}
-
-.feature-card {
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-  height: 400px;
-  position: relative;
+  align-items: center;
+  text-align: center;
+  padding: 30px 20px;
+  background: #ffffff;
+  border-radius: 24px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   cursor: pointer;
-  border: 1px solid rgba(15, 61, 46, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-.feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 30px 60px rgba(15, 61, 46, 0.15);
+.service-sticker-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  border-color: rgba(212, 175, 55, 0.2);
 }
 
-.card-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  transition: transform 1.2s cubic-bezier(0.2, 1, 0.3, 1);
-}
-
-.feature-card:hover .card-bg {
-  transform: scale(1.1);
-}
-
-.card-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom,
-      rgba(15, 61, 46, 0.1) 0%,
-      rgba(15, 61, 46, 0.4) 60%,
-      rgba(15, 61, 46, 0.85) 100%);
-}
-
-.card-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 40px;
-  color: white;
-  z-index: 2;
-}
-
-.card-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin-bottom: 12px;
-  color: #fff;
-}
-
-.card-description {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
+.sticker-visual {
+  position: relative;
+  width: 160px;
+  height: 160px;
   margin-bottom: 25px;
-  max-width: 80%;
-}
-
-.card-button {
-  padding: 15px 0;
-  font-size: 0.9rem;
-  font-weight: 700;
-  border: none;
-  background: none;
-  color: #D4AF37;
-  text-transform: uppercase;
-  letter-spacing: 2px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  transition: color 0.3s ease;
+  justify-content: center;
 }
 
-.card-button:hover {
-  color: #fff;
+.circle-bg {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  z-index: 1;
+  transition: transform 0.4s ease;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.service-sticker-card:hover .circle-bg {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Gradient Circles */
+.orange-circle { background: linear-gradient(135deg, #fff3e0, #ffcc80); border: 2px solid #fb8c00; }
+.purple-circle { background: linear-gradient(135deg, #f3e5f5, #e1bee7); border: 2px solid #8e24aa; }
+.blue-circle   { background: linear-gradient(135deg, #e3f2fd, #bbdefb); border: 2px solid #1e88e5; }
+.emerald-circle { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border: 2px solid #43a047; }
+.gold-circle    { background: linear-gradient(135deg, #fffde7, #fff9c4); border: 2px solid #fbc02d; }
+
+.sticker-img {
+  position: relative;
+  width: 120%; /* Bigger than the circle */
+  height: 120%;
+  object-fit: contain;
+  z-index: 2;
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
+  transition: transform 0.4s ease;
+  transform: translateY(-5px); /* Pop up slightly */
+}
+
+.service-sticker-card:hover .sticker-img {
+  transform: scale(1.1) translateY(-12px);
+}
+
+.service-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.service-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.service-desc {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #64748b;
+  margin: 0;
+  max-width: 200px;
+}
+
+.learn-more-btn {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f3d2e; /* Dark green theme */
+  text-decoration: none;
+  margin-top: 5px;
+  transition: opacity 0.3s ease;
+}
+
+.service-sticker-card:hover .learn-more-btn {
+  opacity: 0.7;
+}
+
+/* ── Scroll Up Button Refinement ───────────────────────────────────── */
+.scroll-top-btn {
+  bottom: 100px; /* Above the bottom navbar */
+  right: 20px;
+  background: #0f3d2e; /* Dark green theme */
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 4px 15px rgba(15, 61, 46, 0.3);
+  transition: all 0.3s ease;
+}
+
+.scroll-top-btn:hover {
+  background: #D4AF37; /* Gold on hover */
+  transform: translateY(-5px);
 }
 
 /* ── Detailed Section (Smart Safety System) ─────────────────────────── */

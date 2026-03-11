@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit {
   cartItems = 3;
   isMobileMenuOpen = false;
   isScrolled = false;
+  isPastHalfScreen = false;
 
   constructor(private router: Router) { }
 
@@ -31,7 +32,8 @@ export class NavbarComponent implements OnInit {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    this.isScrolled = window.scrollY > 100;
+    this.isScrolled = window.scrollY > 50;
+    this.isPastHalfScreen = window.scrollY > (window.innerHeight / 2);
   }
 
   toggleMobileMenu() {

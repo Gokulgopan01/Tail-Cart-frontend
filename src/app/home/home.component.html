@@ -1,4 +1,4 @@
-﻿<!--Home First section----------------------------------------------------------------------------------------------------------------------------->
+<!--Home First section----------------------------------------------------------------------------------------------------------------------------->
 <section class="hero-section" id="heroSection" (touchstart)="onHeroTouchStart($event)"
   (touchend)="onHeroTouchEnd($event)">
 
@@ -160,98 +160,76 @@
 </section>
 
 
-<!-- Features services Section-------------------------------------------------------------------------------------------------------------------------------- -->
-
-<section class="features-section fade-in">
+<!-- Explore TailCart Services Section -->
+<section class="services-sticker-section fade-in">
   <div class="container">
     <div class="section-header">
-      <h2 class="section-title">Pet Services</h2>
-      <p class="section-subtitle">Everything you need for your pet's safety and well-being</p>
+      <h2 class="section-title">Explore TailCart Services</h2>
+      <p class="section-subtitle">Premium care solutions for your pet&apos;s modern life.</p>
     </div>
 
-    <div class="features-stack-container fade-in">
-      <!-- Card 1: Pet QR Code Shop -------------------------->
-      <div class="feature-card-wrapper" style="--index: 1;">
-        <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
-          <div class="card-bg" style="background-image: url('assets/images/photo2.jpg')"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <h3 class="card-title">Smart QR Pet Tags</h3>
-            <p class="card-description">
-              Scan the QR code to get location info of the pet and find them instantly.
-            </p>
-            <button class="card-button" (click)="navigateToShop()">
-              SHOP QR TAGS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
-                <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
+    <div class="services-sticker-grid">
+      <!-- QR Keychains -->
+      <div class="service-sticker-card" (click)="navigateToShop()">
+        <div class="sticker-visual">
+          <div class="circle-bg orange-circle"></div>
+          <img src="assets/images/service_keychain.png" alt="QR Keychains" class="sticker-img">
+        </div>
+        <div class="service-info">
+          <h3 class="service-name">QR Keychains</h3>
+          <p class="service-desc">Secure tracking for your pet with instant notification technology.</p>
+          <a class="learn-more-btn">Learn more &#8594;</a>
         </div>
       </div>
 
-      <!-- Card 2: Pet Document Locker ----------------------------->
-      <div class="feature-card-wrapper" style="--index: 2;">
-        <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
-          <div class="card-bg" style="background-image: url('assets/images/photo3.jpg')"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <h3 class="card-title">Pet Document Locker</h3>
-            <p class="card-description">
-              Upload and securely save all your pet documents in one safe place.
-            </p>
-            <button class="card-button" (click)="navigateToDocuments()">
-              VIEW DOCUMENTS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
-                <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
+      <!-- Smart Reminders -->
+      <div class="service-sticker-card" (click)="navigateToAlerts()">
+        <div class="sticker-visual">
+          <div class="circle-bg purple-circle"></div>
+          <img src="assets/images/service_reminders.png" alt="Smart Reminders" class="sticker-img">
+        </div>
+        <div class="service-info">
+          <h3 class="service-name">Smart Reminders</h3>
+          <p class="service-desc">Never miss a vet visit or medication with intelligent scheduling.</p>
+          <a class="learn-more-btn">Learn more &#8594;</a>
+        </div>
+      </div>
+      <!-- Live Notifications -->
+      <div class="service-sticker-card" (click)="navigateToAlerts()">
+        <div class="sticker-visual">
+          <div class="circle-bg blue-circle"></div>
+          <img src="assets/images/service_notifications.png" alt="Live Notifications" class="sticker-img">
+        </div>
+        <div class="service-info">
+          <h3 class="service-name">Live Notifications</h3>
+          <p class="service-desc">Get instant map alerts when your lost pet&apos;s tag is scanned.</p>
+          <a class="learn-more-btn">Learn more &#8594;</a>
         </div>
       </div>
 
-      <!-- Card 3: Important Alerts -->
-      <div class="feature-card-wrapper" style="--index: 3;">
-        <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
-          <div class="card-bg" style="background-image: url('assets/images/photo4.jpg')"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <h3 class="card-title">Remainder System</h3>
-            <p class="card-description">
-              Get notifications on your pets vaccination dates and important other alerts.
-            </p>
-            <button class="card-button" (click)="navigateToAlerts()">
-              SET UP ALERTS <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
-                <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
+      <!-- AI Pet Doctor -->
+      <div class="service-sticker-card" (click)="navigateToDoctor()">
+        <div class="sticker-visual">
+          <div class="circle-bg emerald-circle"></div>
+          <img src="assets/images/service_doctor.png" alt="AI Pet Doctor" class="sticker-img">
+        </div>
+        <div class="service-info">
+          <h3 class="service-name">AI Pet Doctor</h3>
+          <p class="service-desc">Instant pediatric and behavioral health insights from our advanced AI model.</p>
+          <a class="learn-more-btn">Learn more &#8594;</a>
         </div>
       </div>
 
-      <!-- Card 4: AI Pet Doctor -->
-      <div class="feature-card-wrapper" style="--index: 4;">
-        <div class="feature-card" (mouseenter)="onCardHover($event)" (mouseleave)="onCardLeave($event)">
-          <div class="card-bg" style="background-image: url('assets/images/photo5.jpg')"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <h3 class="card-title">AI Pet Doctor</h3>
-            <p class="card-description">
-              Get 24/7 support from our AI doctor for your pet's health.
-            </p>
-            <button class="card-button" (click)="navigateToDoctor()">
-              CONSULT AI DOCTOR <svg class="arrow-icon" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style="width:18px;height:18px;margin-left:4px;vertical-align:middle;">
-                <path d="M5 12h14m0 0l-7-7m7 7l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
+      <!-- Document Vault -->
+      <div class="service-sticker-card" (click)="navigateToDocuments()">
+        <div class="sticker-visual">
+          <div class="circle-bg gold-circle"></div>
+          <img src="assets/images/service_vault.png" alt="Document Vault" class="sticker-img">
+        </div>
+        <div class="service-info">
+          <h3 class="service-name">Document Vault</h3>
+          <p class="service-desc">Securely store and share all your pet paperwork in one smart cloud.</p>
+          <a class="learn-more-btn">Learn more &#8594;</a>
         </div>
       </div>
     </div>
