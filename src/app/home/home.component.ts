@@ -53,6 +53,42 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       diff > 0 ? this.nextHeroSlide() : this.prevHeroSlide();
     }
   }
+
+  // ── How It Works Carousel ──────────────────────────────────────
+  processSlide = 0;
+  private processTouchStartX = 0;
+
+  nextProcessSlide(): void {
+    if (this.processSlide < 4) {
+      this.processSlide++;
+    } else {
+      this.processSlide = 0; // Loop back
+    }
+  }
+
+  prevProcessSlide(): void {
+    if (this.processSlide > 0) {
+      this.processSlide--;
+    } else {
+      this.processSlide = 4; // Loop to end
+    }
+  }
+
+  goToProcessSlide(index: number): void {
+    this.processSlide = index;
+  }
+
+  onProcessTouchStart(event: TouchEvent): void {
+    this.processTouchStartX = event.touches[0].clientX;
+  }
+
+  onProcessTouchEnd(event: TouchEvent): void {
+    const diff = this.processTouchStartX - event.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      diff > 0 ? this.nextProcessSlide() : this.prevProcessSlide();
+    }
+  }
+  // ───────────────────────────────────────────────────────────────
   // ───────────────────────────────────────────────────────────────
 
   isScrolled = false;
@@ -301,12 +337,27 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.router.navigate(['/doctor-ai']);
   }
 
-  // Scroll to top function
+  // Scroll to top function - Custom slow smooth scroll
   scrollToTop(): void {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    const duration = 1500; // 1.5 seconds for a slower feel
+    const start = window.scrollY;
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime: number) => {
+      const elapsedTime = currentTime - startTime;
+      const progress = Math.min(elapsedTime / duration, 1);
+
+      // Ease out cubic function for a premium feel
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+
+      window.scrollTo(0, start * (1 - easeProgress));
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
   }
 
   // Listen to scroll events to show/hide scroll-to-top button

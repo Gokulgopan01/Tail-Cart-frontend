@@ -44,6 +44,11 @@ export class NavbarComponent implements OnInit {
     this.isMobileMenuOpen = false;
   }
 
+  navigateToHome() {
+    this.router.navigate(['/home']);
+    this.closeMobileMenu();
+  }
+
   logout() {
     localStorage.clear();
     this.router.navigate(['/auth']);

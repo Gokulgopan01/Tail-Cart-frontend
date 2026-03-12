@@ -1,4 +1,4 @@
-<!--Home First section----------------------------------------------------------------------------------------------------------------------------->
+﻿<!--Home First section----------------------------------------------------------------------------------------------------------------------------->
 <section class="hero-section" id="heroSection" (touchstart)="onHeroTouchStart($event)"
   (touchend)="onHeroTouchEnd($event)">
 
@@ -18,7 +18,7 @@
               stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
           </svg>
-          Smart Protection
+          Tail Tag
         </div>
         <h1 class="slide-title">QR Tagged<br><span class="slide-accent">Pet Keychains</span></h1>
         <p class="slide-desc">Buy a smart QR keychain for your dog&apos;s collar. Anyone who finds them can scan &amp;
@@ -49,7 +49,7 @@
               d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          Secure Vault
+          Tail Vault
         </div>
         <h1 class="slide-title">Pet Document<br><span class="slide-accent">Locker</span></h1>
         <p class="slide-desc">Store your pet&apos;s vaccination records, prescriptions &amp; certificates securely in
@@ -80,7 +80,7 @@
               d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          Never Miss a Date
+          Tail Scheduler
         </div>
         <h1 class="slide-title">Smart<br><span class="slide-accent">Alert System</span></h1>
         <p class="slide-desc">Set vaccination reminders and medical appointments. Get notified via Email &amp; Mobile so
@@ -111,7 +111,7 @@
               d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-          AI Powered
+          Tail Care+
         </div>
         <h1 class="slide-title">AI Pet<br><span class="slide-accent">Doctor</span></h1>
         <p class="slide-desc">Ask anything about your pet&apos;s health, diet, or behavior. Our specially trained AI
@@ -132,11 +132,6 @@
     </div>
 
   </div>
-
-  <!-- Navigation Arrows -->
-  <button class="hero-nav hero-prev" (click)="prevHeroSlide()" aria-label="Previous">&#8249;</button>
-  <button class="hero-nav hero-next" (click)="nextHeroSlide()" aria-label="Next">&#8250;</button>
-
   <!-- Progress Bar -->
   <div class="hero-progress">
     <div class="hero-progress-bar running" [attr.key]="heroSlide"
@@ -163,20 +158,21 @@
 <!-- Explore TailCart Services Section -->
 <section class="services-sticker-section fade-in">
   <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">Explore TailCart Services</h2>
-      <p class="section-subtitle">Premium care solutions for your pet&apos;s modern life.</p>
+    <div class="section-header" data-aos="fade-up">
+      <div class="premium-tag tag-emerald">Premium Services</div>
+      <h2 class="section-title">Explore <span class="highlight-green">TailCart</span> Services</h2>
+      <p class="section-subtitle">Everything you need to give your pet the best life, all in one platform.</p>
     </div>
 
     <div class="services-sticker-grid">
       <!-- QR Keychains -->
-      <div class="service-sticker-card" (click)="navigateToShop()">
+      <div class="service-sticker-card" (click)="navigateToShop()" data-aos="fade-up" data-aos-delay="100">
         <div class="sticker-visual">
           <div class="circle-bg orange-circle"></div>
           <img src="assets/images/service_keychain.png" alt="QR Keychains" class="sticker-img">
         </div>
         <div class="service-info">
-          <h3 class="service-name">QR Keychains</h3>
+          <h2 class="service-name">Tail Tag</h2>
           <p class="service-desc">Secure tracking for your pet with instant notification technology.</p>
           <a class="learn-more-btn">Learn more &#8594;</a>
         </div>
@@ -189,7 +185,7 @@
           <img src="assets/images/service_reminders.png" alt="Smart Reminders" class="sticker-img">
         </div>
         <div class="service-info">
-          <h3 class="service-name">Smart Reminders</h3>
+          <h2 class="service-name">Tail Scheduler</h2>
           <p class="service-desc">Never miss a vet visit or medication with intelligent scheduling.</p>
           <a class="learn-more-btn">Learn more &#8594;</a>
         </div>
@@ -214,7 +210,7 @@
           <img src="assets/images/service_doctor.png" alt="AI Pet Doctor" class="sticker-img">
         </div>
         <div class="service-info">
-          <h3 class="service-name">AI Pet Doctor</h3>
+          <h2 class="service-name">Tail Care+</h2>
           <p class="service-desc">Instant pediatric and behavioral health insights from our advanced AI model.</p>
           <a class="learn-more-btn">Learn more &#8594;</a>
         </div>
@@ -227,7 +223,7 @@
           <img src="assets/images/service_vault.png" alt="Document Vault" class="sticker-img">
         </div>
         <div class="service-info">
-          <h3 class="service-name">Document Vault</h3>
+          <h2 class="service-name">Tail Vault</h2>
           <p class="service-desc">Securely store and share all your pet paperwork in one smart cloud.</p>
           <a class="learn-more-btn">Learn more &#8594;</a>
         </div>
@@ -248,93 +244,128 @@
 <section class="how-it-works-section fade-in">
   <div class="particle-background"></div>
   <div class="container">
-    <div class="section-header">
-      <h2 class="process-title">How TailCart Works</h2>
-      <p class="process-subtitle">Four simple steps to ensure your pet's safety and your peace of mind</p>
+    <div class="section-header" data-aos="fade-up">
+      <div class="premium-tag tag-gold">Safety & Security</div>
+      <h2 class="process-title">How <span class="highlight-green">TailTag</span> Works</h2>
+      <p class="process-subtitle">Simple, effective steps to ensure your pet's safety and your peace of mind</p>
     </div>
 
-    <!-- Process Steps -->
-    <div class="process-steps-staggered">
-      <!-- Step 1 -->
-      <div class="step-card-staggered" data-aos="fade-right">
-        <div class="step-number-pill">01</div>
-        <div class="step-icon-box">
-          <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </div>
-        <div class="step-info">
-          <h3 class="step-heading">Purchase & Register</h3>
-          <p class="step-text">Buy your smart QR tag and register your pet on our platform with their details and your
-            contact information.</p>
+    <div class="process-carousel-container" (touchstart)="onProcessTouchStart($event)"
+      (touchend)="onProcessTouchEnd($event)">
+      <!-- Navigation Arrows -->
+      <button class="process-nav-btn prev" (click)="prevProcessSlide()" aria-label="Previous step">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="process-nav-btn next" (click)="nextProcessSlide()" aria-label="Next step">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <!-- Carousel Viewport -->
+      <div class="process-carousel-viewport">
+        <div class="process-carousel-track" [style.transform]="'translateX(-' + (processSlide * 100) + '%)'">
+          <!-- Step 1 -->
+          <div class="process-slide">
+            <div class="step-card-staggered">
+              <div class="step-number-pill">01</div>
+              <div class="step-icon-box">
+                <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="step-info">
+                <h3 class="step-heading">Purchase & Register</h3>
+                <p class="step-text">Buy your smart QR tag and register your pet on our platform with their details and
+                  your
+                  contact information.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="process-slide">
+            <div class="step-card-staggered">
+              <div class="step-number-pill">02</div>
+              <div class="step-icon-box">
+                <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12 4v4m0 0a2.5 2.5 0 002.5-2.5V4m-2.5 4a2.5 2.5 0 01-2.5-2.5V4M5 12h14M5 12c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3m0 0c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3m0 0c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3M5 12V10a2 2 0 012-2h10a2 2 0 012 2v2m-14 0l1 7a2 2 0 002 2h8a2 2 0 002-2l1-7"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="step-info">
+                <h3 class="step-heading">Attach to Collar</h3>
+                <p class="step-text">Securely attach the waterproof QR tag to your pet's collar. It's lightweight,
+                  durable,
+                  and pet-friendly.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="process-slide">
+            <div class="step-card-staggered">
+              <div class="step-number-pill">03</div>
+              <div class="step-icon-box">
+                <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="7" width="18" height="10" rx="5" stroke="currentColor" stroke-width="2" />
+                  <circle cx="16" cy="12" r="3" fill="currentColor" />
+                </svg>
+              </div>
+              <div class="step-info">
+                <h3 class="step-heading">When Lost</h3>
+                <p class="step-text">Switch on the "is lost" button in the website to turn on access to your details in
+                  the QR
+                  code.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="process-slide">
+            <div class="step-card-staggered">
+              <div class="step-number-pill">04</div>
+              <div class="step-icon-box">
+                <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="step-info">
+                <h3 class="step-heading">Scan When Found</h3>
+                <p class="step-text">If your pet gets lost, anyone can scan the QR code with their phone to see owner
+                  details
+                  and exact location.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="process-slide">
+            <div class="step-card-staggered">
+              <div class="step-number-pill">05</div>
+              <div class="step-icon-box">
+                <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="step-info">
+                <h3 class="step-heading">Instant Reunion</h3>
+                <p class="step-text">You receive immediate alerts with the finder's location. Contact them directly and
+                  reunite with your pet quickly.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Step 2 -->
-      <div class="step-card-staggered" data-aos="fade-left">
-        <div class="step-number-pill">02</div>
-        <div class="step-icon-box">
-          <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M12 4v4m0 0a2.5 2.5 0 002.5-2.5V4m-2.5 4a2.5 2.5 0 01-2.5-2.5V4M5 12h14M5 12c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3m0 0c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3m0 0c0 1.5 1 3 2.5 3s2.5-1.5 2.5-3M5 12V10a2 2 0 012-2h10a2 2 0 012 2v2m-14 0l1 7a2 2 0 002 2h8a2 2 0 002-2l1-7"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </div>
-        <div class="step-info">
-          <h3 class="step-heading">Attach to Collar</h3>
-          <p class="step-text">Securely attach the waterproof QR tag to your pet's collar. It's lightweight, durable,
-            and pet-friendly.</p>
-        </div>
-      </div>
-
-      <!-- Step 3: NEW -->
-      <div class="step-card-staggered" data-aos="fade-right">
-        <div class="step-number-pill">03</div>
-        <div class="step-icon-box">
-          <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="7" width="18" height="10" rx="5" stroke="currentColor" stroke-width="2" />
-            <circle cx="16" cy="12" r="3" fill="currentColor" />
-          </svg>
-        </div>
-        <div class="step-info">
-          <h3 class="step-heading">When Lost</h3>
-          <p class="step-text">Switch on the "is lost" button in the website to turn on access to your details in the QR
-            code.</p>
-        </div>
-      </div>
-
-      <!-- Step 4 -->
-      <div class="step-card-staggered" data-aos="fade-left">
-        <div class="step-number-pill">04</div>
-        <div class="step-icon-box">
-          <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" stroke="currentColor"
-              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </div>
-        <div class="step-info">
-          <h3 class="step-heading">Scan When Found</h3>
-          <p class="step-text">If your pet gets lost, anyone can scan the QR code with their phone to see owner details
-            and exact location.</p>
-        </div>
-      </div>
-
-      <!-- Step 5 -->
-      <div class="step-card-staggered" data-aos="fade-right">
-        <div class="step-number-pill">05</div>
-        <div class="step-icon-box">
-          <svg class="step-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </div>
-        <div class="step-info">
-          <h3 class="step-heading">Instant Reunion</h3>
-          <p class="step-text">You receive immediate alerts with the finder's location. Contact them directly and
-            reunite with your pet quickly.</p>
-        </div>
+      <!-- Carousel Pagination Dots -->
+      <div class="process-pagination">
+        <button *ngFor="let dot of [0, 1, 2, 3, 4]; let i = index" class="process-dot"
+          [class.active]="processSlide === i" (click)="goToProcessSlide(i)">
+        </button>
       </div>
     </div>
   </div>
@@ -347,17 +378,10 @@
 <section class="detailed-section fade-in">
   <div class="detailed-background-visual"></div>
   <div class="container relative">
-    <div class="detailed-header">
-      <div class="section-tag-premium">
-        <span class="pulse"></span>
-        SMART SAFETY SYSTEM
-      </div>
-      <h2 class="detail-title-large">
-        <span class="light">How</span> TailCart Protects
-      </h2>
-      <p class="detail-subtitle-refined">
-        Our revolutionary recovery system is designed for one thing: getting your pet home fast. Watch how it works.
-      </p>
+    <div class="section-header" data-aos="fade-up">
+      <div class="premium-tag tag-gold">PRO-GRADE PROTECTION</div>
+      <h2 class="section-title">How TailCart <span class="highlight-green">Protects</span></h2>
+      <p class="section-subtitle">Advanced security and real-time monitoring to keep your pets safe, 24/7.</p>
     </div>
 
     <div class="detailed-video-wrapper">
@@ -413,9 +437,9 @@
     </div>
 
     <div class="detailed-cta-center">
-      <button class="btn-get-protected" (click)="navigateToShop()">
+      <button class="btn-premium" (click)="navigateToShop()" data-aos="zoom-in" data-aos-delay="400">
         GET PROTECTED NOW
-        <i class="fas fa-shield-alt"></i>
+        <i class="fas fa-arrow-right"></i>
       </button>
       <p class="cta-subtext">Join thousands of protected pets across the country.</p>
     </div>
@@ -463,30 +487,25 @@
       </div>
     </div>
 
-    <div class="detailed-header documents-centered-header">
-      <div class="section-tag-premium documents-tag-centered">
-        <span class="pulse"></span>
-        PREMIUM SERVICE
-      </div>
-      <h2 class="detail-title-large documents-title-centered">
-        Pet Documents
+    <div class="section-header documents-centered-header" data-aos="fade-up">
+      <div class="premium-tag tag-silver">HEALTH & WELLNESS</div>
+      <h2 class="section-title documents-title-centered">
+        Pet <span class="highlight-green">Health</span> Management
       </h2>
-      <p class="documents-description-centered">
-        Upload your pet's important documents and manage them securely, without having a chance to miss out any
-        important paperwork. You can set <span class="highlight-gold">smart alerts</span> for crucial dates like <span
-          class="highlight-gold">vaccination reminders</span>,
-        and customize the <span class="highlight-gold">frequency of alerts</span> you need. Receive notifications via
-        <span class="highlight-gold">email</span>, <span class="highlight-gold">mobile</span>, and <span
-          class="highlight-gold">WhatsApp</span>
-        to stay always updated.
+      <p class="section-subtitle documents-description-centered">
+        Securely store and manage all your pet's health records, vaccination schedules, and medical history in one
+        place. Set smart reminders for appointments and medications, ensuring your pet never misses critical care.
+        Access everything anytime, anywhere.
       </p>
 
       <div class="cta-buttons documents-cta-centered">
-        <button class="btn-get-protected" (click)="navigateToDocuments()">
+        <button class="btn-premium" (click)="navigateToDocuments()">
           MANAGE DOCUMENTS
+          <i class="fas fa-arrow-right"></i>
         </button>
-        <button class="btn-premium-outline-dark" (click)="navigateToAlerts()">
+        <button class="btn-premium" (click)="navigateToAlerts()">
           SET ALERTS
+          <i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </div>
@@ -495,20 +514,17 @@
 </section>
 
 
-<!--Mini FAQ ------------------------------------------------------------------------------------------------------------>
 
+<!--Mini FAQ ------------------------------------------------------------------------------------------------------------>
 <!-- Premium FAQ Section -->
 <section class="premium-faq-section fade-in">
   <div class="faq-background-overlay"></div>
   <div class="container relative">
 
-    <div class="faq-header-centered">
-      <div class="section-tag-premium faq-tag-centered">
-        <span class="pulse"></span>
-        TRUST & TRANSPARENCY
-      </div>
-      <h2 class="detail-title-large faq-title-centered">
-        Frequently Asked Questions
+    <div class="section-header" data-aos="fade-up">
+      <div class="premium-tag tag-emerald">YOUR QUESTIONS, ANSWERED</div>
+      <h2 class="section-title faq-title-centered">
+        Frequently Asked <span class="highlight-green">Questions</span>
       </h2>
     </div>
 
@@ -563,6 +579,35 @@
   </div>
 </section>
 
+
+<!-- Social Feed Section ------------------------------------------------------------------------------------>
+<section class="social-feed-section fade-in">
+  <div class="social-container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="premium-tag tag-gold">#TAILCARTPETS</div>
+      <h2 class="section-title">Follow Us on <span class="highlight-green">Instagram</span></h2>
+      <p class="section-subtitle">Join our community of over 50,000 pet parents sharing their stories.</p>
+    </div>
+
+    <div class="social-grid">
+      <div class="social-item">
+        <img src="assets/images/social_pet_1.png" alt="Happy Border Collie" class="social-img">
+      </div>
+      <div class="social-item">
+        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=400"
+          alt="Cute Puppy" class="social-img">
+      </div>
+      <div class="social-item">
+        <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&q=80&w=400"
+          alt="Running Dogs" class="social-img">
+      </div>
+      <div class="social-item">
+        <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=400"
+          alt="Cat on shoulder" class="social-img">
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
