@@ -1,11 +1,11 @@
 import { Component, HostListener, AfterViewInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [NgFor, NgIf, RouterModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -330,11 +330,19 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   navigateToAlerts(): void {
-    this.router.navigate(['/alerts']);
+    this.router.navigate(['/document']);
+  }
+
+  navigateToProfile(): void {
+    this.router.navigate(['/profile']);
   }
 
   navigateToDoctor(): void {
     this.router.navigate(['/doctor-ai']);
+  }
+
+  navigateToAbout(): void {
+    this.router.navigate(['/about']);
   }
 
   // Scroll to top function - Custom slow smooth scroll

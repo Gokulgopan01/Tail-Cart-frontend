@@ -1,11 +1,11 @@
-/* Modern Luxury UI Auth Page */
 .auth-page {
   display: flex;
   min-height: 100vh;
   width: 100vw;
   background: #f7f9fc;
   font-family: 'Outfit', sans-serif;
-  overflow: hidden;
+  overflow-y: auto; /* Changed from hidden to allow scrolling */
+  overflow-x: hidden;
 }
 
 /* Lottie Banner Left Side */
@@ -438,6 +438,13 @@
 .social-grid {
   display: flex;
   gap: 15px;
+  padding: 5px 0;
+}
+
+.social-grid a {
+  flex: 1;
+  display: flex;
+  text-decoration: none;
 }
 
 .social-btn {
@@ -470,7 +477,138 @@
   background: #f8fafc;
 }
 
-/* Responsive Scaling especially 369px and mobile layouts */
+.social-btn.facebook {
+  background: #1877f2;
+  border-color: #1877f2;
+  color: #fff;
+}
+
+.social-btn.facebook:hover {
+  background: #145dbf;
+  border-color: #145dbf;
+}
+
+.social-btn.facebook i {
+  font-size: 18px;
+}
+
+/* Success Animation Overlay */
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.success-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.4s ease-out;
+}
+
+.success-content {
+  position: relative;
+  z-index: 1001;
+  text-align: center;
+  animation: scaleUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  max-width: 450px;
+  padding: 20px;
+}
+
+.success-lottie {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto 20px;
+}
+
+.success-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #003c30;
+  margin-bottom: 10px;
+}
+
+.success-text {
+  font-size: 1.1rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive fixes for social grid */
+@media (max-width: 369px) {
+  .success-lottie {
+    width: 240px;
+    height: 240px;
+  }
+
+  .success-title {
+    font-size: 1.8rem;
+  }
+
+  .success-text {
+    font-size: 1rem;
+  }
+
+  .social-grid {
+    flex-direction: row !important;
+    /* Keep side by side on mobile but with scroll if needed or just better gap */
+    gap: 10px;
+    padding-bottom: 5px;
+  }
+
+  .social-btn {
+    padding: 10px 8px;
+  }
+}
+
+/* NEW: Specific fix for 600px and below as requested */
+@media (max-width: 600px) {
+  .auth-form-container {
+    padding-bottom: 120px !important; /* Extra space at the very bottom */
+  }
+
+  .auth-box {
+    margin-bottom: 100px !important;
+  }
+
+  .social-grid {
+    gap: 20px !important; /* More space between buttons */
+    margin-top: 20px;
+    padding-bottom: 60px !important;
+  }
+  
+  .social-grid a {
+    margin-bottom: 10px;
+  }
+}
 
 @media (max-width: 1024px) {
   .auth-form-container {
@@ -504,7 +642,13 @@
     border-radius: 30px 30px 0 0;
     margin-top: -30px;
     /* Overlap the banner */
-    padding: 40px 25px;
+    padding: 40px 25px 80px; /* Increased to 80px bottom padding */
+    display: block; /* Change from flex center to block for better scroll handling */
+    overflow-y: auto;
+  }
+
+  .auth-box {
+    margin: 0 auto; /* Center manually */
   }
 }
 
@@ -627,13 +771,45 @@
   }
 
   .social-grid {
-    flex-direction: column;
-    gap: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    padding: 10px 0 120px; /* Even more bottom padding */
+    margin-bottom: 40px;
   }
 
   .social-btn {
-    padding: 10px;
+    padding: 16px 10px; /* Taller buttons */
+    font-size: 14px;
   }
+
+  /* Extra bottom space for entire form box */
+  .auth-box {
+    margin-bottom: 200px; /* Massive bottom margin for 369px */
+    padding-bottom: 100px;
+  }
+}
+
+/* Forgot Flow Styles */
+.forgot-flow {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.back-to-login {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.back-to-login:hover {
+  color: #003c30;
+  transform: translateX(-4px);
 }
 
 /* Remove unwanted default Edge eye mask */

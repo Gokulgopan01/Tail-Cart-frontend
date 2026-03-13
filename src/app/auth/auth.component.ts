@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, signal, ViewChild, ElementRef, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -40,7 +40,7 @@ interface RegisterResponse {
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
-export class AuthComponent implements AfterViewInit, OnDestroy {
+export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isLoginMode = signal(true);
   isLoading = signal(false);
@@ -48,8 +48,13 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
   successMessage = signal('');
   showPassword = false;
 
+  showSuccessAnimation = signal(false);
+  forgotMode = signal(false);
+  forgotStep = signal(1); // 1: Email, 2: OTP & New Password
+
   loginData: LoginData = { email_address: '', password: '' };
   registerData: RegisterData = { username: '', email_address: '', password: '' };
+  forgotData = { email_address: '', otp: '', new_password: '' };
   rememberMe = false;
 
   // running cat
@@ -62,10 +67,23 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
   bannerLottie!: ElementRef<HTMLDivElement>;
   private bannerAnimation: AnimationItem | null = null;
 
+  // success lottie
+  @ViewChild('successLottie')
+  successLottieElement!: ElementRef<HTMLDivElement>;
+  private successAnimation: AnimationItem | null = null;
+
   constructor(
     private http: HttpClient,
     private router: Router
   ) { }
+
+  ngOnInit(): void {
+    const savedEmail = localStorage.getItem('remembered_email');
+    if (savedEmail) {
+      this.loginData.email_address = savedEmail;
+      this.rememberMe = true;
+    }
+  }
 
   ngAfterViewInit(): void {
     this.bannerAnimation = lottie.loadAnimation({
@@ -80,12 +98,24 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
     });
 
     this.animation = lottie.loadAnimation({
-      container: this.lottieContainer.nativeElement,
+      container: this.lottieContainer?.nativeElement,
       renderer: 'svg',
       loop: true,
       autoplay: false,
       path: 'assets/Running_Cat.json'
     });
+  }
+
+  private initSuccessAnimation(): void {
+    if (this.successLottieElement) {
+      this.successAnimation = lottie.loadAnimation({
+        container: this.successLottieElement.nativeElement,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: 'assets/Welcome.json'
+      });
+    }
   }
 
   private startLoader(): void {
@@ -128,18 +158,30 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
           next: (response) => {
             if (response.message === 'Login successful') {
 
+              // Handle Remember Me
+              if (this.rememberMe) {
+                localStorage.setItem('remembered_email', this.loginData.email_address);
+              } else {
+                localStorage.removeItem('remembered_email');
+              }
+
               localStorage.setItem('user_id', response.user_id.toString());
               localStorage.setItem('username', response.username);
               localStorage.setItem('access_token', response.access);
               localStorage.setItem('refresh_token', response.refresh);
               localStorage.setItem('access_role', response.role.toLowerCase());
 
-              this.successMessage.set('Login successful! Redirecting...');
+              this.stopLoader();
+              this.showSuccessAnimation.set(true);
+
+              // Wait for view update then init lottie
+              setTimeout(() => {
+                this.initSuccessAnimation();
+              }, 0);
 
               setTimeout(() => {
-                this.stopLoader();
                 this.router.navigate(['/home']);
-              }, 500);
+              }, 3000);
 
             } else {
               this.stopLoader();
@@ -195,9 +237,73 @@ export class AuthComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  onForgotPassword(): void {
+    if (!this.forgotData.email_address) {
+      this.errorMessage.set('Please enter your email address');
+      return;
+    }
+
+    this.startLoader();
+    this.errorMessage.set('');
+
+    this.http.post<any>('http://127.0.0.1:8000/api/user/forgot-password/', {
+      email_address: this.forgotData.email_address
+    }).subscribe({
+      next: (response) => {
+        this.stopLoader();
+        if (response.message === 'OTP sent to email') {
+          this.successMessage.set('OTP sent to your email.');
+          this.forgotStep.set(2);
+        } else {
+          this.errorMessage.set(response.message || 'Failed to send OTP');
+        }
+      },
+      error: (error) => {
+        this.stopLoader();
+        this.errorMessage.set(error.error?.message || 'Error occurred. Please try again.');
+      }
+    });
+  }
+
+  onResetPassword(): void {
+    if (!this.forgotData.otp || !this.forgotData.new_password) {
+      this.errorMessage.set('OTP and New Password are required');
+      return;
+    }
+
+    this.startLoader();
+    this.errorMessage.set('');
+
+    this.http.post<any>('http://127.0.0.1:8000/api/user/reset-password/', {
+      email_address: this.forgotData.email_address,
+      otp: this.forgotData.otp,
+      new_password: this.forgotData.new_password
+    }).subscribe({
+      next: (response) => {
+        this.stopLoader();
+        if (response.message === 'Password reset successfully') {
+          this.successMessage.set('Password reset successful! You can now login.');
+          setTimeout(() => {
+            this.forgotMode.set(false);
+            this.forgotStep.set(1);
+            this.loginData.email_address = this.forgotData.email_address;
+            this.successMessage.set('');
+          }, 2000);
+        } else {
+          this.errorMessage.set(response.message || 'Reset failed');
+        }
+      },
+      error: (error) => {
+        this.stopLoader();
+        this.errorMessage.set(error.error?.message || 'Invalid OTP or reset failed.');
+      }
+    });
+  }
+
   ngOnDestroy(): void {
     this.animation?.destroy();
     this.bannerAnimation?.destroy();
+    this.successAnimation?.destroy();
     this.animation = null;
   }
 }

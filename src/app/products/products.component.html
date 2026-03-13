@@ -1,298 +1,218 @@
 <div class="shop-wrapper">
-  <!-- Lottie Banner Container -->
-  <div class="auth-lottie-container shop-banner">
-    <div #shopBannerLottie class="banner-lottie"></div>
+  <!-- Lottie Banner Heading - Clean Hero -->
+  <div class="shop-banner">
+    <div #shopBannerLottie class="header-lottie"></div>
+    <div class="lottie-label">tail store</div>
   </div>
 
-  <!-- Admin Controls -->
-  <div class="admin-top-bar" *ngIf="isAdmin()">
-    <div class="container">
-      <div class="admin-info">
-        <i class="fas fa-shield-alt"></i>
-        <span>Admin Dashboard</span>
-      </div>
-      <button class="btn-add-product" (click)="openAddProductModal()">
-        <i class="fas fa-plus"></i> Add New Product
-      </button>
-    </div>
-  </div>
-
-  <div class="shop-content container">
-    <!-- Header Section -->
-    <header class="shop-header">
-      <div class="items-found-text">
+  <div class="container main-content">
+    <!-- Toolbar Section -->
+    <div class="shop-toolbar-wrapper">
+      <!-- Search Bar -->
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery" (input)="applyFilters()"
+          class="search-input">
       </div>
 
-      <!-- Toolbar -->
-      <div class="shop-toolbar glass-effect">
-        <!-- Search -->
-        <div class="toolbar-search">
-          <i class="fas fa-search search-icon"></i>
-          <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery" (input)="updateSearch()"
-            class="search-input">
-        </div>
-
-        <!-- Filters & Sort -->
-        <div class="toolbar-actions">
-          <div class="select-group">
-            <i class="fas fa-filter icon-label"></i>
-            <select (change)="onPetFilterChange($event)" class="toolbar-select">
-              <option value="all">All Pets</option>
-              <option value="Dog">Dogs</option>
-              <option value="Cat">Cats</option>
-            </select>
-          </div>
-
-          <div class="select-group">
-            <i class="fas fa-sort-amount-down icon-label"></i>
-            <select [(ngModel)]="sortOption" (change)="applySorting()" class="toolbar-select">
-              <option value="newest">Newest</option>
-              <option value="priceLow">Price: $ to $$$</option>
-              <option value="priceHigh">Price: $$$ to $</option>
-              <option value="name">Name: A-Z</option>
-            </select>
-          </div>
-
-          <!-- Layout Toggle -->
-          <div class="layout-toggle">
-            <button class="toggle-btn" [class.active]="!isGridView" (click)="toggleViewMode(false)" title="List View">
-              <i class="fas fa-list"></i>
-            </button>
-            <button class="toggle-btn" [class.active]="isGridView" (click)="toggleViewMode(true)" title="Grid View">
-              <i class="fas fa-th-large"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- Product Grid -->
-    <main class="products-grid" [class.list-mode]="!isGridView">
-      <div class="product-card" *ngFor="let product of paginatedProducts" [class.hot-deal]="product.deals">
-        <!-- Card Image Area -->
-        <div class="card-image-wrapper" (click)="openQuickView(product)">
-          <div class="deal-badge" *ngIf="product.deals">{{product.deals}}</div>
-          <img [src]="product.image" [alt]="product.model" class="product-image">
-
-          <div class="card-overlay">
-            <button class="quick-view-btn" (click)="openQuickView(product); $event.stopPropagation()">
-              <i class="fas fa-eye"></i> Quick View
-            </button>
-            <div class="admin-actions" *ngIf="isAdmin()">
-              <button class="action-btn edit" (click)="openEditProductModal(product); $event.stopPropagation()">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="action-btn delete" (click)="deleteProduct(product.id, $event); $event.stopPropagation()">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card Body -->
-        <div class="card-body">
-          <div class="breed-tag">{{product.breed}}</div>
-          <h3 class="product-model">{{product.model}}</h3>
-
-          <div class="rating-row">
-            <div class="stars">
-              <span [innerHTML]="generateStars(product.reviews)"></span>
-              <span class="rating-val">{{product.reviews}}</span>
-            </div>
-            <div class="price-val">${{product.price}}</div>
-          </div>
-
-          <button class="btn-cart" (click)="onAddToCartClick(product, $event)">
-            <i class="fas fa-shopping-bag"></i> <span>Add to Cart</span>
-          </button>
-        </div>
-      </div>
-    </main>
-
-    <!-- No Results -->
-    <div class="no-results" *ngIf="filteredProducts.length === 0">
-      <div class="empty-state">
-        <i class="fas fa-box-open"></i>
-        <h3>No products found</h3>
-        <p>Try adjusting your search or filters.</p>
-        <button class="btn-clear" (click)="clearFilters()">Clear Filters</button>
-      </div>
-    </div>
-
-    <!-- Pagination -->
-    <div class="load-more-container" *ngIf="!allProductsLoaded && filteredProducts.length > paginatedProducts.length">
-      <button class="btn-load-more" (click)="loadMore()">
-        <span>Explore More</span>
-        <i class="fas fa-chevron-down"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- Quick View Modal -->
-  <div class="modal-root" *ngIf="showQuickView" (click)="closeQuickView()">
-    <div class="modal-card quick-view-box" (click)="$event.stopPropagation()">
-      <button class="modal-close" (click)="closeQuickView()">
-        <i class="fas fa-times"></i>
-      </button>
-
-      <div class="modal-content-grid">
-        <div class="modal-img-area">
-          <img [src]="selectedProduct?.image" [alt]="selectedProduct?.model">
-        </div>
-        <div class="modal-details-area">
-          <div class="modal-tags">
-            <span class="tag-gold">{{selectedProduct?.breed}}</span>
-            <span class="tag-dark" *ngIf="selectedProduct?.deals">{{selectedProduct?.deals}}</span>
-          </div>
-          <h2 class="modal-title">{{selectedProduct?.model}}</h2>
-          <div class="modal-rating">
-            <span [innerHTML]="generateStars(selectedProduct?.reviews || '0')"></span>
-            <span class="rating-count">({{selectedProduct?.reviews}} reviews)</span>
-          </div>
-          <div class="modal-price">${{selectedProduct?.price}}</div>
-
-          <div class="modal-info">
-            <p>{{selectedProduct?.product_info}}</p>
-          </div>
-
-          <ul class="modal-perks">
-            <li><i class="fas fa-check-circle"></i> Genuine Luxury Item</li>
-            <li><i class="fas fa-truck"></i> Fast Global Shipping</li>
-          </ul>
-
-          <button class="btn-modal-cart" (click)="onAddToCartClick(selectedProduct!, $event)">
-            <i class="fas fa-shopping-bag"></i> Add to Cart
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Cart Process Modal (Pet/Quantity Selection) -->
-  <div class="modal-root" *ngIf="selectedProductForCart && (showPetIdInput || showQuantityInput)"
-    (click)="cancelCartProcess()">
-    <div class="modal-card small-modal" (click)="$event.stopPropagation()">
-      <div class="modal-header-simple">
-        <h3>Complete Your Order</h3>
-        <button class="btn-icon-close" (click)="cancelCartProcess()"><i class="fas fa-times"></i></button>
+      <!-- Material Filters Chips -->
+      <div class="chips-scroll">
+        <button *ngFor="let mat of materialOptions" class="chip-btn" [class.active]="selectedMaterial === mat"
+          (click)="setMaterial(mat)">
+          {{ mat }}
+        </button>
       </div>
 
-      <div class="modal-body-simple">
-        <!-- Pet Step -->
-        <div *ngIf="showPetIdInput" class="step-animation">
-          <p class="step-label">Select your pet:</p>
-          <select class="custom-input" [(ngModel)]="selectedPetId">
-            <option value="" disabled selected>Choose a pet...</option>
-            <option *ngFor="let pet of userPets" [value]="pet.pet_id">{{ pet.pet_name }} ({{ pet.breed }})</option>
+      <!-- Secondary Toolbar: Sort, Filters, View -->
+      <div class="toolbar-actions">
+        <div class="sort-select-wrapper">
+          <select [(ngModel)]="sortOption" (change)="applyFilters()" class="sort-select">
+            <option value="newest">Sort By: Newest</option>
+            <option value="priceLow">Price: Low to High</option>
+            <option value="priceHigh">Price: High to Low</option>
+            <option value="name">Name: A-Z</option>
           </select>
-          <div class="step-actions">
-            <button class="btn-cancel" (click)="cancelCartProcess()">Cancel</button>
-            <button class="btn-next" (click)="submitPetSelection()">Next</button>
-          </div>
         </div>
 
-        <!-- Quantity Step -->
-        <div *ngIf="showQuantityInput" class="step-animation">
-          <p class="step-label">Select quantity:</p>
-          <div class="qty-control">
-            <button class="qty-btn" (click)="decrementQuantity()">-</button>
-            <span class="qty-num">{{ quantity }}</span>
-            <button class="qty-btn" (click)="incrementQuantity()">+</button>
+        <button class="action-btn toggle-filters" (click)="toggleFilters()" [class.active]="showFilters">
+          <i class="fas fa-sliders-h"></i> Filters
+        </button>
+
+        <div class="view-toggle">
+          <button class="view-btn" [class.active]="isGridView" (click)="toggleViewMode(true)">
+            <i class="fas fa-th-large"></i>
+          </button>
+          <button class="view-btn" [class.active]="!isGridView" (click)="toggleViewMode(false)">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Price Range Filter Overlay -->
+      <div class="filters-overlay" *ngIf="showFilters">
+        <div class="price-filter-card">
+          <div class="filter-header">
+            <h3>Max Price: ₹{{ maxPrice }}</h3>
+            <button class="clear-btn" (click)="clearFilters()">Clear All Filters</button>
           </div>
-          <div class="total-row">
-            <span>Subtotal:</span>
-            <strong>${{ (selectedProductForCart.price * quantity).toFixed(2) }}</strong>
-          </div>
-          <div class="step-actions">
-            <button class="btn-back" (click)="showPetIdInput = true; showQuantityInput = false">Back</button>
-            <button class="btn-confirm" (click)="submitQuantity()">Confirm Add</button>
-          </div>
+          <input type="range" min="0" max="30000" step="100" [(ngModel)]="maxPrice" (input)="applyFilters()"
+            class="price-slider">
         </div>
       </div>
     </div>
+
+    <!-- Product Display Area -->
+    <div class="showing-count" *ngIf="filteredProducts.length > 0">
+      Showing {{ filteredProducts.length }} products
+    </div>
+
+    <div [class.products-grid]="isGridView" [class.products-list]="!isGridView">
+      <div class="product-card" *ngFor="let product of filteredProducts">
+        <div class="card-image-area">
+          <img [src]="product.thumbnail_image" [alt]="product.product_name" class="product-thumb">
+          <div class="card-badge" *ngIf="product.deals">{{ product.deals }}</div>
+        </div>
+
+        <div class="card-content">
+          <div class="shop-name">TailCart Luxury</div>
+          <h3 class="product-title">{{ product.product_name }}</h3>
+
+          <!-- Rating Pill -->
+          <div class="rating-pill">
+            <span class="rating-val">{{ product.reviews_stars }}</span>
+            <i class="fas fa-star star-icon"></i>
+            <span class="rating-divider">|</span>
+            <span class="rating-count">2.4K</span>
+          </div>
+
+          <!-- Price Row -->
+          <div class="price-row">
+            <span class="selling-price">₹{{ product.selling_price }}</span>
+            <span class="original-price" *ngIf="product.discount_percentage! > 0">₹{{ product.original_price }}</span>
+            <span class="discount-tag" *ngIf="product.discount_percentage! > 0">{{ product.discount_percentage }}%
+              off</span>
+          </div>
+
+          <!-- Offer Price -->
+          <div class="offer-row">
+            <span class="offer-label">Offer Price</span>
+            <span class="offer-val">₹{{ product.selling_price }}</span>
+          </div>
+
+          <!-- Quick View Button (+) -->
+          <button class="floating-add-btn" (click)="openQuickView(product, $event)">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredProducts.length === 0 && !isLoading">
+      <div #noProductsLottie class="empty-lottie"></div>
+      <h3>No products found</h3>
+      <button class="btn-primary" (click)="clearFilters()" *ngIf="searchQuery || selectedMaterial !== 'ALL'">Clear
+        Filters</button>
+    </div>
+
+    <!-- Load More Section -->
+    <div class="load-more-container" *ngIf="nextPageUrl">
+      <button class="load-more-btn" (click)="loadMore()" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Explore More</span>
+        <span *ngIf="isLoading" class="spinner"><i class="fas fa-circle-notch fa-spin"></i> Loading...</span>
+      </button>
+    </div>
   </div>
 
-  <!-- Admin Add/Edit Modal -->
-  <div class="modal-root" *ngIf="showAddProductModal" (click)="closeAddProductModal()">
-    <div class="modal-card form-modal" (click)="$event.stopPropagation()">
-      <div class="modal-header-simple">
-        <h3>{{ editingProduct ? 'Edit Product' : 'Add New Product' }}</h3>
-        <button class="btn-icon-close" (click)="closeAddProductModal()"><i class="fas fa-times"></i></button>
+  <!-- QUICK VIEW MODAL (IMAGE 2 STYLE) -->
+  <div class="qv-modal-overlay" *ngIf="showQuickView" (click)="closeQuickView()">
+    <div class="qv-modal-card" (click)="$event.stopPropagation()">
+      <button class="qv-close" (click)="closeQuickView()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+
+      <!-- Image Slider Section -->
+      <div class="qv-image-slider">
+        <div class="qv-slide-track" [style.transform]="'translateX(' + (-currentQuickImageIndex * 100) + '%)'">
+          <div class="qv-slide">
+            <img [src]="selectedProductForQuickView?.thumbnail_image" [alt]="selectedProductForQuickView?.product_name">
+          </div>
+          <div class="qv-slide">
+            <img [src]="selectedProductForQuickView?.second_image_1" [alt]="selectedProductForQuickView?.product_name">
+          </div>
+        </div>
+        <!-- Slider Indicators -->
+        <div class="qv-indicators">
+          <span class="dot" [class.active]="currentQuickImageIndex === 0" (click)="currentQuickImageIndex = 0"></span>
+          <span class="dot" [class.active]="currentQuickImageIndex === 1" (click)="currentQuickImageIndex = 1"></span>
+        </div>
+        <!-- Slider Nav -->
+        <button class="qv-nav-btn prev" (click)="prevQuickImage()"><i class="fas fa-chevron-left"></i></button>
+        <button class="qv-nav-btn next" (click)="nextQuickImage()"><i class="fas fa-chevron-right"></i></button>
       </div>
 
-      <div class="modal-body-scroll">
-        <form (ngSubmit)="saveProduct()" #productForm="ngForm" class="luxury-form">
-          <div class="form-grid">
-            <div class="field">
-              <label>Model Name</label>
-              <input type="text" [(ngModel)]="newProduct.model" name="model" required class="luxury-input">
+      <!-- Details Section -->
+      <div class="qv-details-scroll">
+        <div class="qv-body">
+          <div class="qv-shop-brand">TailCart Luxury</div>
+          <h2 class="qv-item-title">{{ selectedProductForQuickView?.product_name }}</h2>
+
+          <div class="qv-price-info">
+            <span class="qv-sell-price">₹{{ selectedProductForQuickView?.selling_price }}</span>
+            <span class="qv-mrp-label">MRP</span>
+            <span class="qv-orig-price">₹{{ selectedProductForQuickView?.original_price }}</span>
+            <span class="qv-discount-pill">{{ selectedProductForQuickView?.discount_percentage }}% OFF</span>
+          </div>
+          <p class="qv-tax-note">Price inclusive of all taxes.</p>
+
+          <!-- Offer Highlight Box -->
+          <div class="qv-offer-box">
+            <div class="qv-offer-header">
+              <span class="dot-green"></span>
+              <span class="offer-title">Offer Price ₹{{ selectedProductForQuickView?.selling_price }}</span>
             </div>
-            <div class="field">
-              <label>Price ($)</label>
-              <input type="number" [(ngModel)]="newProduct.price" name="price" required class="luxury-input">
+            <p class="qv-offer-desc">High quality luxury accessory for your pet with laser engraving option.</p>
+            <div class="qv-coupon-code">
+              <div class="code-info">
+                <p class="code-label">Use Code</p>
+                <p class="code-val">LUXURYPET</p>
+              </div>
+              <span class="code-tc">T&C</span>
             </div>
-            <div class="field">
-              <label>Pet Type</label>
-              <select [(ngModel)]="newProduct.breed" name="breed" required class="luxury-input">
-                <option value="Dog">Dog</option>
-                <option value="Cat">Cat</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Stock</label>
-              <input type="number" [(ngModel)]="newProduct.quantity" name="quantity" required class="luxury-input">
-            </div>
-            <div class="field full">
-              <label>Description</label>
-              <textarea [(ngModel)]="newProduct.product_info" name="product_info" required rows="3"
-                class="luxury-input"></textarea>
-            </div>
-            <div class="field">
-              <label>Rating (1-5)</label>
-              <input type="number" [(ngModel)]="newProduct.reviews" name="reviews" step="0.1" class="luxury-input">
-            </div>
-            <div class="field">
-              <label>Deal Tag</label>
-              <select [(ngModel)]="newProduct.deals" name="deals" class="luxury-input">
-                <option value="">None</option>
-                <option value="Hot Sale">Hot Sale</option>
-                <option value="Bestseller">Bestseller</option>
-              </select>
-            </div>
-            <div class="field full">
-              <label>Product Image</label>
-              <div class="upload-zone" (click)="triggerFileInput()" [class.has-file]="newProduct.image">
-                <i class="fas fa-upload"></i>
-                <span>{{ newProduct.image ? newProduct.image.name : 'Click to upload image' }}</span>
-                <input type="file" #fileInput (change)="onFileSelected($event)" hidden accept="image/*">
+          </div>
+
+          <!-- Color Section -->
+          <div class="qv-property-row">
+            <h4 class="qv-prop-title">Color</h4>
+            <p class="qv-prop-val">{{ selectedProductForQuickView?.colours?.join(', ') || 'Default' }}</p>
+            <div class="qv-color-swatches">
+              <div class="color-circle" *ngFor="let color of selectedProductForQuickView?.colours"
+                [style.backgroundColor]="color.toLowerCase()" [title]="color">
               </div>
             </div>
           </div>
-          <div class="form-footer">
-            <button type="button" class="btn-cancel" (click)="closeAddProductModal()">Cancel</button>
-            <button type="submit" class="btn-submit" [disabled]="!productForm.valid || isCreatingProduct">
-              {{ editingProduct ? 'Save Changes' : 'Create Product' }}
-            </button>
+
+          <!-- Description Section -->
+          <div class="qv-desc-section">
+            <h4 class="qv-prop-title">Product Description</h4>
+            <p class="qv-full-desc">{{ selectedProductForQuickView?.product_long_description }}</p>
+            <p class="qv-spec-desc"><strong>Specifications:</strong> {{
+              selectedProductForQuickView?.product_other_specifications }}</p>
           </div>
-        </form>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="qv-footer">
+        <div class="qv-footer-left">
+          <button class="qv-icon-btn"><i class="fas fa-share-alt"></i></button>
+          <button class="qv-icon-btn"><i class="far fa-heart"></i></button>
+        </div>
+        <button class="qv-add-to-bag">
+          <i class="fas fa-shopping-bag"></i> Add To Bag
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Delete Confirm Modal -->
-  <div class="modal-root" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
-    <div class="modal-card small-modal confirm-delete" (click)="$event.stopPropagation()">
-      <div class="confirm-content">
-        <div class="warn-icon"><i class="fas fa-exclamation-triangle"></i></div>
-        <h3>Delete Product?</h3>
-        <p>This action cannot be undone.</p>
-        <div class="confirm-actions">
-          <button class="btn-light" (click)="closeDeleteModal()">Cancel</button>
-          <button class="btn-danger" (click)="confirmDelete()" [disabled]="isDeleting">
-            {{ isDeleting ? 'Deleting...' : 'Confirm Delete' }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

@@ -18,9 +18,12 @@
       </div>
 
       <div class="auth-headings">
-        <h2>{{ isLoginMode() ? 'Welcome Back.' : 'Join TailCart.' }}</h2>
-        <p>{{ isLoginMode() ? 'Enter your details to access your luxury account.' : 'Create an account for personalized
+        <h2 *ngIf="!forgotMode()">{{ isLoginMode() ? 'Welcome Back.' : 'Join TailCart.' }}</h2>
+        <p *ngIf="!forgotMode()">{{ isLoginMode() ? 'Enter your details to access your luxury account.' : 'Create an account for personalized
           pet services.' }}</p>
+
+        <h2 *ngIf="forgotMode()">{{ forgotStep() === 1 ? 'Reset Password' : 'Enter OTP' }}</h2>
+        <p *ngIf="forgotMode()">{{ forgotStep() === 1 ? 'Enter your registered email to receive an OTP.' : 'Enter the 6-digit code sent to your email.' }}</p>
       </div>
 
       <!-- Messages -->
@@ -36,8 +39,8 @@
         <button type="button" class="btn-close" (click)="successMessage.set('')"><i class="fas fa-times"></i></button>
       </div>
 
-      <!-- Main Form -->
-      <form (ngSubmit)="onSubmit()" #authForm="ngForm" class="modern-form">
+      <!-- Main Form (Login / Register) -->
+      <form *ngIf="!forgotMode()" (ngSubmit)="onSubmit()" #authForm="ngForm" class="modern-form">
 
         <!-- Username (Register only) -->
         <div class="input-float-group" *ngIf="!isLoginMode()">
@@ -95,7 +98,7 @@
             </span>
             <span class="check-text">Remember me</span>
           </label>
-          <a href="javascript:void(0)" class="forgot-link">Forgot password?</a>
+          <a href="javascript:void(0)" (click)="forgotMode.set(true)" class="forgot-link">Forgot password?</a>
         </div>
 
         <!-- Submit -->
@@ -113,16 +116,79 @@
         </div>
 
         <div class="social-grid">
-          <button type="button" class="social-btn google">
-            <img src="https://cdn.iconscout.com/icon/free/png-256/free-google-1772223-1507807.png" alt="Google">
-            Google
-          </button>
-          <button type="button" class="social-btn apple">
-            <i class="fab fa-apple"></i>
-            Apple
-          </button>
+          <a href="https://www.google.com" target="_blank" style="text-decoration: none;">
+            <button type="button" class="social-btn google">
+              <img src="https://cdn.iconscout.com/icon/free/png-256/free-google-1772223-1507807.png" alt="Google">
+              Google
+            </button>
+          </a>
+          <a href="https://www.facebook.com" target="_blank" style="text-decoration: none;">
+            <button type="button" class="social-btn facebook">
+              <i class="fab fa-facebook-f"></i>
+              Facebook
+            </button>
+          </a>
         </div>
       </form>
+
+      <!-- Forgot Password Flow -->
+      <div *ngIf="forgotMode()" class="forgot-flow">
+        <!-- Step 1: Email -->
+        <div *ngIf="forgotStep() === 1" class="forgot-step">
+          <div class="input-float-group">
+            <input type="email" id="forgot-email" name="forgot-email" [(ngModel)]="forgotData.email_address" required email
+              placeholder=" " autocomplete="off">
+            <label for="forgot-email">Email Address</label>
+            <i class="fas fa-envelope input-icon"></i>
+          </div>
+          
+          <button type="button" class="modern-submit-btn" (click)="onForgotPassword()" [disabled]="isLoading()">
+            <span class="btn-text">Send OTP</span>
+            <div class="loader-ring" *ngIf="isLoading()"></div>
+          </button>
+          
+          <a href="javascript:void(0)" (click)="forgotMode.set(false)" class="back-to-login">
+            <i class="fas fa-arrow-left"></i> Back to Login
+          </a>
+        </div>
+
+        <!-- Step 2: OTP & New Password -->
+        <div *ngIf="forgotStep() === 2" class="forgot-step">
+          <div class="input-float-group">
+            <input type="text" id="otp" name="otp" [(ngModel)]="forgotData.otp" required maxlength="6"
+              placeholder=" " autocomplete="off">
+            <label for="otp">Enter 6-digit OTP</label>
+            <i class="fas fa-key input-icon"></i>
+          </div>
+
+          <div class="input-float-group">
+            <input [type]="showPassword ? 'text' : 'password'" id="new-password" name="new-password" 
+              [(ngModel)]="forgotData.new_password" required minlength="6"
+              placeholder=" " autocomplete="off">
+            <label for="new-password">New Password</label>
+            <i class="fas fa-lock input-icon"></i>
+          </div>
+
+          <button type="button" class="modern-submit-btn" (click)="onResetPassword()" [disabled]="isLoading()">
+            <span class="btn-text">Reset Password</span>
+            <div class="loader-ring" *ngIf="isLoading()"></div>
+          </button>
+
+          <a href="javascript:void(0)" (click)="forgotStep.set(1)" class="back-to-login">
+            <i class="fas fa-arrow-left"></i> Use different email
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Lottie Overlay -->
+  <div class="success-overlay" *ngIf="showSuccessAnimation()">
+    <div class="success-backdrop"></div>
+    <div class="success-content">
+      <div #successLottie class="success-lottie"></div>
+      <h2 class="success-title">Welcome to TailCart!</h2>
+      <p class="success-text">Your luxury pet experience starts now.</p>
     </div>
   </div>
 </div>

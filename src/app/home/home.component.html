@@ -32,7 +32,7 @@
             </svg>
             Shop Now
           </button>
-          <button class="btn-hero-ghost" (click)="navigateToShop()">Learn More &#8594;</button>
+          <button class="btn-hero-ghost" (click)="navigateToAbout()">Learn More &#8594;</button>
         </div>
       </div>
     </div>
@@ -63,7 +63,7 @@
             </svg>
             Upload Document
           </button>
-          <button class="btn-hero-ghost" (click)="navigateToDocuments()">View Docs &#8594;</button>
+          <button class="btn-hero-ghost" (click)="navigateToAbout()">Learn More &#8594;</button>
         </div>
       </div>
     </div>
@@ -82,7 +82,7 @@
           </svg>
           Tail Scheduler
         </div>
-        <h1 class="slide-title">Smart<br><span class="slide-accent">Alert System</span></h1>
+        <h1 class="slide-title">Smart<br><span class="slide-accent">Remainder System</span></h1>
         <p class="slide-desc">Set vaccination reminders and medical appointments. Get notified via Email &amp; Mobile so
           your pet never misses a critical care date.</p>
         <div class="slide-actions">
@@ -94,7 +94,7 @@
             </svg>
             Set Reminders
           </button>
-          <button class="btn-hero-ghost" (click)="navigateToAlerts()">Learn More &#8594;</button>
+          <button class="btn-hero-ghost" (click)="navigateToAbout()">Learn More &#8594;</button>
         </div>
       </div>
     </div>
@@ -126,7 +126,7 @@
             </svg>
             Ask Doctor
           </button>
-          <button class="btn-hero-ghost" (click)="navigateToDoctor()">Learn More &#8594;</button>
+          <button class="btn-hero-ghost" (click)="navigateToAbout()">Learn More &#8594;</button>
         </div>
       </div>
     </div>
@@ -173,8 +173,8 @@
         </div>
         <div class="service-info">
           <h2 class="service-name">Tail Tag</h2>
-          <p class="service-desc">Secure tracking for your pet with instant notification technology.</p>
-          <a class="learn-more-btn">Learn more &#8594;</a>
+          <p class="service-desc">Secure tracking for your pet with instant notification technology anywhere</p>
+          <a class="learn-more-btn">Get Item &#8594;</a>
         </div>
       </div>
 
@@ -187,19 +187,20 @@
         <div class="service-info">
           <h2 class="service-name">Tail Scheduler</h2>
           <p class="service-desc">Never miss a vet visit or medication with intelligent scheduling.</p>
-          <a class="learn-more-btn">Learn more &#8594;</a>
+          <a class="learn-more-btn">Add Document &#8594;</a>
         </div>
       </div>
       <!-- Live Notifications -->
-      <div class="service-sticker-card" (click)="navigateToAlerts()">
+      <div class="service-sticker-card" (click)="navigateToProfile()">
         <div class="sticker-visual">
           <div class="circle-bg blue-circle"></div>
           <img src="assets/images/service_notifications.png" alt="Live Notifications" class="sticker-img">
         </div>
         <div class="service-info">
           <h3 class="service-name">Live Notifications</h3>
-          <p class="service-desc">Get instant map alerts when your lost pet&apos;s tag is scanned.</p>
-          <a class="learn-more-btn">Learn more &#8594;</a>
+          <p class="service-desc">Add your pet and buy product for get instant map alerts when your lost pet&apos;s tag
+            is scanned.</p>
+          <a class="learn-more-btn">Add Pet &#8594;</a>
         </div>
       </div>
 
@@ -212,7 +213,7 @@
         <div class="service-info">
           <h2 class="service-name">Tail Care+</h2>
           <p class="service-desc">Instant pediatric and behavioral health insights from our advanced AI model.</p>
-          <a class="learn-more-btn">Learn more &#8594;</a>
+          <a class="learn-more-btn">Visit Doctor &#8594;</a>
         </div>
       </div>
 
@@ -225,7 +226,7 @@
         <div class="service-info">
           <h2 class="service-name">Tail Vault</h2>
           <p class="service-desc">Securely store and share all your pet paperwork in one smart cloud.</p>
-          <a class="learn-more-btn">Learn more &#8594;</a>
+          <a class="learn-more-btn">Upload Document &#8594;</a>
         </div>
       </div>
     </div>
@@ -571,7 +572,7 @@
           <span class="faq-icon-premium" [class.open]="faqStates[3]">+</span>
         </button>
         <div class="faq-answer-premium" [class.active]="faqStates[3]">
-          Absolutely. You can update pet info, documents, and alerts anytime from your dashboard.
+          Absolutely. You can update pet info, owner info, and documents anytime from your dashboard.
         </div>
       </div>
 
@@ -584,9 +585,9 @@
 <section class="social-feed-section fade-in">
   <div class="social-container">
     <div class="section-header" data-aos="fade-up">
-      <div class="premium-tag tag-gold">#TAILCARTPETS</div>
+      <div class="premium-tag tag-gold">#TAILCART</div>
       <h2 class="section-title">Follow Us on <span class="highlight-green">Instagram</span></h2>
-      <p class="section-subtitle">Join our community of over 50,000 pet parents sharing their stories.</p>
+      <p class="section-subtitle">Join our community of pet parents sharing their stories.</p>
     </div>
 
     <div class="social-grid">
@@ -659,30 +660,30 @@
           <div class="link-column">
             <h3 class="column-title-premium">Products</h3>
             <ul class="link-list">
-              <li><a href="#" class="footer-link">Smart QR Tags</a></li>
-              <li><a href="#" class="footer-link">Document Locker</a></li>
-              <li><a href="#" class="footer-link">Alert System</a></li>
-              <li><a href="#" class="footer-link">AI Pet Doctor</a></li>
+              <li><a routerLink="/shop" class="footer-link">TailTags</a></li>
+              <li><a routerLink="/document" class="footer-link">TailVault</a></li>
+              <li><a routerLink="/document" class="footer-link">TailScheduler</a></li>
+              <li><a routerLink="/doctor-ai" class="footer-link">TailCare</a></li>
             </ul>
           </div>
 
           <div class="link-column">
             <h3 class="column-title-premium">Company</h3>
             <ul class="link-list">
-              <li><a href="#" class="footer-link">About Us</a></li>
-              <li><a href="#" class="footer-link">Our Story</a></li>
-              <li><a href="#" class="footer-link">Careers</a></li>
-              <li><a href="#" class="footer-link">Contact</a></li>
+              <li><a routerLink="/about" class="footer-link">About Us</a></li>
+              <li><a routerLink="/about" class="footer-link">Our Story</a></li>
+              <li><a routerLink="/about" class="footer-link">Careers</a></li>
+              <li><a routerLink="/about" class="footer-link">Contact</a></li>
             </ul>
           </div>
 
           <div class="link-column">
             <h3 class="column-title-premium">Support</h3>
             <ul class="link-list">
-              <li><a href="#" class="footer-link">Help Center</a></li>
-              <li><a href="#" class="footer-link">FAQs</a></li>
-              <li><a href="#" class="footer-link">Shipping</a></li>
-              <li><a href="#" class="footer-link">Returns</a></li>
+              <li><a routerLink="/about" class="footer-link">Help Center</a></li>
+              <li><a routerLink="/about" class="footer-link">FAQs</a></li>
+              <li><a routerLink="/about" class="footer-link">Shipping</a></li>
+              <li><a routerLink="/about" class="footer-link">Returns</a></li>
             </ul>
           </div>
         </div>
@@ -716,8 +717,8 @@
       <div class="copyright-premium">
         <p>© 2026 TailCart. All rights reserved.</p>
         <div class="legal-links-premium">
-          <a href="#" class="legal-link">Privacy Policy</a>
-          <a href="#" class="legal-link">Terms of Service</a>
+          <a routerLink="/about" class="legal-link">Privacy Policy</a>
+          <a routerLink="/about" class="legal-link">Terms of Service</a>
         </div>
       </div>
     </div>
