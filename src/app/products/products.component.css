@@ -105,7 +105,8 @@
   gap: 12px;
   overflow-x: auto;
   padding: 5px 0 15px;
-  justify-content: center;
+  justify-content: flex-start;
+  /* changed from center to avoid left-clipping on overflow */
   scrollbar-width: none;
 }
 
@@ -788,6 +789,7 @@
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   margin-top: 20px;
+  margin-bottom: 100px;
 }
 
 .empty-lottie {
