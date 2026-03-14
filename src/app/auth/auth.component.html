@@ -19,11 +19,13 @@
 
       <div class="auth-headings">
         <h2 *ngIf="!forgotMode()">{{ isLoginMode() ? 'Welcome Back.' : 'Join TailCart.' }}</h2>
-        <p *ngIf="!forgotMode()">{{ isLoginMode() ? 'Enter your details to access your luxury account.' : 'Create an account for personalized
+        <p *ngIf="!forgotMode()">{{ isLoginMode() ? 'Enter your details to access your luxury account.' : 'Create an
+          account for personalized
           pet services.' }}</p>
 
         <h2 *ngIf="forgotMode()">{{ forgotStep() === 1 ? 'Reset Password' : 'Enter OTP' }}</h2>
-        <p *ngIf="forgotMode()">{{ forgotStep() === 1 ? 'Enter your registered email to receive an OTP.' : 'Enter the 6-digit code sent to your email.' }}</p>
+        <p *ngIf="forgotMode()">{{ forgotStep() === 1 ? 'Enter your registered email to receive an OTP.' : 'Enter the
+          6-digit code sent to your email.' }}</p>
       </div>
 
       <!-- Messages -->
@@ -136,17 +138,17 @@
         <!-- Step 1: Email -->
         <div *ngIf="forgotStep() === 1" class="forgot-step">
           <div class="input-float-group">
-            <input type="email" id="forgot-email" name="forgot-email" [(ngModel)]="forgotData.email_address" required email
-              placeholder=" " autocomplete="off">
+            <input type="email" id="forgot-email" name="forgot-email" [(ngModel)]="forgotData.email_address" required
+              email placeholder=" " autocomplete="off">
             <label for="forgot-email">Email Address</label>
             <i class="fas fa-envelope input-icon"></i>
           </div>
-          
+
           <button type="button" class="modern-submit-btn" (click)="onForgotPassword()" [disabled]="isLoading()">
             <span class="btn-text">Send OTP</span>
             <div class="loader-ring" *ngIf="isLoading()"></div>
           </button>
-          
+
           <a href="javascript:void(0)" (click)="forgotMode.set(false)" class="back-to-login">
             <i class="fas fa-arrow-left"></i> Back to Login
           </a>
@@ -155,16 +157,15 @@
         <!-- Step 2: OTP & New Password -->
         <div *ngIf="forgotStep() === 2" class="forgot-step">
           <div class="input-float-group">
-            <input type="text" id="otp" name="otp" [(ngModel)]="forgotData.otp" required maxlength="6"
-              placeholder=" " autocomplete="off">
+            <input type="text" id="otp" name="otp" [(ngModel)]="forgotData.otp" required maxlength="6" placeholder=" "
+              autocomplete="off">
             <label for="otp">Enter 6-digit OTP</label>
             <i class="fas fa-key input-icon"></i>
           </div>
 
           <div class="input-float-group">
-            <input [type]="showPassword ? 'text' : 'password'" id="new-password" name="new-password" 
-              [(ngModel)]="forgotData.new_password" required minlength="6"
-              placeholder=" " autocomplete="off">
+            <input [type]="showPassword ? 'text' : 'password'" id="new-password" name="new-password"
+              [(ngModel)]="forgotData.new_password" required minlength="6" placeholder=" " autocomplete="off">
             <label for="new-password">New Password</label>
             <i class="fas fa-lock input-icon"></i>
           </div>

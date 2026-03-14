@@ -445,7 +445,7 @@ export class DocumentsComponent implements OnInit {
   downloadDocument(doc: Document | null): void {
     if (!doc) return;
 
-    const fileUrl = `https://tailcart1.duckdns.org${doc.document_file}`;
+    const fileUrl = `http://127.0.0.1:8000${doc.document_file}`;
     const link = document.createElement('a');
     link.href = fileUrl;
     link.download = doc.document_title;

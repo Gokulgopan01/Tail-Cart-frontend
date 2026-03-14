@@ -1610,6 +1610,7 @@ input:checked+.slider:before {
 
 /* Mobile Layout */
 @media (max-width: 768px) {
+  /* Stack sidebar + main */
   .remainders-layout {
     flex-direction: column;
   }
@@ -1617,9 +1618,86 @@ input:checked+.slider:before {
   .remainders-sidebar {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid #e2e8f0;
-    padding-bottom: 20px;
+    border-bottom: none;
+    padding-bottom: 0;
+    padding-right: 0;
     min-height: auto;
+  }
+
+  .header-section {
+    padding: 20px 0 80px;
+  }
+
+  /* Table headers hidden */
+  .rem-list-headers {
+    display: none !important;
+  }
+
+  /* Card stacking for reminders */
+  .rem-header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .rem-row-card {
+    padding: 15px;
+    flex-wrap: wrap !important;
+  }
+
+  .pet-col {
+    width: 100% !important;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+
+  .icon-col {
+    width: 20% !important;
+    border: none !important;
+    display: flex;
+    justify-content: flex-start !important;
+  }
+
+  .title-col {
+    width: 80% !important;
+    padding-left: 5px;
+  }
+
+  .time-col {
+    width: 100% !important;
+    padding-top: 10px;
+    margin-top: 5px;
+    border-top: 1px dashed rgba(0, 0, 0, 0.1);
+  }
+
+  .notes-col {
+    width: 100% !important;
+    margin-top: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .actions-col {
+    width: 100% !important;
+    padding-top: 12px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .card-action-btns {
+    justify-content: center !important;
+    width: 100%;
+    gap: 15px;
+  }
+
+  .card-action-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
   }
 }
 
@@ -1697,86 +1775,8 @@ input:checked+.slider:before {
   gap: 12px;
 }
 
-/* Mobile Perfection (400px) */
+/* Small mobile tweaks (400px) */
 @media (max-width: 400px) {
-  .rem-list-headers {
-    display: none !important;
-  }
-
-  .rem-header-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 15px;
-  }
-
-  .rem-row-card {
-    padding: 15px;
-    flex-wrap: wrap !important;
-  }
-
-  .pet-col {
-    width: 100% !important;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
-    padding-bottom: 8px;
-    margin-bottom: 8px;
-  }
-
-  .icon-col {
-    width: 20% !important;
-    border: none !important;
-    display: flex;
-    justify-content: flex-start !important;
-  }
-
-  .title-col {
-    width: 80% !important;
-    padding-left: 5px;
-  }
-
-  .time-col {
-    width: 100% !important;
-    padding-top: 10px;
-    margin-top: 5px;
-    border-top: 1px dashed rgba(0, 0, 0, 0.1);
-  }
-
-  .notes-col {
-    width: 100% !important;
-    margin-top: 8px;
-    background: rgba(255, 255, 255, 0.4);
-    padding: 10px;
-    border-radius: 12px;
-  }
-
-  .actions-col {
-    width: 100% !important;
-    padding-top: 12px;
-    margin-top: 5px;
-    display: flex;
-    justify-content: center !important;
-    align-items: center !important;
-  }
-
-  .card-action-btns {
-    justify-content: center !important;
-    width: 100%;
-    gap: 15px;
-  }
-
-  .card-action-btn {
-    width: 44px;
-    height: 44px;
-    font-size: 1.1rem;
-  }
-
-  .sidebar-title {
-    font-size: 1.25rem;
-  }
-
-  .main-title {
-    font-size: 1.25rem;
-  }
-
   .modal-card {
     border-radius: 20px;
     width: 96%;
@@ -1813,7 +1813,7 @@ input:checked+.slider:before {
 
   .view-toggles {
     gap: 15px;
-    min-width: 320px;
+    min-width: 280px;
   }
 }
 
