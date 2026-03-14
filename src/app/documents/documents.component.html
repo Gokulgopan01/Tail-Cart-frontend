@@ -1,30 +1,47 @@
 <div class="documents-locker">
-  <!-- Header Section -->
-  <header class="header-section">
-    <div class="container">
+  <!-- Premium curved header -->
+  <header class="header-section premium-header">
+    <div class="container header-container">
+      <div class="header-top-bar">
+        <button class="back-link-btn" title="Back">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="header-actions">
+          <div class="icon-badge-wrapper">
+            <i class="far fa-bell"></i>
+            <span class="badge red-badge">5</span>
+          </div>
+          <div class="icon-badge-wrapper">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="badge teal-badge">4</span>
+          </div>
+        </div>
+      </div>
+
       <div class="documents-header-wrapper">
         <div class="documents-title-section">
+          <h1 class="documents-main-title">Tail VAULT <i class="fas fa-paw paw-icon"></i></h1>
+          <p class="documents-subtitle">Your pet's health and life-saving reminders in one secure place.</p>
         </div>
 
-        <div class="tabs-container">
+        <div class="tabs-container premium-tabs">
           <button class="tab-btn" [class.active]="activeTab === 'documents'" (click)="activeTab = 'documents'">
             <i class="fas fa-folder"></i>
-            <span>Documents</span>
-            <span class="tab-badge">{{ documents.length }}</span>
+            <span>Documents <span class="tab-badge-inline">{{ documents.length }}</span></span>
           </button>
 
-          <button class="tab-btn" [class.active]="activeTab === 'alerts'" (click)="activeTab = 'alerts'">
+          <button class="tab-btn" [class.active]="activeTab === 'remainders'" (click)="activeTab = 'remainders'">
             <i class="fas fa-bell"></i>
-            <span>Alerts</span>
-            <span class="tab-badge">{{ alerts.length }}</span>
+            <span>Reminders <span class="tab-badge-inline">{{ remainders.length }}</span></span>
           </button>
         </div>
       </div>
     </div>
+    <div class="header-curve"></div>
   </header>
 
-  <!-- Smart High-Priority Alert Banner -->
-  <div *ngIf="getOverdueAlerts().length > 0 || getUpcomingAlerts().length > 0" class="priority-banner">
+  <!-- Smart High-Priority Remainder Banner -->
+  <div *ngIf="overdueCount > 0 || upcomingCount > 0" class="priority-banner">
     <div class="container">
       <div class="banner-flex">
         <div class="banner-info">
@@ -32,17 +49,19 @@
             <i class="fas fa-exclamation-circle"></i>
           </div>
           <div class="banner-text">
-            <h4 *ngIf="getOverdueAlerts().length > 0">Overdue Reminders!</h4>
-            <h4 *ngIf="getOverdueAlerts().length === 0 && getUpcomingAlerts().length > 0">Upcoming Reminders</h4>
+            <h4 *ngIf="overdueCount > 0">Overdue Reminders!</h4>
+            <h4 *ngIf="overdueCount === 0 && upcomingCount > 0">Upcoming Reminders
+            </h4>
             <p>
-              <span *ngIf="getOverdueAlerts().length > 0">{{ getOverdueAlerts().length }} items need immediate
+              <span *ngIf="overdueCount > 0">{{ overdueCount }} items need immediate
                 attention.</span>
-              <span *ngIf="getUpcomingAlerts().length > 0"> {{ getUpcomingAlerts().length }} reminders due today or
+              <span *ngIf="upcomingCount > 0"> {{ upcomingCount }} reminders due today
+                or
                 tomorrow.</span>
             </p>
           </div>
         </div>
-        <button class="banner-btn" (click)="activeTab = 'alerts'">
+        <button class="banner-btn" (click)="activeTab = 'remainders'">
           Review Now <i class="fas fa-chevron-right"></i>
         </button>
       </div>
@@ -53,196 +72,313 @@
     <!-- Documents Tab -->
     <section *ngIf="activeTab === 'documents'" class="tab-pane fade-in">
       <div class="toolbar-section">
-        <div class="toolbar-left">
+        <div class="toolbar-left filters-container">
           <div class="search-wrapper">
             <i class="fas fa-search"></i>
             <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="filterDocuments()"
-              placeholder="Search documents..." class="modern-input">
+              placeholder="Search by document name..." class="modern-input">
           </div>
-          <select class="modern-select" [(ngModel)]="selectedType" (change)="filterDocuments()">
-            <option value="">All Types</option>
-            <option value="Pet Vaccination Record">Vaccinations</option>
-            <option value="Pet Medical Record">Medical</option>
-            <option value="Pet Prescription">Prescriptions</option>
-            <option value="Veterinary Document">Veterinary</option>
-            <option value="Other Pet Document">Other</option>
-          </select>
+          <div class="custom-select-wrapper tb-select">
+            <select class="modern-select" [(ngModel)]="selectedType" (change)="filterDocuments()">
+              <option value="">All Categories</option>
+              <option value="Pet Vaccination Record">Vaccination records</option>
+              <option value="Pet Medical Record">Medical reports</option>
+              <option value="Pet Prescription">Vet prescriptions</option>
+              <option value="Veterinary Document">Insurance documents</option>
+              <option value="Adoption papers">Adoption papers</option>
+              <option value="Training certificates">Training certificates</option>
+              <option value="Other Pet Document">Others</option>
+            </select>
+            <i class="fas fa-chevron-down select-icon"></i>
+          </div>
+          <div class="custom-select-wrapper tb-select">
+            <select class="modern-select" [(ngModel)]="selectedPet" (change)="filterDocuments()">
+              <option value="">All Pets</option>
+              <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
+            </select>
+            <i class="fas fa-chevron-down select-icon"></i>
+          </div>
+          <div class="custom-select-wrapper tb-select">
+            <select class="modern-select" [(ngModel)]="dateFilter" (change)="filterDocuments()">
+              <option value="all">Any Time</option>
+              <option value="recent">Uploaded Recently</option>
+            </select>
+            <i class="fas fa-chevron-down select-icon"></i>
+          </div>
         </div>
 
         <div class="toolbar-right">
-          <div class="view-toggle">
-            <button class="toggle-btn" [class.active]="docsViewMode === 'grid'" (click)="docsViewMode = 'grid'">
-              <i class="fas fa-th"></i>
-            </button>
-            <button class="toggle-btn" [class.active]="docsViewMode === 'list'" (click)="docsViewMode = 'list'">
-              <i class="fas fa-bars"></i>
-            </button>
-          </div>
           <button class="btn-primary" (click)="openUploadModal()">
-            <i class="fas fa-cloud-upload-alt"></i> Upload
+            <i class="fas fa-plus"></i> Add Document
           </button>
         </div>
       </div>
 
-      <div class="docs-display" [class.grid-mode]="docsViewMode === 'grid'" [class.list-mode]="docsViewMode === 'list'">
+      <div class="docs-display new-list-mode">
+        <div class="list-headers" *ngIf="filteredDocuments.length > 0">
+          <span class="lh-light">Light</span>
+          <span class="lh-remainder">Remainder</span>
+          <span class="lh-szecin">Szecin</span>
+        </div>
         <ng-container *ngIf="filteredDocuments.length > 0; else noDocs">
-          <div *ngFor="let doc of filteredDocuments" class="doc-card premium-card"
-            [class.expired]="isDocumentExpired(doc)">
-            <div class="card-bg-pattern"></div>
-            <div class="card-gradient" [ngClass]="getDocTypeClass(doc.document_type)"></div>
-
-            <div class="card-content">
-              <div class="card-header">
-                <div class="doc-icon"><i [class]="getDocTypeIcon(doc.document_type)"></i></div>
-                <div class="card-actions">
-                  <button class="icon-btn" (click)="previewDocument(doc)" title="View"><i
-                      class="fas fa-eye"></i></button>
-                  <button class="icon-btn" (click)="downloadDocument(doc)" title="Download"><i
-                      class="fas fa-download"></i></button>
-                  <button class="icon-btn" (click)="setAlertForDocument(doc)" title="Set Reminder"><i
-                      class="fas fa-bell"></i></button>
-                  <button class="icon-btn danger" (click)="deleteDocument(doc.document_id)" title="Delete"><i
-                      class="fas fa-trash-alt"></i></button>
-                </div>
+          <div *ngFor="let doc of filteredDocuments" class="premium-row-card" [class.expired]="isDocumentExpired(doc)">
+            <div class="card-left" (click)="previewDocument(doc)" title="View Document">
+              <div class="custom-pdf-icon">
+                <span class="pdf-label">PDF</span>
               </div>
-
-              <div class="card-body">
+              <div class="doc-info">
                 <h3 class="doc-title">{{ doc.document_title }}</h3>
-                <div class="doc-meta">
-                  <span><i class="far fa-calendar-alt"></i> {{ doc.upload_date | date:'dd MMM yyyy' }}</span>
-                  <span><i class="fas fa-file-invoice"></i> {{ doc.file_name || 'document.pdf' }}</span>
-                </div>
+                <p class="doc-subtitle">{{ doc.file_name?.substring(0, 10) || '1PP' }} {{
+                  calculateFileSize(doc.document_file) }} • {{ doc.upload_date | date:'dd MMM yyyy' }}</p>
               </div>
+            </div>
+            <div class="card-right">
+              <button class="doc-action doc-download" (click)="downloadDocument(doc)" title="Download">
+                <i class="fas fa-arrow-down"></i>
+              </button>
+              <button class="doc-action doc-remainder" (click)="setRemainderForDocument(doc)" title="Set Reminder">
+                <i class="far fa-bell"></i>
+              </button>
+              <span class="doc-separator"></span>
+              <button class="doc-action doc-delete" (click)="deleteDocument(doc.document_id)" title="Delete">
+                <i class="fas fa-clipboard-check"></i>
+              </button>
             </div>
           </div>
         </ng-container>
       </div>
     </section>
 
-    <!-- Alerts Tab -->
-    <section *ngIf="activeTab === 'alerts'" class="tab-pane fade-in">
-      <div class="toolbar-section">
-        <div class="toolbar-left">
-          <div class="search-wrapper">
-            <i class="fas fa-search"></i>
-            <input type="text" [(ngModel)]="alertSearchQuery" (ngModelChange)="filterAlerts()"
-              placeholder="Search alerts..." class="modern-input">
+    <!-- Remainders Tab -->
+    <section *ngIf="activeTab === 'remainders'" class="tab-pane fade-in remainders-layout">
+      <!-- Sidebar / Filters -->
+      <aside class="remainders-sidebar">
+        <h2 class="sidebar-title">Filters</h2>
+
+        <div class="filters-horizontal-row">
+          <div class="filter-group">
+            <label class="filter-label">PETS</label>
+            <div class="custom-select-wrapper has-left-icon">
+              <i class="fas fa-paw input-icon-left"></i>
+              <select class="modern-select" [(ngModel)]="selectedPet" (change)="filterRemainders()">
+                <option value="">All Pets</option>
+                <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label class="filter-label">STATUS</label>
+            <div class="custom-select-wrapper has-left-icon">
+              <i class="far fa-clock input-icon-left"></i>
+              <select class="modern-select" [(ngModel)]="selectedStatus" (change)="filterRemainders()">
+                <option value="">All Statuses</option>
+                <option value="upcoming">Upcoming</option>
+                <option value="overdue">Overdue</option>
+                <option value="completed">Completed</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="remainders-main">
+        <div class="rem-header-row unified-header">
+          <h2 class="main-title">Reminders</h2>
+          <button class="btn-teal-full" (click)="openCreateRemainderModal()">Create New Reminder</button>
+        </div>
+
+        <div class="rem-toolbar">
+          <div class="view-toggles">
+            <div class="view-select">List View <i class="fas fa-caret-down"></i></div>
+            <div class="view-switch-wrapper">
+              <span>Calendar View</span>
+              <label class="switch small-switch">
+                <input type="checkbox" [checked]="remainderViewMode === 'calendar'"
+                  (change)="remainderViewMode = (remainderViewMode === 'calendar' ? 'list' : 'calendar')">
+                <span class="slider round"></span>
+              </label>
+            </div>
           </div>
         </div>
 
-        <div class="toolbar-right">
-          <div class="view-toggle">
-            <button class="toggle-btn" [class.active]="alertViewMode === 'grid'" (click)="alertViewMode = 'grid'">
-              <i class="fas fa-th"></i>
-            </button>
-            <button class="toggle-btn" [class.active]="alertViewMode === 'list'" (click)="alertViewMode = 'list'">
-              <i class="fas fa-bars"></i>
-            </button>
+        <div class="rem-list-container" *ngIf="remainderViewMode === 'list'">
+          <div class="rem-list-headers">
+            <span class="pet-col-header">Pet Name</span>
+            <span class="icon-col-header">Icon</span>
+            <span class="title-col-header">Title / Category</span>
+            <span class="time-col-header">Date / Time</span>
+            <span class="notes-col-header">Notes</span>
+            <span class="actions-col-header text-right">Actions</span>
           </div>
-          <button class="btn-primary" (click)="openCreateAlertModal()">
-            <i class="fas fa-plus"></i> New Alert
-          </button>
-        </div>
-      </div>
 
-      <div class="alerts-display" [class.grid-mode]="alertViewMode === 'grid'"
-        [class.list-mode]="alertViewMode === 'list'">
-        <ng-container *ngIf="filteredAlerts.length > 0; else noAlerts">
-          <div *ngFor="let alert of filteredAlerts" class="alert-card premium-card" [class.inactive]="!alert.is_active">
-            <div class="card-bg-pattern"></div>
-            <div class="card-gradient alert-type-{{alert.alert_type.toLowerCase()}}"></div>
-
-            <div class="card-content">
-              <div class="card-header">
-                <div class="alert-icon"><i class="fas fa-clock"></i></div>
-                <div class="alert-status">
-                  <span class="status-label">{{ alert.is_active ? 'Active' : 'Inactive' }}</span>
-                  <label class="switch">
-                    <input type="checkbox" [(ngModel)]="alert.is_active" (change)="toggleAlert(alert)">
-                    <span class="slider round"></span>
-                  </label>
+          <div class="rem-cards-wrapper" *ngIf="filteredRemainders.length > 0; else noRemainders">
+            <div class="rem-row-card" *ngFor="let rem of filteredRemainders"
+              [ngClass]="(rem.statusInfo?.type || 'overdue') + '-bg'">
+              <div class="rem-col pet-col">
+                <div class="rem-pet-info">
+                  <span class="rem-pet-name">{{ getPetName(rem.pet) }}</span>
+                  <span class="rem-status-text" [ngClass]="(rem.statusInfo?.type || 'overdue') + '-text'">{{
+                    rem.statusInfo?.text || 'Overdue' }}</span>
                 </div>
               </div>
-
-              <div class="card-body">
-                <h3 class="alert-title">{{ alert.title }}</h3>
-                <div class="alert-meta">
-                  <span class="type-tag">{{ alert.alert_type }}</span>
-                  <span class="due-tag"><i class="far fa-calendar-check"></i> Due: {{ alert.due_date | date:'dd MMM
-                    yyyy' }}</span>
-                </div>
+              <div class="rem-col icon-col">
+                <i class="fas fa-exclamation-circle text-red" *ngIf="rem.statusInfo?.type === 'overdue'"></i>
+                <i class="fas fa-clock text-orange" *ngIf="rem.statusInfo?.type === 'upcoming'"></i>
+                <i class="fas fa-calendar-alt text-scheduled" *ngIf="rem.statusInfo?.type === 'scheduled'"></i>
+                <i class="fas fa-check-circle text-green" *ngIf="rem.statusInfo?.type === 'completed'"></i>
               </div>
-
-              <div class="card-footer">
-                <button class="lite-btn edit-btn" (click)="editAlert(alert)"><i class="fas fa-edit"></i> Edit</button>
-                <button class="lite-btn danger" (click)="deleteAlert(alert)"><i class="fas fa-trash"></i>
-                  Delete</button>
+              <div class="rem-col title-col">
+                <span class="rem-card-title">{{ rem.title }}</span>
+                <span class="rem-card-subtype">{{ rem.alert_type }} • {{ rem.alert_subtype }}</span>
+              </div>
+              <div class="rem-col time-col">
+                <span>{{ rem.remainder_date | date:'dd MMM yyyy' }}</span>
+                <span class="time-sub">{{ rem.reminder_time }}</span>
+                <span class="completed-time" *ngIf="rem.statusInfo?.type === 'completed' && rem.completed_at">
+                  Done: {{ rem.completed_at | date:'shortTime' }}
+                </span>
+              </div>
+              <div class="rem-col notes-col">
+                <span class="rem-notes-text">{{ rem.notes || 'No notes' }}</span>
+              </div>
+              <div class="rem-col actions-col text-right">
+                <div class="card-action-btns">
+                  <button *ngIf="rem.statusInfo?.type !== 'completed'" class="card-action-btn complete"
+                    (click)="markAsCompleted(rem)" title="Mark as Completed">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button class="card-action-btn edit" (click)="editRemainder(rem)" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="card-action-btn delete" (click)="deleteRemainder(rem.alert_id)" title="Delete">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </ng-container>
+        </div>
+
+        <div class="rem-calendar-container" *ngIf="remainderViewMode === 'calendar'">
+          <div class="empty-state">
+            <i class="far fa-calendar-alt"></i>
+            <h3>Calendar View</h3>
+            <p>Coming soon...</p>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Empty States -->
     <ng-template #noDocs>
-      <div class="empty-state">
-        <i class="far fa-folder-open"></i>
-        <h3>No documents found</h3>
-        <p>Your search didn't return any matches. Try adjusting your filters.</p>
-        <button class="btn-clear" (click)="searchQuery = ''; selectedType = ''; filterDocuments()">Clear All</button>
+      <div class="empty-state lottie-empty">
+        <h3 class="empty-title">No documents found</h3>
+        <lottie-player src="assets/not_datas.json" background="transparent" speed="1"
+          style="width: 220px; height: 220px; margin: 0 auto;" loop autoplay>
+        </lottie-player>
+        <p class="empty-subtitle">Your search didn't match anything. Try clearing your filters.</p>
+        <button class="btn-clear-filter" (click)="searchQuery = ''; selectedType = ''; filterDocuments()">
+          <i class="fas fa-times"></i> Clear Filters
+        </button>
       </div>
     </ng-template>
 
-    <ng-template #noAlerts>
-      <div class="empty-state">
-        <i class="far fa-bell-slash"></i>
-        <h3>No alerts found</h3>
-        <p>You haven't set any reminders yet. Tap "New Alert" to stay ahead.</p>
+    <ng-template #noRemainders>
+      <div class="empty-state lottie-empty">
+        <h3 class="empty-title">No reminders found</h3>
+        <lottie-player src="assets/not_datas.json" background="transparent" speed="1"
+          style="width: 220px; height: 220px; margin: 0 auto;" loop autoplay>
+        </lottie-player>
+        <p class="empty-subtitle">You haven't set any reminders yet. Create one to stay on top of your pet's care.</p>
+        <div class="empty-actions">
+          <button class="btn-teal-full" style="max-width: 220px;" (click)="openCreateRemainderModal()">
+            <i class="fas fa-plus"></i> Create Reminder
+          </button>
+          <button *ngIf="selectedPet || selectedStatus" class="btn-clear-filter"
+            (click)="selectedPet = ''; selectedStatus = ''; filterRemainders()">
+            <i class="fas fa-filter"></i> Clear Filters
+          </button>
+        </div>
       </div>
     </ng-template>
   </main>
 
   <!-- Upload Modal -->
   <div class="modal-root" *ngIf="showUploadModal" (click)="closeUploadModal()">
-    <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-card small-modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Upload Document</h3>
         <button class="close-btn" (click)="closeUploadModal()"><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
-        <div class="upload-dropzone" (click)="fileInput.click()" [class.dragover]="isDragOver"
-          (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
-          <i class="fas fa-cloud-upload-alt"></i>
-          <p>{{ selectedFiles.length > 0 ? selectedFiles.length + ' files selected' : 'Tap or drag files to upload' }}
-          </p>
-          <input type="file" #fileInput (change)="onFileSelected($event)" class="d-none" multiple>
+        <div class="upload-dropzone" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)" [class.drag-over]="isDragOver" (click)="fileInput.click()">
+          <i class="fas fa-cloud-upload-alt fa-3x text-muted"
+            style="margin-bottom: 15px; color: #94a3b8; font-size: 3rem;"></i>
+          <h4 style="margin: 0 0 10px; color: #1e293b;">Click or Drag files here</h4>
+          <p style="margin: 0; color: #64748b; font-size: 0.9rem;">Supports PDF, JPG, PNG (Max 10MB)</p>
+          <input type="file" #fileInput multiple (change)="onFileSelected($event)" style="display: none"
+            accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+
+        <div class="selected-files" *ngIf="selectedFiles.length > 0" style="margin-bottom: 20px;">
+          <div class="file-item" *ngFor="let file of selectedFiles"
+            style="display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: #f8fafc; border-radius: 10px; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <i class="fas fa-file-alt" style="color: var(--primary-dark-green);"></i>
+              <span style="font-size: 0.9rem; font-weight: 500;">{{ file.name }}</span>
+            </div>
+            <button class="icon-btn danger" (click)="removeFile(file)"
+              style="width: 28px; height: 28px; border-radius: 8px;"><i class="fas fa-times"></i></button>
+          </div>
         </div>
 
         <form [formGroup]="uploadForm" class="modern-form">
           <div class="form-group">
             <label>Title</label>
-            <input type="text" formControlName="document_title" class="modern-input" placeholder="e.g. Health Record">
+            <input type="text" formControlName="document_title" class="modern-input"
+              placeholder="e.g. Rabies Certificate">
           </div>
           <div class="form-group">
-            <label>Type</label>
-            <select formControlName="document_type" class="modern-select">
-              <option value="Pet Vaccination Record">Vaccination</option>
-              <option value="Pet Medical Record">Medical Record</option>
-              <option value="Pet Prescription">Prescription</option>
-              <option value="Veterinary Document">Veterinary</option>
-              <option value="Other Pet Document">Other</option>
-            </select>
+            <label>Document Type</label>
+            <div class="custom-select-wrapper">
+              <select formControlName="document_type" class="modern-select">
+                <option value="" disabled hidden>Select document type</option>
+                <option value="Pet Vaccination Record">Vaccination records</option>
+                <option value="Pet Medical Record">Medical reports</option>
+                <option value="Pet Prescription">Vet prescriptions</option>
+                <option value="Veterinary Document">Insurance documents</option>
+                <option value="Adoption papers">Adoption papers</option>
+                <option value="Training certificates">Training certificates</option>
+                <option value="Other Pet Document">Others</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
           </div>
           <div class="form-group">
-            <label>Expiry Date</label>
+            <label>Pet</label>
+            <div class="custom-select-wrapper">
+              <select formControlName="pet" class="modern-select">
+                <option value="" disabled hidden>Select pet</option>
+                <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Expiry Date (Optional)</label>
             <input type="date" formControlName="expiry_date" class="modern-input">
           </div>
+
           <div class="form-actions">
             <button type="button" class="btn-lite" (click)="closeUploadModal()">Cancel</button>
             <button type="button" class="btn-primary" (click)="uploadDocuments()"
-              [disabled]="uploadForm.invalid || isUploading">
-              {{ isUploading ? 'Uploading...' : 'Save Document' }}
+              [disabled]="uploadForm.invalid || selectedFiles.length === 0 || isUploading">
+              {{ isUploading ? 'Uploading...' : 'Upload Now' }}
             </button>
           </div>
         </form>
@@ -250,51 +386,92 @@
     </div>
   </div>
 
-  <!-- Alert Modal -->
-  <div class="modal-root" *ngIf="showEditAlertModal" (click)="closeEditAlertModal()">
+  <!-- Remainder Modal -->
+  <div class="modal-root scrollable-modal" *ngIf="showEditRemainderModal" (click)="closeEditRemainderModal()">
     <div class="modal-card small-modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>{{ editingAlert ? 'Edit Alert' : 'Create Alert' }}</h3>
-        <button class="close-btn" (click)="closeEditAlertModal()"><i class="fas fa-times"></i></button>
+        <h3>{{ editingRemainder ? 'Edit Reminder' : 'Create Reminder' }}</h3>
+        <button class="close-btn" (click)="closeEditRemainderModal()"><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="alertForm" class="modern-form">
+        <form [formGroup]="remainderForm" class="modern-form">
           <div class="form-group">
             <label>Pet</label>
-            <select formControlName="pet" class="modern-select">
-              <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
-            </select>
+            <div class="custom-select-wrapper">
+              <select formControlName="pet" class="modern-select">
+                <option value="" disabled hidden>Select pet</option>
+                <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
           </div>
           <div class="form-group">
-            <label>Alert Type</label>
-            <select formControlName="alert_type" class="modern-select">
-              <option value="Vaccination">Vaccination</option>
-              <option value="Medication">Medication</option>
-              <option value="Appointment">Appointment</option>
-            </select>
+            <label>Category (Type)</label>
+            <div class="custom-select-wrapper">
+              <select formControlName="alert_type" class="modern-select">
+                <option value="Health">Health</option>
+                <option value="Grooming">Grooming</option>
+                <option value="Activity">Activity</option>
+                <option value="Nutrition">Nutrition</option>
+                <option value="Administrative">Administrative</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Sub Category</label>
+            <div class="custom-select-wrapper">
+              <select formControlName="alert_subtype" class="modern-select">
+                <option value="Medication">Medication</option>
+                <option value="Vet Appointment">Vet Appointment</option>
+                <option value="Deworming">Deworming</option>
+                <option value="Flea Treatment">Flea Treatment</option>
+                <option value="Bath">Bath</option>
+                <option value="Nail Trimming">Nail Trimming</option>
+                <option value="Teeth Cleaning">Teeth Cleaning</option>
+                <option value="Walk">Walk</option>
+                <option value="Exercise">Exercise</option>
+                <option value="Insurance Renewal">Insurance Renewal</option>
+                <option value="License Renewal">License Renewal</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
           </div>
           <div class="form-group">
             <label>Title</label>
             <input type="text" formControlName="title" class="modern-input" placeholder="e.g. Rabies Booster">
           </div>
           <div class="form-group">
-            <label>Due Date</label>
-            <input type="date" formControlName="due_date" class="modern-input">
+            <label>Date</label>
+            <input type="date" formControlName="remainder_date" class="modern-input">
+          </div>
+          <div class="form-group">
+            <label>Time</label>
+            <input type="time" formControlName="reminder_time" class="modern-input">
           </div>
           <div class="form-group">
             <label>Frequency</label>
-            <select formControlName="frequency" class="modern-select">
-              <option value="One-time">One-time</option>
-              <option value="Daily">Daily</option>
-              <option value="Weekly">Weekly</option>
-              <option value="Monthly">Monthly</option>
-            </select>
+            <div class="custom-select-wrapper">
+              <select formControlName="frequency" class="modern-select">
+                <option value="One-time">One-time</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Yearly">Yearly</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea formControlName="notes" class="modern-input" rows="3"
+              placeholder="Additional details..."></textarea>
           </div>
           <div class="form-actions">
-            <button type="button" class="btn-lite" (click)="closeEditAlertModal()">Cancel</button>
-            <button type="button" class="btn-primary" (click)="saveAlert()"
-              [disabled]="alertForm.invalid || isSavingAlert">
-              {{ isSavingAlert ? 'Saving...' : 'Save Alert' }}
+            <button type="button" class="btn-lite" (click)="closeEditRemainderModal()">Cancel</button>
+            <button type="button" class="btn-primary" (click)="saveRemainder()"
+              [disabled]="remainderForm.invalid || isSavingRemainder">
+              {{ isSavingRemainder ? 'Saving...' : 'Save Reminder' }}
             </button>
           </div>
         </form>

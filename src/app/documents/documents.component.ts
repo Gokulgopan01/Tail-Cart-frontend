@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Added FormsModule
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -19,17 +19,21 @@ interface Document {
   file_size?: string;
 }
 
-interface Alert {
+interface Remainder {
   alert_id: number;
   user: number;
   pet: number;
   alert_type: string;
+  alert_subtype: string;
   title: string;
-  due_date: string;
+  reminder_time: string;
+  remainder_date: string;
   frequency: string;
+  notes?: string;
   is_active: boolean;
-  custom_message?: string;
-  days_before?: number;
+  completed_at?: string | null;
+  created_at?: string;
+  statusInfo?: { text: string, type: string };
 }
 
 @Component({
@@ -37,10 +41,11 @@ interface Alert {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule, // Added FormsModule for ngModel
+    FormsModule,
     ReactiveFormsModule,
     MatTooltipModule
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './documents.component.html',
   styleUrls: ['./documents.component.css']
 })
@@ -48,42 +53,48 @@ interface Alert {
 export class DocumentsComponent implements OnInit {
   // Data
   documents: Document[] = [];
-  alerts: Alert[] = [];
+  remainders: Remainder[] = [];
   filteredDocuments: Document[] = [];
-  filteredAlerts: Alert[] = [];
+  filteredRemainders: Remainder[] = [];
   userPets: { id: number, name: string }[] = [];
 
+  overdueCount: number = 0;
+  upcomingCount: number = 0;
+
   // UI State
-  activeTab: 'documents' | 'alerts' = 'documents';
+  activeTab: 'documents' | 'remainders' = 'documents';
   docsViewMode: 'grid' | 'list' = 'grid';
-  alertViewMode: 'grid' | 'list' = 'grid';
+  remainderViewMode: 'list' | 'calendar' = 'list';
   searchQuery: string = '';
-  alertSearchQuery: string = '';
+  remainderSearchQuery: string = '';
   selectedType: string = '';
+  selectedPet: string = '';
+  selectedStatus: string = '';
+  dateFilter: string = 'all';
 
   // Modal States
   showUploadModal: boolean = false;
-  showEditAlertModal: boolean = false;
+  showEditRemainderModal: boolean = false;
   showViewModal: boolean = false;
-  showAlertsModal: boolean = false; // Added this from original
+  showRemaindersModal: boolean = false; // Added this from original
 
   // File Upload
   selectedFiles: File[] = [];
   isDragOver: boolean = false;
   isUploading: boolean = false;
-  isSavingAlert: boolean = false; // Added this
+  isSavingRemainder: boolean = false; // Added this
 
   // Forms
   uploadForm: FormGroup;
-  alertForm: FormGroup;
+  remainderForm: FormGroup;
 
   // Selected Items
   selectedDoc: Document | null = null;
-  editingAlert: Alert | null = null;
+  editingRemainder: Remainder | null = null;
 
   // API Endpoints
   private documentsApi = 'http://127.0.0.1:8000/api/user/documents/';
-  private alertsApi = 'http://127.0.0.1:8000/api/user/pet-alerts/';
+  private remaindersApi = 'http://127.0.0.1:8000/api/user/pet-remainder/';
   private userId: string = '';
 
   constructor(
@@ -95,15 +106,18 @@ export class DocumentsComponent implements OnInit {
       document_type: ['', Validators.required],
       document_title: ['', Validators.required],
       expiry_date: [''],
-      pet: ['']
+      pet: ['', Validators.required]
     });
 
-    this.alertForm = this.fb.group({
+    this.remainderForm = this.fb.group({
       pet: ['', Validators.required],
-      alert_type: ['', Validators.required],
+      alert_type: ['Health', Validators.required],
+      alert_subtype: ['', Validators.required],
       title: ['', Validators.required],
-      due_date: ['', Validators.required],
+      remainder_date: ['', Validators.required],
+      reminder_time: ['', Validators.required],
       frequency: ['One-time', Validators.required],
+      notes: [''],
       is_active: [true]
     });
   }
@@ -112,7 +126,7 @@ export class DocumentsComponent implements OnInit {
     this.userId = localStorage.getItem('user_id') || '';
     if (this.userId) {
       this.loadDocuments();
-      this.loadAlerts();
+      this.loadRemainders();
       this.loadUserPets(); // <-- ADD THIS
     } else {
       this.showSnackbar('Please log in to access documents.', 'error');
@@ -127,10 +141,11 @@ export class DocumentsComponent implements OnInit {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (pets) => {
-        this.userPets = pets.map(p => ({ id: p.pet_id, name: p.pet_name })); // pets should be array of {id, pet_name}
-        // If creating a new alert, preselect the first pet
-        if (!this.editingAlert && this.userPets.length > 0) {
-          this.alertForm.patchValue({ pet: this.userPets[0].id });
+        this.userPets = pets.map(p => ({ id: p.pet_id, name: p.pet_name }));
+        console.log('Processed Pets:', this.userPets);
+        // If creating a new remainder, preselect the first pet
+        if (!this.editingRemainder && this.userPets.length > 0) {
+          this.remainderForm.patchValue({ pet: this.userPets[0].id });
         }
       },
       error: (err) => {
@@ -140,9 +155,9 @@ export class DocumentsComponent implements OnInit {
     });
   }
 
-  scrollToAlerts(): void {
+  scrollToRemainders(): void {
     setTimeout(() => {
-      document.getElementById('alerts-section')?.scrollIntoView({
+      document.getElementById('remainders-section')?.scrollIntoView({
         behavior: 'smooth'
       });
     }, 50);
@@ -171,22 +186,61 @@ export class DocumentsComponent implements OnInit {
       });
   }
 
-  loadAlerts(): void {
+  loadRemainders(): void {
     const token = localStorage.getItem('access_token');
     const headers = { Authorization: `Bearer ${token}` };
 
-    this.http.get<Alert[]>(`${this.alertsApi}?user_id=${this.userId}`, { headers })
+    this.http.get<Remainder[]>(`${this.remaindersApi}?user_id=${this.userId}`, { headers })
       .subscribe({
-        next: (alerts) => {
-          console.log('ALERTS LOADED:', alerts); // Debug log
-          this.alerts = alerts;
-          this.filteredAlerts = [...this.alerts]; // FIX: Copy alerts to filteredAlerts
+        next: (remainders) => {
+          this.remainders = remainders.map(rem => ({
+            ...rem,
+            statusInfo: this.calculateStatus(rem)
+          }));
+          this.filterRemainders();
         },
         error: (error) => {
-          console.error('Error loading alerts:', error);
-          this.showSnackbar('Error loading alerts.', 'error');
+          console.error('Error loading remainders:', error);
+          this.showSnackbar('Error loading remainders.', 'error');
         }
       });
+  }
+
+  calculateStatus(remainder: Remainder): { text: string, type: string } {
+    if (remainder.completed_at || !remainder.is_active) {
+      return { text: 'Completed', type: 'completed' };
+    }
+
+    if (!remainder.remainder_date) return { text: 'Scheduled', type: 'scheduled' };
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const remDate = new Date(remainder.remainder_date);
+    remDate.setHours(0, 0, 0, 0);
+
+    if (remDate.getTime() < today.getTime()) {
+      return { text: 'Overdue', type: 'overdue' };
+    }
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (remDate.getTime() <= tomorrow.getTime()) {
+      return { text: 'Upcoming', type: 'upcoming' };
+    }
+
+    return { text: 'Scheduled', type: 'scheduled' };
+  }
+
+  getPetName(petId: number): string {
+    const pet = this.userPets.find(p => p.id === petId);
+    return pet ? pet.name : `Pet ${petId}`;
+  }
+
+  updateBannerCounts(): void {
+    this.overdueCount = this.remainders.filter(r => r.statusInfo?.type === 'overdue').length;
+    this.upcomingCount = this.remainders.filter(r => r.statusInfo?.type === 'upcoming').length;
   }
 
   // Filtering
@@ -196,7 +250,8 @@ export class DocumentsComponent implements OnInit {
     if (this.searchQuery) {
       const query = this.searchQuery.toLowerCase();
       filtered = filtered.filter(doc =>
-        doc.document_title.toLowerCase().includes(query)
+        doc.document_title.toLowerCase().includes(query) ||
+        (doc.file_name && doc.file_name.toLowerCase().includes(query))
       );
     }
 
@@ -204,21 +259,43 @@ export class DocumentsComponent implements OnInit {
       filtered = filtered.filter(doc => doc.document_type === this.selectedType);
     }
 
+    if (this.selectedPet) {
+      filtered = filtered.filter(doc => doc.pet.toString() === this.selectedPet.toString());
+    }
+
+    if (this.dateFilter === 'recent') {
+      const recentThreshold = new Date();
+      recentThreshold.setDate(recentThreshold.getDate() - 30);
+      filtered = filtered.filter(doc => {
+        if (!doc.upload_date) return false;
+        return new Date(doc.upload_date) >= recentThreshold;
+      });
+    }
+
     this.filteredDocuments = filtered;
   }
 
-  filterAlerts(): void {
-    let filtered = this.alerts;
+  filterRemainders(): void {
+    let filtered = this.remainders;
 
-    if (this.alertSearchQuery) {
-      const query = this.alertSearchQuery.toLowerCase();
-      filtered = filtered.filter(alert =>
-        alert.title.toLowerCase().includes(query) ||
-        alert.alert_type.toLowerCase().includes(query)
+    if (this.remainderSearchQuery) {
+      const query = this.remainderSearchQuery.toLowerCase();
+      filtered = filtered.filter(remainder =>
+        remainder.title.toLowerCase().includes(query) ||
+        remainder.alert_type.toLowerCase().includes(query)
       );
     }
 
-    this.filteredAlerts = filtered;
+    if (this.selectedPet) {
+      filtered = filtered.filter(remainder => remainder.pet.toString() === this.selectedPet.toString());
+    }
+
+    if (this.selectedStatus) {
+      filtered = filtered.filter(remainder => remainder.statusInfo?.type === this.selectedStatus);
+    }
+
+    this.filteredRemainders = filtered;
+    this.updateBannerCounts();
   }
 
   // Document Methods
@@ -229,15 +306,15 @@ export class DocumentsComponent implements OnInit {
 
   closeUploadModal(): void {
     this.showUploadModal = false;
-    this.uploadForm.reset();
+    this.uploadForm.reset({ document_type: '', pet: '' });
     this.selectedFiles = [];
     document.body.style.overflow = 'auto';
   }
 
   // Missing methods added here:
-  closeEditAlertModal(): void {
-    this.showEditAlertModal = false;
-    this.editingAlert = null;
+  closeEditRemainderModal(): void {
+    this.showEditRemainderModal = false;
+    this.editingRemainder = null;
     document.body.style.overflow = 'auto';
   }
 
@@ -247,15 +324,15 @@ export class DocumentsComponent implements OnInit {
     document.body.style.overflow = 'auto';
   }
 
-  closeCreateAlertModal(): void {
-    this.showEditAlertModal = false; // Using same modal for create/edit
-    this.editingAlert = null;
+  closeCreateRemainderModal(): void {
+    this.showEditRemainderModal = false; // Using same modal for create/edit
+    this.editingRemainder = null;
     document.body.style.overflow = 'auto';
   }
 
-  toggleAlertsModal(): void {
-    this.showAlertsModal = !this.showAlertsModal;
-    if (this.showAlertsModal) {
+  toggleRemaindersModal(): void {
+    this.showRemaindersModal = !this.showRemaindersModal;
+    if (this.showRemaindersModal) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
@@ -264,9 +341,9 @@ export class DocumentsComponent implements OnInit {
 
   closeAllModals(): void {
     this.closeUploadModal();
-    this.closeEditAlertModal();
+    this.closeEditRemainderModal();
     this.closeViewModal();
-    this.showAlertsModal = false;
+    this.showRemaindersModal = false;
     document.body.style.overflow = 'auto';
   }
 
@@ -401,135 +478,137 @@ export class DocumentsComponent implements OnInit {
     }
   }
 
-  // Alert Methods
-  openCreateAlertModal(): void {
-    this.alertForm.reset({
-      alert_type: 'Vaccination',
+  // Remainder Methods
+  openCreateRemainderModal(): void {
+    const todayStr = new Date().toISOString().split('T')[0];
+    this.remainderForm.reset({
+      alert_type: 'Health',
+      alert_subtype: 'Vaccination',
+      remainder_date: todayStr,
+      reminder_time: '09:00',
       frequency: 'One-time',
-      is_active: true,   // <-- Add this
+      is_active: true,
       pet: this.userPets.length > 0 ? this.userPets[0].id : ''
     });
 
-    this.editingAlert = null;
-    this.showEditAlertModal = true;
+    this.editingRemainder = null;
+    this.showEditRemainderModal = true;
     document.body.style.overflow = 'hidden';
   }
 
-  editAlert(alert: Alert): void {
-    this.editingAlert = alert;
-    this.alertForm.patchValue({
-      pet: alert.pet,
-      alert_type: alert.alert_type,
-      title: alert.title,
-      due_date: alert.due_date,
-      frequency: alert.frequency,
-      is_active: alert.is_active
+  editRemainder(remainder: Remainder): void {
+    this.editingRemainder = remainder;
+    this.remainderForm.patchValue({
+      pet: remainder.pet,
+      alert_type: remainder.alert_type || 'Health',
+      alert_subtype: remainder.alert_subtype || '',
+      title: remainder.title,
+      remainder_date: remainder.remainder_date,
+      reminder_time: remainder.reminder_time,
+      frequency: remainder.frequency,
+      notes: remainder.notes || '',
+      is_active: remainder.is_active
     });
-    this.showEditAlertModal = true;
+    this.showEditRemainderModal = true;
     document.body.style.overflow = 'hidden';
   }
 
-  saveAlert(): void {
-    if (this.alertForm.invalid) {
+  saveRemainder(): void {
+    if (this.remainderForm.invalid) {
       this.showSnackbar('Please fill all required fields.', 'error');
       return;
     }
 
-    this.isSavingAlert = true;
-    const alertData = {
+    this.isSavingRemainder = true;
+    const remainderData = {
       user: this.userId,
-      pet: this.alertForm.value.pet,
-      alert_type: this.alertForm.value.alert_type,
-      title: this.alertForm.value.title,
-      due_date: this.alertForm.value.due_date,
-      frequency: this.alertForm.value.frequency,
-      is_active: this.alertForm.value.is_active ?? true
+      pet: this.remainderForm.value.pet,
+      alert_type: this.remainderForm.value.alert_type,
+      alert_subtype: this.remainderForm.value.alert_subtype,
+      title: this.remainderForm.value.title,
+      remainder_date: this.remainderForm.value.remainder_date,
+      reminder_time: this.remainderForm.value.reminder_time,
+      frequency: this.remainderForm.value.frequency,
+      notes: this.remainderForm.value.notes,
+      is_active: this.remainderForm.value.is_active ?? true
     };
 
     const token = localStorage.getItem('access_token');
-    const request$ = this.editingAlert
-      ? this.http.put(this.alertsApi, {
-        ...alertData,
-        alert_id: this.editingAlert.alert_id,
+    const request$ = this.editingRemainder
+      ? this.http.put(this.remaindersApi, {
+        ...remainderData,
+        alert_id: this.editingRemainder.alert_id,
         user_id: this.userId
       }, {
         headers: { Authorization: `Bearer ${token}` }
       })
-      : this.http.post(this.alertsApi, alertData, {
+      : this.http.post(this.remaindersApi, remainderData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
     request$.subscribe({
       next: () => {
-        this.isSavingAlert = false;
-        this.closeEditAlertModal();
-        this.loadAlerts();
-        this.showSnackbar(`Alert ${this.editingAlert ? 'updated' : 'created'} successfully!`, 'success');
+        this.isSavingRemainder = false;
+        this.closeEditRemainderModal();
+        this.loadRemainders();
+        this.showSnackbar(`Remainder ${this.editingRemainder ? 'updated' : 'created'} successfully!`, 'success');
       },
       error: (error) => {
-        this.isSavingAlert = false;
-        console.error('Error saving alert:', error);
-        this.showSnackbar('Error saving alert.', 'error');
+        this.isSavingRemainder = false;
+        console.error('Error saving remainder:', error);
+        this.showSnackbar('Error saving remainder.', 'error');
       }
     });
   }
 
-  deleteAlert(alert: Alert): void {
+  markAsCompleted(remainder: Remainder): void {
     const token = localStorage.getItem('access_token');
+    const headers = { Authorization: `Bearer ${token}` };
+    const now = new Date().toISOString();
 
-    this.http.delete(
-      `${this.alertsApi}?alert_id=${alert.alert_id}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    ).subscribe({
-      next: () => {
-        this.alerts = this.alerts.filter(a => a.alert_id !== alert.alert_id);
-        this.filteredAlerts = this.filteredAlerts.filter(a => a.alert_id !== alert.alert_id);
-        this.showSnackbar('Alert deleted successfully', 'success');
-      },
-      error: (error) => {
-        console.error('Delete alert error:', error);
-        this.showSnackbar('Failed to delete alert', 'error');
-      }
-    });
-  }
-
-  toggleAlert(alert: Alert): void {
-    const token = localStorage.getItem('access_token');
-
-    const payload = {
-      alert_id: alert.alert_id,
+    this.http.put(`${this.remaindersApi}`, {
       user_id: this.userId,
-      is_active: alert.is_active   // ✅ USE DIRECT VALUE
-    };
-
-    this.http.put(this.alertsApi, payload, {
-      headers: { Authorization: `Bearer ${token}` }
-    }).subscribe({
+      alert_id: remainder.alert_id,
+      completed_at: now,
+      is_active: false
+    }, { headers }).subscribe({
       next: () => {
-        this.showSnackbar(
-          `Alert ${alert.is_active ? 'enabled' : 'disabled'}`,
-          'success'
-        );
+        this.showSnackbar('Reminder marked as completed', 'success');
+        this.loadRemainders();
       },
-      error: (error) => {
-        console.error('Toggle failed:', error);
-
-        // 🔁 revert UI if backend fails
-        alert.is_active = !alert.is_active;
-
-        this.showSnackbar('Failed to update alert', 'error');
+      error: (err) => {
+        console.error('Error marking as completed:', err);
+        this.showSnackbar('Failed to update status', 'error');
       }
     });
   }
 
-  setAlertForDocument(doc: Document | null): void {
+  deleteRemainder(remainderId: number): void {
+    if (!confirm('Are you sure you want to delete this reminder?')) return;
+
+    const token = localStorage.getItem('access_token');
+    const headers = { Authorization: `Bearer ${token}` };
+
+    this.http.delete(`${this.remaindersApi}${remainderId}/`, { headers }).subscribe({
+      next: () => {
+        this.showSnackbar('Reminder deleted permanently', 'success');
+        this.loadRemainders();
+      },
+      error: (err) => {
+        console.error('Error deleting reminder:', err);
+        this.showSnackbar('Failed to delete reminder', 'error');
+      }
+    });
+  }
+
+  setRemainderForDocument(doc: Document | null): void {
     if (!doc) return;
 
-    this.alertForm.patchValue({
-      title: `${doc.document_type} Alert`,
+    this.remainderForm.patchValue({
+      title: `${doc.document_type} Remainder`,
       alert_type: 'Vaccination'
     });
-    this.openCreateAlertModal();
+    this.openCreateRemainderModal();
   }
 
   // Helper Methods
@@ -623,31 +702,20 @@ export class DocumentsComponent implements OnInit {
     return expiry >= today && expiry <= thirtyDaysFromNow;
   }
 
-  getOverdueAlerts(): Alert[] {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    return this.alerts.filter(alert => {
-      if (!alert.is_active) return false;
-      const dueDate = new Date(alert.due_date);
-      dueDate.setHours(0, 0, 0, 0);
-      return dueDate < today;
-    });
+  getReminderStatus(remainder: Remainder): { text: string, type: string } {
+    return remainder.statusInfo || this.calculateStatus(remainder);
   }
 
-  getUpcomingAlerts(): Alert[] {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  getRemindersByStatus(status: 'overdue' | 'today'): Remainder[] {
+    return this.remainders.filter(r => this.getReminderStatus(r).type === status);
+  }
 
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
+  getOverdueRemainders(): Remainder[] {
+    return this.getRemindersByStatus('overdue');
+  }
 
-    return this.alerts.filter(alert => {
-      if (!alert.is_active) return false;
-      const dueDate = new Date(alert.due_date);
-      dueDate.setHours(0, 0, 0, 0);
-      return dueDate.getTime() === today.getTime() || dueDate.getTime() === tomorrow.getTime();
-    });
+  getUpcomingRemainders(): Remainder[] {
+    return this.getRemindersByStatus('today');
   }
 
   calculateDaysAgo(dateString: string): string {
@@ -661,10 +729,10 @@ export class DocumentsComponent implements OnInit {
     return `${diffDays} days ago`;
   }
 
-  getDefaultAlertMessage(alert: Alert): string {
-    if (alert.alert_type === 'Expiry Reminder') {
+  getDefaultRemainderMessage(remainder: Remainder): string {
+    if (remainder.alert_type === 'Expiry Reminder') {
       return 'Your document will expire soon. Consider renewing it.';
-    } else if (alert.alert_type === 'Review Reminder') {
+    } else if (remainder.alert_type === 'Review Reminder') {
       return 'Annual review reminder for document validity';
     }
     return 'Reminder for your document';
