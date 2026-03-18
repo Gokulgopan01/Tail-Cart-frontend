@@ -1,4 +1,4 @@
-﻿<!--Home First section----------------------------------------------------------------------------------------------------------------------------->
+<!--Home First section----------------------------------------------------------------------------------------------------------------------------->
 <section class="hero-section" id="heroSection" (touchstart)="onHeroTouchStart($event)"
   (touchend)="onHeroTouchEnd($event)">
 
@@ -154,9 +154,138 @@
 
 </section>
 
+<!-- Trending Products Section -->
+<section class="trending-products-section fade-in">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="premium-tag tag-gold">TRENDING NOW</div>
+      <h2 class="section-title">Smart <span class="highlight-green">Pet Tags</span></h2>
+      <p class="section-subtitle">Our most popular smart accessories for your beloved companions.</p>
+    </div>
 
-<!-- Explore TailCart Services Section -->
-<section class="services-sticker-section fade-in">
+    <div class="product-grid">
+      <!-- Product 1 -->
+      <div class="product-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="product-badge badge-new">NEW</div>
+        <div class="product-image-wrapper">
+          <img src="assets/images/product_trending_1.png" alt="Lux Gold QR Tag" class="product-img">
+          <div class="product-overlay">
+            <button class="btn-shop-now" (click)="navigateToShop()">
+              SHOP NOW <i class="fas fa-shopping-bag"></i>
+            </button>
+          </div>
+        </div>
+        <div class="product-details">
+          <div class="product-category">Tail Tag</div>
+          <h3 class="product-name">Lux Gold QR Tag</h3>
+          <div class="product-rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <span>(48)</span>
+          </div>
+          <div class="product-price">
+            <span class="currency"></span>899
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="product-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="product-badge badge-hot">HOT</div>
+        <div class="product-image-wrapper">
+          <img src="assets/images/product_trending_2.jpg" alt="Silver Minimalist Tag" class="product-img">
+          <div class="product-overlay">
+            <button class="btn-shop-now" (click)="navigateToShop()">
+              SHOP NOW <i class="fas fa-shopping-bag"></i>
+            </button>
+          </div>
+        </div>
+        <div class="product-details">
+          <div class="product-category">Tail Tag</div>
+          <h3 class="product-name">Silver Minimalist Tag</h3>
+          <div class="product-rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+            <span>(35)</span>
+          </div>
+          <div class="product-price">
+            <span class="currency"></span>599
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="product-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="product-image-wrapper">
+          <img src="assets/images/product_trending_3.png" alt="Sporty Neon Tag" class="product-img">
+          <div class="product-overlay">
+            <button class="btn-shop-now" (click)="navigateToShop()">
+              SHOP NOW <i class="fas fa-shopping-bag"></i>
+            </button>
+          </div>
+        </div>
+        <div class="product-details">
+          <div class="product-category">Tail Tag</div>
+          <h3 class="product-name">Sporty Neon Tag</h3>
+          <div class="product-rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="far fa-star"></i>
+            <span>(22)</span>
+          </div>
+          <div class="product-price">
+            <span class="currency"></span>599
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 4 -->
+      <div class="product-card" data-aos="fade-up" data-aos-delay="400">
+        <div class="product-image-wrapper">
+          <img src="assets/images/product_trending_4.png" alt="Tough Stealth Tag" class="product-img">
+          <div class="product-overlay">
+            <button class="btn-shop-now" (click)="navigateToShop()">
+              SHOP NOW <i class="fas fa-shopping-bag"></i>
+            </button>
+          </div>
+        </div>
+        <div class="product-details">
+          <div class="product-category">Tail Tag</div>
+          <h3 class="product-name">Tough Stealth Tag</h3>
+          <div class="product-rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <span>(56)</span>
+          </div>
+          <div class="product-price">
+            <span class="currency"></span>499
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="view-all-container" data-aos="fade-up">
+      <button class="btn-view-all" (click)="navigateToShop()">
+        VIEW ALL PRODUCTS <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+
+<!-- Explore TailCart Services Section (3D Carousel) -->
+<section class="services-3d-section fade-in">
   <div class="container">
     <div class="section-header" data-aos="fade-up">
       <div class="premium-tag tag-emerald">Premium Services</div>
@@ -164,71 +293,134 @@
       <p class="section-subtitle">Everything you need to give your pet the best life, all in one platform.</p>
     </div>
 
-    <div class="services-sticker-grid">
-      <!-- QR Keychains -->
-      <div class="service-sticker-card" (click)="navigateToShop()" data-aos="fade-up" data-aos-delay="100">
-        <div class="sticker-visual">
-          <div class="circle-bg orange-circle"></div>
-          <img src="assets/images/service_keychain.png" alt="QR Keychains" class="sticker-img">
-        </div>
-        <div class="service-info">
-          <h2 class="service-name">Tail Tag</h2>
-          <p class="service-desc">Secure tracking for your pet with instant notification technology anywhere</p>
-          <a class="learn-more-btn">Get Item &#8594;</a>
+    <!-- 3D Carousel Container -->
+    <div class="services-3d-carousel-container" data-aos="zoom-in">
+      <div class="carousel-stage">
+        <div class="carousel-rotator" [style.transform]="'rotateY(' + (activeServiceIndex * -72) + 'deg)'">
+          <div *ngFor="let service of services; let i = index" class="carousel-slide"
+            [class.active]="activeServiceIndex === i"
+            [style.transform]="'rotateY(' + (i * 72) + 'deg) translateZ(var(--carousel-z))'">
+
+            <div class="service-slide-content">
+              <!-- Left Side: Visual -->
+              <div class="service-visual-column">
+                <div class="service-round-visual" [style.background]="service.bgColor">
+                  <div class="visual-glow" [style.background]="service.color"></div>
+                  <img [src]="service.img" [alt]="service.name" class="service-3d-img">
+                </div>
+              </div>
+
+              <!-- Right Side: Info -->
+              <div class="service-info-column">
+                <h3 class="service-3d-name" [style.color]="service.color">{{service.name}}</h3>
+                <p class="service-3d-desc">{{service.desc}}</p>
+                <button class="btn-service-cta" [style.background-color]="service.color"
+                  (click)="navigateToService(service.route)">
+                  {{service.cta}} <i class="fas fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Smart Reminders -->
-      <div class="service-sticker-card" (click)="navigateToAlerts()">
-        <div class="sticker-visual">
-          <div class="circle-bg purple-circle"></div>
-          <img src="assets/images/service_reminders.png" alt="Smart Reminders" class="sticker-img">
-        </div>
-        <div class="service-info">
-          <h2 class="service-name">Tail Scheduler</h2>
-          <p class="service-desc">Never miss a vet visit or medication with intelligent scheduling.</p>
-          <a class="learn-more-btn">Add Document &#8594;</a>
-        </div>
-      </div>
-      <!-- Live Notifications -->
-      <div class="service-sticker-card" (click)="navigateToProfile()">
-        <div class="sticker-visual">
-          <div class="circle-bg blue-circle"></div>
-          <img src="assets/images/service_notifications.png" alt="Live Notifications" class="sticker-img">
-        </div>
-        <div class="service-info">
-          <h3 class="service-name">Live Notifications</h3>
-          <p class="service-desc">Add your pet and buy product for get instant map alerts when your lost pet&apos;s tag
-            is scanned.</p>
-          <a class="learn-more-btn">Add Pet &#8594;</a>
-        </div>
-      </div>
+      <!-- Navigation Controls -->
+      <div class="services-3d-nav">
+        <button class="nav-arrow prev" (click)="prevService()" aria-label="Previous Service">
+          <i class="fas fa-chevron-left"></i>
+        </button>
 
-      <!-- AI Pet Doctor -->
-      <div class="service-sticker-card" (click)="navigateToDoctor()">
-        <div class="sticker-visual">
-          <div class="circle-bg emerald-circle"></div>
-          <img src="assets/images/service_doctor.png" alt="AI Pet Doctor" class="sticker-img">
+        <div class="nav-indicators">
+          <button *ngFor="let service of services; let i = index" class="nav-dot"
+            [class.active]="activeServiceIndex === i" (click)="goToService(i)"
+            [style.background-color]="i === activeServiceIndex ? service.color : 'rgba(255,255,255,0.2)'">
+          </button>
         </div>
-        <div class="service-info">
-          <h2 class="service-name">Tail Care+</h2>
-          <p class="service-desc">Instant pediatric and behavioral health insights from our advanced AI model.</p>
-          <a class="learn-more-btn">Visit Doctor &#8594;</a>
-        </div>
-      </div>
 
-      <!-- Document Vault -->
-      <div class="service-sticker-card" (click)="navigateToDocuments()">
-        <div class="sticker-visual">
-          <div class="circle-bg gold-circle"></div>
-          <img src="assets/images/service_vault.png" alt="Document Vault" class="sticker-img">
+        <button class="nav-arrow next" (click)="nextService()" aria-label="Next Service">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Divider -->
+<div class="divider-wrapper">
+  <div class="section-divider fade-in"></div>
+</div>
+
+
+<!-- detailed section ------------------------------------------------------------------------------------------------------------------------------->
+
+<!-- Detailed Section pet scanning -->
+<section class="detailed-section fade-in">
+  <div class="detailed-background-visual"></div>
+  <div class="container relative">
+    <div class="section-header" data-aos="fade-up">
+      <div class="premium-tag tag-gold">PRO-GRADE PROTECTION</div>
+      <h2 class="section-title">How TailCart <span class="highlight-green">Protects</span></h2>
+      <p class="section-subtitle">Advanced security and real-time monitoring to keep your pets safe, 24/7.</p>
+    </div>
+
+    <div class="detailed-video-wrapper">
+      <div class="video-container-premium">
+        <video #featureVideo class="feature-video" [muted]="isDetailedVideoMuted" playsinline preload="auto">
+          <source src="assets/videos/pet_scan.mp4" type="video/mp4">
+        </video>
+
+        <div class="video-controls-overlay" [class.hidden]="!isDetailedVideoPlaying">
+          <button class="video-control-btn" (click)="toggleDetailedVideo()">
+            <i class="fas" [class.fa-pause]="isDetailedVideoPlaying" [class.fa-play]="!isDetailedVideoPlaying"></i>
+          </button>
+          <button class="video-control-btn" (click)="toggleDetailedMute()">
+            <i class="fas" [class.fa-volume-mute]="isDetailedVideoMuted"
+              [class.fa-volume-up]="!isDetailedVideoMuted"></i>
+          </button>
         </div>
-        <div class="service-info">
-          <h2 class="service-name">Tail Vault</h2>
-          <p class="service-desc">Securely store and share all your pet paperwork in one smart cloud.</p>
-          <a class="learn-more-btn">Upload Document &#8594;</a>
+
+        <!-- Initial play overlay -->
+        <div class="play-button-overlay-luxury" *ngIf="!isDetailedVideoPlaying" (click)="toggleDetailedVideo()">
+          <div class="luxury-play-circle">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+          <span class="play-text-luxury">WATCH THE RECOVERY PROCESS</span>
         </div>
       </div>
+    </div>
+
+    <div class="detailed-info-grid">
+      <div class="info-card">
+        <div class="info-icon">
+          <i class="fas fa-qrcode"></i>
+        </div>
+        <h3>Instant Scan</h3>
+        <p>No apps needed. Anyone with a smartphone can scan the tag to identify your pet.</p>
+      </div>
+      <div class="info-card highlight">
+        <div class="info-icon">
+          <i class="fas fa-location-arrow"></i>
+        </div>
+        <h3>Live GPS Alert</h3>
+        <p>Receive an instant notification with the exact location when your pet's tag is scanned.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">
+          <i class="fas fa-phone-alt"></i>
+        </div>
+        <h3>Direct Contact</h3>
+        <p>Finders can call you immediately through the secure public profile on the tag.</p>
+      </div>
+    </div>
+
+    <div class="detailed-cta-center">
+      <button class="btn-premium" (click)="navigateToShop()" data-aos="zoom-in" data-aos-delay="400">
+        GET PROTECTED NOW
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <p class="cta-subtext">Join thousands of protected pets across the country.</p>
     </div>
   </div>
 </section>
@@ -371,87 +563,6 @@
     </div>
   </div>
 </section>
-
-
-<!-- detailed section ------------------------------------------------------------------------------------------------------------------------------->
-
-<!-- Detailed Section pet scanning -->
-<section class="detailed-section fade-in">
-  <div class="detailed-background-visual"></div>
-  <div class="container relative">
-    <div class="section-header" data-aos="fade-up">
-      <div class="premium-tag tag-gold">PRO-GRADE PROTECTION</div>
-      <h2 class="section-title">How TailCart <span class="highlight-green">Protects</span></h2>
-      <p class="section-subtitle">Advanced security and real-time monitoring to keep your pets safe, 24/7.</p>
-    </div>
-
-    <div class="detailed-video-wrapper">
-      <div class="video-container-premium">
-        <video #featureVideo class="feature-video" [muted]="isDetailedVideoMuted" playsinline preload="auto">
-          <source src="assets/videos/pet_scan.mp4" type="video/mp4">
-        </video>
-
-        <div class="video-controls-overlay" [class.hidden]="!isDetailedVideoPlaying">
-          <button class="video-control-btn" (click)="toggleDetailedVideo()">
-            <i class="fas" [class.fa-pause]="isDetailedVideoPlaying" [class.fa-play]="!isDetailedVideoPlaying"></i>
-          </button>
-          <button class="video-control-btn" (click)="toggleDetailedMute()">
-            <i class="fas" [class.fa-volume-mute]="isDetailedVideoMuted"
-              [class.fa-volume-up]="!isDetailedVideoMuted"></i>
-          </button>
-        </div>
-
-        <!-- Initial play overlay -->
-        <div class="play-button-overlay-luxury" *ngIf="!isDetailedVideoPlaying" (click)="toggleDetailedVideo()">
-          <div class="luxury-play-circle">
-            <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-          <span class="play-text-luxury">WATCH THE RECOVERY PROCESS</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="detailed-info-grid">
-      <div class="info-card">
-        <div class="info-icon">
-          <i class="fas fa-qrcode"></i>
-        </div>
-        <h3>Instant Scan</h3>
-        <p>No apps needed. Anyone with a smartphone can scan the tag to identify your pet.</p>
-      </div>
-      <div class="info-card highlight">
-        <div class="info-icon">
-          <i class="fas fa-location-arrow"></i>
-        </div>
-        <h3>Live GPS Alert</h3>
-        <p>Receive an instant notification with the exact location when your pet's tag is scanned.</p>
-      </div>
-      <div class="info-card">
-        <div class="info-icon">
-          <i class="fas fa-phone-alt"></i>
-        </div>
-        <h3>Direct Contact</h3>
-        <p>Finders can call you immediately through the secure public profile on the tag.</p>
-      </div>
-    </div>
-
-    <div class="detailed-cta-center">
-      <button class="btn-premium" (click)="navigateToShop()" data-aos="zoom-in" data-aos-delay="400">
-        GET PROTECTED NOW
-        <i class="fas fa-arrow-right"></i>
-      </button>
-      <p class="cta-subtext">Join thousands of protected pets across the country.</p>
-    </div>
-  </div>
-</section>
-
-<!-- Divider -->
-<div class="divider-wrapper">
-  <div class="section-divider fade-in"></div>
-</div>
-
 <!--Docuemnt upload section--------------------------------------------------------------------------->
 
 <!-- Pet Documents Section -->

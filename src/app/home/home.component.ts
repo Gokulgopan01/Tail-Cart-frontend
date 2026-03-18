@@ -88,6 +88,92 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       diff > 0 ? this.nextProcessSlide() : this.prevProcessSlide();
     }
   }
+
+  // ── Services 3D Carousel ──────────────────────────────────────
+  activeServiceIndex = 0;
+  serviceAutoPlayDuration = 6000;
+  private serviceTimer: any;
+
+  services = [
+    {
+      id: 'keychain',
+      name: 'Tail Tag',
+      desc: 'Secure tracking for your pet with instant notification technology anywhere in the world.',
+      img: 'assets/images/service_keychain.png',
+      color: '#fb8c00', // orange
+      bgColor: 'rgba(251, 140, 0, 0.1)',
+      route: '/shop',
+      cta: 'Get Item'
+    },
+    {
+      id: 'reminders',
+      name: 'Tail Scheduler',
+      desc: 'Never miss a vet visit or medication with intelligent scheduling and smart reminders.',
+      img: 'assets/images/service_reminders.png',
+      color: '#8e24aa', // purple
+      bgColor: 'rgba(142, 36, 170, 0.1)',
+      route: '/document',
+      cta: 'Add Document'
+    },
+    {
+      id: 'notifications',
+      name: 'Live Alerts',
+      desc: 'Get instant map alerts when your lost pet\'s tag is scanned by anyone with a smartphone.',
+      img: 'assets/images/service_notifications.png',
+      color: '#1e88e5', // blue
+      bgColor: 'rgba(30, 136, 229, 0.1)',
+      route: '/profile',
+      cta: 'Add Pet'
+    },
+    {
+      id: 'doctor',
+      name: 'Tail Care+',
+      desc: 'Instant pediatric and behavioral health insights from our advanced AI model for your pet.',
+      img: 'assets/images/service_doctor.png',
+      color: '#43a047', // emerald
+      bgColor: 'rgba(67, 160, 71, 0.1)',
+      route: '/doctor-ai',
+      cta: 'Visit Doctor'
+    },
+    {
+      id: 'vault',
+      name: 'Tail Vault',
+      desc: 'Securely store and share all your pet paperwork, vaccinations, and history in one smart cloud.',
+      img: 'assets/images/service_vault.png',
+      color: '#fbc02d', // gold
+      bgColor: 'rgba(251, 192, 45, 0.1)',
+      route: '/documents',
+      cta: 'Upload Document'
+    }
+  ];
+
+  nextService(): void {
+    this.activeServiceIndex = (this.activeServiceIndex + 1) % this.services.length;
+    this.restartServiceTimer();
+  }
+
+  prevService(): void {
+    this.activeServiceIndex = (this.activeServiceIndex - 1 + this.services.length) % this.services.length;
+    this.restartServiceTimer();
+  }
+
+  goToService(index: number): void {
+    this.activeServiceIndex = index;
+    this.restartServiceTimer();
+  }
+
+  private startServiceTimer(): void {
+    this.serviceTimer = setInterval(() => this.nextService(), this.serviceAutoPlayDuration);
+  }
+
+  private restartServiceTimer(): void {
+    clearInterval(this.serviceTimer);
+    this.startServiceTimer();
+  }
+
+  navigateToService(route: string): void {
+    this.router.navigate([route]);
+  }
   // ───────────────────────────────────────────────────────────────
   // ───────────────────────────────────────────────────────────────
 
@@ -112,6 +198,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.isScrolled = window.scrollY > 300;
     }, 100);
+
+    this.startServiceTimer();
 
     //how it works section scroll animation
     const cards = document.querySelectorAll('.step-card');
@@ -418,5 +506,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     clearInterval(this.heroTimer);
+    clearInterval(this.serviceTimer);
   }
 }
