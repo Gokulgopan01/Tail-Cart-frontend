@@ -38,10 +38,7 @@ QUEUE_NAME = "autologin-tool"
 # CREDENTIALS_URL = "https://api.hybridbpo.ecesistech.com/hybrid/api/v1/entry/entry-client-account/"
 # PIC_PDF_UPLOAD_URL = "https://api.hybridbpo.ecesistech.com/hybrid/api/v1/pic_pdf_downloader/get-comp-path/"
 # BASE_URL_ENTRY = "https://valuationops.homegenius.com/VendorBpoForm"
-# RESEARCHPAD_DATA_URL='https://api.hybridbpo-rpad.ecesistech.com/api/v1/entry-data/'
-# STATUS_UPDATE_URL = "https://api.hybridbpo.ecesistech.com/hybrid/api/v1/status_update/"
-# ACCOUNT_INACTIVE="https://api.hybridbpo.ecesistech.com/hybrid/api/v1/client/client-account-status/"
-# VERSION_FILE = "1.4"
+# VERSION_FILE = "1.6"
 # MAIN_EXE = exe_path
 # REMOTE_VERSION_URL = "https://api.hybridbpo.ecesistech.com/hybrid/api/v1/autologin/autologin-version"
 # PORTAL_LOGIN_CONFIRMATION="https://api.hybridbpo.ecesistech.com/hybrid/api/v1/autologin/update-autologin-check?order_id="
@@ -50,6 +47,10 @@ QUEUE_NAME = "autologin-tool"
 
 # RABBIT_URL = "amqp://guest:guest@api.hybridbpo-msgbroker.ecesistech.com:5672/"
 # QUEUE_NAME = "autologin-tool"
+# RESEARCHPAD_DATA_URL='https://api.hybridbpo-rpad.ecesistech.com/api/v1/entry-data/'
+# STATUS_UPDATE_URL = "https://api.hybridbpo.ecesistech.com/hybrid/api/v1/status_update/"
+# ACCOUNT_INACTIVE="https://api.hybridbpo.ecesistech.com/hybrid/api/v1/client/client-account-status/"
+
 
 
 

@@ -37,14 +37,14 @@ def params_check():
             arg3 = args.get('arg3', [None])[0]
             print(f"Args : {arg1}")   
             return arg1,arg2,arg3
-            #return "SmartEntry","2560","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjksImVtYWlsIjoic2lkc21AZ21haWwuY29tIiwicm9sZSI6MywiaWF0IjoxNzY4MzcwMDc1LCJleHAiOjE3Njg0NTY0NzV9.GlzV5kBkj5rIlL8q-XvuHme_wQNgWjrFmC1IGn1-Yog"
+            #return "SmartEntry","3604","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzM3MzkyMzB9.gofoCzJHG-DmjL-j861Sw6XbqGDucs0QUbZMccnAyV4"
     else:
           #return None,None  
           # Returns auto for manualy opening Autologin  
 
         return "AutoLogin",None,None
-        # return "SmartEntry","3394","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjYyLCJlbWFpbCI6InJhdGhpX3JAZWNlc2lzZ3JvdXBzLmNvbSIsInJvbGUiOjIsImlhdCI6MTc3MTQzMzU0Nn0.NicvPKeETxUQSJ3Aly4DI9iNmWbHCTdhFLRl0d58Noc"
-   
+        #return "SmartEntry",3604,"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzM3NDQ2NDN9.IELMPoQFFov_6NVXyUP1KtfhSMcBjGOqM4KNAivH_8c"
+    
 
 process_type, hybrid_orderid, hybrid_token = params_check()
 
@@ -1616,18 +1616,19 @@ def tfs_statuschange(tfs_order_id, bpo_statusid, tfs_status, tfs_status_reason):
     bpo_statusid = str(bpo_statusid).strip()
     tfs_status = str(tfs_status).strip()
     tfs_status_reason = str(tfs_status_reason).strip()
+    EmpId="11023"
    
     try:
         tfs_status_data = {
             "strSessionID": "",
-            "ProcParameters": ["type", "sTFStatusData", "stfsOrderId"],
-            "ProcInputData": [1, f"{tfs_status}~{tfs_status_reason}~", tfs_order_id]
+            "ProcParameters": ["type", "sTFStatusData", "stfsOrderId", "sEmpId"],
+            "ProcInputData": [1, f"{tfs_status}~{tfs_status_reason}~", tfs_order_id, EmpId]
         }
 
         bpo_status_data = {
             "strSessionID": "",
-            "ProcInputData": [f"{bpo_statusid}~Na~Na~", tfs_order_id],
-            "ProcParameters": ["sAutoBPOdata", "sOrderId"]
+            "ProcInputData": [f"{bpo_statusid}~Na~Na~", tfs_order_id, EmpId],
+            "ProcParameters": ["sAutoBPOdata", "sOrderId", "sEmpId"]
         }
         
         tfs_statuschange_url = env.tfs_statuschange_url

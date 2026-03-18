@@ -25,6 +25,13 @@ load_dotenv()
 from utils.glogger import GLogger
 logger = GLogger()
 process_type, hybrid_orderid, hybrid_token = params_check()
+logger.log(
+                    module="SingleSource",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"process_type-{process_type}, hybrid_orderid-{hybrid_orderid}, hybrid_token-{hybrid_token}",
+                    severity="INFO"
+                )
 
 class SingleSource:
     def __init__(self,username, password, portal_url, portal_name, proxy,session,account_id, portal_key):
@@ -242,11 +249,10 @@ class SingleSource:
             self.driver.switch_to.default_content()
             return self.driver  # Return anyway, even if error
 
-    def singleSource_formopen(self,session, merged_json, order_details, order_id):
+    def singleSource_formopen(self, session, merged_json, order_details, order_id):
         try:
             orders_from_api = HybridBPOApi.get_entry_order(hybrid_orderid) 
             if not orders_from_api:  # Check if the order list is empty
-                # print("No orders found.")
                 logger.log(
                     module="SingleSource-singleSource_formopen",
                     order_id=hybrid_orderid,
@@ -267,7 +273,7 @@ class SingleSource:
                 order_id=order_from_api.get("order_id","")
                 order_details_from_api,tfs_orderid,is_qc=get_order_address_from_assigned_order(order_id,hybrid_token)
                 self.tfs_orderid = tfs_orderid
-                # print("order_details_from_api:", order_details_from_api)
+                
                 logger.log(
                     module="SingleSource-singleSource_formopen",
                     order_id=hybrid_orderid,
@@ -275,11 +281,7 @@ class SingleSource:
                     remarks=f"order_details_from_api: {order_details_from_api}",
                     severity="INFO"
                 )
-                # if not order_details_from_api:
-                #     messagebox.showerror("Authentication Required", "Please log in again.")
-                #     self.controller.show_frame("EcesisLoginScreen")
-                #     return
-            # logging.info("Starting form open process")
+
             logger.log(
                 module="SingleSource-singleSource_formopen",
                 order_id=hybrid_orderid,
@@ -287,15 +289,14 @@ class SingleSource:
                 remarks="Starting form open process",
                 severity="INFO"
             )
-            target_genorderid =order_details_from_api
+            target_genorderid = order_details_from_api
 
             form_type = [
                 'FMC BPO Exterior Evaluation', 'Resolute As Repaired BPO', 'New BPO Exterior',
-                'BPO Exterior', 'Exterior Evaluation'
+                'BPO Exterior', 'Exterior Evaluation', 'SS New BPO Exterior-SHP', 'SS New BPO Exterior'
             ]
 
             get_url = self.driver.current_url
-            # logging.info(f"Current URL in formopen_fill: {get_url}")
             logger.log(
                 module="SingleSource-singleSource_formopen",
                 order_id=hybrid_orderid,
@@ -305,7 +306,6 @@ class SingleSource:
             )
 
             if 'main' in get_url:
-                # print('Refreshing Portal')
                 logger.log(
                     module="SingleSource-singleSource_formopen",
                     order_id=hybrid_orderid,
@@ -317,15 +317,68 @@ class SingleSource:
                 self.driver.switch_to.frame("_MAIN")
                 time.sleep(5)
 
+                try:
+                    search_order_id = str(target_genorderid).strip() if target_genorderid and str(target_genorderid).strip().lower() not in ["none", "", "address not found"] else ""
+
+                    if search_order_id:
+                        logger.log(
+                            module="SingleSource-singleSource_formopen",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks=f"Applying search filter with Order Number: {search_order_id}",
+                            severity="INFO"
+                        )
+                        
+                        # Select 'All' for Product
+                        product_dropdown = self.driver.find_element(By.ID, "business_product_id")
+                        for option in product_dropdown.find_elements(By.TAG_NAME, "option"):
+                            if option.get_attribute("value") == "0":
+                                option.click()
+                                break
+                        
+                        # Select 'Order Number' for Search Field
+                        search_type_dropdown = self.driver.find_element(By.ID, "search_type")
+                        for option in search_type_dropdown.find_elements(By.TAG_NAME, "option"):
+                            if option.get_attribute("value") == "order_number":
+                                option.click()
+                                break
+                        
+                        # Enter the search value
+                        search_input = self.driver.find_element(By.ID, "search_value")
+                        search_input.clear()
+                        search_input.send_keys(search_order_id)
+                        
+                        # Click Search
+                        search_btn = self.driver.find_element(By.XPATH, "//a[contains(@href, 'javascript:search()')]")
+                        search_btn.click()
+                        time.sleep(5)
+                    else:
+                        logger.log(
+                            module="SingleSource-singleSource_formopen",
+                            order_id=hybrid_orderid,
+                            action_type="Condition-check",
+                            remarks="Order Number is empty or 'none', failing early.",
+                            severity="WARNING"
+                        )
+                        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
+                        return
+                except Exception as e:
+                    logger.log(
+                        module="SingleSource-singleSource_formopen",
+                        order_id=hybrid_orderid,
+                        action_type="Exception",
+                        remarks=f"Exception during search or search elements not found: {e}",
+                        severity="ERROR"
+                    )
+
                 table = self.driver.find_element(By.XPATH, '//*[@id="Form1"]/table/tbody/tr/td/table[3]')
                 rows = table.find_elements(By.TAG_NAME, 'tr')
 
-                orderidnotfound =False
+                orderidnotfound = False
                 newform = 0
 
                 if rows:
                     for row in rows:
-                        # print("Fetching the address")
                         logger.log(
                             module="SingleSource-singleSource_formopen",
                             order_id=hybrid_orderid,
@@ -335,7 +388,7 @@ class SingleSource:
                         )
                         cells = row.find_elements(By.TAG_NAME, 'td')
                         row_data = [cell.text for cell in cells]
-                        # logging.info(f"Data fetched from form: {row_data}")
+                        
                         logger.log(
                             module="SingleSource-singleSource_formopen",
                             order_id=hybrid_orderid,
@@ -345,18 +398,17 @@ class SingleSource:
                         )
 
                         if len(row_data) > 2:
-                            portal_orderid = target_genorderid
-                            portal_orderid_portal = row_data[1]
-                            portal_formtype=row_data[2]
+                            portal_orderid = str(target_genorderid).strip() if target_genorderid and str(target_genorderid).strip().lower() != "none" else ""
+                            portal_orderid_portal = str(row_data[1]).strip() if len(row_data) > 1 and str(row_data[1]).strip().lower() != "none" else ""
+                            portal_formtype = row_data[2]
 
-                            if (portal_orderid in portal_orderid_portal and portal_formtype in form_type) or(portal_orderid_portal in portal_orderid and portal_formtype in form_type) : 
+                            if portal_orderid and portal_orderid_portal and portal_formtype in form_type and (portal_orderid in portal_orderid_portal or portal_orderid_portal in portal_orderid):
 
-                                # logging.info(f"Address matched in form: {portal_formtype}")
                                 logger.log(
                                     module="SingleSource-singleSource_formopen",
                                     order_id=hybrid_orderid,
                                     action_type="Condition-check",
-                                    remarks=f"Address matched in form: {portal_formtype}",
+                                    remarks=f"Order matched in form: {portal_formtype} for Order ID: {portal_orderid_portal}",
                                     severity="INFO"
                                 )
                                 orderidnotfound = True
@@ -367,9 +419,8 @@ class SingleSource:
                                 time.sleep(5)
 
                                 try:
-                                    element =  self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table')
+                                    element = self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table')
                                 except Exception as e:
-                                    # logging.info(f"Exception finding form element: {e}")
                                     logger.log(
                                         module="SingleSource-singleSource_formopen",
                                         order_id=hybrid_orderid,
@@ -377,10 +428,9 @@ class SingleSource:
                                         remarks=f"Exception finding form element: {e}",
                                         severity="INFO"
                                     )
-                                    element =  self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[1]/font')
+                                    element = self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[1]/font')
                                 
                                 formtype_value = element.text.strip()
-                                # logging.info(f"Form type inside the form: {formtype_value}")
                                 logger.log(
                                     module="SingleSource-singleSource_formopen",
                                     order_id=hybrid_orderid,
@@ -388,14 +438,11 @@ class SingleSource:
                                     remarks=f"Form type inside the form: {formtype_value}",
                                     severity="INFO"
                                 )
-                                SingleSource_formopen_fill(self, formtype_value, session, merged_json, order_details, order_id,tfs_orderid,is_qc)
+                                
+                                SingleSource_formopen_fill(self, formtype_value, session, merged_json, order_details, order_id, tfs_orderid, is_qc)
                                 break
-                                # element = session.find_element(By.ID, "PS_FORM/RECENT_SALE1/Street_Address1")
-                                # listing_address = element.get_attribute('value')
-                                # logging.info(f"sale1 address: {listing_address}")
 
                             else:
-                                # logging.info(f"portal_orderid_portal not matched in the corresponding row: {portal_orderid_portal}")
                                 logger.log(
                                     module="SingleSource-singleSource_formopen",
                                     order_id=hybrid_orderid,
@@ -403,13 +450,11 @@ class SingleSource:
                                     remarks=f"portal_orderid_portal not matched in the corresponding row: {portal_orderid_portal}",
                                     severity="INFO"
                                 )
-                                if portal_orderid not in portal_orderid_portal:
+                                if not portal_orderid or portal_orderid not in portal_orderid_portal:
                                     orderidnotfound += 1
                                 else:
                                     newform += 1
                         else:
-                            # print("No orders in the portal")
-                            # logging.info("No orders in the portal")
                             logger.log(
                                 module="SingleSource-singleSource_formopen",
                                 order_id=hybrid_orderid,
@@ -417,23 +462,17 @@ class SingleSource:
                                 remarks="No orders in the portal",
                                 severity="INFO"
                             )
-                            #update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
 
                     if not orderidnotfound:
-                        # print("portal_orderid_portal not found")
-                        # logging.info(f"portal_orderid_portal not found {portal_orderid_portal}")
                         logger.log(
                             module="SingleSource-singleSource_formopen",
                             order_id=hybrid_orderid,
                             action_type="Condition-check",
-                            remarks=f"portal_orderid_portal not found {portal_orderid_portal}",
+                            remarks=f"portal_orderid_portal not found {portal_orderid_portal if 'portal_orderid_portal' in locals() else ''}",
                             severity="INFO"
                         )
-                        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-                        #statuschange(order_details, "29", "3" if order_desc == "X-Completed" else "16", "14")
+                        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
                     else:
-                        # print("address completed")
-                        # logging.info("Address completed")
                         logger.log(
                             module="SingleSource-singleSource_formopen",
                             order_id=hybrid_orderid,
@@ -444,18 +483,15 @@ class SingleSource:
                         return
 
                     if newform > 0:
-                        # logging.info(f"Form type outside the form: {formtype_value}")
                         logger.log(
                             module="SingleSource-singleSource_formopen",
                             order_id=hybrid_orderid,
                             action_type="Condition-check",
-                            remarks=f"Form type outside the form: {formtype_value}",
+                            remarks=f"Form type outside the form: {formtype_value if 'formtype_value' in locals() else 'Unknown'}",
                             severity="INFO"
                         )
-                        #statuschange(order_details, "28", "3" if order_desc == "X-Completed" else "16", "14")
-                        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
+                        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
                     else:
-                        # logging.info("Exception Form type outside the form")
                         logger.log(
                             module="SingleSource-singleSource_formopen",
                             order_id=hybrid_orderid,
@@ -464,20 +500,16 @@ class SingleSource:
                             severity="INFO"
                         )
                 else:
-                    # print("No orders in the portal Address Not Found")
-                    # logging.info(f"No orders in the portal Address Not Found {order_details['subject_address']}")
                     logger.log(
                         module="SingleSource-singleSource_formopen",
                         order_id=hybrid_orderid,
                         action_type="Condition-check",
-                        remarks=f"No orders in the portal Address Not Found {order_details['subject_address']}",
+                        remarks="No orders in the portal Address Not Found",
                         severity="INFO"
                     )
-                    update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-                    #statuschange(order_details, "29", "3" if order_desc == "X-Completed" else "16", "14")
+                    update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
 
         except Exception as e:
-            # logging.exception(f"Exception in singleSource_formopen: {e}")
             import traceback
             logger.log(
                 module="SingleSource-singleSource_formopen",
@@ -486,199 +518,6 @@ class SingleSource:
                 remarks=f"Exception in singleSource_formopen: {traceback.format_exc()}",
                 severity="ERROR"
             )
-    #####
-    # def singleSource_formopen(self,session, merged_json, order_details, order_id):
-    #     try:
-    #         orders_from_api = HybridBPOApi.get_entry_order(hybrid_orderid) 
-    #         if not orders_from_api:  # Check if the order list is empty
-    #             # print("No orders found.")
-    #             logger.log(
-    #                 module="SingleSource-singleSource_formopen",
-    #                 order_id=hybrid_orderid,
-    #                 action_type="Condition-check",
-    #                 remarks="No orders found.",
-    #                 severity="INFO"
-    #             )
-    #             return
-            
-    #         # Process each order
-    #         for order_from_api in orders_from_api:
-    #             portal_name = order_from_api.get("portal_name", "")
-    #             username = order_from_api.get("username", "")
-    #             password = order_from_api.get("password", "")
-    #             portal_url = order_from_api.get("portal_url", "")
-    #             proxy = order_from_api.get("proxy", None)  # Optional proxy
-    #             sessions=order_from_api.get("session",None)
-    #             order_id=order_from_api.get("order_id","")
-    #             order_details_from_api,tfs_orderid,is_qc=get_order_address_from_assigned_order(order_id,hybrid_token)
-    #             # print("order_details_from_api:", order_details_from_api)
-    #             logger.log(
-    #                 module="SingleSource-singleSource_formopen",
-    #                 order_id=hybrid_orderid,
-    #                 action_type="Condition-check",
-    #                 remarks=f"order_details_from_api: {order_details_from_api}",
-    #                 severity="INFO"
-    #             )
-    #             # if not order_details_from_api:
-    #             #     messagebox.showerror("Authentication Required", "Please log in again.")
-    #             #     self.controller.show_frame("EcesisLoginScreen")
-    #             #     return
-    #         # logging.info("Starting form open process")
-    #         logger.log(
-    #             module="SingleSource-singleSource_formopen",
-    #             order_id=hybrid_orderid,
-    #             action_type="Condition-check",
-    #             remarks="Starting form open process",
-    #             severity="INFO"
-    #         )
-    #         target_genorderid =order_details_from_api
-
-    #         form_type = [
-    #             'FMC BPO Exterior Evaluation', 'Resolute As Repaired BPO', 'New BPO Exterior',
-    #             'BPO Exterior', 'Exterior Evaluation'
-    #         ]
-
-    #         get_url = self.driver.current_url
-    #         # logging.info(f"Current URL in formopen_fill: {get_url}")
-    #         logger.log(
-    #             module="SingleSource-singleSource_formopen",
-    #             order_id=hybrid_orderid,
-    #             action_type="Condition-check",
-    #             remarks=f"Current URL in formopen_fill: {get_url}",
-    #             severity="INFO"
-    #         )
-
-    #         if 'main' in get_url:
-    #             # print('Refreshing Portal')
-    #             logger.log(
-    #                 module="SingleSource-singleSource_formopen",
-    #                 order_id=hybrid_orderid,
-    #                 action_type="Condition-check",
-    #                 remarks="Refreshing Portal",
-    #                 severity="INFO"
-    #             )
-    #             self.driver.switch_to.parent_frame()
-    #             self.driver.switch_to.frame("_MAIN")
-                
-    #             # More robust row finding - include hybrid order_id for extra robustness
-    #             # Hybrid order_id is the numerical ID from the app, target_genorderid/tfs_orderid are portal IDs
-    #             or_conditions = ' or '.join([f"contains(., '{ft}')" for ft in form_type])
-    #             target_xpath = (
-    #                 f"//tr[(contains(., '{target_genorderid}') or contains(., '{tfs_orderid}') or contains(., '{order_id}')) "
-    #                 f"and ({or_conditions})]"
-    #             )
-
-    #             try:
-    #                 target_row = self.driver.find_element(By.XPATH, target_xpath)
-    #             except:
-    #                 # Optional: Dynamic search attempt if not found initially
-    #                 logger.log(
-    #                     module="SingleSource-singleSource_formopen",
-    #                     order_id=hybrid_orderid,
-    #                     action_type="Condition-check",
-    #                     remarks=f"Order {target_genorderid} not found in current view. Attempting dynamic search...",
-    #                     severity="INFO"
-    #                 )
-    #                 try:
-    #                     self.driver.switch_to.default_content()
-    #                     self.driver.switch_to.frame("_TOP_MENU")
-                        
-    #                     # Look for potential search fields
-    #                     potential_inputs = self.driver.find_elements(By.XPATH, "//input[@type='text' or not(@type)]")
-    #                     search_field = None
-    #                     for inp in potential_inputs:
-    #                         id_name = (inp.get_attribute("id") or "") + (inp.get_attribute("name") or "")
-    #                         if any(k in id_name.lower() for k in ["search", "find", "filter", "order"]):
-    #                             search_field = inp
-    #                             break
-                        
-    #                     if search_field:
-    #                         from selenium.webdriver.common.keys import Keys
-    #                         search_field.clear()
-    #                         search_field.send_keys(target_genorderid)
-    #                         search_field.send_keys(Keys.ENTER)
-    #                         time.sleep(5) # Wait for search results
-                            
-    #                         # Switch back to MAIN to find the row again
-    #                         self.driver.switch_to.default_content()
-    #                         self.driver.switch_to.frame("_MAIN")
-    #                         target_row = self.driver.find_element(By.XPATH, target_xpath)
-    #                     else:
-    #                         raise Exception("No search field identified")
-    #                 except Exception as search_err:
-    #                     logger.log(
-    #                         module="SingleSource-singleSource_formopen",
-    #                         order_id=hybrid_orderid,
-    #                         action_type="Warning",
-    #                         remarks=f"Search attempt failed or order still not found: {search_err}",
-    #                         severity="WARNING"
-    #                     )
-    #                     # Re-raise to trigger the outer except block
-    #                     raise
-
-    #             try:
-    #                 # Target the specific 'Complete Report' link in the row that triggers the event
-    #                 # This specifically looks for the link with 'do_html_event'
-    #                 try:
-    #                     clickable_element = target_row.find_element(By.XPATH, ".//a[contains(@href, 'do_html_event') and (contains(., 'Complete Report') or contains(., 'Report'))]")
-    #                 except:
-    #                     # Fallback: any link containing "Complete Report"
-    #                     try:
-    #                         clickable_element = target_row.find_element(By.XPATH, ".//a[contains(text(), 'Complete Report') or contains(text(), 'Report')]")
-    #                     except Exception as e:
-    #                         logger.log(
-    #                             module="SingleSource-singleSource_formopen",
-    #                             order_id=hybrid_orderid,
-    #                             action_type="Exception",
-    #                             remarks=f"Could not find 'Complete Report' link in row for {target_genorderid}",
-    #                             severity="ERROR"
-    #                         )
-    #                         return
-
-    #                 logger.log(
-    #                     module="SingleSource-singleSource_formopen",
-    #                     order_id=hybrid_orderid,
-    #                     action_type="Condition-check",
-    #                     remarks=f"Order {target_genorderid} matched, clicking 'Complete Report' via JS",
-    #                     severity="INFO"
-    #                 )
-                    
-    #                 # Use JavaScript click for maximum reliability
-    #                 self.driver.execute_script("arguments[0].scrollIntoView({block:'center'});", clickable_element)
-    #                 time.sleep(1)
-    #                 self.driver.execute_script("arguments[0].click();", clickable_element)
-    #                 time.sleep(5) # Wait for form to start loading
-
-    #                 # Identify the form type inside the form to confirm
-    #                 try:
-    #                     element = self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table')
-    #                 except:
-    #                     element = self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[1]/font')
-                    
-    #                 formtype_value = element.text.strip()
-    #                 SingleSource_formopen_fill(self, formtype_value, session, merged_json, order_details, order_id)
-    #                 orderidnotfound = False
-
-    #             except Exception as e:
-    #                 logger.log(
-    #                     module="SingleSource-singleSource_formopen",
-    #                     order_id=hybrid_orderid,
-    #                     action_type="Condition-check",
-    #                     remarks=f"Failed to find or click order {target_genorderid}: {e}",
-    #                     severity="ERROR"
-    #                 )
-    #                 return
-
-    #     except Exception as e:
-    #         # logging.exception(f"Exception in singleSource_formopen: {e}")
-    #         import traceback
-    #         logger.log(
-    #             module="SingleSource-singleSource_formopen",
-    #             order_id=hybrid_orderid,
-    #             action_type="Exception",
-    #             remarks=f"Exception in singleSource_formopen: {traceback.format_exc()}",
-    #             severity="ERROR"
-    #         )
 
 
 def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=None, order_details=None, order_id=None,tfs_orderid=None,is_qc=None):

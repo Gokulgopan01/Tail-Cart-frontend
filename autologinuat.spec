@@ -5,7 +5,7 @@ a = Analysis(
     ['autologinuat.py'],
     pathex=[],
     binaries=[],
-    datas=[('assets', 'assets'), ('screens/json/portal_map.json', 'json'), ('.env', '.'), ('json', 'json'), ('assets\\logo.jpg', 'assets')],
+    datas=[('assets\\', 'assets'), ('screens/json/portal_map.json', 'json'), ('.env', '.'), ('json\\', 'json'), ('assets\\logo.jpg', 'assets')],
     hiddenimports=['pyi_splash'],
     hookspath=[],
     hooksconfig={},
