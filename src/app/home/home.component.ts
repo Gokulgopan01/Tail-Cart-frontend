@@ -435,7 +435,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   // Scroll to top function - Custom slow smooth scroll
   scrollToTop(): void {
-    const duration = 1500; // 1.5 seconds for a slower feel
+    const duration = 2500; // 1.5 seconds for a slower feel
     const start = window.scrollY;
     const startTime = performance.now();
 
