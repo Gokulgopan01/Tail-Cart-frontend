@@ -1,4 +1,4 @@
-<nav class="luxury-navbar" [class.scrolled]="isScrolled" [class.hidden]="isPastHalfScreen">
+<nav class="luxury-navbar" [class.scrolled]="isScrolled" [class.hidden]="isPastHalfScreen" *ngIf="!hideTopNav">
   <div class="nav-floating-body">
     <div class="nav-container container">
       <!-- Left: Menu Toggle -->
@@ -62,21 +62,25 @@
           <div class="item-icon"><i class="fas fa-folder"></i></div>
           <span class="item-label">Documents / Reminders</span>
         </a>
-        <a class="menu-item-premium" routerLink="/alerts" (click)="closeMobileMenu()" routerLinkActive="active">
+        <!-- <a class="menu-item-premium" routerLink="/alerts" (click)="closeMobileMenu()" routerLinkActive="active">
           <div class="item-icon"><i class="fas fa-bell"></i></div>
           <span class="item-label">Alerts</span>
-        </a>
+        </a> -->
         <a class="menu-item-premium" routerLink="/doctor-ai" (click)="closeMobileMenu()" routerLinkActive="active">
           <div class="item-icon"><i class="fas fa-stethoscope"></i></div>
           <span class="item-label">API Doctor</span>
         </a>
-        <a class="menu-item-premium" routerLink="/profile-public" (click)="closeMobileMenu()" routerLinkActive="active">
+        <!-- <a class="menu-item-premium" routerLink="/profile-public" (click)="closeMobileMenu()" routerLinkActive="active">
           <div class="item-icon"><i class="fas fa-users"></i></div>
           <span class="item-label">Public Profile</span>
-        </a>
+        </a> -->
         <a class="menu-item-premium" routerLink="/profile" (click)="closeMobileMenu()" routerLinkActive="active">
           <div class="item-icon"><i class="fas fa-user"></i></div>
           <span class="item-label">Owner Profile</span>
+        </a>
+        <a class="menu-item-premium" routerLink="/cart" (click)="closeMobileMenu()" routerLinkActive="active">
+          <div class="item-icon"><i class="fas fa-shopping-bag"></i></div>
+          <span class="item-label">Cart</span>
         </a>
         <a class="menu-item-premium" routerLink="/about" (click)="closeMobileMenu()" routerLinkActive="active">
           <div class="item-icon"><i class="fas fa-info-circle"></i></div>
@@ -96,7 +100,7 @@
 </nav>
 
 <!-- MOBILE BOTTOM NAV BAR: Visible all time on Mobile -->
-<div class="mobile-bottom-nav">
+<div class="mobile-bottom-nav" *ngIf="!hideBottomNav">
   <a class="bottom-nav-link" routerLink="/home" routerLinkActive="active">
     <div class="bottom-nav-icon home-icon">
       <svg viewBox="0 0 24 24" fill="currentColor">

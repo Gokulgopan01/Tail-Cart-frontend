@@ -1,12 +1,10 @@
-import { Component, OnInit, inject, AfterViewInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBarConfig } from '@angular/material/snack-bar';
-import lottie, { AnimationItem } from 'lottie-web';
-import { ViewChild, ElementRef, OnDestroy } from '@angular/core';
 
 interface CartItem {
   cart_id: number;
@@ -31,18 +29,13 @@ interface CartItem {
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
-export class CartComponent implements OnInit, AfterViewInit {
+export class CartComponent implements OnInit {
   cartItems: CartItem[] = [];
   loading = false;
   userId: string | null = '';
   totalAmount = 0;
   readonly API_BASE_URL = 'http://127.0.0.1:8000/api';
   readonly TAX_RATE = 0.18;
-
-  @ViewChild('cartBannerLottie', { static: true })
-  cartBannerLottie!: ElementRef<HTMLDivElement>;
-  private bannerAnimation: AnimationItem | null = null;
-
 
   private snackBar = inject(MatSnackBar);
   private getHeaders() {
@@ -57,7 +50,7 @@ export class CartComponent implements OnInit, AfterViewInit {
     };
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     console.log('🎬 CartComponent ngOnInit() called');
@@ -89,20 +82,6 @@ export class CartComponent implements OnInit, AfterViewInit {
       console.log('⏰ Component should be rendered by now');
       this.loadCart();
     }, 100);
-  }
-  ngAfterViewInit(): void {
-    console.log('🖼️ CartComponent ngAfterViewInit() called');
-    this.bannerAnimation = lottie.loadAnimation({
-      container: this.cartBannerLottie.nativeElement,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      path: 'assets/shop_page_banner.json'
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.bannerAnimation?.destroy();
   }
 
 
@@ -142,24 +121,6 @@ export class CartComponent implements OnInit, AfterViewInit {
   }
 
 
-  /** Manage order status timeline display */
-  toggleStatus(item: CartItem): void {
-    item.showStatus = !item.showStatus;
-  }
-
-  isNormalStatus(status: string | undefined): boolean {
-    if (!status) return true;
-    const normal = ['In Cart', 'Ordered', 'Shipped', 'Out for Delivery', 'Delivered'];
-    return normal.includes(status);
-  }
-
-  getStatusIndex(status: string | undefined): number {
-    if (!status) return 0;
-    const mappedStatus = status === 'In Cart' ? 'Ordered' : status;
-    const order = ['Ordered', 'Shipped', 'Out for Delivery', 'Delivered'];
-    const idx = order.indexOf(mappedStatus);
-    return idx === -1 ? 0 : idx;
-  }
 
   /** Update item quantity */
   updateQuantity(item: CartItem, newQuantity: number): void {
@@ -226,56 +187,21 @@ export class CartComponent implements OnInit, AfterViewInit {
 
   /** Checkout process */
   checkout(): void {
-    if (this.cartItems.length === 0) {
-      this.showSnackBar('Your cart is empty! Add items to checkout.', 'info');
-      return;
-    }
+    // if (this.cartItems.length === 0) {
+    //   this.showSnackBar('Your cart is empty! Add items to checkout.', 'info');
+    //   return;
+    // }
 
-    const unavailableItems = this.cartItems.filter(
-      item => item.status !== 'available' && item.status !== 'pending'
-    );
+    // const unavailableItems = this.cartItems.filter(
+    //   item => item.status !== 'available' && item.status !== 'pending' && item.status !== 'In Cart'
+    // );
 
-    if (unavailableItems.length > 0) {
-      this.showSnackBar('Some items are currently unavailable. Please remove them to proceed.', 'warning');
-      return;
-    }
+    // if (unavailableItems.length > 0) {
+    //   this.showSnackBar('Some items are currently unavailable. Please remove them to proceed.', 'warning');
+    //   return;
+    // }
 
-    const formattedTotal = this.formatCurrency(this.totalAmount);
-    const snackBarRef = this.snackBar.open(
-      `Proceed to checkout? Total: ${formattedTotal}`,
-      'Confirm',
-      {
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
-        duration: 5000,
-        panelClass: ['snackbar-info']
-      }
-    );
-
-    snackBarRef.onAction().subscribe(() => {
-      this.loading = true;
-      this.http.post(
-        `${this.API_BASE_URL}/checkout/`,
-        {
-          user_id: this.userId,
-          items: this.cartItems,
-          total_amount: this.totalAmount
-        },
-        this.getHeaders()
-      ).subscribe({
-        next: (res: any) => {
-          this.loading = false;
-          this.showSnackBar(res.message || 'Order placed successfully! Thank you for your purchase.', 'success');
-          this.cartItems = [];
-          this.totalAmount = 0;
-        },
-        error: (error) => {
-          this.loading = false;
-          console.error('Checkout error:', error);
-          this.showSnackBar('Checkout failed. Please try again.', 'error');
-        }
-      });
-    });
+    this.router.navigate(['/checkout']);
   }
 
   /** Calculate totals */

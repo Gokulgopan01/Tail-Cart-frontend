@@ -29,31 +29,47 @@
   border-bottom: 1px solid rgba(201, 161, 74, 0.2);
 }
 
-/* Hero Section */
+/* Hero Section Banner */
 .profile-hero {
-  padding: 40px 0 30px;
+  position: relative;
+  min-height: 250px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   margin-bottom: 40px;
   border-radius: 0 0 40px 40px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  padding: 0;
+  background: var(--primary-dark-green);
+}
+
+.hero-banner-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  /* Keep faces in view */
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 31, 24, 0.1), rgba(0, 31, 24, 0.85));
+  z-index: 2;
 }
 
 .hero-content {
-  text-align: center;
-}
-
-.hero-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: wheat;
-  margin: 0 0 10px;
-  letter-spacing: -1px;
-}
-
-.hero-subtitle {
-  color: var(--gray);
-  font-size: 1rem;
-  margin-bottom: 35px;
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  padding-bottom: 25px;
+  display: flex;
+  justify-content: center;
 }
 
 /* Luxury Tabs Pill */
@@ -133,77 +149,32 @@
   margin-bottom: 40px;
 }
 
-.owner-photo-wrapper {
-  position: relative;
-  width: 130px;
-  height: 130px;
-}
-
-.owner-photo {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 5px solid white;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.pulse-border::after {
-  content: '';
-  position: absolute;
-  inset: -8px;
-  border: 2px solid var(--accent-gold);
-  border-radius: 50%;
-  opacity: 0.3;
-  animation: pulse-ring 2s infinite;
-}
-
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.95);
-    opacity: 0.5;
-  }
-
-  100% {
-    transform: scale(1.05);
-    opacity: 0;
-  }
-}
-
-.edit-badge {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 38px;
-  height: 38px;
-  background: var(--accent-gold);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s;
-}
-
-.edit-badge:hover {
-  transform: scale(1.1);
-}
-
 .owner-display-name {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
   color: var(--primary-dark-green);
-  margin: 0 0 5px;
+  margin: 0 0 15px;
+}
+
+.owner-meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
 }
 
 .owner-location-tag {
-  color: var(--gray);
+  color: var(--text-dark);
   font-weight: 600;
   display: flex;
   align-items: center;
   gap: 8px;
+  background: #f1f5f9;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  margin: 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .luxury-divider {
@@ -580,38 +551,8 @@ input:checked+.slider:before {
   border: 2px solid white;
 }
 
-/* 368px Mobile Optimization */
-@media (max-width: 500px) {
-  .hero-title {
-    font-size: 1.8rem;
-  }
-
-  .owner-hero {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .owner-profile-card {
-    padding: 30px 20px;
-  }
-
-  .owner-details-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .pets-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-premium {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 368px) {
+/* 450px Mobile Optimization */
+@media (max-width: 450px) {
   .profile-page {
     width: 100vw;
     overflow-x: hidden;
@@ -621,54 +562,167 @@ input:checked+.slider:before {
     padding: 0 15px;
   }
 
-  .hero-title {
-    font-size: 1.6rem;
+  /* Owner Banner Mobile */
+  .profile-hero {
+    min-height: 260px;
+    border-radius: 0 0 25px 25px;
+    margin-bottom: 25px;
   }
 
-  .tab-btn {
-    padding: 10px 15px;
-    font-size: 0.85rem;
-    gap: 6px;
+  .owner-hero {
+    margin-bottom: 20px;
   }
 
   .owner-display-name {
     font-size: 1.6rem;
   }
 
-  .owner-photo-wrapper {
-    width: 110px;
-    height: 110px;
-  }
-
-  .pet-premium-card {
-    border-radius: 20px;
-  }
-
-  .pet-photo-container {
-    height: 180px;
-  }
-
-  .pet-card-header {
+  .owner-meta-tags {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 8px;
   }
 
-  .pet-card-actions {
-    flex-wrap: wrap;
-  }
-
-  .action-btn {
+  .owner-location-tag {
+    font-size: 0.8rem;
+    padding: 6px 14px;
     width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
   }
 
-  .action-btn.public-link {
-    grid-column: span 2;
+  .tab-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    gap: 6px;
+  }
+
+  /* Owner Cards */
+  .owner-profile-card {
+    padding: 20px 15px;
+    border-radius: 20px;
+  }
+
+  .owner-details-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .detail-item {
+    padding: 15px;
+    gap: 12px;
+  }
+
+  .detail-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+    min-width: 38px;
+  }
+
+  .detail-content label {
+    font-size: 0.7rem;
+  }
+
+  .detail-content p {
+    font-size: 0.9rem;
+    word-break: break-all;
+  }
+
+  .pets-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .filter-pill {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+
+  .btn-premium {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 0.9rem;
   }
 
   .luxury-divider span {
     font-size: 0.75rem;
     letter-spacing: 1px;
+    padding: 0 12px;
+  }
+
+  /* Pets */
+  .pet-premium-card {
+    border-radius: 16px;
+    border: 1.5px solid rgba(0, 31, 24, 0.15); /* Dark green tint */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+  }
+
+  .pet-card-content {
+    padding: 15px;
+  }
+
+  .pet-photo-container {
+    height: 150px;
+  }
+
+  .pet-name {
+    font-size: 1.25rem;
+  }
+
+  .pet-card-header {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .pet-breed-text {
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+  }
+
+  .pet-meta-info {
+    margin-bottom: 15px;
+  }
+
+  .pet-meta-info span {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+
+  /* Compact Action Buttons Grid */
+  .pet-card-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .action-btn {
+    width: 100%;
+    min-height: 46px;
+    padding: 8px 2px;
+    border-radius: 10px;
+  }
+
+  .action-btn i {
+    font-size: 1rem;
+    margin-bottom: 3px;
+  }
+
+  .btn-label {
+    font-size: 0.55rem;
+    letter-spacing: 0px;
+  }
+
+  .action-btn.public-link {
+    grid-column: span 4;
+    min-height: 40px;
+    padding: 8px;
   }
 }
 
@@ -747,7 +801,7 @@ input:checked+.slider:before {
   display: block;
   font-size: 0.8rem;
   font-weight: 800;
-  color: var(--gray);
+  color: var(--text-dark);
   text-transform: uppercase;
   margin-bottom: 8px;
   letter-spacing: 0.5px;

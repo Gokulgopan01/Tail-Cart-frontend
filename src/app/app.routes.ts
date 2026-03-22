@@ -11,7 +11,8 @@ import { AboutComponent } from './about/about.component';
 import { CartComponent } from './cart/cart.component';
 import { adminGuard } from './guards/admin.guard';
 import { PetPublicComponent } from './pet-public/pet-public.component';
-
+import { CheckoutComponent } from './checkout/checkout.component';
+import { MyOrdersComponent } from './my-orders/my-orders.component'; 
 
 export const routes: Routes = [
 
@@ -27,6 +28,8 @@ export const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'pet-public', component: PetPublicComponent },
   { path: 'pet/:uuid', component: PetPublicComponent },
+  { path: 'checkout', component: CheckoutComponent },
+  { path: 'myorders', component: MyOrdersComponent },
   { path: '**', component: AuthComponent },
   {
     path: 'admin/products',

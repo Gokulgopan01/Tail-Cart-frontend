@@ -27,17 +27,26 @@
   background: #003c30;
   /* Very Dark Green */
   color: white;
-  padding: 20px 0 100px;
+  padding: 0;
   border-radius: 0;
   box-shadow: none;
   overflow: hidden;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-.header-top-bar {
+.header-top-bar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  padding-top: 20px;
+  z-index: 10;
 }
 
 .back-link-btn {
@@ -99,23 +108,56 @@
 .documents-header-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 30px;
-}
-
-.documents-main-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin: 0 0 8px;
-  letter-spacing: -0.5px;
-  display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  padding: 20px 0 60px;
+  position: relative;
+  z-index: 4;
 }
 
-.paw-icon {
+.doc-banner-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.doc-banner-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+.doc-banner-label {
+  position: absolute;
+  bottom: 120px;
+  width: 100%;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.95);
   font-size: 1.4rem;
-  opacity: 0.6;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  font-weight: 800;
+  z-index: 3;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+.doc-banner-label {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1.2rem;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  font-weight: 800;
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 .documents-subtitle {
@@ -153,6 +195,9 @@
   max-width: 100%;
   box-sizing: border-box;
   overflow: hidden;
+  gap: 15px;
+  /* Add explicit gap between tabs */
+  margin: 0 auto;
 }
 
 @media (max-width: 400px) {
@@ -1610,6 +1655,7 @@ input:checked+.slider:before {
 
 /* Mobile Layout */
 @media (max-width: 768px) {
+
   /* Stack sidebar + main */
   .remainders-layout {
     flex-direction: column;
@@ -1897,4 +1943,135 @@ input:checked+.slider:before {
 
 .btn-clear:hover {
   background: #e2e8f0;
+}
+
+/* App-like experience for small mobiles (300px - 450px) */
+@media (max-width: 450px) {
+
+  /* Banner resizing */
+  .doc-banner-full {
+    height: 300px;
+  }
+
+  .doc-banner-label {
+    font-size: 0.9rem;
+    letter-spacing: 4px;
+    bottom: 12px;
+  }
+
+  /* Header adjustments */
+  .header-section {
+    padding: 0;
+  }
+
+  .documents-header-wrapper {
+    padding: 25px 0 45px;
+  }
+
+  .back-link-btn,
+  .icon-badge-wrapper {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  .badge {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    font-size: 0.6rem;
+  }
+
+  /* Tabs */
+  .tab-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+  }
+
+  .tab-badge-inline {
+    font-size: 0.65rem;
+    padding: 0 4px;
+  }
+
+  /* Row Cards for Documents and Reminders */
+  .premium-row-card,
+  .rem-row-card {
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    gap: 8px;
+  }
+
+  .doc-title,
+  .rem-card-title,
+  .main-title {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .doc-subtitle,
+  .rem-notes-text {
+    font-size: 0.7rem;
+    margin-bottom: 0;
+  }
+
+  .custom-pdf-icon,
+  .rem-pet-info,
+  .icon-col {
+    transform: scale(0.85);
+    transform-origin: left center;
+  }
+
+  .doc-action,
+  .card-action-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+    border-radius: 8px;
+  }
+
+  /* Form / Filters */
+  .modern-input,
+  .modern-select {
+    padding: 10px 12px 10px 36px;
+    font-size: 0.8rem;
+    border-radius: 10px;
+  }
+
+  .search-wrapper i,
+  .input-icon-left {
+    left: 12px;
+    font-size: 0.85rem;
+  }
+
+  .btn-primary,
+  .btn-teal-full {
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  /* Tighter Layout */
+  .toolbar-section {
+    gap: 10px;
+  }
+
+  .filters-container {
+    gap: 8px;
+  }
+
+  .main-content {
+    padding-top: 10px;
+  }
+
+  .rem-list-headers,
+  .list-headers {
+    font-size: 0.7rem;
+    padding: 0 5px;
+  }
 }

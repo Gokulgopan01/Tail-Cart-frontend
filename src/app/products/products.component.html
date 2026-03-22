@@ -1,7 +1,7 @@
 <div class="shop-wrapper">
   <!-- Lottie Banner Heading - Clean Hero -->
   <div class="shop-banner">
-    <div #shopBannerLottie class="header-lottie"></div>
+    <img src="assets/shop_banner.png" alt="Luxury Pet Store Banner" class="header-banner-img">
     <div class="lottie-label">tail store</div>
   </div>
 
@@ -208,7 +208,7 @@
           <button class="qv-icon-btn"><i class="fas fa-share-alt"></i></button>
           <button class="qv-icon-btn"><i class="far fa-heart"></i></button>
         </div>
-        <button class="qv-add-to-bag">
+        <button class="qv-add-to-bag" (click)="addToCart(selectedProductForQuickView!)">
           <i class="fas fa-shopping-bag"></i> Add To Bag
         </button>
       </div>

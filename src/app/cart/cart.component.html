@@ -1,11 +1,13 @@
 <div class="cart-container">
 
-  <!-- Lottie Banner Container -->
-  <div class="auth-lottie-container cart-banner">
-    <div class="glass-overlay">
-      <h2 class="cart-heading">Cart Items</h2>
+<div class="cart-image-banner">
+    <div class="banner-overlay"></div>
+    <div class="banner-content">
+      <h2 class="cart-heading">My Cart</h2>
+      <a class="see-orders-link" routerLink="/myorders">
+        <i class="fas fa-box"></i> See My Orders
+      </a>
     </div>
-    <div #cartBannerLottie class="banner-lottie"></div>
   </div>
 
   <ng-container *ngIf="!loading; else loadingTpl">
@@ -48,63 +50,6 @@
           </div>
         </div>
 
-        <div class="status-toggle-wrapper">
-          <button class="btn-see-status" (click)="toggleStatus(item)">
-            See Status
-            <i class="fas fa-chevron-down" [class.rotated]="item.showStatus"></i>
-          </button>
-        </div>
-
-        <div class="status-expansion" *ngIf="item.showStatus">
-          <div class="status-timeline-container" *ngIf="isNormalStatus(item.status); else altStatus">
-            <div class="t-track"></div>
-            <div class="t-track-completed" [style.width]="(getStatusIndex(item.status) * 33.3) + '%'"></div>
-
-            <div class="t-step" [class.completed]="getStatusIndex(item.status) >= 0"
-              [class.active-box]="item.status === 'Ordered' || item.status === 'In Cart' || !item.status">
-              <div class="t-dot-outer">
-                <div class="t-dot">
-                  <i class="fas fa-shopping-cart"
-                    *ngIf="item.status === 'Ordered' || item.status === 'In Cart' || !item.status"></i>
-                </div>
-              </div>
-              <span class="t-label">Order Placed</span>
-            </div>
-
-            <div class="t-step" [class.completed]="getStatusIndex(item.status) >= 1"
-              [class.active-box]="item.status === 'Shipped'">
-              <div class="t-dot-outer">
-                <div class="t-dot">
-                  <i class="fas fa-shopping-cart" *ngIf="item.status === 'Shipped'"></i>
-                </div>
-              </div>
-              <span class="t-label">Shipped</span>
-            </div>
-
-            <div class="t-step" [class.completed]="getStatusIndex(item.status) >= 2"
-              [class.active-box]="item.status === 'Out for Delivery'">
-              <div class="t-dot-outer">
-                <div class="t-dot">
-                  <i class="fas fa-shopping-cart" *ngIf="item.status === 'Out for Delivery'"></i>
-                </div>
-              </div>
-              <span class="t-label">Out for Delivery</span>
-            </div>
-
-            <div class="t-step" [class.completed]="getStatusIndex(item.status) >= 3"
-              [class.active-box]="item.status === 'Delivered'">
-              <div class="t-dot-outer">
-                <div class="t-dot">
-                  <i class="fas fa-shopping-cart" *ngIf="item.status === 'Delivered'"></i>
-                </div>
-              </div>
-              <span class="t-label">Delivered</span>
-            </div>
-          </div>
-          <ng-template #altStatus>
-            <div class="alt-status-badge">Order Status: <strong>{{ item.status }}</strong></div>
-          </ng-template>
-        </div>
       </div>
 
       <!-- Modern Summary Details Section Before Checkout Bar -->

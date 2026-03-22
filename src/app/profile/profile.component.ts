@@ -32,9 +32,13 @@ export interface UserProfile {
   owner_name: string;
   owner_address: string;
   owner_phone: string;
+  owner_email?: string;
   owner_city: string;
   owner_state: string;
   owner_photo: string | null;
+  emergency_contact_name?: string;
+  emergency_contact_phone?: string;
+  created_at?: string;
   pets: Pet[];
 }
 
@@ -70,9 +74,13 @@ export class ProfileComponent implements OnInit {
     owner_name: '',
     owner_address: '',
     owner_phone: '',
+    owner_email: '',
     owner_city: '',
     owner_state: '',
     owner_photo: null,
+    emergency_contact_name: '',
+    emergency_contact_phone: '',
+    created_at: '',
     pets: []
   };
 
@@ -250,8 +258,11 @@ export class ProfileComponent implements OnInit {
     formData.append('owner_name', this.profile.owner_name);
     formData.append('owner_address', this.profile.owner_address);
     formData.append('owner_phone', this.profile.owner_phone);
+    if (this.profile.owner_email) formData.append('owner_email', this.profile.owner_email);
     formData.append('owner_city', this.profile.owner_city);
     formData.append('owner_state', this.profile.owner_state);
+    if (this.profile.emergency_contact_name) formData.append('emergency_contact_name', this.profile.emergency_contact_name);
+    if (this.profile.emergency_contact_phone) formData.append('emergency_contact_phone', this.profile.emergency_contact_phone);
 
     if (this.ownerPhotoFile) {
       formData.append('owner_photo', this.ownerPhotoFile);

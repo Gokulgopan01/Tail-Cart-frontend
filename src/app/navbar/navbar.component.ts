@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -15,8 +16,18 @@ export class NavbarComponent implements OnInit {
   isMobileMenuOpen = false;
   isScrolled = false;
   isPastHalfScreen = false;
+  hideTopNav = false;
+  hideBottomNav = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      const url = event.urlAfterRedirects;
+      this.hideTopNav = url.includes('/profile') || url.includes('/checkout');
+      this.hideBottomNav = url.includes('/checkout');
+    });
+  }
 
   ngOnInit() {
     // Load cart items from localStorage if needed

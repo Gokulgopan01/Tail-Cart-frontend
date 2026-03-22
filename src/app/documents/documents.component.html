@@ -1,29 +1,12 @@
 <div class="documents-locker">
   <!-- Premium curved header -->
   <header class="header-section premium-header">
+    <img src="assets/doc_banner.png" alt="Tail VAULT Banner" class="doc-banner-img">
+    <div class="doc-banner-overlay"></div>
+    <div class="doc-banner-label">TAIL VAULT</div>
+
     <div class="container header-container">
-      <div class="header-top-bar">
-        <button class="back-link-btn" title="Back">
-          <i class="fas fa-arrow-left"></i>
-        </button>
-        <div class="header-actions">
-          <div class="icon-badge-wrapper">
-            <i class="far fa-bell"></i>
-            <span class="badge red-badge">5</span>
-          </div>
-          <div class="icon-badge-wrapper">
-            <i class="fas fa-shopping-bag"></i>
-            <span class="badge teal-badge">4</span>
-          </div>
-        </div>
-      </div>
-
       <div class="documents-header-wrapper">
-        <div class="documents-title-section">
-          <h1 class="documents-main-title">Tail VAULT <i class="fas fa-paw paw-icon"></i></h1>
-          <p class="documents-subtitle">Your pet's health and life-saving reminders in one secure place.</p>
-        </div>
-
         <div class="tabs-container premium-tabs">
           <button class="tab-btn" [class.active]="activeTab === 'documents'" (click)="activeTab = 'documents'">
             <i class="fas fa-folder"></i>

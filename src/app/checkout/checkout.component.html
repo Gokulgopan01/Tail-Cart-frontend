@@ -1,0 +1,79 @@
+<div class="checkout-container">
+
+  <!-- Premium Header -->
+  <div class="checkout-header-banner">
+    <div class="header-overlay"></div>
+    <div class="header-content container">
+      <button class="back-link-btn" routerLink="/cart">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="header-title">Checkout</h2>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!loading; else loadingTpl">
+    <div class="checkout-main container">
+
+      <div class="order-summary-box">
+        <h3 class="section-title">Order Review</h3>
+
+        <div class="checkout-items-list" *ngIf="cartItems.length > 0">
+          <div class="c-item" *ngFor="let item of cartItems">
+            <div class="c-img-box">
+              <img [src]="item.product_image" alt="Item" onerror="this.src='assets/images/photo2.jpg'">
+            </div>
+            <div class="c-info">
+              <h4 class="c-name">{{ item.product_name }}</h4>
+              <p class="c-pet">{{ item.pet_name || 'Generic Pet' }}</p>
+              <div class="c-price-qty">
+                <span class="c-qty">Qty: {{ item.quantity }}</span>
+                <span class="c-price">₹{{ item.product_price }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="luxury-divider"></div>
+
+        <div class="totals-section">
+          <div class="t-row">
+            <span class="t-label">Subtotal ({{ getTotalItems() }} items)</span>
+            <span class="t-value">₹{{ getSubtotal() | number:'1.2-2' }}</span>
+          </div>
+          <div class="t-row">
+            <span class="t-label">Tax (18% GST)</span>
+            <span class="t-value">₹{{ getTax() | number:'1.2-2' }}</span>
+          </div>
+          <div class="t-row highlight">
+            <span class="t-label"><i class="fas fa-truck text-green"></i> Shipping</span>
+            <span class="t-value text-green">FREE</span>
+          </div>
+
+          <div class="grand-total-row">
+            <span class="gt-label">Total to Pay</span>
+            <span class="gt-value">₹{{ totalAmount | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sticky Bottom Place Order Action -->
+    <div class="checkout-bottom-fixed" *ngIf="cartItems.length > 0">
+      <button class="place-order-btn" (click)="placeOrder()">
+        <span>PLACE ORDER</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <p class="secure-text"><i class="fas fa-lock"></i> Secure & Encrypted checkout</p>
+    </div>
+  </ng-container>
+
+</div>
+
+<ng-template #loadingTpl>
+  <div class="loading-container">
+    <div class="spinner-border text-dark" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</ng-template>

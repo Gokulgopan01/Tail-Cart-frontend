@@ -42,10 +42,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   nextPageUrl: string | null = null;
   isLoading = false;
 
-  // Banner
-  @ViewChild('shopBannerLottie', { static: true })
-  shopBannerLottie!: ElementRef<HTMLDivElement>;
-  private bannerAnimation: AnimationItem | null = null;
+
 
   // Empty State Lottie
   private emptyStateAnimation: AnimationItem | null = null;
@@ -207,17 +204,10 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.bannerAnimation = lottie.loadAnimation({
-      container: this.shopBannerLottie.nativeElement,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      path: 'assets/Shoping_Website.json'
-    });
+    // Banner lottie removed, empty state initializes when needed via ViewChild setter
   }
 
   ngOnDestroy(): void {
-    this.bannerAnimation?.destroy();
     this.emptyStateAnimation?.destroy();
   }
 
@@ -225,6 +215,33 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
       panelClass: [`snackbar-${type}`]
+    });
+  }
+
+  /** Add product to cart via POST /api/user/cart/ */
+  addToCart(product: Product): void {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      this.showSnackbar('Please log in first', 'error');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('owner', userId);
+    formData.append('pet', '1');
+    formData.append('product', product.id.toString());
+    formData.append('quantity', '1');
+
+    const token = localStorage.getItem('access_token');
+    const headers: any = token ? { Authorization: `Bearer ${token}` } : {};
+
+    this.http.post('http://127.0.0.1:8000/api/user/cart/', formData, { headers }).subscribe({
+      next: (res: any) => {
+        this.showSnackbar(res.message || 'Item added to cart successfully!', 'success');
+      },
+      error: (err) => {
+        this.showSnackbar('Failed to add item to cart', 'error');
+      }
     });
   }
 }

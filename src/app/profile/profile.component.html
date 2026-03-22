@@ -1,12 +1,9 @@
 <div class="profile-page">
   <!-- Premium Header -->
-  <header class="profile-hero glass-effect">
+  <header class="profile-hero">
+    <img [src]="getOwnerPhotoUrl()" alt="Owner Banner" class="hero-banner-img" (error)="handleOwnerImageError($event)">
+    <div class="hero-overlay"></div>
     <div class="container hero-content">
-      <div class="hero-text">
-        <h1 class="hero-title">My Pet Family</h1>
-        <p class="hero-subtitle">Manage your profile and furry friends in your personal vault</p>
-      </div>
-
       <!-- Luxury Tab Switcher -->
       <div class="tabs-container">
         <div class="tabs-pill">
@@ -28,18 +25,21 @@
       <div class="owner-profile-card luxury-card">
         <div class="card-pattern"></div>
 
-        <div class="owner-hero">
-          <div class="owner-photo-wrapper pulse-border">
-            <img [src]="getOwnerPhotoUrl()" alt="Owner" class="owner-photo" (error)="handleOwnerImageError($event)">
-            <div class="edit-badge" (click)="toggleEditMode()" *ngIf="!isEditMode">
-              <i class="fas fa-camera"></i>
-            </div>
-          </div>
+        <div class="owner-hero" style="justify-content: center; text-align: center;">
           <div class="owner-primary-info">
             <h2 class="owner-display-name">{{ profile.owner_name || 'Set Your Name' }}</h2>
-            <p class="owner-location-tag">
-              <i class="fas fa-map-marker-alt"></i> {{ profile.owner_city }}, {{ profile.owner_state }}
-            </p>
+            <div class="owner-meta-tags">
+              <p class="owner-location-tag">
+                <i class="fas fa-map-marker-alt"></i> {{ profile.owner_city || 'City' }}, {{ profile.owner_state ||
+                'State' }}
+              </p>
+              <p class="owner-location-tag" *ngIf="profile.created_at">
+                <i class="fas fa-calendar-alt"></i> Joined {{ profile.created_at | date:'mediumDate' }}
+              </p>
+              <p class="owner-location-tag">
+                <i class="fas fa-paw"></i> {{ pets.length }} Pet{{ pets.length !== 1 ? 's' : '' }}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -60,6 +60,34 @@
             <div class="detail-content">
               <label>Phone Number</label>
               <p>{{ profile.owner_phone || 'No phone added' }}</p>
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-icon"><i class="fas fa-envelope"></i></div>
+            <div class="detail-content">
+              <label>Email Address</label>
+              <p>{{ profile.owner_email || 'No email added' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="luxury-divider">
+          <span><i class="fas fa-heartbeat"></i> Additional contact</span>
+        </div>
+
+        <div class="owner-details-grid">
+          <div class="detail-item">
+            <div class="detail-icon"><i class="fas fa-user-shield"></i></div>
+            <div class="detail-content">
+              <label>Contact Name</label>
+              <p>{{ profile.emergency_contact_name || 'Not provided' }}</p>
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-icon"><i class="fas fa-phone-square-alt"></i></div>
+            <div class="detail-content">
+              <label>Contact Phone</label>
+              <p>{{ profile.emergency_contact_phone || 'Not provided' }}</p>
             </div>
           </div>
         </div>
@@ -205,6 +233,21 @@
             <label>Residential Address</label>
             <textarea name="owner_address" [(ngModel)]="profile.owner_address" rows="2"
               placeholder="Street, Building, etc." class="luxury-input"></textarea>
+          </div>
+          <div class="form-group full">
+            <label>Email Address</label>
+            <input type="email" name="owner_email" [(ngModel)]="profile.owner_email" placeholder="Email Address"
+              class="luxury-input">
+          </div>
+          <div class="form-group">
+            <label>Emergency Contact Name</label>
+            <input type="text" name="emergency_contact_name" [(ngModel)]="profile.emergency_contact_name"
+              placeholder="Contact Name" class="luxury-input">
+          </div>
+          <div class="form-group">
+            <label>Emergency Contact Phone</label>
+            <input type="tel" name="emergency_contact_phone" [(ngModel)]="profile.emergency_contact_phone"
+              placeholder="Contact Phone" class="luxury-input">
           </div>
         </div>
         <div class="modal-footer">
