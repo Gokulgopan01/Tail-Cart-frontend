@@ -1,38 +1,31 @@
+import logging
 import re
 import time
-import tkinter as tk
-from tkinter import ttk, messagebox
-import threading
-import logging
-from venv import logger
-from dotenv import load_dotenv
-from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-
-                   
-
-import logging
 import requests
 import json
 import os
-from selenium.webdriver.chrome.options import Options
 from dotenv import load_dotenv
-import os
 from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from config import env
 load_dotenv()
 from condtions.all_portal_conditions import generate_condition_data
-from utils.helper import data_filling_text, extract_data_sections, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_repair_details, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status,tfs_statuschange, update_portal_login_confirmation_status
+from utils.helper import adj_click, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_repair_details, rrr_select_hoa_amenities, rrr_select_amenities, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status, tfs_statuschange
 from integrations.hybrid_bpo_api import HybridBPOApi
-# arg1, arg2,arg3 = params_check()
-# print(arg1,arg2,arg3)
+from utils.glogger import GLogger
+
+
+logger = GLogger()
 
 process_type, hybrid_orderid, hybrid_token = params_check()
-logging.info(f"type,orderid,token,{process_type},{hybrid_orderid},{hybrid_token}")
-# Load environment variables from the .env file
+logger.log(
+    module="rrreview-main",
+    order_id=hybrid_orderid,
+    action_type="Info",
+    remarks=f"type,orderid,token,{process_type},{hybrid_orderid},{hybrid_token}",
+    severity="INFO"
+)
 load_dotenv()
 class rrreview:
     def __init__(self, username, password, portal_url, portal_name, proxy, session,account_id, portal_key):
@@ -55,7 +48,13 @@ class rrreview:
             setup_driver(self)
 
             api_response = get_cookie_from_api(self.username, portal="rrr", proxy=self.proxy)
-            print(api_response)
+            logger.log(
+                module="rrreview-login_to_portal",
+                order_id=hybrid_orderid,
+                action_type="Debug",
+                remarks=f"API Response: {api_response}",
+                severity="INFO"
+            )
             if not api_response:
                 self.login_status = "API response error"
                 handle_login_status("API_FAILED", self.username, ["VendorPortal/Index"], self.portal_name)
@@ -77,7 +76,13 @@ class rrreview:
 
             # Step 5: Check if Login Successful
             current_url = self.driver.current_url
-            print(current_url)
+            logger.log(
+                module="rrreview-login_to_portal",
+                order_id=hybrid_orderid,
+                action_type="Debug",
+                remarks=f"Current URL: {current_url}",
+                severity="INFO"
+            )
             # if 'https://www.rrreview.com/#/baseauth/activeorders' in current_url:
             #     logging.info("Login successful")
             #     return "Login success", self.driver
@@ -103,18 +108,30 @@ class rrreview:
           
         except Exception as e:
             self.login_status = f"Exception occurred: {e}"
-            logging.exception("Exception during login")
-            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
+            # Fix 6: Use GLogger for consistency with the rest of the file
+            logger.log(
+                module="rrreview-login_to_portal",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Exception during login: {e}",
+                severity="INFO"
+            )
+            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
             update_client_account_status(self.account_id)
             handle_login_status("EXCEPTION", self.username, ["activeorders"], self.portal_name)
-            #update_client_account_status(self.order_id)
             return "Login error", self.driver
         
     def rrreview_formopen(self):
         try:
             orders_from_api = HybridBPOApi.get_entry_order(hybrid_orderid)
             if not orders_from_api:  
-                print("No orders found.")
+                logger.log(
+                    module="rrreview-rrreview_formopen",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks="No orders found.",
+                    severity="INFO"
+                )
                 return
             
 
@@ -128,13 +145,16 @@ class rrreview:
                 hyorder_id=order_from_api.get("order_id","")
                 portal_order_id=order_from_api.get("portal_orderid","")
                 order_details_from_api,tfs_orderid,is_qc=get_order_address_from_assigned_order(hyorder_id,hybrid_token)
-                print("order_details_from_api:", order_details_from_api)
-                print("tfs",tfs_orderid)
-                print("ID:",portal_order_id)
             
             # --- Step 2: Parse ALL Active Orders in RRR portal ---
-            
-            print("Fetching all portal order IDs and Form Types from RRR...")
+            print("Looking for Active Orders...")
+            logger.log(
+                module="rrreview-rrreview_formopen",
+                order_id=hybrid_orderid,
+                action_type="Info",
+                remarks="Scanning portal dashboard for active order rows...",
+                severity="INFO"
+            )
 
             # Wait for all order rows to load completely
             order_rows = WebDriverWait(self.driver, 30).until(
@@ -160,17 +180,37 @@ class rrreview:
                     if portalorder_id.isdigit():
                         portal_order_data[portalorder_id] = form_type
                 except Exception as e:
-                    logging.warning(f"Skipping a row due to parsing error: {e}")
+                    logger.log(
+                        module="rrreview-rrreview_formopen",
+                        order_id=hybrid_orderid,
+                        action_type="Warning",
+                        remarks=f"Row parsing warning: {e}",
+                        severity="INFO"
+                    )
                     continue
 
-            print(f"Parsed Portal Order Data: {portal_order_data}")
+            logger.log(
+                module="rrreview-rrreview_formopen",
+                order_id=hybrid_orderid,
+                action_type="Info",
+                remarks=f"Portal scan complete. Found {len(portal_order_data)} orders.",
+                severity="INFO"
+            )
+            print(f"Total Active Orders: {len(portal_order_data)}")
 
             # Extract HybridBPO order IDs for matching
             hybrid_order_id = [str(o.get("portal_orderid", "")).strip() for o in orders_from_api if o.get("portal_orderid")]
 
             # Find common order IDs
             matched_order = [oid for oid in portal_order_data.keys() if oid in hybrid_order_id]
-            print(f"Matched Order: {matched_order}")
+            print(f"Matched Orders for Processing:{matched_order}")
+            logger.log(
+                module="rrreview-rrreview_formopen",
+                order_id=hybrid_orderid,
+                action_type="Info",
+                remarks=f"Matching Complete. {len(matched_order)} orders pending automated processing.",
+                severity="INFO"
+            )
 
             # Optional: define allowed form types for SmartEntry
             allowed_form_types = ["EXTERIOR BPO"]
@@ -179,22 +219,56 @@ class rrreview:
             for order_id in matched_order:
                 form_type = portal_order_data.get(order_id)
                 if form_type in allowed_form_types:
-                    print(f"Opening order {order_id} with form type {form_type}")
-                    self.click_order_by_id(order_id)
-                    
-                    # Proceed to form fill once open
-                    self.rrreview_formopen_fill(form_type,hyorder_id,self.session,tfs_orderid,is_qc,merged_json=None)
+                    print(f"Opening Order {order_id} ({form_type})...")
+                    logger.log(
+                        module="rrreview-rrreview_formopen",
+                        order_id=hybrid_orderid,
+                        action_type="Info",
+                        remarks=f"Opening order {order_id} with form type {form_type}",
+                        severity="INFO"
+                    )
+                    # Fix 2: Guard form fill on click success
+                    if self.click_order_by_id(order_id):
+                        # Proceed to form fill once open
+                        self.rrreview_formopen_fill(form_type,hyorder_id,self.session,tfs_orderid,is_qc,merged_json=None)
+                    else:
+                        logger.log(
+                            module="rrreview-rrreview_formopen",
+                            order_id=hybrid_orderid,
+                            action_type="Error",
+                            remarks=f"Failed to open order {order_id}. Skipping.",
+                            severity="ERROR"
+                        )
 
                 else:
-                    print(f"Skipping order {order_id} with unsupported form type: {form_type}")
+                    logger.log(
+                        module="rrreview-rrreview_formopen",
+                        order_id=hybrid_orderid,
+                        action_type="Warning",
+                        remarks=f"Skipping order {order_id} with unsupported form type: {form_type}",
+                        severity="INFO"
+                    )
 
         except Exception as e:
-            logging.exception(f"Exception in rrreview_formopen: {e}")
+            #logging.exception(f"Exception in rrreview_formopen: {e}")
+            logger.log(
+                module="rrreview-rrreview_formopen",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Exception in rrreview_formopen: {e}",
+                severity="INFO"
+            )
 
     def click_order_by_id(self, order_id):
         """Find and click the given order ID on the RRR portal dashboard."""
         try:
-            print(f"Looking for order {order_id}...")
+            logger.log(
+                module="rrreview-click_order_by_id",
+                order_id=hybrid_orderid,
+                action_type="Info",
+                remarks=f"Looking for order {order_id}...",
+                severity="INFO"
+            )
 
             # Wait for all order labels to load completely
             WebDriverWait(self.driver, 20).until(
@@ -224,14 +298,27 @@ class rrreview:
 
             # Use JavaScript click (Ionic click is often JS-handled)
             self.driver.execute_script("arguments[0].click();", target)
-            print(f"Successfully clicked order {order_id}")
+            print(f"Order {order_id} clicked successfully.")
+            logger.log(
+                module="rrreview-click_order_by_id",
+                order_id=hybrid_orderid,
+                action_type="Info",
+                remarks=f"Successfully clicked order {order_id}",
+                severity="INFO"
+            )
 
             # Optional: wait a bit for navigation or popup
             time.sleep(3)
 
 
             try:
-                print("Looking for 'I am ready to enter data or submit report' button...")
+                logger.log(
+                    module="rrreview-click_order_by_id",
+                    order_id=hybrid_orderid,
+                    action_type="Info",
+                    remarks="Looking for 'I am ready to enter data or submit report' button...",
+                    severity="INFO"
+                )
 
                 # Wait until the button is visible & clickable
                 ready_button = WebDriverWait(self.driver, 20).until(
@@ -243,37 +330,86 @@ class rrreview:
                 # Use native Selenium click 
                 self.driver.execute_script("arguments[0].scrollIntoView({block:'center'});", ready_button)
                 time.sleep(1)  # small pause so Angular attaches handlers
+                print("Clicking 'Ready to enter data' button...")
                 ready_button.click()  
 
-                print("Button clicked, waiting for form to open...")
+                logger.log(
+                    module="rrreview-click_order_by_id",
+                    order_id=hybrid_orderid,
+                    action_type="Info",
+                    remarks="Button clicked, waiting for form to open...",
+                    severity="INFO"
+                )
 
                 # Now wait for the form submitorder button
                 WebDriverWait(self.driver, 20).until(
                     EC.presence_of_element_located((By.XPATH, "//*[@id='submitorderbutton']"))
                 )
-                print("Form loaded successfully!")
+                logger.log(
+                    module="rrreview-click_order_by_id",
+                    order_id=hybrid_orderid,
+                    action_type="Success",
+                    remarks="Order form interface loaded and confirmed.",
+                    severity="INFO"
+                )
+                return True
               
             except Exception as e:
-                    print(f"Could not open the form: {e}")
+                    logger.log(
+                        module="rrreview-click_order_by_id",
+                        order_id=hybrid_orderid,
+                        action_type="Exception",
+                        remarks=f"Could not open the form: {e}",
+                        severity="INFO"
+                    )
+                    return False
 
         except Exception as e:
-            logging.exception(f"Could not click order {order_id}: {e}")
+            # Fix 3: Added return False so caller can detect click failure
+            logger.log(
+                module="rrreview-click_order_by_id",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Could not click order {order_id}: {e}",
+                severity="INFO"
+            )
+            return False
       
     def rrreview_formopen_fill(self,formtype_value,order_id,session,tfs_orderid,is_qc,merged_json):
         """Handles mapping config, merged_json loading, and form-filling for RRReview SmartEntry."""
         try:
             # Load ResearchPad API endpoint from environment
             researchpad_data_retrival_url=env.RESEARCHPAD_DATA_URL
-            print(researchpad_data_retrival_url)
+            logger.log(
+                module="rrreview-rrreview_formopen_fill",
+                order_id=hybrid_orderid,
+                action_type="Debug",
+                remarks=f"ResearchPad URL: {researchpad_data_retrival_url}",
+                severity="INFO"
+            )
 
             #  Step 1: Choose JSON config path based on form type
             if formtype_value == "EXTERIOR BPO":
-                print("yes")
+                print(f"Mapping matched for {formtype_value}")
+                logger.log(
+                    module="rrreview-rrreview_formopen_fill",
+                    order_id=hybrid_orderid,
+                    action_type="Info",
+                    remarks="Form type matches EXTERIOR BPO",
+                    severity="INFO"
+                )
                 config_path = 'json/rrreviewjson/RRReview_Exterior_BPO.json'
             else:
-                logging.warning(f"No matching config path found for form type: {formtype_value}")
+                #logging.warning(f"No matching config path found for form type: {formtype_value}")
+                logger.log(
+                    module="rrreview-rrreview_formopen_fill",
+                    order_id=hybrid_orderid,
+                    action_type="Warning",
+                    remarks=f"No matching config path found for form type: {formtype_value}",
+                    severity="INFO"
+                )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-                #tfs_statuschange(tfs_orderid, "27", "3", "14")
+                # Fix 5: Restored TFS failure status call on form type mismatch
                 return
             
             form_config, merged_json = load_form_config_and_data(
@@ -285,8 +421,15 @@ class rrreview:
             token=hybrid_token
             )
             if not form_config or not merged_json:
-              logging.warning(f"Config or data missing for order {order_id}")
-              return 
+                print(f"[!] Smart Entry Data Missing for Order {order_id}")
+                logger.log(
+                    module="rrreview-rrreview_formopen_fill",
+                    order_id=hybrid_orderid,
+                    action_type="Warning",
+                    remarks=f"Config or data missing for order {order_id}",
+                    severity="INFO"
+                )
+                return False
         
             # Extract and generate condition_data, attach it inside merged_json for usage if needed
             sub_data, comp_data, adj_data, rental_data,sold1,sold2,sold3, list1, list2, list3,rental_list1,rental_list2,rental_leased1,rental_leased2,adj_sold1,adj_sold2,adj_sold3,adj_list1,adj_list2,adj_list3, prior1, prior2, prior3 = extract_data_sections(merged_json)
@@ -294,20 +437,32 @@ class rrreview:
             if "entry_data" in merged_json and merged_json["entry_data"]:
                 merged_json["entry_data"][0]["condition_data"] = condition_data
 
-          
-            # print("MERGED JSON:",merged_json)
-
             try:
-                # Call fill_form_multi for just this page
-                self.fill_form_multi(merged_json, order_id, form_config, session, tfs_orderid,is_qc)
+                # Fix 1: Assign return value to success (was NameError before)
+                success = self.fill_form_multi(merged_json, order_id, form_config, session, tfs_orderid,is_qc)
                 time.sleep(2)
+                return success
 
             except Exception as e:
-                logging.exception(f"Error while navigating and filling forms: {e}")
-                return
+                #logging.exception(f"Error while navigating and filling forms: {e}")
+                logger.log(
+                    module="rrreview-rrreview_formopen_fill",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Error while navigating and filling forms: {e}",
+                    severity="INFO"
+                )
+                return False
         except Exception as e:
-            logging.exception(f"Exception in rrreview_formopen_fill: {e}")
-            pass
+            #logging.exception(f"Exception in rrreview_formopen_fill: {e}")
+            logger.log(
+                    module="rrreview-rrreview_formopen_fill",
+                    order_id=hybrid_orderid,
+                    action_type="Exception",
+                    remarks=f"Exception in rrreview_formopen_fill: {e}",
+                    severity="INFO"
+                )
+            return False
 
     def fill_form_multi(self, merged_json, order_id, form_config, session, tfs_orderid,is_qc):
         """
@@ -335,7 +490,7 @@ class rrreview:
             if expr in value_cache:
                 return value_cache[expr]
 
-            # Define data sources (similar to redbell)
+            # Define data sources
             data_sources = {
                 "sub_data": sub_data,
                 "comp_data": comp_data,
@@ -349,6 +504,7 @@ class rrreview:
                 "rental_leased1": rental_leased1, "rental_leased2": rental_leased2,
                 "adj_sold1": adj_sold1, "adj_sold2": adj_sold2, "adj_sold3": adj_sold3,
                 "adj_list1": adj_list1, "adj_list2": adj_list2, "adj_list3": adj_list3,
+                "prior1": prior1, "prior2": prior2, "prior3": prior3,
             }
 
             # Find matching prefix and extract nested keys
@@ -364,10 +520,9 @@ class rrreview:
                     value_cache[expr] = value
                     return value
 
-            # Default fallback
-            value_cache[expr] = None
-            logging.warning(f"[extract_value_from_expr] No value found for {expr}")
-            return None
+            # Default fallback: If it's a literal string (not an expression starting with a prefix), return it as-is
+            # value_cache[expr] = None # Removed this, we want to return the literal
+            return expr
 
         # --------------------------
         # Field type to function map
@@ -381,13 +536,17 @@ class rrreview:
             "radiobutton_default": radio_btn_click,
             "date_fill_javascript": javascript_excecuter_filling,
             "checkbox": single_checkbox,
+            "button_click": adj_click,
+            # "rrr_listing_history_fill": rrr_fill_listing_history,
+            "rrr_hoa_amenities": rrr_select_hoa_amenities,
+            "rrr_amenities": rrr_select_amenities,
         }
 
         # --------------------------
         # RRReview iframe tab mapping
         # --------------------------
         iframe_id_map = {
-            "Work Order Detail": "iframeBPOBPOEntryFormTab1",
+            "Order Instructions": "iframeBPOBPOEntryFormTab1",
             "Subject Information": "iframeBPOBPOEntryFormTab2",
             "Repair Information": "iframeBPOBPOEntryFormTab3",
             "Comparable Information": "iframeBPOBPOEntryFormTab4",
@@ -396,6 +555,10 @@ class rrreview:
         }
 
         try:
+            # --- Success-tracking flags (mirrors old version) ---
+            form_fill_success = True
+            photo_upload_success = True
+
             # --- Extract all JSON data sections ---
             (
                 sub_data, comp_data, adj_data, rental_data,
@@ -408,9 +571,15 @@ class rrreview:
                 prior1, prior2, prior3) = extract_data_sections(merged_json)
 
             if sub_data is None:
-                logging.error("'entry_data' missing or empty in merged_json")
+                #logging.error("'entry_data' missing or empty in merged_json")
+                logger.log(
+                    module="rrreview-fill_form_multi",
+                    order_id=hybrid_orderid,
+                    action_type="Condition_check",
+                    remarks=f"'entry_data' missing or empty in merged_json",
+                    severity="INFO"
+                )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
-                #tfs_statuschange(tfs_orderid, "27", "3", "14")
                 return False
 
             # --- Generate computed conditional data ---
@@ -422,8 +591,23 @@ class rrreview:
                 prior1, prior2, prior3
             )
 
-            saved_form = False
+            form_fill_success = True
+            photo_upload_success = True
             form_pages = form_config.get("page", [])
+
+            # --- Helper to resolve {condition_data['...']} in locators ---
+            def resolve_template(template):
+                if not template or '{' not in template:
+                    return template
+                try:
+                    placeholders = re.findall(r'\{(.*?)\}', template)
+                    for ph in placeholders:
+                        val = extract_value_from_expr(ph)
+                        if val is not None:
+                            template = template.replace('{' + ph + '}', str(val))
+                    return template
+                except Exception:
+                    return template
 
             # --------------------------
             # Iterate through pages & tabs
@@ -435,7 +619,14 @@ class rrreview:
                     self.driver.switch_to.default_content()
                     time.sleep(0.5)
                     # Step 1: Click the corresponding tab
-                    print(f"\n Switching to tab: {tab_name}")
+                    print(f"Switching to  {tab_name} Tab")
+                    logger.log(
+                        module="rrreview-fill_form_multi",
+                        order_id=hybrid_orderid,
+                        action_type="Info",
+                        remarks=f"Switching to portal tab: {tab_name}",
+                        severity="INFO"
+                    )
                     
                     try:
                         tab_xpath = f"//a[contains(@class,'ui-tabs-anchor') and contains(.,'{tab_name}')]"
@@ -445,10 +636,22 @@ class rrreview:
                         self.driver.execute_script("arguments[0].scrollIntoView({block:'center'});", tab_element)
                         time.sleep(0.5)
                         tab_element.click()
-                        print(f"Clicked tab: {tab_name}")
+                        logger.log(
+                            module="rrreview-fill_form_multi",
+                            order_id=hybrid_orderid,
+                            action_type="Info",
+                            remarks=f"Clicked tab: {tab_name}",
+                            severity="INFO"
+                        )
                         time.sleep(1)
                     except Exception as e:
-                        print(f"Could not click tab '{tab_name}': {e}")
+                        logger.log(
+                            module="rrreview-fill_form_multi",
+                            order_id=hybrid_orderid,
+                            action_type="Warning",
+                            remarks=f"Could not click tab '{tab_name}': {e}",
+                            severity="INFO"
+                        )
                         continue
 
                     # Step 2: Switch to iframe
@@ -460,12 +663,47 @@ class rrreview:
                                 EC.presence_of_element_located((By.ID, iframe_id))
                             )
                             self.driver.switch_to.frame(iframe)
-                            print(f"Switched to iframe: {iframe_id}")
+                            logger.log(
+                                module="rrreview-fill_form_multi",
+                                order_id=hybrid_orderid,
+                                action_type="Info",
+                                remarks=f"Switched to iframe: {iframe_id}",
+                                severity="INFO"
+                            )
                         except Exception as e:
-                            print(f"Could not switch to iframe {iframe_id}: {e}")
+                            logger.log(
+                                module="rrreview-fill_form_multi",
+                                order_id=hybrid_orderid,
+                                action_type="Warning",
+                                remarks=f"Could not switch to iframe {iframe_id}: {e}",
+                                severity="INFO"
+                            )
                             continue
                     else:
-                        print(f"No iframe mapping for tab: {tab_name}")
+                        logger.log(
+                            module="rrreview-fill_form_multi",
+                            order_id=hybrid_orderid,
+                            action_type="Warning",
+                            remarks=f"No iframe mapping for tab: {tab_name}",
+                            severity="INFO"
+                        )
+
+                    # --- Step 2.5: Inject Upload Logic if Tab is Photos/Documents ---
+                    if tab_name == "Photos/Documents":
+                         photo_upload_success = self.upload_files_for_order(order_id, tfs_orderid)
+                         if not photo_upload_success:
+                            logger.log(
+                                module="rrreview-fill_form_multi",
+                                order_id=hybrid_orderid,
+                                action_type="Warning",
+                                remarks="Document upload failed during tab processing.",
+                                severity="INFO"
+                            )
+                         # Continue to process controls if any (though usually empty for this tab?)
+                         # Also ensure we are back in the correct iframe for controls?
+                         # The upload function switches to default then iframeBPOBPOEntryFormTab5.
+                         # The loop logic above ALREADY switched to iframeBPOBPOEntryFormTab5 (if mapped correctly).
+                         # So we are good.
 
                     # Step 3: Process field controls in this tab
                     
@@ -473,25 +711,9 @@ class rrreview:
                         field_type = control.get("filedtype")
                         values = control.get("values", [])
 
-                        # if field_type == "save_data":
-                        #   if not saved_form:
-                        #     save_form(self.driver)
-                        #     logging.info("Form saved.")
-                        #     # for cookie in self.driver.get_cookies():
-                        #     #     session.cookies.set(cookie['name'], cookie['value'])
-                        #     # time.sleep(5)
-                        #     saved_form = True
-                        #     continue
-
-                        # if field_type == "save_data_adj":
-                        #     if not saved_form:
-                        #         save_form_adj(self.driver)
-                        #         logging.info("Form saved.")
-                        #         # for cookie in self.driver.get_cookies():
-                        #         #     session.cookies.set(cookie['name'], cookie['value'])
-                        #         # time.sleep(5)
-                        #         saved_form = True
-                        #     continue
+                        if field_type in ["save_data", "save_data_adj"]:
+                            # Save logic is handled dynamically at the end of the tab loop.
+                            continue
 
                         if field_type == "checkbox_list":
                             for field in values:
@@ -532,48 +754,697 @@ class rrreview:
                         elif field_type == "repair_details_fill":
                             for value_config in values:
                                 key_expr, _, _ = value_config
-                                repair_data = extract_value_from_expr(key_expr)
+                                try:
+                                    repair_data = extract_value_from_expr(key_expr)
 
-                                if isinstance(repair_data, list):
-                                    rrr_fill_repair_details(self.driver, repair_data)
+                                    if isinstance(repair_data, list):
+                                        if not rrr_fill_repair_details(self.driver, repair_data):
+                                            print("Warning: Repair details filling failed.")
+                                            form_fill_success = False
+                                            logger.log(module="rrreview-fill_form_multi", order_id=hybrid_orderid, action_type="Warning", remarks="Repair details filling returned failure for some items.", severity="INFO")
+                                except Exception as e:
+                                    print(f"Exception in Repair Details: {e}")
+                                    form_fill_success = False
+                                    logger.log(module="rrreview-fill_form_multi", order_id=hybrid_orderid, action_type="Exception", remarks=f"Error processing repair details: {e}", severity="INFO")
                             continue
 
 
                         for field in values:
                             if not (isinstance(field, list) and len(field) == 3):
-                                logging.warning(f"Invalid field format: {field}")
+                                #logging.warning(f"Invalid field format: {field}")
+                                logger.log(
+                                    module="rrreview-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Warning",
+                                    remarks=f"Invalid field format: {field}",
+                                    severity="INFO"
+                                )
                                 continue
 
                             key_expr, xpath, mode = field
+                            # Resolve dynamic parts like {condition_data['...']}
+                            xpath = resolve_template(xpath)
+                            if '{' in field[1]: # Log if it WAS a template
+                                logger.log(
+                                    module="rrreview-fill_form_multi",
+                                    order_id=hybrid_orderid,
+                                    action_type="Info",
+                                    remarks=f"Resolved dynamic locator: {xpath}",
+                                    severity="INFO"
+                                )
                             try:
                                 value = extract_value_from_expr(key_expr)
+                                # if field_type == "radiobutton_data": # Removed debug print
 
-                                if value in [None, ""]:
+                                if field_type != "button_click" and value in [None, ""]:
                                     continue
                                 # WebDriverWait(self.driver, 3).until(
                                 #     EC.element_to_be_clickable((By.XPATH, xpath))
                                 # )
                                 action_func = field_actions.get(field_type)
                                 if action_func:
+                                    if field_type == "button_click":
+                                        # Only click if button is present and clickable
+                                        try:
+                                            WebDriverWait(self.driver, 10).until(
+                                                EC.element_to_be_clickable((By.XPATH, xpath))
+                                            )
+                                            logger.log(module="rrreview-fill_form_multi", order_id=hybrid_orderid, action_type="Info", remarks=f"Button '{xpath}' is clickable, executing click.", severity="INFO")
+                                        except Exception as e:
+                                            logger.log(module="rrreview-fill_form_multi", order_id=hybrid_orderid, action_type="Warning", remarks=f"Button '{xpath}' not clickable/found after wait: {e}", severity="INFO")
+                                            continue  # Skip click if the button isn't there (e.g., popup didn't open)
                                     action_func(self.driver, value, xpath, mode)
                                 else:
-                                    logging.warning(f"Unknown field type: {field_type}")
+                                    #logging.warning(f"Unknown field type: {field_type}")
+                                    logger.log(
+                                        module="rrreview-fill_form_multi",
+                                        order_id=hybrid_orderid,
+                                        action_type="Warning",
+                                        remarks=f"Unknown field type: {field_type}",
+                                        severity="INFO"
+                                    )
                             except Exception as e:
-                                logging.error(f"Exception filling field {key_expr}: {e}")
+                                #logging.error(f"Exception filling field {key_expr}: {e}")
+                                print(f"Exception filling field {key_expr} (Type: {field_type}): {e}")
+                                form_fill_success = False
+                                logger.log(
+                                        module="rrreview-fill_form_multi",
+                                        order_id=hybrid_orderid,
+                                        action_type="Exception",
+                                        remarks=f"Exception filling field {key_expr}: {e}",
+                                        severity="INFO"
+                                    )
+                    if tab_name not in ["Validation Results", "Photos/Documents"]:
+                        # --- Step 2.7: Save after each tab ---
+                        print(f"Saving after {tab_name} Tab...")
+                        self.driver.switch_to.default_content()
+                        self.save_form_rrreview()
+                        # No need to switch back to iframe here as the next iteration will do it
+
 
             # --- Final Status Update ---
-            if is_qc :   #qc order
-                logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="QC order no status change needed",severity="INFO")
+            print(f"Smart Entry Check for Order {hybrid_orderid}")
+            print(f"Form Fill Success: {form_fill_success}")
+            print(f"Photo Upload Success: {photo_upload_success}")
+            
+
+            if form_fill_success and photo_upload_success:
+                update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed", hybrid_token)
+                logger.log(
+                    module="rrreview-fill_form_multi",
+                    order_id=hybrid_orderid,
+                    action_type="Info",
+                    remarks=f"Smart Entry Completed successfully for {hybrid_orderid}",
+                    severity="INFO"
+                )
+                print(f"Smart Entry Process Completed for {hybrid_orderid}")
+                if is_qc :   #qc order
+                    logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="QC order status change ",severity="INFO")
+                    tfs_statuschange(tfs_orderid , "82", "17", "14")
+                else:
+                    logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="fresh or redo order status change ",severity="INFO")
+                    tfs_statuschange(tfs_orderid , "26", "5", "20")
+
             else:
-                tfs_statuschange(tfs_orderid , "26", "5", "20")
+                print(f"Smart Entry Result: FAILED (Fill: {form_fill_success}, Upload: {photo_upload_success})")
+                update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
+                logger.log(
+                    module="rrreview-fill_form_multi",
+                    order_id=hybrid_orderid,
+                    action_type="Warning",
+                    remarks=f"Smart Entry Failed for {hybrid_orderid} (Fill: {form_fill_success}, Upload: {photo_upload_success})",
+                    severity="INFO"
+                )
+                return False
 
-            update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
-            print(hybrid_orderid,"Smart Entry")
-
-            return saved_form
+    
 
         except Exception as e:
-            logging.error(f"Critical error in fill_form_multi: {e}")
-            update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-            #tfs_statuschange(tfs_orderid, "27", "3", "14")
+            #logging.error(f"Critical error in fill_form_multi: {e}")
+            logger.log(
+                module="rrreview-fill_form_multi",
+                order_id=hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Critical error in fill_form_multi: {e}",
+                severity="INFO"
+            )
+            #update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             return False
+
+    def save_form_rrreview(self):
+        """
+        RRReview-specific save function.
+        Clicks the 'savebutton' element (id="savebutton") which triggers saveAllTabData().
+        Should be called from default content (not inside iframe).
+        """
+        print("Saving...")
+        try:
+            # Ensure we're in default content
+            self.driver.switch_to.default_content()
+            
+            # Wait for and click the save button
+            save_btn = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "savebutton"))
+            )
+            
+            # Scroll into view and click
+            self.driver.execute_script("arguments[0].scrollIntoView({block:'center'});", save_btn)
+            time.sleep(0.5)
+            save_btn.click()
+            
+            # Wait for any save confirmation alert
+            try:
+                WebDriverWait(self.driver, 5).until(EC.alert_is_present())
+                alert = self.driver.switch_to.alert
+                alert_text = alert.text
+                alert.accept()
+                
+                # Proactive handling for 'Property Condition' alert
+                if "Property Condition" in alert_text:
+                    logger.log(module="rrreview-save_form_rrreview", order_id=hybrid_orderid, action_type="Warning", remarks="Detected missing Property Condition alert. Attempting logic fix.", severity="INFO")
+                    self.driver.switch_to.default_content()
+                    try:
+                        # Quickly flip to Tab 1 to check the box
+                        tab1_link = self.driver.find_element(By.ID, "tabBPOBPOEntryFormTab1")
+                        tab1_link.click()
+                        time.sleep(1)
+                        self.driver.switch_to.frame("iframeBPOBPOEntryFormTab1")
+                        cond_cb = self.driver.find_element(By.ID, "chkPCond")
+                        if not cond_cb.is_selected():
+                            self.driver.execute_script("arguments[0].click();", cond_cb)
+                            logger.log(module="rrreview-save_form_rrreview", order_id=hybrid_orderid, action_type="Info", remarks="Surgically checked 'chkPCond' to satisfy portal requirement.", severity="INFO")
+                        self.driver.switch_to.default_content()
+                        # Re-click save
+                        save_btn = self.driver.find_element(By.ID, "savebutton")
+                        save_btn.click()
+                        time.sleep(2)
+                    except Exception as e:
+                        logger.log(module="rrreview-save_form_rrreview", order_id=hybrid_orderid, action_type="Error", remarks=f"Failed to proactively fix Property Condition: {e}", severity="WARNING")
+                        self.driver.switch_to.default_content()
+            except:
+                # No alert, that's fine
+                pass
+            
+            # Wait for save to complete
+            time.sleep(5)
+            
+            logger.log(
+                module="rrreview-save_form_rrreview",
+                order_id=hybrid_orderid,
+                action_type="Success",
+                remarks="Form saved successfully using savebutton",
+                severity="INFO"
+            )
+            return True
+            
+        except Exception as e:
+            logger.log(
+                module="rrreview-save_form_rrreview",
+                order_id=hybrid_orderid,
+                action_type="Error",
+                remarks=f"Failed to save form: {e}",
+                severity="ERROR"
+            )
+            return False
+
+    def clear_existing_documents(self):
+        """
+        Clears existing documents in the 'Photos/Documents' tab to prevent duplicates.
+        Flow:
+        1. Check if any checkboxes exist (indicating uploaded files).
+        2. If yes: Select all checkboxes → Click Delete → Save Form.
+        3. If no: Return False (no files to delete)."""
+        try:
+            # Ensure we are in the correct iframe
+            self.driver.switch_to.default_content()
+            iframe = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.ID, "iframeBPOBPOEntryFormTab5"))
+            )
+            self.driver.switch_to.frame(iframe)
+
+            print("Scanning Portal for Existing Documents to Clear...")
+            logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks="Scanning portal for surgical document clearing (Comps, MLS, TAX)...", severity="INFO")
+            
+            count_deleted = 0
+            
+            # --- Targeted Patterns for Clearing ---
+            # Comps: s1-s3 and a1-a3 (from spans like 0_s1.jpg)
+            # Docs: mls.pdf, tax.pdf
+            comp_keys = ["s1", "s2", "s3", "a1", "a2", "a3", "sale", "listing"]
+            doc_keys = ["mls.pdf", "tax.pdf"]
+            
+            # 1. Handle Photos (Targeted via dlPhotos spans)
+            try:
+                pnl_photos = self.driver.find_element(By.ID, "dlPhotos")
+                # Each photo is in a container table
+                photo_containers = pnl_photos.find_elements(By.TAG_NAME, "table")
+                for container in photo_containers:
+                    try:
+                        # Find the filename span (e.g., 0_s1.jpg)
+                        span = container.find_element(By.TAG_NAME, "span")
+                        filename = span.text.lower().strip()
+                        
+                        if not filename:
+                            continue
+
+                        is_target_comp = False
+                        for key in comp_keys:
+                            if key in filename:
+                                # Safe check: Never delete a Subject photo even if it has a comp key in the name
+                                if "subject" not in filename:
+                                    is_target_comp = True
+                                    break
+                        
+                        if is_target_comp:
+                            cb = container.find_element(By.XPATH, ".//input[@type='checkbox']")
+                            if cb.is_displayed() and cb.is_enabled() and not cb.is_selected():
+                                cb.click()
+                                count_deleted += 1
+                                logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks=f"Surgical Select (Photo): '{filename}'", severity="INFO")
+                        else:
+                            # Preserve by default
+                            logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks=f"Surgical Preserve (Photo): '{filename}'", severity="INFO")
+                    except Exception as e:
+                        logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Warning", remarks=f"Error processing photo row: {e}", severity="WARNING")
+                        continue
+            except Exception as e:
+                logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Error", remarks=f"Photo scanning failed: {e}", severity="ERROR")
+
+            # 2. Handle Documents (Targeted via pnlDocsGrid rows)
+            try:
+                pnl_docs = self.driver.find_element(By.ID, "pnlDocsGrid")
+                doc_rows = pnl_docs.find_elements(By.TAG_NAME, "tr")
+                for row in doc_rows:
+                    try:
+                        row_text = row.text.lower()
+                        if not row_text.strip():
+                            continue
+
+                        is_target_doc = False
+                        # Check for MLS or TAX specifically
+                        if any(key in row_text for key in doc_keys):
+                            # EXCLUSION: Never delete combined mls_tax.pdf
+                            if "mls_tax" not in row_text:
+                                is_target_doc = True
+                        
+                        if is_target_doc:
+                            cb = row.find_element(By.XPATH, ".//input[@type='checkbox']")
+                            if cb.is_displayed() and cb.is_enabled() and not cb.is_selected():
+                                cb.click()
+                                count_deleted += 1
+                                logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks=f"Surgical Select (Doc): '{row_text.strip()[:60]}'", severity="INFO")
+                        else:
+                            # Preserve everything else (like county.pdf)
+                            logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks=f"Surgical Preserve (Doc): '{row_text.strip()[:60]}'", severity="INFO")
+                    except Exception as e:
+                        logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Warning", remarks=f"Error processing doc row: {e}", severity="WARNING")
+                        continue
+            except Exception as e:
+                logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Error", remarks=f"Document scanning failed: {e}", severity="ERROR")
+            
+            if count_deleted == 0:
+                 print("No existing documents found to clear.")
+                 logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks="No eligible Re-Upload files found for deletion. Preserving current state.", severity="INFO")
+                 return False
+
+            print(f"Clearing {count_deleted} detected documents...")
+            logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks=f"Triggering deletion of {count_deleted} targeted documents.", severity="INFO")
+
+            # 2. Save Form - This actually triggers the deletion
+            self.driver.switch_to.default_content()
+            
+            save_success = self.save_form_rrreview()
+            return save_success
+
+        except Exception as e:
+            logger.log(
+                module="rrreview-clear_existing_documents",
+                order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown",
+                action_type="Error",
+                remarks=f"Error clearing documents: {e}",
+                severity="ERROR"
+            )
+            return False
+
+    def upload_files_for_order(self, order_id: int, tfs_orderid: str) -> bool:
+        """
+        Fetches documents for the order and uploads them via the 'Photos/Documents' tab in two batches:
+        1. Subject PDFs (MLS.pdf, TAX.pdf)
+        2. Comparable Images (anything not .pdf inside comparables folder)
+        """
+        logger.log(module="rrreview-upload_files_for_order", order_id=hybrid_orderid, action_type="Info", remarks=f"Starting upload process for order {order_id}", severity="INFO")
+        try:
+            # 0. Clear existing files first (if any exist)
+            files_were_cleared = self.clear_existing_documents()
+            
+            if files_were_cleared:
+                logger.log(module="rrreview-upload_files_for_order", order_id=hybrid_orderid, action_type="Info", remarks="Previous files were cleared. Proceeding to new uploads.", severity="INFO")
+            else:
+                logger.log(module="rrreview-upload_files_for_order", order_id=hybrid_orderid, action_type="Info", remarks="No previous files required clearing. Proceeding directly.", severity="INFO")
+
+            # 1. Fetch upload data
+            data = fetch_upload_data(self, order_id)
+            if not data:
+                logger.log(
+                    module="rrreview-upload_files_for_order",
+                    order_id=hybrid_orderid,
+                    action_type="Error",
+                    remarks="Critical: No upload data (JSON) retrieved for this order.",
+                    severity="ERROR"
+                )
+                return False
+            
+            logger.log(module="rrreview-upload_files_for_order", order_id=hybrid_orderid, action_type="Info", remarks=f"Retrieved upload data for {order_id}. Processing files...", severity="INFO")
+
+            documents = data.get("documents", [])
+            comparables_folder = data.get("comparables_folder", "")
+            
+            # --- Single Batch: Subject PDFs + Comp Images ---
+            all_files_to_upload = []
+            
+            # 1. Subject PDFs (Strictly MLS.pdf and TAX.pdf only, excluding mls_tax.pdf)
+            target_pdfs = ["mls.pdf", "tax.pdf"]
+            for doc in documents:
+                doc_path = doc.get("path")
+                if doc_path and os.path.exists(doc_path) and doc_path.lower().endswith(".pdf"):
+                    basename = os.path.basename(doc_path).lower()
+                    if basename in target_pdfs:
+                        all_files_to_upload.append(doc_path)
+                    else:
+                        logger.log(module="rrreview-upload_files_for_order", order_id=hybrid_orderid, action_type="Info", remarks=f"Skipping non-target PDF: {basename}", severity="INFO")
+                elif doc_path and not os.path.exists(doc_path):
+                     logger.log(module="rrreview-upload_files_for_order", order_id=hybrid_orderid, action_type="Error", remarks=f"File missing on disk: {doc_path}", severity="ERROR")
+            
+            # 2. Comparable Images
+            if os.path.exists(comparables_folder):
+                for fname in os.listdir(comparables_folder):
+                    if fname.lower() == "thumbs.db":
+                        continue
+                    if not fname.lower().endswith(".pdf"):
+                        full_path = os.path.join(comparables_folder, fname)
+                        if os.path.isfile(full_path):
+                            all_files_to_upload.append(full_path)
+            
+            if not all_files_to_upload:
+                 logger.log(module="rrreview-upload_files_for_order", order_id=hybrid_orderid, action_type="Info", remarks="No valid files (PDFs/Images) identified for upload.", severity="INFO")
+                 return True
+
+            print(f"Starting upload of {len(all_files_to_upload)} new files...")
+            logger.log(module="rrreview-upload_files_for_order", order_id=hybrid_orderid, action_type="Info", remarks=f"Ready to batch upload {len(all_files_to_upload)} files.", severity="INFO")
+
+            # Helper function to perform the upload session
+            def perform_single_upload(files):
+                logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Info", remarks=f"Starting single batch session for {len(files)} files.", severity="INFO")
+                
+                self.driver.switch_to.default_content()
+                try:
+                    iframe = WebDriverWait(self.driver, 10).until(
+                        EC.presence_of_element_located((By.ID, "iframeBPOBPOEntryFormTab5"))
+                    )
+                    self.driver.switch_to.frame(iframe)
+                except Exception as e:
+                    logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Error", remarks=f"Iframe Tab 5 switch failed: {e}", severity="ERROR")
+                    return False
+
+                # Open Popup
+                try:
+                    upload_btn = WebDriverWait(self.driver, 10).until(
+                        EC.element_to_be_clickable((By.ID, "myBtn"))
+                    )
+                    self.driver.execute_script("arguments[0].scrollIntoView({block:'center'});", upload_btn)
+                    upload_btn.click()
+                    time.sleep(2)
+                except Exception as e:
+                    logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Error", remarks=f"Fail to open upload dialog: {e}", severity="ERROR")
+                    return False
+
+                # Switch to uploader iframe - use specific source matching standalone bot
+                try:
+                    uploader_iframe = WebDriverWait(self.driver, 10).until(
+                        EC.frame_to_be_available_and_switch_to_it((By.XPATH, "//iframe[@src='https://legacy.rrreview.com/bpo/FormEntry/new/Uploader.aspx']"))
+                    )
+                except Exception as e:
+                    logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Warning", remarks=f"Primary uploader iframe match failed, trying fallback. Error: {e}", severity="INFO")
+                    try:
+                         uploader_iframe = WebDriverWait(self.driver, 5).until(
+                            EC.presence_of_element_located((By.CSS_SELECTOR, "div#MyDialog iframe"))
+                         )
+                         self.driver.switch_to.frame(uploader_iframe)
+                    except:
+                        logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Error", remarks="Both primary and fallback uploader iframe matches failed.", severity="ERROR")
+                        return False
+
+                # Send Files
+                try:
+                     file_input = WebDriverWait(self.driver, 5).until(
+                        EC.presence_of_element_located((By.ID, "file"))
+                     )
+                     file_input.send_keys("\n".join(files))
+                     logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Info", remarks=f"Queued {len(files)} files into uploader.", severity="INFO")
+                     time.sleep(3)
+                except Exception as e:
+                    logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Error", remarks=f"Failed to queue files: {e}", severity="ERROR")
+                    return False
+
+                # Start Upload
+                try:
+                    start_btn = WebDriverWait(self.driver, 10).until(
+                        EC.element_to_be_clickable((By.CSS_SELECTOR, "button.start"))
+                    )
+                    start_btn.click()
+                    logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Info", remarks="Upload started. Waiting for server confirmation...", severity="INFO")
+                    
+                    # Wait for explicit success message in the uploader list
+                    try:
+                        WebDriverWait(self.driver, 180).until(
+                            EC.visibility_of_element_located((By.XPATH, "//td[contains(text(), 'Files Uploaded Successfully:')]"))
+                        )
+                        print("Upload Success..")
+                        logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Success", remarks="Server confirmed upload success. Starting fast batch verification...", severity="INFO")
+                        
+                        # High-speed batch verification loop
+                        for _ in range(25): # Try for ~50 seconds
+                            uploader_text = self.driver.find_element(By.TAG_NAME, "body").text.lower()
+                            missing_in_uploader = []
+                            for f_path in files:
+                                fname = os.path.basename(f_path).lower()
+                                if fname not in uploader_text:
+                                    missing_in_uploader.append(fname)
+                            
+                            if not missing_in_uploader:
+                                logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Success", remarks=f"All {len(files)} files verified in uploader UI.", severity="INFO")
+                                break
+                            
+                            logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Info", remarks=f"Sync wait: {len(missing_in_uploader)} files pending in uploader UI...", severity="INFO")
+                            time.sleep(2)
+                        
+                        logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Info", remarks="Verification phase complete. Closing uploader modal.", severity="INFO")
+                    except Exception as e:
+                        logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Warning", remarks=f"Uploader verification loop encountered an error: {e}", severity="INFO")
+              
+                    close_btn = None
+                    try:
+                        close_btn = WebDriverWait(self.driver, 180).until(
+                             EC.element_to_be_clickable((By.XPATH, "//button[@class='closeWidget' and contains(@style, 'block')]"))
+                        )
+                    except:
+                        logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Info", remarks="'closeWidget' not present, checking for legacy 'Close Uploader' button.", severity="INFO")
+                        close_btn = WebDriverWait(self.driver, 10).until(
+                             EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Close Uploader')]"))
+                        )
+                    
+                    if close_btn:
+                        close_btn.click()
+                        logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Success", remarks="Uploader modal closed successfully.", severity="INFO")
+                        time.sleep(2)
+                        return True
+                    return False
+                except Exception as e:
+                    logger.log(module="rrreview-perform_single_upload", order_id=hybrid_orderid, action_type="Error", remarks=f"Critical error during upload or verification: {e}", severity="ERROR")
+                    return False
+
+            # --- Execute Upload ---
+            if perform_single_upload(all_files_to_upload):
+                time.sleep(10) # Increased buffer for portal stability
+                sync_success = self.select_file_types_in_portal(all_files_to_upload)
+                
+                # Final Save
+                save_success = self.save_form_rrreview()
+                
+                if sync_success and save_success:
+                    logger.log(module="rrreview-upload_files_for_order", order_id=hybrid_orderid, action_type="Success", remarks="Files uploaded and selected successfully", severity="INFO")
+                    return True
+                else:
+                    logger.log(module="rrreview-upload_files_for_order", order_id=hybrid_orderid, action_type="Error", remarks=f"Post-upload steps failed (Sync: {sync_success}, Save: {save_success})", severity="ERROR")
+                    return False
+            else:
+                return False
+
+        except Exception as e:
+            logger.log(
+                module="rrreview-upload_files_for_order",
+                order_id=hybrid_token if hybrid_token else hybrid_orderid,
+                action_type="Exception",
+                remarks=f"Exception in upload_files_for_order: {e}",
+                severity="ERROR"
+            )
+            return False
+
+    def select_file_types_in_portal(self, uploaded_files=[]):
+        """
+        Iterates through tables and selects appropriate document types based on filenames.
+        Includes a wait loop to ensure all specifically uploaded files have been processed by the portal.
+        """
+        expected_count = len(uploaded_files)
+        
+        logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Info", remarks=f"Starting document type synchronization for {expected_count} files.", severity="INFO")
+        try:
+            self.driver.switch_to.default_content()
+            iframe = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.ID, "iframeBPOBPOEntryFormTab5"))
+            )
+            self.driver.switch_to.frame(iframe)
+
+            # --- Absolute Specific-File Synchronization ---
+            if expected_count > 0:
+                logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Info", remarks=f"Waiting for {expected_count} files to populate in portal grid...", severity="INFO")
+                max_retries = 30 # Up to 180 seconds total
+                known_found_files = set()
+                
+                for i in range(max_retries):
+                    self.driver.switch_to.default_content()
+                    iframe = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.ID, "iframeBPOBPOEntryFormTab5")))
+                    self.driver.switch_to.frame(iframe)
+
+                    # Get entire page text as a single blob for fastest search
+                    body_text = self.driver.find_element(By.TAG_NAME, "body").text.lower()
+                    
+                    missing_files = []
+                    for f_path in uploaded_files:
+                        fname = os.path.basename(f_path).lower()
+                        # Use flexible matching for stems
+                        name_stem = fname.split('.')[0]
+                        if name_stem in body_text:
+                            if fname not in known_found_files:
+                                logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Info", remarks=f"File detected in portal grid: '{fname}'", severity="INFO")
+                                
+                                known_found_files.add(fname)
+                        else:
+                            missing_files.append(fname)
+                    
+                    if not missing_files:
+                        logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Success", remarks=f"All {expected_count} files are fully populated in the portal grid.", severity="INFO")
+                        break
+                    
+                    # Periodic frame content refresh (not a full page refresh)
+                    if i > 0 and i % 5 == 0:
+                        logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Info", remarks=f"Synchronization stalled ({len(known_found_files)}/{expected_count}). Refreshing tab context...", severity="INFO")
+
+                    logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Info", remarks=f"Population Status: {len(known_found_files)}/{expected_count} found. Waiting for: {missing_files}...", severity="INFO")
+                    time.sleep(6) # Slightly longer sleep for portal refresh
+                else:
+                    logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Warning", remarks=f"Synchronization timed out. Proceeding with {len(known_found_files)}/{expected_count} files.", severity="WARNING")
+                    # In a high-standard flow, maybe we should fail here if files are missing?
+                    # But if we found some, we might still try to fill.
+                    # For now, let's track which ones we actually find vs expected.
+
+            # Track which expected files were successfully selected
+            selected_files = set()
+            
+            # Mappings (using basenames)
+            file_type_map = {
+                "tax.pdf": "Tax Records",
+                "mls.pdf": "MLS Sheet",
+                "s1": "Sale 1 Photo",
+                "s2": "Sale 2 Photo",
+                "s3": "Sale 3 Photo",
+                "a1": "Listing 1 Photo",
+                "a2": "Listing 2 Photo",
+                "a3": "Listing 3 Photo",
+            }
+
+            # 1. Photos (dlPhotos table)
+            photo_containers = self.driver.find_elements(By.XPATH, "//table[@id='dlPhotos']//td[.//select]")
+            logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Info", remarks=f"Processing {len(photo_containers)} photo containers", severity="INFO")
+            
+            for container in photo_containers:
+                try:
+                    cell_text = container.text.lower()
+                    filename = ""
+                    for key in file_type_map.keys():
+                        if ".pdf" not in key and key in cell_text:
+                            filename = key
+                            break
+                    
+                    if not filename:
+                        continue
+
+                    select_el = container.find_element(By.TAG_NAME, "select")
+                    dropdown = Select(select_el)
+                    current_val = dropdown.first_selected_option.text.strip()
+                    
+                    if current_val == "None Selected" or current_val == "":
+                        for key, val in file_type_map.items():
+                            if ".pdf" not in key and key in filename:
+                                dropdown.select_by_visible_text(val)
+                                logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Success", remarks=f"Selected '{val}' for photo '{filename}'", severity="INFO")
+                                selected_files.add(filename)
+                                break
+                    else:
+                        # Already has a value, count it as selected
+                        selected_files.add(filename)
+                except Exception as e:
+                    logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Error", remarks=f"Error selecting type for photo container: {e}", severity="WARNING")
+
+            # 2. Documents (pnlDocsGrid)
+            doc_rows = self.driver.find_elements(By.XPATH, "//div[@id='pnlDocsGrid']//table//tr[.//select]")
+            logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Info", remarks=f"Processing {len(doc_rows)} doc rows", severity="INFO")
+            for row in doc_rows:
+                try:
+                    row_text = row.text.lower()
+                    select_el = row.find_element(By.TAG_NAME, "select")
+                    dropdown = Select(select_el)
+                    
+                    current_val = dropdown.first_selected_option.text.strip()
+                    if current_val == "None Selected" or current_val == "":
+                        for key, val in file_type_map.items():
+                            if ".pdf" in key and key in row_text:
+                                dropdown.select_by_visible_text(val)
+                                logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Success", remarks=f"Selected '{val}' for row matching '{key}'", severity="INFO")
+                                selected_files.add(key)
+                                break
+                    else:
+                        # Already has a value, check which one it matches
+                        for key in file_type_map.keys():
+                            if ".pdf" in key and key in row_text:
+                                selected_files.add(key)
+                                break
+                except Exception as e:
+                    logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Error", remarks=f"Error selecting type for doc row: {e}", severity="WARNING")
+
+            # Final Satisfaction Check
+            all_satisfied = True
+            for f_path in uploaded_files:
+                fname = os.path.basename(f_path).lower()
+                stem = fname.split('.')[0]
+                # Check for either the stem (photos) or full name (pdfs) in selected_files
+                matched = False
+                for s in selected_files:
+                    if s in fname:
+                        matched = True
+                        break
+                if not matched:
+                    logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Warning", remarks=f"File '{fname}' was not successfully matched to a type dropdown.", severity="INFO")
+                    all_satisfied = False
+
+            if all_satisfied:
+                logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Success", remarks="All uploaded files successfully mapped and selected.", severity="INFO")
+            else:
+                logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Warning", remarks=f"Only partial success in file mapping. ({len(selected_files)}/{expected_count})", severity="INFO")
+            
+            return all_satisfied
+
+        except Exception as e:
+            logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Error", remarks=f"Critical error in select_file_types_in_portal: {e}", severity="ERROR")
+            return False
+

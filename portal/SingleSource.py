@@ -634,8 +634,10 @@ def SingleSource_formopen_fill(self, formtype_value, session=None, merged_json=N
             )
             
             if is_qc :   #qc order
-                logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="QC order no status change needed",severity="INFO")
+                logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="QC order status change ",severity="INFO")
+                tfs_statuschange(tfs_orderid , "82", "17", "14")
             else:
+                logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="fresh or redo order status change ",severity="INFO")
                 tfs_statuschange(tfs_orderid , "26", "5", "20")
 
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)

@@ -1098,6 +1098,207 @@ def rrr_fill_repair_details(driver, repair_list):
         except:
             pass
 
+def rrr_select_hoa_amenities(driver, amenities_str, id_prefix, mode="id"):
+    """
+    Specialized helper for RRR HOA Amenities checkboxes.
+    Maps text values to index-based IDs with a robust JS click and label fallback.
+    CLEARS all checkboxes first, then selects only the ones from backend data.
+    """
+    if not amenities_str:
+        return True
+
+    print(f"--- [DEBUG] HOA Amenities processing started for: '{amenities_str}' using prefix '{id_prefix}'")
+
+    # Portal index mapping (Order from HTML: Water, Cable, Trash, Maintenance, Security, Mowing, Snow Removal, Recreational Facilities)
+    rrr_hoa_map = {
+        "Water": "0",
+        "Cable": "1",
+        "Trash": "2",
+        "Maintenance": "3",
+        "Security": "4",
+        "Mowing": "5",
+        "Snow Removal": "6",
+        "Recreational Facilities": "7"
+    }
+    
+    # Create a lower-case version of the map for easier matching
+    lookup_map = {k.lower(): v for k, v in rrr_hoa_map.items()}
+
+    # Process input: handle string "water, trash" or list
+    if isinstance(amenities_str, str):
+        selected_items = [item.strip().lower() for item in amenities_str.split(",") if item.strip()]
+    elif isinstance(amenities_str, list):
+        selected_items = [str(item).strip().lower() for item in amenities_str]
+    else:
+        selected_items = []
+
+    # Stabilization sleep
+    time.sleep(2)
+
+    # STEP 1: Uncheck ALL checkboxes first (clean slate)
+    print(f"--- [DEBUG] [HOA] Clearing all checkboxes first...")
+    for index in rrr_hoa_map.values():
+        checkbox_id = f"{id_prefix}_{index}"
+        try:
+            checkbox = driver.find_element(By.ID, checkbox_id)
+            if checkbox.is_selected():
+                driver.execute_script("arguments[0].click();", checkbox)
+                print(f"--- [DEBUG] [HOA] Unchecked checkbox ID: {checkbox_id}")
+        except Exception as e:
+            # Checkbox might not exist, skip
+            pass
+
+    # STEP 2: Select only the checkboxes from backend data
+    success = True
+    for item in selected_items:
+        found = False
+        # 1. Attempt ID-based selection (Robust JS click + Scrolling)
+        # item is already lowercased, check against lookup_map
+        if item in lookup_map:
+            index = lookup_map[item]
+            checkbox_id = f"{id_prefix}_{index}"
+            try:
+                wait = WebDriverWait(driver, 5)
+                checkbox = wait.until(EC.presence_of_element_located((By.ID, checkbox_id)))
+                
+                # Scroll and Click via JS
+                driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", checkbox)
+                time.sleep(0.5)
+                
+                if not checkbox.is_selected():
+                    driver.execute_script("arguments[0].click();", checkbox)
+                    print(f"--- [DEBUG] [ID Path] Selected '{item}' via JS ID: {checkbox_id}")
+                else:
+                    print(f"--- [DEBUG] [ID Path] '{item}' was already selected.")
+                found = True
+            except Exception as e:
+                print(f"--- [DEBUG] [ID Path] Failed for {item} ({checkbox_id}): {e}")
+
+        # 2. Attempt Label-based matching (robust fallback)
+        if not found:
+            print(f"--- [DEBUG] [Label Fallback] Trying label match for '{item}'...")
+            try:
+                labels = driver.find_elements(By.TAG_NAME, "label")
+                for label in labels:
+                    if item.lower() in label.text.lower():
+                        label_for = label.get_attribute("for")
+                        if label_for:
+                            checkbox = driver.find_element(By.ID, label_for)
+                            if not checkbox.is_selected():
+                                driver.execute_script("arguments[0].click();", checkbox)
+                            print(f"--- [DEBUG] [Label Path] Selected '{item}' via label match: '{label.text}' (ID: {label_for})")
+                            found = True
+                            break
+            except Exception as e:
+                print(f"--- [DEBUG] [Label Path] Failed for {item}: {e}")
+        if not found:
+            print(f"--- [DEBUG] WARNING: Could not find checkbox for HOA Amenity: '{item}'")
+            # success = False 
+    
+    return True
+
+
+def rrr_select_amenities(driver, values, locator, selector="xpath"):
+    """
+    Robust helper for RRReview amenities (Subject and Comps).
+    Handles both ListBox (select) and CheckBoxList (table of checkboxes with labels).
+    """
+    if not values:
+        return True
+    
+    # Ensure values is a list
+    if isinstance(values, str):
+        selected_items = [v.strip().lower() for v in values.split(",") if v.strip()]
+    elif isinstance(values, list):
+        selected_items = [str(v).strip().lower() for v in values]
+    else:
+        selected_items = []
+        
+    if not selected_items:
+        return True
+
+    try:
+        element = find_elem(driver, selector, locator)
+        tag_name = element.tag_name.lower()
+        
+        if tag_name == "select":
+            # Multi-select ListBox
+            dropdown = Select(element)
+            if dropdown.is_multiple:
+                dropdown.deselect_all()
+            
+            for item in selected_items:
+                found = False
+                for option in dropdown.options:
+                    if item in option.text.lower():
+                        dropdown.select_by_visible_text(option.text)
+                        found = True
+                        print(f"--- [DEBUG] Selected ListBox option: '{option.text}'")
+                if not found:
+                    print(f"--- [DEBUG] Could not find ListBox option for: '{item}'")
+        else:
+            # CheckBoxList - search for labels inside/near the element
+            
+            # STEP 1: Clear existing selections first (Clean Slate)
+            try:
+                existing_checkboxes = element.find_elements(By.TAG_NAME, "input")
+                for cb in existing_checkboxes:
+                    if cb.get_attribute("type") == "checkbox" and cb.is_selected():
+                        driver.execute_script("arguments[0].click();", cb)
+                print(f"--- [DEBUG] Cleared existing checkboxes in container: {locator}")
+            except Exception as e:
+                print(f"--- [DEBUG] Notice: Container clear skipped or failed: {e}")
+
+            # STEP 2: Select the ones from backend data
+            for item in selected_items:
+                found = False
+                try:
+                    # Search specifically within the container for better performance and accuracy
+                    labels = element.find_elements(By.TAG_NAME, "label")
+                    for label in labels:
+                        # CRITICAL: Remove spaces from both sides for flexible matching
+                        # Backend: "Guest House" | Portal HTML: "GuestHouse"
+                        # Without this normalization, the match FAILS and form becomes invalid
+                        item_normalized = item.replace(" ", "")
+                        label_normalized = label.text.lower().replace(" ", "")
+                        if item_normalized in label_normalized:
+                            label_for = label.get_attribute("for")
+                            if label_for:
+                                checkbox = driver.find_element(By.ID, label_for)
+                                if not checkbox.is_selected():
+                                    driver.execute_script("arguments[0].click();", checkbox)
+                                print(f"--- [DEBUG] Selected Checkbox via label: '{label.text}' (ID: {label_for})")
+                                found = True
+                                break
+                    
+                    if not found:
+                        # Fallback: search all labels on page if element search failed
+                        all_labels = driver.find_elements(By.TAG_NAME, "label")
+                        for label in all_labels:
+                            if item in label.text.lower():
+                                label_for = label.get_attribute("for")
+                                if label_for:
+                                    # locator might be an xpath like //*[@id='rrrSale1_lbAmenities']
+                                    base_id = locator.replace("//*[@id='", "").replace("']", "")
+                                    prefix = base_id.split("_")[0]
+                                    if prefix in label_for:
+                                        checkbox = driver.find_element(By.ID, label_for)
+                                        if not checkbox.is_selected():
+                                            driver.execute_script("arguments[0].click();", checkbox)
+                                        print(f"--- [DEBUG] Selected Checkbox via global label fallback: '{label.text}' (ID: {label_for})")
+                                        found = True
+                                        break
+                except Exception as e:
+                    print(f"--- [DEBUG] Error matching label for '{item}': {e}")
+                
+                if not found:
+                    print(f"--- [DEBUG] Could not find checkbox/label for amenity: '{item}'")
+
+    except Exception as e:
+        print(f"--- [DEBUG] Error in rrr_select_amenities: {e}")
+        return False
+        
+    return True
 
 
 def save_form(driver):
