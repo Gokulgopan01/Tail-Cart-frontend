@@ -13,6 +13,11 @@ interface CartItem {
   product_price: number;
   product_image?: string;
   status: string;
+  product_details?: {
+    product_name: string;
+    selling_price: string;
+    thumbnail_image: string;
+  };
 }
 
 @Component({
@@ -68,12 +73,18 @@ export class CheckoutComponent implements OnInit {
     const url = `${this.API_BASE_URL}/user/cart/?user_id=${this.userId}`;
     this.http.get<CartItem[]>(url, this.getHeaders()).subscribe({
       next: (res) => {
-        this.cartItems = res.map(item => ({
-          ...item,
-          product_image: item.product_image?.startsWith('http')
-            ? item.product_image
-            : `http://127.0.0.1:8000${item.product_image?.startsWith('/') ? '' : '/'}${item.product_image}`
-        }));
+        this.cartItems = res.map(item => {
+          const details = item.product_details;
+          const rawImageUrl = details?.thumbnail_image || item.product_image;
+          return {
+            ...item,
+            product_name: details?.product_name || item.product_name,
+            product_price: details ? parseFloat(details.selling_price) : item.product_price,
+            product_image: rawImageUrl?.startsWith('http')
+              ? rawImageUrl
+              : `http://127.0.0.1:8000${rawImageUrl?.startsWith('/') ? '' : '/'}${rawImageUrl}`
+          };
+        });
         this.calculateTotal();
         this.loading = false;
       },

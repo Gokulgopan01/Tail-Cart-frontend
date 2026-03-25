@@ -11,107 +11,121 @@
     </div>
   </div>
 
+  <!-- Search Bar Section -->
+  <div class="search-section">
+    <div class="container">
+      <div class="search-bar-wrapper">
+        <i class="fas fa-search search-icon-left"></i>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search your orders here" class="search-input">
+        <button class="search-btn-rounded">
+          Search
+        </button>
+      </div>
+    </div>
+  </div>
+
   <ng-container *ngIf="!loading; else loadingTpl">
     <div class="orders-main container">
 
-      <div class="empty-orders-view" *ngIf="orders.length === 0">
+      <div class="empty-orders-view" *ngIf="flattenedItems.length === 0">
         <i class="fas fa-box-open"></i>
-        <h3>No orders yet</h3>
+        <h3>No orders found</h3>
         <button class="shop-btn" routerLink="/shop">Shop Now</button>
       </div>
 
-      <div class="orders-list" *ngIf="orders.length > 0">
-        <div class="order-card luxury-card" *ngFor="let order of orders; let idx = index">
+      <div class="orders-list" *ngIf="flattenedItems.length > 0">
+        <div class="order-product-card" *ngFor="let item of flattenedItems">
 
-          <!-- Order Header -->
-          <div class="order-header">
-            <div class="o-meta">
-              <span class="o-number">Order #{{ idx + 1001 }}</span>
-              <span class="o-items-count">{{ order.items.length }} Item{{ order.items.length !== 1 ? 's' : '' }}</span>
+          <div class="card-body">
+            <div class="product-img">
+              <img [src]="item.product.thumbnail_image" [alt]="item.product.product_name"
+                onerror="this.src='assets/images/photo2.jpg'">
             </div>
-            <div class="o-total">
-              ₹{{ order.total_price }}
+            <div class="product-info">
+              <h3 class="product-name">{{ item.product.product_name }}</h3>
+              <p class="product-meta" *ngIf="item.product.color || item.product.size">
+                <span *ngIf="item.product.color">Color: {{ item.product.color }}</span>
+                <span *ngIf="item.product.size"> Size: {{ item.product.size }}</span> |
+                <span class="price-val">₹{{ item.price }}</span>
+              </p>
+              <p class="product-price" *ngIf="!item.product.color && !item.product.size">
+                Price: ₹{{ item.price }}
+              </p>
+
+            <div class="status-info" [class.cancelled]="item.orderStatus === 'Cancelled'">
+                <span class="status-dot"></span>
+                <span class="status-text">
+                  <ng-container *ngIf="item.orderStatus === 'Cancelled'; else normalStatus">
+                    Cancelled on {{ item.orderDate | date:'MMM dd' }}
+                  </ng-container>
+                  <ng-template #normalStatus>
+                    {{ item.orderStatus }} <span *ngIf="item.orderStatus === 'Pending' || item.orderStatus === 'Out for Delivery'">on</span> {{ getStatusDate(item) | date:'MMM dd' }}
+                  </ng-template>
+                </span>
+                <p class="status-desc" *ngIf="item.orderStatus === 'Cancelled'">
+                  Your order was cancelled as per your request.
+                </p>
+              </div>
             </div>
           </div>
 
-          <!-- Items List (Preview) -->
-          <div class="order-items-preview">
-            <div class="o-item-row" *ngFor="let item of order.items">
-              <div class="o-item-img">
-                <img [src]="item.product.thumbnail_image" alt="Item" onerror="this.src='assets/images/photo2.jpg'">
-              </div>
-              <div class="o-item-details">
-                <h4 class="o-item-name">{{ item.product.product_name }}</h4>
-                <span class="o-item-price">₹{{ item.price }} <small>x{{ item.quantity }}</small></span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Status Toggle -->
-          <div class="status-toggle-wrapper">
-            <button class="btn-see-status" (click)="toggleStatus(order)">
-              Track Order
-              <i class="fas fa-chevron-down" [class.rotated]="order.showStatus"></i>
+          <div class="card-footer" *ngIf="item.orderStatus !== 'Cancelled'">
+            <button class="action-link" (click)="openTracking(item)">
+              <i class="fas fa-map-marker-alt"></i> Track Order
+            </button>
+            <div class="v-separator"></div>
+            <button class="action-link" (click)="cancelOrder(item.orderId)">
+                <i class="fas fa-times-circle"></i> Cancel Order
+            </button>
+            <div class="v-separator"></div>
+            <button class="action-link">
+              <i class="fas fa-star"></i> Rate & Review Product
             </button>
           </div>
 
-          <!-- Status Expansion (Transplanted from Cart) -->
-          <div class="status-expansion" *ngIf="order.showStatus">
-            <div class="status-timeline-container" *ngIf="isNormalStatus(order.status); else altStatus">
-              <div class="t-track"></div>
-              <div class="t-track-completed" [style.width]="(getStatusIndex(order.status) * 25) + '%'"></div>
-
-              <div class="t-step" [class.completed]="getStatusIndex(order.status) >= 0"
-                [class.active-box]="order.status === 'Pending' || order.status === 'Processing' || !order.status">
-                <div class="t-dot-outer">
-                  <div class="t-dot">
-                    <i class="fas fa-box"
-                      *ngIf="order.status === 'Pending' || order.status === 'Processing' || !order.status"></i>
-                  </div>
-                </div>
-                <span class="t-label">Processing</span>
-              </div>
-
-              <div class="t-step" [class.completed]="getStatusIndex(order.status) >= 2"
-                [class.active-box]="order.status === 'Shipped'">
-                <div class="t-dot-outer">
-                  <div class="t-dot">
-                    <i class="fas fa-truck-loading" *ngIf="order.status === 'Shipped'"></i>
-                  </div>
-                </div>
-                <span class="t-label">Shipped</span>
-              </div>
-
-              <div class="t-step" [class.completed]="getStatusIndex(order.status) >= 3"
-                [class.active-box]="order.status === 'Out for Delivery'">
-                <div class="t-dot-outer">
-                  <div class="t-dot">
-                    <i class="fas fa-motorcycle" *ngIf="order.status === 'Out for Delivery'"></i>
-                  </div>
-                </div>
-                <span class="t-label">Out for Delivery</span>
-              </div>
-
-              <div class="t-step" [class.completed]="getStatusIndex(order.status) >= 4"
-                [class.active-box]="order.status === 'Delivered'">
-                <div class="t-dot-outer">
-                  <div class="t-dot">
-                    <i class="fas fa-box-open" *ngIf="order.status === 'Delivered'"></i>
-                  </div>
-                </div>
-                <span class="t-label">Delivered</span>
-              </div>
-            </div>
-            <ng-template #altStatus>
-              <div class="alt-status-badge">Order Status: <strong>{{ order.status }}</strong></div>
-            </ng-template>
-          </div>
-
+          <!-- Legacy Expanded Status (hidden, using modal now) -->
         </div>
       </div>
 
     </div>
   </ng-container>
+
+  <!-- Bottom Tracking Modal -->
+  <div class="tracking-modal-overlay" *ngIf="showTrackingModal" (click)="closeTracking()">
+    <div class="tracking-bottom-sheet" (click)="$event.stopPropagation()">
+      <div class="sheet-header">
+        <div class="drawer-handle"></div>
+        <h3>Track Order</h3>
+        <button class="close-sheet" (click)="closeTracking()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="sheet-body" *ngIf="selectedTrackingItem">
+        <div class="sheet-product-info">
+            <img [src]="selectedTrackingItem.product.thumbnail_image" class="sheet-img">
+            <div>
+                <h4>{{ selectedTrackingItem.product.product_name }}</h4>
+                <p>Order ID: #{{ selectedTrackingItem.orderId }}</p>
+            </div>
+        </div>
+
+        <div class="timeline-container">
+          <div class="timeline-item" *ngFor="let step of selectedTrackingItem.timeline; let last = last" [class.completed]="isStepCompleted(selectedTrackingItem, step.label)">
+            <div class="timeline-marker">
+              <div class="dot" [class.active]="isStepCompleted(selectedTrackingItem, step.label)">
+                <i class="fas fa-check" *ngIf="isStepCompleted(selectedTrackingItem, step.label)"></i>
+              </div>
+              <div class="line" *ngIf="!last"></div>
+            </div>
+            <div class="timeline-content">
+              <span class="label">{{ step.label }}</span>
+              <span class="date" *ngIf="step.date">{{ step.date | date:'EEE, dd MMM' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-full-green" (click)="closeTracking()">Done</button>
+      </div>
+    </div>
+  </div>
 
 </div>
 

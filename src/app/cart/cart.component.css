@@ -16,11 +16,47 @@
   display: flex;
   align-items: flex-end;
   border-radius: 0 0 24px 24px;
-  margin: -85px -15px 25px -15px;
+  margin: -85px -15px 0 -15px; /* Removed bottom margin */
   overflow: hidden;
   background-image: url('/assets/images/cart_banner.png');
   background-size: cover;
   background-position: center 30%;
+}
+
+/* Free Delivery Hero Banner */
+.free-delivery-hero-banner {
+  background: linear-gradient(135deg, #10b981, #059669);
+  padding: 12px 0;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  margin: 0 -15px 25px -15px; /* Match full width of container */
+  border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.fd-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.fd-content i {
+  font-size: 1.1rem;
+  animation: bounceRight 2s infinite;
+}
+
+@keyframes bounceRight {
+  0%, 20%, 50%, 80%, 100% {transform: translateX(0);}
+  40% {transform: translateX(-5px);}
+  60% {transform: translateX(-3px);}
+}
+
+.fd-content strong {
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .banner-overlay {

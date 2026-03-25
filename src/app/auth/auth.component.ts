@@ -47,6 +47,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
   errorMessage = signal('');
   successMessage = signal('');
   showPassword = false;
+  isScrolled = signal(false);
 
   showSuccessAnimation = signal(false);
   forgotMode = signal(false);
@@ -83,6 +84,50 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loginData.email_address = savedEmail;
       this.rememberMe = true;
     }
+
+    // Add scroll listener for footer scroll-top button
+    window.addEventListener('scroll', this.checkScroll.bind(this));
+  }
+
+  private checkScroll(): void {
+    this.isScrolled.set(window.scrollY > 300);
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  private getErrorMessage(error: any): string {
+    if (!error) return 'An unknown error occurred.';
+
+    // If it's a simple string error from our own logic
+    if (typeof error === 'string') return error;
+
+    // Check for backend error object
+    const errorData = error.error;
+    if (!errorData) return error.message || 'An unknown error occurred.';
+
+    // Case 1: errorData is a string
+    if (typeof errorData === 'string') return errorData;
+
+    // Case 2: errorData has a 'message' or 'detail' field (common in DRF)
+    if (errorData.message) return errorData.message;
+    if (errorData.detail) return errorData.detail;
+
+    // Case 3: errorData is an object with field-specific errors (e.g., {"email_address": ["..."]})
+    if (typeof errorData === 'object') {
+      const messages: string[] = [];
+      for (const key in errorData) {
+        if (Array.isArray(errorData[key])) {
+          messages.push(`${key}: ${errorData[key].join(', ')}`);
+        } else if (typeof errorData[key] === 'string') {
+          messages.push(`${key}: ${errorData[key]}`);
+        }
+      }
+      if (messages.length > 0) return messages.join(' | ');
+    }
+
+    return error.message || 'An unknown error occurred.';
   }
 
   ngAfterViewInit(): void {
@@ -95,14 +140,6 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice'
       }
-    });
-
-    this.animation = lottie.loadAnimation({
-      container: this.lottieContainer?.nativeElement,
-      renderer: 'svg',
-      loop: true,
-      autoplay: false,
-      path: 'assets/Running_Cat.json'
     });
   }
 
@@ -190,9 +227,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
           },
           error: (error) => {
             this.stopLoader();
-            this.errorMessage.set(
-              error.error?.message || 'Login failed. Please check your credentials.'
-            );
+            this.errorMessage.set(this.getErrorMessage(error));
           }
         });
 
@@ -229,9 +264,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
           },
           error: (error) => {
             this.stopLoader();
-            this.errorMessage.set(
-              error.error?.message || 'Registration failed. Please try again.'
-            );
+            this.errorMessage.set(this.getErrorMessage(error));
           }
         });
     }
@@ -260,7 +293,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       error: (error) => {
         this.stopLoader();
-        this.errorMessage.set(error.error?.message || 'Error occurred. Please try again.');
+        this.errorMessage.set(this.getErrorMessage(error));
       }
     });
   }
@@ -295,7 +328,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       error: (error) => {
         this.stopLoader();
-        this.errorMessage.set(error.error?.message || 'Invalid OTP or reset failed.');
+        this.errorMessage.set(this.getErrorMessage(error));
       }
     });
   }

@@ -294,6 +294,24 @@ export class DocumentsComponent implements OnInit {
       filtered = filtered.filter(remainder => remainder.statusInfo?.type === this.selectedStatus);
     }
 
+    // Sort by status priority: overdue first, then upcoming, scheduled, and completed last
+    const statusPriority: { [key: string]: number } = {
+      'overdue': 0,
+      'upcoming': 1,
+      'scheduled': 2,
+      'completed': 3
+    };
+
+    filtered.sort((a, b) => {
+      const priorityA = statusPriority[a.statusInfo?.type || 'scheduled'] ?? 2;
+      const priorityB = statusPriority[b.statusInfo?.type || 'scheduled'] ?? 2;
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+      }
+      // Within the same status, sort by date (earliest first)
+      return new Date(a.remainder_date).getTime() - new Date(b.remainder_date).getTime();
+    });
+
     this.filteredRemainders = filtered;
     this.updateBannerCounts();
   }

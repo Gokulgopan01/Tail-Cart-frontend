@@ -17,6 +17,9 @@ import { MyOrdersComponent } from './my-orders/my-orders.component';
 export const routes: Routes = [
 
   { path: 'auth', component: AuthComponent },
+  { path: '', component: AuthComponent },
+  { path: '**', component: AuthComponent },
+  
   { path: 'home', component: HomeComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'shop', component: ProductsComponent },
@@ -24,7 +27,7 @@ export const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'document', component: DocumentsComponent },
   { path: 'about', component: AboutComponent },
-  { path: '', component: AuthComponent },
+  
   { path: 'cart', component: CartComponent },
   { path: 'pet-public', component: PetPublicComponent },
   { path: 'pet/:uuid', component: PetPublicComponent },
