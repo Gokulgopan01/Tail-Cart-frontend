@@ -158,15 +158,14 @@
 <div class="home-free-delivery-banner">
   <div class="container fd-home-container">
     <div class="fd-home-content">
-      <div class="fd-icon-float">
-        <i class="fas fa-truck-fast"></i>
+      <div class="fd-info-wrapper">
+        <div class="fd-icon-float">
+          <i class="fas fa-truck-fast"></i>
+        </div>
+        <div class="fd-text-group">
+          <span class="fd-main-text">LIMITED OFFER: <strong>FREE DELIVERY</strong> ON ALL ORDERS!</span>
+        </div>
       </div>
-      <div class="fd-text-group">
-        <span class="fd-main-text">LIMITED TIME OFFER: <strong>FREE DELIVERY</strong> ON ALL ORDERS!</span>
-      </div>
-      <button class="fd-cta-btn" (click)="navigateToShop()">
-        SHOP NOW <i class="fas fa-arrow-right"></i>
-      </button>
     </div>
   </div>
 </div>
@@ -175,118 +174,48 @@
 <section class="trending-products-section">
   <div class="container">
     <div class="section-header" data-aos="fade-up">
-      <div class="premium-tag tag-gold">TRENDING NOW</div>
+      <div class="premium-tag tag-amber"><i class="fas fa-bolt"></i> TRENDING NOW</div>
       <h2 class="section-title">Smart <span class="highlight-green">Pet Tags</span></h2>
       <p class="section-subtitle">Our most popular smart accessories for your beloved companions.</p>
     </div>
 
     <div class="product-grid">
       <!-- Product 1 -->
-      <div class="product-card" data-aos="fade-up" data-aos-delay="100">
-        <div class="product-badge badge-new">NEW</div>
+      <div class="product-card" data-aos="fade-up" data-aos-delay="100" (click)="navigateToShop()">
         <div class="product-image-wrapper">
           <img src="assets/images/product_trending_1.png" alt="Lux Gold QR Tag" class="product-img">
-          <div class="product-overlay">
-            <button class="btn-shop-now" (click)="navigateToShop()">
-              SHOP NOW <i class="fas fa-shopping-bag"></i>
-            </button>
-          </div>
-        </div>
-        <div class="product-details">
-          <div class="product-category">Tail Tag</div>
-          <h3 class="product-name">Lux Gold QR Tag</h3>
-          <div class="product-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <span>(48)</span>
-          </div>
-          <div class="product-price">
-            <span class="currency"></span>899
+          <div class="shop-now-label">
+            Shop Now <i class="fas fa-caret-right"></i>
           </div>
         </div>
       </div>
 
       <!-- Product 2 -->
-      <div class="product-card" data-aos="fade-up" data-aos-delay="200">
-        <div class="product-badge badge-hot">HOT</div>
+      <div class="product-card" data-aos="fade-up" data-aos-delay="200" (click)="navigateToShop()">
         <div class="product-image-wrapper">
           <img src="assets/images/product_trending_2.jpg" alt="Silver Minimalist Tag" class="product-img">
-          <div class="product-overlay">
-            <button class="btn-shop-now" (click)="navigateToShop()">
-              SHOP NOW <i class="fas fa-shopping-bag"></i>
-            </button>
-          </div>
-        </div>
-        <div class="product-details">
-          <div class="product-category">Tail Tag</div>
-          <h3 class="product-name">Silver Minimalist Tag</h3>
-          <div class="product-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span>(35)</span>
-          </div>
-          <div class="product-price">
-            <span class="currency"></span>599
+          <div class="shop-now-label">
+            Shop Now <i class="fas fa-caret-right"></i>
           </div>
         </div>
       </div>
 
       <!-- Product 3 -->
-      <div class="product-card" data-aos="fade-up" data-aos-delay="300">
+      <div class="product-card" data-aos="fade-up" data-aos-delay="300" (click)="navigateToShop()">
         <div class="product-image-wrapper">
           <img src="assets/images/product_trending_3.png" alt="Sporty Neon Tag" class="product-img">
-          <div class="product-overlay">
-            <button class="btn-shop-now" (click)="navigateToShop()">
-              SHOP NOW <i class="fas fa-shopping-bag"></i>
-            </button>
-          </div>
-        </div>
-        <div class="product-details">
-          <div class="product-category">Tail Tag</div>
-          <h3 class="product-name">Sporty Neon Tag</h3>
-          <div class="product-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="far fa-star"></i>
-            <span>(22)</span>
-          </div>
-          <div class="product-price">
-            <span class="currency"></span>599
+          <div class="shop-now-label">
+            Shop Now <i class="fas fa-caret-right"></i>
           </div>
         </div>
       </div>
 
       <!-- Product 4 -->
-      <div class="product-card" data-aos="fade-up" data-aos-delay="400">
+      <div class="product-card" data-aos="fade-up" data-aos-delay="400" (click)="navigateToShop()">
         <div class="product-image-wrapper">
           <img src="assets/images/product_trending_4.png" alt="Tough Stealth Tag" class="product-img">
-          <div class="product-overlay">
-            <button class="btn-shop-now" (click)="navigateToShop()">
-              SHOP NOW <i class="fas fa-shopping-bag"></i>
-            </button>
-          </div>
-        </div>
-        <div class="product-details">
-          <div class="product-category">Tail Tag</div>
-          <h3 class="product-name">Tough Stealth Tag</h3>
-          <div class="product-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <span>(56)</span>
-          </div>
-          <div class="product-price">
-            <span class="currency"></span>499
+          <div class="shop-now-label">
+            Shop Now <i class="fas fa-caret-right"></i>
           </div>
         </div>
       </div>
@@ -305,9 +234,8 @@
 <section class="services-3d-section fade-in">
   <div class="container">
     <div class="section-header" data-aos="fade-up">
-      <div class="premium-tag tag-emerald">Premium Services</div>
+      <div class="premium-tag tag-emerald"><i class="fas fa-gem"></i> Premium Services</div>
       <h2 class="section-title">Explore <span class="highlight-green">TailCart</span> Services</h2>
-      <p class="section-subtitle">Everything you need to give your pet the best life, all in one platform.</p>
     </div>
 
     <!-- 3D Carousel Container -->
@@ -375,7 +303,7 @@
   <div class="detailed-background-visual"></div>
   <div class="container relative">
     <div class="section-header" data-aos="fade-up">
-      <div class="premium-tag tag-gold">PRO-GRADE PROTECTION</div>
+      <div class="premium-tag tag-indigo"><i class="fas fa-shield-alt"></i> PRO-GRADE PROTECTION</div>
       <h2 class="section-title">How TailCart <span class="highlight-green">Protects</span></h2>
       <p class="section-subtitle">Advanced security and real-time monitoring to keep your pets safe, 24/7.</p>
     </div>
@@ -455,7 +383,7 @@
   <div class="particle-background"></div>
   <div class="container">
     <div class="section-header" data-aos="fade-up">
-      <div class="premium-tag tag-gold">Safety & Security</div>
+      <div class="premium-tag tag-rose"><i class="fas fa-lock"></i> Safety & Security</div>
       <h2 class="process-title">How <span class="highlight-green">TailTag</span> Works</h2>
       <p class="process-subtitle">Simple, effective steps to ensure your pet's safety and your peace of mind</p>
     </div>
@@ -587,6 +515,15 @@
   <div class="detailed-background-visual"></div>
   <div class="container relative">
 
+    <div class="section-header documents-centered-header" data-aos="fade-up">
+      <div class="premium-tag tag-silver"><i class="fas fa-heartbeat"></i> HEALTH & WELLNESS</div>
+      <h2 class="section-title documents-title-centered">
+        Pet <span class="highlight-green">Health</span> Management
+      </h2>
+      <p class="section-subtitle">Securely manage your pet’s health records and get smart reminders for care anytime,
+        anywhere.</p>
+    </div>
+
     <div class="detailed-video-wrapper">
       <div class="video-container-premium">
         <video #documentsVideo class="feature-video documents-feature-video" [muted]="isDocumentsVideoMuted" playsinline
@@ -617,10 +554,6 @@
     </div>
 
     <div class="section-header documents-centered-header" data-aos="fade-up">
-      <div class="premium-tag tag-silver">HEALTH & WELLNESS</div>
-      <h2 class="section-title documents-title-centered">
-        Pet <span class="highlight-green">Health</span> Management
-      </h2>
       <p class="section-subtitle documents-description-centered">
         Securely store and manage all your pet's health records, vaccination schedules, and medical history in one
         place. Set smart reminders for appointments and medications, ensuring your pet never misses critical care.
@@ -633,7 +566,7 @@
           <i class="fas fa-arrow-right"></i>
         </button>
         <button class="btn-premium" (click)="navigateToAlerts()">
-          SET ALERTS
+          SET REMINDERS
           <i class="fas fa-arrow-right"></i>
         </button>
       </div>
@@ -651,7 +584,6 @@
   <div class="container relative">
 
     <div class="section-header" data-aos="fade-up">
-      <div class="premium-tag tag-emerald">YOUR QUESTIONS, ANSWERED</div>
       <h2 class="section-title faq-title-centered">
         Frequently Asked <span class="highlight-green">Questions</span>
       </h2>
@@ -713,7 +645,7 @@
 <section class="social-feed-section fade-in">
   <div class="social-container">
     <div class="section-header" data-aos="fade-up">
-      <div class="premium-tag tag-gold">#TAILCART</div>
+      <div class="premium-tag tag-cyan"><i class="fab fa-instagram"></i> #TAILCART</div>
       <h2 class="section-title">Follow Us on <span class="highlight-green">Instagram</span></h2>
       <p class="section-subtitle">Join our community of pet parents sharing their stories.</p>
     </div>
