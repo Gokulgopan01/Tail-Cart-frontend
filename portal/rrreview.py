@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 from config import env
 load_dotenv()
 from condtions.all_portal_conditions import generate_condition_data
-from utils.helper import adj_click, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_repair_details, rrr_select_hoa_amenities, rrr_select_amenities, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status, tfs_statuschange
+from utils.helper import adj_click, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_listing_history, rrr_fill_repair_details, rrr_select_hoa_amenities, rrr_select_amenities, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status, tfs_statuschange
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.glogger import GLogger
 
@@ -142,9 +142,8 @@ class rrreview:
                 portal_url = order_from_api.get("portal_url", "")
                 proxy = order_from_api.get("proxy", None)  # Optional proxy
                 session=order_from_api.get("session",None)
-                hyorder_id=order_from_api.get("order_id","")
-                portal_order_id=order_from_api.get("portal_orderid","")
-                order_details_from_api,tfs_orderid,is_qc=get_order_address_from_assigned_order(hyorder_id,hybrid_token)
+                order_id=order_from_api.get("order_id","")
+                order_details_from_api,tfs_orderid,is_qc=get_order_address_from_assigned_order(order_id,hybrid_token)
             
             # --- Step 2: Parse ALL Active Orders in RRR portal ---
             print("Looking for Active Orders...")
@@ -216,27 +215,27 @@ class rrreview:
             allowed_form_types = ["EXTERIOR BPO"]
 
             # Click only matched orders **with allowed form type**
-            for order_id in matched_order:
-                form_type = portal_order_data.get(order_id)
+            for order in matched_order:
+                form_type = portal_order_data.get(order)
                 if form_type in allowed_form_types:
-                    print(f"Opening Order {order_id} ({form_type})...")
+                    print(f"Opening Order {order} ({form_type})...")
                     logger.log(
                         module="rrreview-rrreview_formopen",
                         order_id=hybrid_orderid,
                         action_type="Info",
-                        remarks=f"Opening order {order_id} with form type {form_type}",
+                        remarks=f"Opening order {order} with form type {form_type}",
                         severity="INFO"
                     )
                     # Fix 2: Guard form fill on click success
-                    if self.click_order_by_id(order_id):
+                    if self.click_order_by_id(order):
                         # Proceed to form fill once open
-                        self.rrreview_formopen_fill(form_type,hyorder_id,self.session,tfs_orderid,is_qc,merged_json=None)
+                        self.rrreview_formopen_fill(form_type,order_id,session,tfs_orderid,is_qc,merged_json=None)
                     else:
                         logger.log(
                             module="rrreview-rrreview_formopen",
                             order_id=hybrid_orderid,
                             action_type="Error",
-                            remarks=f"Failed to open order {order_id}. Skipping.",
+                            remarks=f"Failed to open order {order}. Skipping.",
                             severity="ERROR"
                         )
 
@@ -245,7 +244,7 @@ class rrreview:
                         module="rrreview-rrreview_formopen",
                         order_id=hybrid_orderid,
                         action_type="Warning",
-                        remarks=f"Skipping order {order_id} with unsupported form type: {form_type}",
+                        remarks=f"Skipping order {order} with unsupported form type: {form_type}",
                         severity="INFO"
                     )
 
@@ -410,13 +409,14 @@ class rrreview:
                 )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                 # Fix 5: Restored TFS failure status call on form type mismatch
+                # tfs_statuschange(tfs_orderid, "27", "5", "20")
                 return
             
             form_config, merged_json = load_form_config_and_data(
             order_id=order_id,
             config_path=config_path,
             researchpad_data_retrival_url=researchpad_data_retrival_url,
-            session=self.session,
+            session=session,
             merged_json=merged_json,
             token=hybrid_token
             )
@@ -537,7 +537,7 @@ class rrreview:
             "date_fill_javascript": javascript_excecuter_filling,
             "checkbox": single_checkbox,
             "button_click": adj_click,
-            # "rrr_listing_history_fill": rrr_fill_listing_history,
+            "rrr_listing_history_fill": rrr_fill_listing_history,
             "rrr_hoa_amenities": rrr_select_hoa_amenities,
             "rrr_amenities": rrr_select_amenities,
         }
@@ -556,8 +556,8 @@ class rrreview:
 
         try:
             # --- Success-tracking flags (mirrors old version) ---
-            form_fill_success = True
-            photo_upload_success = True
+            # form_fill_success = True
+            # photo_upload_success = True
 
             # --- Extract all JSON data sections ---
             (
@@ -580,6 +580,7 @@ class rrreview:
                     severity="INFO"
                 )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
+                #tfs_statuschange(tfs_orderid, "27", "3", "14")
                 return False
 
             # --- Generate computed conditional data ---
@@ -591,8 +592,8 @@ class rrreview:
                 prior1, prior2, prior3
             )
 
-            form_fill_success = True
-            photo_upload_success = True
+            form_fill_success = False
+            photo_upload_success = False
             form_pages = form_config.get("page", [])
 
             # --- Helper to resolve {condition_data['...']} in locators ---
@@ -760,11 +761,11 @@ class rrreview:
                                     if isinstance(repair_data, list):
                                         if not rrr_fill_repair_details(self.driver, repair_data):
                                             print("Warning: Repair details filling failed.")
-                                            form_fill_success = False
+                                            #form_fill_success = False
                                             logger.log(module="rrreview-fill_form_multi", order_id=hybrid_orderid, action_type="Warning", remarks="Repair details filling returned failure for some items.", severity="INFO")
                                 except Exception as e:
                                     print(f"Exception in Repair Details: {e}")
-                                    form_fill_success = False
+                                    #form_fill_success = False
                                     logger.log(module="rrreview-fill_form_multi", order_id=hybrid_orderid, action_type="Exception", remarks=f"Error processing repair details: {e}", severity="INFO")
                             continue
 
@@ -826,7 +827,7 @@ class rrreview:
                             except Exception as e:
                                 #logging.error(f"Exception filling field {key_expr}: {e}")
                                 print(f"Exception filling field {key_expr} (Type: {field_type}): {e}")
-                                form_fill_success = False
+                                #form_fill_success = False
                                 logger.log(
                                         module="rrreview-fill_form_multi",
                                         order_id=hybrid_orderid,
@@ -839,6 +840,7 @@ class rrreview:
                         print(f"Saving after {tab_name} Tab...")
                         self.driver.switch_to.default_content()
                         self.save_form_rrreview()
+                        form_fill_success = True
                         # No need to switch back to iframe here as the next iteration will do it
 
 
@@ -858,13 +860,11 @@ class rrreview:
                     severity="INFO"
                 )
                 print(f"Smart Entry Process Completed for {hybrid_orderid}")
-                if is_qc :   #qc order
-                    logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="QC order status change ",severity="INFO")
-                    tfs_statuschange(tfs_orderid , "82", "17", "14")
+                if is_qc:  # QC orders skip TFS status change
+                    logger.log(module="TFS_Status_Change", order_id=hybrid_orderid, action_type="Status_change", remarks="QC order no status change needed", severity="INFO")
                 else:
-                    logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="fresh or redo order status change ",severity="INFO")
-                    tfs_statuschange(tfs_orderid , "26", "5", "20")
-
+                    tfs_statuschange(tfs_orderid, "26", "5", "20")
+                #return True
             else:
                 print(f"Smart Entry Result: FAILED (Fill: {form_fill_success}, Upload: {photo_upload_success})")
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
@@ -875,9 +875,19 @@ class rrreview:
                     remarks=f"Smart Entry Failed for {hybrid_orderid} (Fill: {form_fill_success}, Upload: {photo_upload_success})",
                     severity="INFO"
                 )
-                return False
+                # tfs_statuschange(tfs_orderid, "27", "5", "20")
+                #return False
 
-    
+            # # --- Final Status Update ---
+            # if is_qc :   #qc order
+            #     logger.log(module="TFS_Status_Change",order_id=hybrid_orderid,action_type="Status_change",remarks="QC order no status change needed",severity="INFO")
+            # else:
+            #     tfs_statuschange(tfs_orderid , "26", "5", "20")
+
+            # update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
+            # print(hybrid_orderid,"Smart Entry")
+
+            # return saved_form
 
         except Exception as e:
             #logging.error(f"Critical error in fill_form_multi: {e}")
@@ -889,6 +899,7 @@ class rrreview:
                 severity="INFO"
             )
             #update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
+            #tfs_statuschange(tfs_orderid, "27", "3", "14")
             return False
 
     def save_form_rrreview(self):
@@ -983,84 +994,77 @@ class rrreview:
             self.driver.switch_to.frame(iframe)
 
             print("Scanning Portal for Existing Documents to Clear...")
-            logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks="Scanning portal for surgical document clearing (Comps, MLS, TAX)...", severity="INFO")
+            logger.log(module="rrreview-clear_existing_documents", order_id=hybrid_orderid, action_type="Info", remarks="Scanning portal for document clearing (Preserving ALL Subject labels)...", severity="INFO")
             
             count_deleted = 0
             
-            # --- Targeted Patterns for Clearing ---
-            # Comps: s1-s3 and a1-a3 (from spans like 0_s1.jpg)
-            # Docs: mls.pdf, tax.pdf
-            comp_keys = ["s1", "s2", "s3", "a1", "a2", "a3", "sale", "listing"]
-            doc_keys = ["mls.pdf", "tax.pdf"]
+            # --- Targeted Labels for Clearing ---
+            # Identifies Comps and Documents by their portal-assigned labels.
+            # LOGIC: Delete ALL except for labels containing "Subject".
             
-            # 1. Handle Photos (Targeted via dlPhotos spans)
+            # 1. Handle Photos (Identify ALL except Subject)
             try:
                 pnl_photos = self.driver.find_element(By.ID, "dlPhotos")
-                # Each photo is in a container table
                 photo_containers = pnl_photos.find_elements(By.TAG_NAME, "table")
                 for container in photo_containers:
                     try:
-                        # Find the filename span (e.g., 0_s1.jpg)
-                        span = container.find_element(By.TAG_NAME, "span")
-                        filename = span.text.lower().strip()
+                        # Find the Label Dropdown
+                        select_el = container.find_element(By.TAG_NAME, "select")
+                        selected_label = Select(select_el).first_selected_option.text.lower().strip()
                         
-                        if not filename:
+                        if not selected_label or "none selected" in selected_label:
                             continue
 
-                        is_target_comp = False
-                        for key in comp_keys:
-                            if key in filename:
-                                # Safe check: Never delete a Subject photo even if it has a comp key in the name
-                                if "subject" not in filename:
-                                    is_target_comp = True
-                                    break
+                        # PRESERVATION RULE: Keep if label HAS "Subject" (Primary Requirement)
+                        if "subject" in selected_label:
+                            logger.log(module="rrreview-clear_existing_documents", order_id=hybrid_orderid, action_type="Info", remarks=f"Preserving Subject Photo via Label: '{selected_label}'", severity="INFO")
+                            continue
+
+                        # UNIVERSAL CLEARING: Delete anything that is NOT a Subject label
+                        cb = container.find_element(By.XPATH, ".//input[@type='checkbox']")
+                        if cb.is_displayed() and cb.is_enabled() and not cb.is_selected():
+                            cb.click()
+                            count_deleted += 1
+                            logger.log(module="rrreview-clear_existing_documents", order_id=hybrid_orderid, action_type="Info", remarks=f"Select for Deletion (Photo): '{selected_label}'", severity="INFO")
                         
-                        if is_target_comp:
-                            cb = container.find_element(By.XPATH, ".//input[@type='checkbox']")
-                            if cb.is_displayed() and cb.is_enabled() and not cb.is_selected():
-                                cb.click()
-                                count_deleted += 1
-                                logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks=f"Surgical Select (Photo): '{filename}'", severity="INFO")
-                        else:
-                            # Preserve by default
-                            logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks=f"Surgical Preserve (Photo): '{filename}'", severity="INFO")
                     except Exception as e:
-                        logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Warning", remarks=f"Error processing photo row: {e}", severity="WARNING")
+                        # logger.log(module="rrreview-clear_existing_documents", order_id=hybrid_orderid, action_type="Warning", remarks=f"Error processing photo container: {e}", severity="WARNING")
                         continue
             except Exception as e:
-                logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Error", remarks=f"Photo scanning failed: {e}", severity="ERROR")
+                logger.log(module="rrreview-clear_existing_documents", order_id=hybrid_orderid, action_type="Error", remarks=f"Photo label scanning failed: {e}", severity="ERROR")
 
-            # 2. Handle Documents (Targeted via pnlDocsGrid rows)
+            # 2. Handle Documents (Identify ALL except Subject)
             try:
                 pnl_docs = self.driver.find_element(By.ID, "pnlDocsGrid")
                 doc_rows = pnl_docs.find_elements(By.TAG_NAME, "tr")
                 for row in doc_rows:
                     try:
-                        row_text = row.text.lower()
-                        if not row_text.strip():
+                        select_els = row.find_elements(By.TAG_NAME, "select")
+                        if not select_els:
+                            continue
+                            
+                        select_el = select_els[0]
+                        selected_label = Select(select_el).first_selected_option.text.lower().strip()
+                        
+                        if not selected_label or "none selected" in selected_label:
                             continue
 
-                        is_target_doc = False
-                        # Check for MLS or TAX specifically
-                        if any(key in row_text for key in doc_keys):
-                            # EXCLUSION: Never delete combined mls_tax.pdf
-                            if "mls_tax" not in row_text:
-                                is_target_doc = True
-                        
-                        if is_target_doc:
-                            cb = row.find_element(By.XPATH, ".//input[@type='checkbox']")
-                            if cb.is_displayed() and cb.is_enabled() and not cb.is_selected():
-                                cb.click()
-                                count_deleted += 1
-                                logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks=f"Surgical Select (Doc): '{row_text.strip()[:60]}'", severity="INFO")
-                        else:
-                            # Preserve everything else (like county.pdf)
-                            logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Info", remarks=f"Surgical Preserve (Doc): '{row_text.strip()[:60]}'", severity="INFO")
+                        # PRESERVATION RULE: Keep if label HAS "Subject"
+                        if "subject" in selected_label:
+                            logger.log(module="rrreview-clear_existing_documents", order_id=hybrid_orderid, action_type="Info", remarks=f"Preserving Subject Doc via Label: '{selected_label}'", severity="INFO")
+                            continue
+
+                        # UNIVERSAL CLEARING: Delete anything that is NOT a Subject label
+                        cb = row.find_element(By.XPATH, ".//input[@type='checkbox']")
+                        if cb.is_displayed() and cb.is_enabled() and not cb.is_selected():
+                            cb.click()
+                            count_deleted += 1
+                            logger.log(module="rrreview-clear_existing_documents", order_id=hybrid_orderid, action_type="Info", remarks=f"Select for Deletion (Doc): '{selected_label}'", severity="INFO")
                     except Exception as e:
-                        logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Warning", remarks=f"Error processing doc row: {e}", severity="WARNING")
+                        # logger.log(module="rrreview-clear_existing_documents", order_id=hybrid_orderid, action_type="Warning", remarks=f"Error processing doc row: {e}", severity="WARNING")
                         continue
             except Exception as e:
-                logger.log(module="rrreview-clear_existing_documents", order_id=self.order_id if hasattr(self, 'order_id') and self.order_id else "Unknown", action_type="Error", remarks=f"Document scanning failed: {e}", severity="ERROR")
+                logger.log(module="rrreview-clear_existing_documents", order_id=hybrid_orderid, action_type="Error", remarks=f"Document label scanning failed: {e}", severity="ERROR")
             
             if count_deleted == 0:
                  print("No existing documents found to clear.")
@@ -1085,6 +1089,7 @@ class rrreview:
                 severity="ERROR"
             )
             return False
+
 
     def upload_files_for_order(self, order_id: int, tfs_orderid: str) -> bool:
         """

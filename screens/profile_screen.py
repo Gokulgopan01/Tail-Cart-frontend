@@ -1,9 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from integrations.hybrid_bpo_api import HybridBPOApi
-from integrations.mls_automation.gamls import Gamls
-from integrations.mls_automation.fmls import Fmls
-from utils.pic_pdf_downloads.vpn_connection import vpn_checking
+from utils.vpn_connection import vpn_checking
 import sys
 import threading
 from urllib.parse import urlparse, parse_qs

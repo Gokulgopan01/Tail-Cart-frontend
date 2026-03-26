@@ -272,7 +272,6 @@ class SingleSource:
                 sessions=order_from_api.get("session",None)
                 order_id=order_from_api.get("order_id","")
                 order_details_from_api,tfs_orderid,is_qc=get_order_address_from_assigned_order(order_id,hybrid_token)
-                self.tfs_orderid = tfs_orderid
                 
                 logger.log(
                     module="SingleSource-singleSource_formopen",

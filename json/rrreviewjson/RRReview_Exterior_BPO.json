@@ -187,46 +187,6 @@
           ]
         },
         {
-          "filedtype": "Textbox",
-          "values": [
-            [
-              "sub_data['Address']",
-              "//*[@id='txtNewAddress']",
-              "xpath"
-            ]
-          ]
-        },
-        {
-          "filedtype": "Textbox",
-          "values": [
-            [
-              "sub_data['City']",
-              "//*[@id='txtNewCity']",
-              "xpath"
-            ]
-          ]
-        },
-        {
-          "filedtype": "select_data",
-          "values": [
-            [
-              "sub_data['State']",
-              "//*[@id='ddlNewState']",
-              "xpath"
-            ]
-          ]
-        },
-        {
-          "filedtype": "Textbox",
-          "values": [
-            [
-              "sub_data['Zipcode']",
-              "//*[@id='txtNewZip']",
-              "xpath"
-            ]
-          ]
-        },
-        {
           "filedtype": "select_data",
           "values": [
             [
@@ -282,6 +242,16 @@
             [
               "sub_data['AnnualPropertyTax']",
               "//*[@id='txtPropertyTax']",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "Textbox",
+          "values": [
+            [
+              "sub_data['LandValue']",
+              "//*[@id='txtLandValue']",
               "xpath"
             ]
           ]
@@ -391,7 +361,16 @@
             ]
           ]
         },
-        
+        {
+          "filedtype": "rrr_listing_history_fill",
+          "values": [
+            [
+              "sub_data['SubjectPriorHistory']",
+              "AddNewListHistLink",
+              "id"
+            ]
+          ]
+        },
         {
           "filedtype": "select_data",
           "values": [
@@ -584,7 +563,7 @@
           "filedtype": "Textbox",
           "values": [
             [
-              "sub_data['MarketValue']",
+              "sub_data['Rentalvalue']",
               "//*[@id='rrrSubject_txtMarketRent']",
               "xpath"
             ]
@@ -974,6 +953,16 @@
           "filedtype": "select_data",
           "values": [
             [
+              "sold1['View']",
+              "//*[@id='rrrSale1$ddlView']",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_data",
+          "values": [
+            [
               "sold1['Condition']",
               "//*[@id='rrrSale1_ddlConditionType']",
               "xpath"
@@ -1306,6 +1295,16 @@
             [
               "sold2['LotAcrs']",
               "//*[@id='rrrSale2_txtLotSizeAcres']",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_data",
+          "values": [
+            [
+              "sold2['View']",
+              "//*[@id='rrrSale2$ddlView']",
               "xpath"
             ]
           ]
@@ -1654,6 +1653,16 @@
           "filedtype": "select_data",
           "values": [
             [
+              "sold3['View']",
+              "//*[@id='rrrSale3$ddlView']",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_data",
+          "values": [
+            [
               "sold3['Condition']",
               "//*[@id='rrrSale3_ddlConditionType']",
               "xpath"
@@ -1964,6 +1973,16 @@
           "filedtype": "select_data",
           "values": [
             [
+              "list1['View']",
+              "//*[@id='rrrListing1$ddlView']",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_data",
+          "values": [
+            [
               "list1['Condition']",
               "//*[@id='rrrListing1_ddlConditionType']",
               "xpath"
@@ -2154,6 +2173,16 @@
           "filedtype": "select_data",
           "values": [
             [
+              "list2['Proximity']",
+              "//*[@id='rrrListing2_ddlProximityType']",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_data",
+          "values": [
+            [
               "list2['DataSource']",
               "//*[@id='rrrListing2_ddlDataSource']",
               "xpath"
@@ -2274,6 +2303,16 @@
           "filedtype": "select_data",
           "values": [
             [
+              "list2['View']",
+              "//*[@id='rrrListing2$ddlView']",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_data",
+          "values": [
+            [
               "list2['Condition']",
               "//*[@id='rrrListing2_ddlConditionType']",
               "xpath"
@@ -2325,7 +2364,7 @@
           "values": [
             [
               "list2['HalfBath']",
-              "//*[@id='rrrListing2_chkBestSaleList']",
+              "//*[@id='rrrListing2_txtHalfBaths']",
               "xpath"
             ]
           ]
@@ -2574,6 +2613,16 @@
           "filedtype": "select_data",
           "values": [
             [
+              "list3['View']",
+              "//*[@id='rrrListing3$ddlView']",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_data",
+          "values": [
+            [
               "list3['Condition']",
               "//*[@id='rrrListing3_ddlConditionType']",
               "xpath"
@@ -2734,7 +2783,7 @@
           "filedtype": "Textbox",
           "values": [
             [
-              "sub_data['SubjectComment']",
+              "sub_data['Comments']",
               "//*[@id='txtSubjectComments']",
               "xpath"
             ]

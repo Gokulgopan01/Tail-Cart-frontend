@@ -103,6 +103,8 @@ class EcesisLoginScreen(tk.Frame):
         # Initialize client data
         self.client_data = {}
         self.dropdowns = []
+        # Bind global click to close dropdowns when clicking outside
+        self.bind_all("<Button-1>", self._on_global_click)
         self.create_login_frame()
 
     def create_login_frame(self):
@@ -402,11 +404,11 @@ class EcesisLoginScreen(tk.Frame):
     # # Move to the Login Button
 
 
-    #     # Account Dropdown
+        # Account Dropdown
         self.account_var = tk.StringVar()
         style = ttk.Style()
         style.configure('TCombobox', padding=5, font=('sans-serif', 13), height=30)
-        self.account_dropdown = self.create_combobox(self.inner_frame, self.account_var, "Select Account", self.on_account_select)
+        self.account_dropdown = self.create_combobox(self.inner_frame, self.account_var, "Select Username", self.on_account_select)
         self.account_dropdown.config(style='TCombobox')
         self.account_dropdown.pack(pady=8, padx=30, fill='x')
         self.dropdowns.append(self.account_dropdown)
@@ -414,25 +416,25 @@ class EcesisLoginScreen(tk.Frame):
 
     #     # Login Button
 
-        canvas = tk.Canvas(self.inner_frame, width=200, height=100, bg="#FFFFFF", highlightthickness=0,cursor="hand2")
-        canvas.pack(pady=30)
+        self.login_button = tk.Canvas(self.inner_frame, width=200, height=100, bg="#FFFFFF", highlightthickness=0,cursor="hand2")
+        self.login_button.pack(pady=30)
 
         # Draw rounded rectangle (simplified)
         x0, y0, x1, y1 = 10, 10, 190, 50
         r = 20  # corner radius
-        button = canvas.create_arc(x0, y0, x0+r*2, y0+r*2, start=90, extent=90, fill="#1877F2", outline="#1877F2")
-        canvas.create_arc(x1-r*2, y0, x1, y0+r*2, start=0, extent=90, fill="#1877F2", outline="#1877F2")
-        canvas.create_arc(x0, y1-r*2, x0+r*2, y1, start=180, extent=90, fill="#1877F2", outline="#1877F2")
-        canvas.create_arc(x1-r*2, y1-r*2, x1, y1, start=270, extent=90, fill="#1877F2", outline="#1877F2")
-        canvas.create_rectangle(x0+r, y0, x1-r, y1, fill="#1877F2", outline="#1877F2")
-        canvas.create_rectangle(x0, y0+r, x1, y1-r, fill="#1877F2", outline="#1877F2")
+        self.login_button.create_arc(x0, y0, x0+r*2, y0+r*2, start=90, extent=90, fill="#1877F2", outline="#1877F2")
+        self.login_button.create_arc(x1-r*2, y0, x1, y0+r*2, start=0, extent=90, fill="#1877F2", outline="#1877F2")
+        self.login_button.create_arc(x0, y1-r*2, x0+r*2, y1, start=180, extent=90, fill="#1877F2", outline="#1877F2")
+        self.login_button.create_arc(x1-r*2, y1-r*2, x1, y1, start=270, extent=90, fill="#1877F2", outline="#1877F2")
+        self.login_button.create_rectangle(x0+r, y0, x1-r, y1, fill="#1877F2", outline="#1877F2")
+        self.login_button.create_rectangle(x0, y0+r, x1, y1-r, fill="#1877F2", outline="#1877F2")
 
-        text = canvas.create_text((x0 + x1)//2, (y0 + y1)//2, text="Login to Portal", fill="white", font=("sans-serif", 13, "bold"))
+        self.login_button.create_text((x0 + x1)//2, (y0 + y1)//2, text="Login to Portal", fill="white", font=("sans-serif", 13, "bold"))
 
         # Bind click
-        canvas.bind("<Button-1>", lambda event: self.confirm_selection())
-        canvas.config(takefocus=True)
-        canvas.bind("<Return>", lambda event: self.confirm_selection())
+        self.login_button.bind("<Button-1>", lambda event: self.confirm_selection())
+        self.login_button.config(takefocus=True)
+        self.login_button.bind("<Return>", lambda event: self.confirm_selection())
       
 
         threading.Thread(target=self.load_main_clients, daemon=True).start()
@@ -457,13 +459,16 @@ class EcesisLoginScreen(tk.Frame):
                 # Layout
                 # Entry widget on the left
                 self._entry = tk.Entry(self, textvariable=textvariable, font=('sans-serif', 12),
-                                      bd=0, bg='#F0F0F0')
+                                      bd=0, bg='#F0F0F0', state='readonly', readonlybackground='#F0F0F0')
                 self._entry.pack(side=tk.LEFT, padx=(5, 0), pady=5, fill=tk.X, expand=True)
+
+                # Incremental Search State
+                self._search_buffer = ""
+                self._search_timer = None
                 
                 # Initial placeholder
                 if not textvariable.get():
-                    self._entry.insert(0, placeholder_text)
-                    self._entry.config(fg='gray')
+                    self.set(placeholder_text)
                 else:
                     self._entry.config(fg='black')
                 
@@ -491,8 +496,65 @@ class EcesisLoginScreen(tk.Frame):
                 self._entry.bind('<FocusIn>', self._on_focus_in)
                 self._entry.bind('<FocusOut>', self._on_focus_out)
                 self._entry.bind('<Button-1>', self._on_click)
+                self._entry.bind('<Key>', self._on_key_press)
                 self._listbox.bind('<<ListboxSelect>>', self._on_listbox_select)
-                self._listbox.bind('<Button-1>', self._on_listbox_select)
+                self._listbox.bind('<ButtonRelease-1>', self._on_listbox_click)
+
+            def _on_listbox_click(self, event):
+                """Handle mouse click selection (confirms and closes)."""
+                selection = self._listbox.curselection()
+                if selection:
+                    val = self._listbox.get(selection[0])
+                    self.set(val)
+                    self._popup.withdraw()
+                    
+                    # Trigger visual update in parent
+                    if self._parent_screen:
+                        self._parent_screen.update_dropdown_colors(self)
+
+                    if self._callback:
+                        self._callback(event)
+
+            def _on_key_press(self, event):
+                """Handle incremental search on readonly entry."""
+                # Ignore non-character keys
+                if len(event.char) == 0 or not event.char.isprintable():
+                    return
+
+                # Reset timer and append to buffer
+                if self._search_timer:
+                    self.after_cancel(self._search_timer)
+                
+                self._search_buffer += event.char.lower()
+                self._search_timer = self.after(800, self._reset_search_buffer)
+
+                # Find match
+                match = next((v for v in self._all_values if str(v).lower().startswith(self._search_buffer)), None)
+                if match:
+                    self.set(match)
+                    
+                    # Automatically show results if not already mapped
+                    if not self._popup.winfo_ismapped():
+                        self.show_results(self._all_values)
+
+                    # Sync listbox
+                    if self._popup.winfo_ismapped():
+                        idx = self._all_values.index(match)
+                        self._listbox.selection_clear(0, tk.END)
+                        self._listbox.selection_set(idx)
+                        self._listbox.activate(idx) # Highlight the active item
+                        self._listbox.see(idx)
+                    
+                    # Trigger visual update logic in parent
+                    if self._parent_screen:
+                         # Ensure it looks active/selected
+                         self.set_color_mode('blue')
+
+                return "break"
+
+            def _reset_search_buffer(self):
+                self._search_buffer = ""
+                self._search_timer = None
 
             def _on_click(self, event):
                 # If it's blue, trigger the same reset logic as FocusIn
@@ -503,16 +565,17 @@ class EcesisLoginScreen(tk.Frame):
                         self._parent_screen.reset_downstream(self)
 
             def _on_focus_in(self, event):
-                # If it's blue, reset to gray and select all text for easy re-search
+                if self._parent_screen:
+                    self._parent_screen.close_all_popups(self)
+                    
+                # If it's blue, select all text for visual feedback (though readonly)
                 if self.cget('bg') == '#1877F2':
-                    self.set_color_mode('gray')
                     self._entry.selection_range(0, tk.END)
                     self._entry.icursor(tk.END)
                     return 
                 
                 if self._entry.get() == self._placeholder:
-                    self._entry.delete(0, tk.END)
-                    # If it's blue, keep text white, otherwise black
+                    # We don't delete readonly text, we just update colors/placeholder
                     if self.cget('bg') == '#1877F2':
                         self._entry.config(fg='white')
                     else:
@@ -526,12 +589,15 @@ class EcesisLoginScreen(tk.Frame):
                 # If focus didn't move to the popup/listbox, handle placeholder
                 focus_widget = self.focus_get()
                 if focus_widget != self._listbox and focus_widget != self._popup:
-                    if not self._entry.get():
-                        self._entry.insert(0, self._placeholder)
+                    if not self._entry.get() or self._entry.get() == "":
+                        self.set(self._placeholder)
                         self._entry.config(fg='gray')
                     self._popup.withdraw()
 
             def toggle_dropdown(self):
+                if self._parent_screen:
+                    self._parent_screen.close_all_popups(self)
+
                 # If it's blue, reset to gray immediately when we open/interact with results
                 if self.cget('bg') == '#1877F2':
                     self.set_color_mode('gray')
@@ -552,7 +618,8 @@ class EcesisLoginScreen(tk.Frame):
                     self._listbox.insert(tk.END, v)
                 
                 # Positioning
-                self.update_idletasks()
+                if self._popup.state() == "withdrawn":
+                    self.update_idletasks()
                 x = self.winfo_rootx()
                 y = self.winfo_rooty() + self.winfo_height()
                 width = self.winfo_width()
@@ -569,19 +636,25 @@ class EcesisLoginScreen(tk.Frame):
                 self._listbox.activate(0)
 
             def _on_listbox_select(self, event):
+                """Update entry text as user moves through the list, but don't close yet."""
                 selection = self._listbox.curselection()
                 if selection:
                     val = self._listbox.get(selection[0])
-                    self.set(val)
-                    self._popup.withdraw()
-                    
-                    # Trigger color update in parent screen
-                    if self._parent_screen:
-                        self._parent_screen.update_dropdown_colors(self)
-
-                    if self._callback:
-                        self._callback(event)
+                    # Update without triggering color logic or clearing buffer
+                    self._entry.config(state='normal')
+                    self._entry.delete(0, tk.END)
+                    self._entry.insert(0, val)
+                    self._entry.config(state='readonly')
+                    # Keep text black/white based on active state
+                    if self.cget('bg') == '#1877F2':
+                        self._entry.config(fg='white')
+                    else:
+                        self._entry.config(fg='black')
             
+            def focus_set(self):
+                """Redirect focus to the inner entry field."""
+                self._entry.focus_set()
+
             def __setitem__(self, key, value):
                 if key == "values":
                     self._all_values = value
@@ -593,10 +666,15 @@ class EcesisLoginScreen(tk.Frame):
                 return None
 
             def set(self, text):
+                self._entry.config(state='normal')
                 self._entry.delete(0, tk.END)
                 self._entry.insert(0, text)
-                if self.cget('bg') == '#1877F2':
-                    self._entry.config(fg='white')
+                self._entry.config(state='readonly')
+                if self.cget('bg') == '#1877F2' or text == self._placeholder:
+                    if text == self._placeholder:
+                        self._entry.config(fg='gray')
+                    else:
+                        self._entry.config(fg='white')
                 else:
                     self._entry.config(fg='black')
 
@@ -619,7 +697,7 @@ class EcesisLoginScreen(tk.Frame):
                     arrow_fg = '#666666'
                 
                 self.config(bg=bg_color, highlightbackground=border_color)
-                self._entry.config(bg=bg_color, fg=fg_color)
+                self._entry.config(bg=bg_color, fg=fg_color, readonlybackground=bg_color)
                 self._arrow.config(bg=bg_color, fg=arrow_fg)
 
             def get(self):
@@ -644,6 +722,12 @@ class EcesisLoginScreen(tk.Frame):
             else:
                 dd.set_color_mode('gray')
 
+    def close_all_popups(self, except_dd=None):
+        """Closes all dropdown popups except the specified one."""
+        for dd in self.dropdowns:
+            if dd != except_dd and hasattr(dd, '_popup') and dd._popup.winfo_exists() and dd._popup.winfo_ismapped():
+                dd._popup.withdraw()
+
     def reset_downstream(self, triggering_dropdown):
         """Clears all dropdowns that depend on the triggering one."""
         try:
@@ -653,9 +737,7 @@ class EcesisLoginScreen(tk.Frame):
                 dd = self.dropdowns[i]
                 # Clear text and values
                 dd._var.set("") 
-                dd._entry.delete(0, tk.END)
-                dd._entry.insert(0, dd._placeholder)
-                dd._entry.config(fg='gray')
+                dd.set(dd._placeholder)
                 dd["values"] = []
                 dd.set_color_mode('gray')
             
@@ -666,6 +748,35 @@ class EcesisLoginScreen(tk.Frame):
             self.portal_url_label.config(text="Portal URL: ")
             self.proxy_label.config(text="Proxy: ")
         except (ValueError, AttributeError):
+            pass
+
+    def _on_global_click(self, event):
+        """Handles clicks anywhere in the application to close dropdowns if needed."""
+        if not self.winfo_ismapped():
+            return
+
+        try:
+            clicked_widget = event.widget
+            
+            # Check if click is inside any of our custom dropdowns (Entry, Arrow, Listbox, etc)
+            is_inside_any = False
+            for dd in self.dropdowns:
+                # Check dropdown container and its internal components
+                if (clicked_widget == dd or 
+                    clicked_widget == getattr(dd, '_entry', None) or 
+                    clicked_widget == getattr(dd, '_arrow', None) or 
+                    (hasattr(dd, '_popup') and (
+                        clicked_widget == dd._popup or 
+                        clicked_widget == getattr(dd, '_listbox', None) or 
+                        clicked_widget == getattr(dd, '_scrollbar', None)
+                    ))):
+                    is_inside_any = True
+                    break
+            
+            if not is_inside_any:
+                self.close_all_popups()
+        except Exception:
+            # Prevent failures in global click handler from breaking the app
             pass
 
 
@@ -707,74 +818,45 @@ class EcesisLoginScreen(tk.Frame):
         for widget in self.winfo_children():
             widget.destroy()
 
-    def bind_dropdown_keyboard_sort(self, container, values_list, default_text="Select", on_return_handler=None):
-        """Adds live search filtration to custom Entry+Listbox dropdown."""
+    def bind_dropdown_keyboard_sort(self, container, values_list, default_text="Select", on_return_handler=None, on_up_handler=None, on_down_handler=None):
+        """Adds live search filtration and field-to-field navigation."""
         sorted_values = sorted([str(v) for v in values_list])
         container._all_values = sorted_values
         
-        # Check if there's an existing Return binding to preserve it
-        existing_return = None
-        # We can't easily get the existing handler, so we'll use add='+' later
-        # and ensure on_return handles navigation if popup is closed.
-        
-        def on_keyrelease(event):
-            # Ignore special keys
-            if event.keysym in ("Down", "Up", "Return", "Escape", "Tab", "Shift_L", "Shift_R", "Control_L", "Control_R", "Alt_L", "Alt_R"):
-                return
-            
-            # If the dropdown is blue, it means it's being "altered". Reset it to gray.
-            if container.cget('bg') == '#1877F2':
-                container.set_color_mode('gray')
-
-            value = container.get()
-            
-            # Skip if placeholder
-            if value == container._placeholder or value == "":
-                container._popup.withdraw()
-                return
-            
-            # Filter data - Case-insensitive and smarter sorting
-            current_values = container._all_values
-            lower_val = value.lower()
-            
-            # Use starts-with first, then contains, all case-insensitive
-            starts_with = [item for item in current_values if item.lower().startswith(lower_val)]
-            contains = [item for item in current_values if lower_val in item.lower() and item not in starts_with]
-            filtered_data = starts_with + contains
-            
-            # If no matches, don't show stale results
-            if not filtered_data:
-                 container._popup.withdraw()
-                 return
-                 
-            container.show_results(filtered_data)
-        
         def on_return(event):
-            """Press Enter to select top result."""
-            if container._popup.winfo_ismapped() and container._listbox.size() > 0:
-                # Use current selection if any, else first
+            """Press Enter to select highlighted result and proceed to next field."""
+            if container._popup.winfo_ismapped():
                 selection = container._listbox.curselection()
-                idx = selection[0] if selection else 0
-                val = container._listbox.get(idx)
-                container.set(val)
+                if selection:
+                    val = container._listbox.get(selection[0])
+                    container.set(val)
                 container._popup.withdraw()
                 
-                # Trigger color update
                 self.update_dropdown_colors(container)
-
+                
+                # Move focus to next field or trigger callback
+                if on_return_handler:
+                    if hasattr(on_return_handler, 'focus_set'):
+                        on_return_handler.focus_set()
+                    elif callable(on_return_handler):
+                        on_return_handler(event)
+                else:
+                    self.focus_set()
+                
                 if container._callback:
                     container._callback(event)
                 return "break"
             
-            # If popup is not mapped, trigger the next action
+            # If popup is not mapped, jump to next field or trigger callback
             if on_return_handler:
-                if callable(on_return_handler):
-                    on_return_handler(event)
-                elif hasattr(on_return_handler, 'focus_set'):
+                if hasattr(on_return_handler, 'focus_set'):
                     on_return_handler.focus_set()
+                elif callable(on_return_handler):
+                    on_return_handler(event)
                 return "break"
+
         def on_down(event):
-            """Navigate dropdown list with arrow keys."""
+            """Navigate dropdown list OR move to next field."""
             if container._popup.winfo_ismapped():
                 current = container._listbox.curselection()
                 next_idx = min(current[0] + 1, container._listbox.size() - 1) if current else 0
@@ -784,11 +866,15 @@ class EcesisLoginScreen(tk.Frame):
                 container._listbox.see(next_idx)
                 return "break"
             else:
-                container.show_results(container._all_values)
+                # If list is closed, move to next field
+                if on_down_handler and hasattr(on_down_handler, 'focus_set'):
+                    on_down_handler.focus_set()
+                else:
+                    container.show_results(container._all_values)
                 return "break"
 
         def on_up(event):
-            """Navigate dropdown list with arrow keys."""
+            """Navigate dropdown list OR move to previous field."""
             if container._popup.winfo_ismapped():
                 current = container._listbox.curselection()
                 prev_idx = max(current[0] - 1, 0) if current else 0
@@ -797,26 +883,21 @@ class EcesisLoginScreen(tk.Frame):
                 container._listbox.activate(prev_idx)
                 container._listbox.see(prev_idx)
                 return "break"
+            else:
+                # If list is closed, move to previous field
+                if on_up_handler and hasattr(on_up_handler, 'focus_set'):
+                    on_up_handler.focus_set()
+                return "break"
         
         def on_escape(event):
             container._popup.withdraw()
 
-        # Bind events
-        container.bind('<KeyRelease>', on_keyrelease)
-        
-        def on_keypress(event):
-            # If the dropdown is blue, immediately turn it back to gray
-            if container.cget('bg') == '#1877F2':
-                container.set_color_mode('gray')
-                # SELECTION LOCK: Trigger downstream clear
-                self.reset_downstream(container)
-
-        # Remove add='+' to prevent pileup on re-binding
-        container.bind('<Key>', on_keypress) 
-        container.bind('<Return>', on_return) 
-        container.bind('<Down>', on_down)
-        container.bind('<Up>', on_up)
-        container.bind('<Escape>', on_escape)
+        # Bind events to the focused entry widget
+        container._entry.bind('<Return>', on_return) 
+        container._entry.bind('<Tab>', on_return)
+        container._entry.bind('<Down>', on_down)
+        container._entry.bind('<Up>', on_up)
+        container._entry.bind('<Escape>', on_escape)
 
     def load_main_clients(self):
         """Fetch and populate main clients."""
@@ -825,7 +906,15 @@ class EcesisLoginScreen(tk.Frame):
             self.client_data["main_clients"] = response
             values_list = sorted([c["client_name"] for c in self.client_data["main_clients"]])
             self.main_client_dropdown["values"] = values_list
-            self.bind_dropdown_keyboard_sort(self.main_client_dropdown, values_list, "Select Main Client", on_return_handler=self.sub_client_dropdown)
+            self.bind_dropdown_keyboard_sort(
+                self.main_client_dropdown, 
+                values_list, 
+                "Select Main Client", 
+                on_return_handler=self.sub_client_dropdown,
+                on_down_handler=self.sub_client_dropdown
+            )
+            # Automatically focus so placeholder turns black
+            self.after(500, self.main_client_dropdown.focus_set)
 
 
     def on_main_client_select(self, event):
@@ -833,14 +922,14 @@ class EcesisLoginScreen(tk.Frame):
         selected_name = self.main_client_var.get()
         
         # Reset dependent dropdowns and data
-        self.sub_client_var.set("Select Subclient")
+        self.sub_client_dropdown.set("Select Subclient")
         self.sub_client_dropdown["values"] = []
         self.sub_client_dropdown.set_color_mode('gray')
-        self.portal_var.set("Select Portal")
+        self.portal_dropdown.set("Select Portal")
         self.portal_dropdown["values"] = []
         self.portal_dropdown.set_color_mode('gray')
         self.accounts = [] 
-        self.account_var.set("Select Account")
+        self.account_dropdown.set("Select Username")
         self.account_dropdown["values"] = []
         self.account_dropdown.set_color_mode('gray')
 
@@ -883,7 +972,16 @@ class EcesisLoginScreen(tk.Frame):
             def update_ui():
                 self.client_data["sub_clients"] = response
                 self.sub_client_dropdown["values"] = values_list
-                self.bind_dropdown_keyboard_sort(self.sub_client_dropdown, values_list,"Select Subclient", on_return_handler=self.portal_dropdown)
+                self.bind_dropdown_keyboard_sort(
+                    self.sub_client_dropdown, 
+                    values_list, 
+                    "Select Subclient", 
+                    on_return_handler=self.portal_dropdown,
+                    on_up_handler=self.main_client_dropdown,
+                    on_down_handler=self.portal_dropdown
+                )
+                # Automatically focus so placeholder turns black
+                self.after(500, self.sub_client_dropdown.focus_set)
             
             self.after(0, update_ui)
         else:
@@ -899,11 +997,11 @@ class EcesisLoginScreen(tk.Frame):
         if selected_sub_client:
             self.selected_sub_client_id = selected_sub_client["sub_client_id"]
             # Reset dependent dropdowns and IDs
-            self.portal_var.set("Select Portal")
+            self.portal_dropdown.set("Select Portal")
             self.portal_dropdown["values"] = []
             self.portal_dropdown.set_color_mode('gray')
+            self.account_dropdown.set("Select Username")
             self.account_dropdown["values"] = []
-            self.account_var.set("Select Account")
             self.account_dropdown.set_color_mode('gray')
             
             self.selected_portal_id = None
@@ -926,7 +1024,16 @@ class EcesisLoginScreen(tk.Frame):
             def update_ui():
                 self.client_data["portals"] = response["content"]["data"]
                 self.portal_dropdown["values"] = values_list
-                self.bind_dropdown_keyboard_sort(self.portal_dropdown, values_list,"Select Portal", on_return_handler=self.account_dropdown)
+                self.bind_dropdown_keyboard_sort(
+                    self.portal_dropdown, 
+                    values_list, 
+                    "Select Portal", 
+                    on_return_handler=self.account_dropdown,
+                    on_up_handler=self.sub_client_dropdown,
+                    on_down_handler=self.account_dropdown
+                )
+                # Automatically focus so placeholder turns black
+                self.after(500, self.portal_dropdown.focus_set)
             
             self.after(0, update_ui)
 
@@ -941,7 +1048,7 @@ class EcesisLoginScreen(tk.Frame):
             self.selected_portal_url = selected_portal["portal_url"]
             self.selected_portal_key = selected_portal.get("portal_key")
             # Reset account dropdown
-            self.account_var.set("Select Account")
+            self.account_dropdown.set("Select Username")
             self.account_dropdown["values"] = []
             self.account_dropdown.set_color_mode('gray')
             
@@ -957,19 +1064,34 @@ class EcesisLoginScreen(tk.Frame):
             return
 
         if response:
-            values_list = sorted([str(acc["account_id"]) for acc in response["content"]["data"]])
+            values_list = sorted([str(acc["username"]) for acc in response["content"]["data"]])
             
             def update_ui():
                 self.accounts = response["content"]["data"]
                 self.account_dropdown["values"] = values_list
-                self.bind_dropdown_keyboard_sort(self.account_dropdown, values_list,"Select Account", on_return_handler=self.confirm_selection)
+                self.bind_dropdown_keyboard_sort(
+                    self.account_dropdown, 
+                    values_list, 
+                    "Select Username", 
+                    on_return_handler=self.confirm_selection,
+                    on_up_handler=self.portal_dropdown,
+                    on_down_handler=self.login_button
+                )
+                
+                # Auto-select the first username if available
+                if values_list:
+                    self.account_dropdown.set(values_list[0])
+                    self.account_dropdown.set_color_mode('blue')
+                    self.on_account_select(None)
+                    # Automatically focus the login button for one-key login experience
+                    self.after(300, self.login_button.focus_set)
             
             self.after(0, update_ui)
 
 
     def on_account_select(self, event):
         """Handle account selection and display details."""
-        selected_account = next((acc for acc in self.accounts if str(acc["account_id"]) == self.account_var.get()), None)
+        selected_account = next((acc for acc in self.accounts if str(acc["username"]) == self.account_var.get()), None)
         if selected_account:
             self.load_selected_account_info(selected_account)
 
@@ -1011,9 +1133,9 @@ class EcesisLoginScreen(tk.Frame):
             return
 
         account_v = self.account_var.get()
-        selected_account = next((acc for acc in self.accounts if str(acc["account_id"]) == account_v), None)
+        selected_account = next((acc for acc in self.accounts if str(acc["username"]) == account_v), None)
         if not selected_account:
-            messagebox.showwarning("Invalid Selection", f"'{account_v}' is not a valid Account ID.")
+            messagebox.showwarning("Invalid Selection", f"'{account_v}' is not a valid Account.")
             return
 
         # 3. Proceed to login
@@ -1072,5 +1194,4 @@ class EcesisLoginScreen(tk.Frame):
         except requests.exceptions.RequestException as e:
             messagebox.showerror("Error", f"Request failed: {e}")
             return {"status_code": 500, "content": {"data": []}}
-
 

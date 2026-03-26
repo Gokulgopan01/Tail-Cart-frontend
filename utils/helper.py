@@ -3,7 +3,6 @@ import os
 import re
 import time
 import traceback
-from venv import logger
 import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -43,11 +42,9 @@ def params_check():
           # Returns auto for manualy opening Autologin  
 
         return "AutoLogin",None,None
-        #return "SmartEntry",3604,"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzM3NDQ2NDN9.IELMPoQFFov_6NVXyUP1KtfhSMcBjGOqM4KNAivH_8c"
-    
+        #return "SmartEntry","3643","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzQzNDUwMjZ9.pwhdxOUSmfTVHPcrMJ5jJdOyIW112TKmq7H4f0SNlBY"
 
 process_type, hybrid_orderid, hybrid_token = params_check()
-
 
 
 # def initialize_driver(self):
@@ -1097,6 +1094,155 @@ def rrr_fill_repair_details(driver, repair_list):
                 elem.send_keys(str(cost_value))
         except:
             pass
+def rrr_fill_listing_history(driver, history_list, add_link_id, mode="id"):
+    """
+    Specialized helper for RRR Prior Listing History popups.
+    Iterates through the history list, fills the modal fields, and clicks 'Save'.
+    Handles the first record differently as 'Yes' radio might have already opened it.
+    """
+    if not history_list or not isinstance(history_list, list):
+        print("--- [DEBUG] No prior history list to process.")
+        return True
+
+    # Check if 'Yes' (value 1) is actually selected before proceeding
+    try:
+        # ID is based on the radio button control 'rbl_ListingHistoryExists'
+        yes_radio = driver.find_element(By.ID, "rbl_ListingHistoryExists_1")
+        if not yes_radio.is_selected():
+            print("--- [DEBUG] 'Yes' option Not selected for Prior Listing History. Skipping additional fill/clear logic.")
+            return True
+    except Exception as e:
+        print(f"--- [DEBUG] Warning: Could not find/check 'Yes' radio status: {e}")
+        # Proceed anyway as a fallback if we can't find the radio button
+        pass
+
+    # STEP 0: CLEAR existing records first (Fresh refill concept)
+    try:
+        # Loop until all 'Delete' links are gone
+        while True:
+            # We look for links with text 'Delete' and relaction='DELETE'
+            delete_links = driver.find_elements(By.XPATH, "//a[contains(text(), 'Delete') and @relaction='DELETE']")
+            if not delete_links:
+                break # No more records to delete
+            
+            print(f"--- [DEBUG] Found {len(delete_links)} existing history record(s) to clear. Deleting first one...")
+            
+            # Click the first delete link found
+            target_link = delete_links[0]
+            # Use JS click as it's more stable for these small links
+            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", target_link)
+            driver.execute_script("arguments[0].click();", target_link)
+            
+            # Wait for and handle the confirmation alert
+            try:
+                alert_wait = WebDriverWait(driver, 5)
+                alert = alert_wait.until(EC.alert_is_present())
+                alert.accept()
+                print("--- [DEBUG] Delete alert accepted.")
+            except:
+                # No alert or something went wrong?
+                pass
+                
+            time.sleep(3) # Allow record to delete and table to refresh
+    except Exception as e:
+        print(f"--- [DEBUG] Error during Prior History clearing phase: {e}")
+
+    # Process new records as before...
+
+    for index, history in enumerate(history_list):
+        if not history or not any(history.values()):
+            continue
+            
+        print(f"--- [DEBUG] Processing Prior History entry {index + 1}...")
+
+        # 1. Open the popup
+        try:
+            wait = WebDriverWait(driver, 10)
+            popup_open = False
+            
+            # Check if popup is already open (Status dropdown is visible and displayed)
+            try:
+                status_elem = driver.find_element(By.ID, "ddl_slh_ListingStatus")
+                if status_elem.is_displayed():
+                    popup_open = True
+                    print(f"--- [DEBUG] Popup for entry {index + 1} is already open.")
+            except:
+                pass
+
+            if not popup_open:
+                if index == 0:
+                    # For the first record, clicking 'Yes' (if already yes) might re-trigger the popup
+                    # or we use the 'Add New Record' link if the radio doesn't work.
+                    print(f"--- [DEBUG] First record popup not open. Attempting 'Yes' radio click...")
+                    try:
+                        yes_radio = driver.find_element(By.ID, "rbl_ListingHistoryExists_1")
+                        driver.execute_script("arguments[0].click();", yes_radio)
+                        time.sleep(3)
+                        # Check again
+                        status_elem = driver.find_element(By.ID, "ddl_slh_ListingStatus")
+                        if status_elem.is_displayed():
+                            popup_open = True
+                    except:
+                        pass
+                
+                if not popup_open:
+                    # Click Add New Record link
+                    print(f"--- [DEBUG] Clicking '{add_link_id}' to open popup for record {index + 1}...")
+                    selector = By.ID if mode == "id" else By.XPATH
+                    add_link = wait.until(EC.element_to_be_clickable((selector, add_link_id)))
+                    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", add_link)
+                    driver.execute_script("arguments[0].click();", add_link)
+                    
+                    # Wait for popup elements to be visible
+                    wait.until(EC.visibility_of_element_located((By.ID, "ddl_slh_ListingStatus")))
+                    time.sleep(2) # Extra stabilization
+        except Exception as e:
+            print(f"--- [DEBUG] Error opening popup for record {index + 1}: {e}")
+            continue
+
+        # 2. Define field mappings (ID in popup : Key in backend data)
+        mappings = {
+            "ddl_slh_ListingStatus": "PriorStatus",
+            "txt_slh_ListingStartDate": "PriorOriginalListDate",
+            "txt_slh_SoldDate": "EndDate",
+            "txt_slh_ListEndPrice": "EndPrice",
+            "txt_slh_ListStartPrice": "PriorOriginalListPrice",
+            "txt_slh_AgentName": "AgentName",
+            "txt_slh_Agency": "Agency",
+            "ddl_slh_SaleType": "SaleType",
+            "txt_slh_Concessions": "Concessions",
+            "ddl_slh_Financing": "Financing"
+        }
+
+        # 3. Fill the fields
+        for elem_id, key in mappings.items():
+            val = history.get(key)
+            if val is None or val == "":
+                continue
+            
+            try:
+                elem = driver.find_element(By.ID, elem_id)
+                tag = elem.tag_name.lower()
+                if tag == "select":
+                    select_field(driver, val, elem_id, "id")
+                else:
+                    data_filling_text(driver, val, elem_id, "id")
+            except Exception as e:
+                print(f"--- [DEBUG] Error filling {elem_id} with {val}: {e}")
+
+        # 4. Click Save
+        try:
+            # Re-wait for save button to be sure
+            save_btn = WebDriverWait(driver, 5).until(
+                EC.element_to_be_clickable((By.ID, "saveButtonForNewLH"))
+            )
+            driver.execute_script("arguments[0].click();", save_btn)
+            time.sleep(2) # Wait for popup to close
+        except Exception as e:
+            print(f"--- [DEBUG] Error clicking Save in Prior History popup: {e}")
+
+    return True
+
 
 def rrr_select_hoa_amenities(driver, amenities_str, id_prefix, mode="id"):
     """

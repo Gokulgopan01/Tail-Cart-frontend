@@ -4,7 +4,7 @@
 # import logging
 # from integrations.hybrid_bpo_api import HybridBPOApi
 # from utils.helper import get_order_address_from_assigned_order, params_check
-# from utils.pic_pdf_downloads.vpn_connection import vpn_checking
+# from utils.vpn_connection import vpn_checking
 # from screens import portal_login_screen
 
 # arg1, arg2,arg3 = params_check()
@@ -104,7 +104,7 @@
 
 # from integrations.hybrid_bpo_api import HybridBPOApi
 # from utils.helper import get_order_address_from_assigned_order, params_check
-# from utils.pic_pdf_downloads.vpn_connection import vpn_checking
+# from utils.vpn_connection import vpn_checking
 # from screens import portal_login_screen
 
 # arg1, arg2, arg3 = params_check()
@@ -200,7 +200,7 @@ import sys
 
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.helper import get_order_address_from_assigned_order, params_check, update_order_status
-from utils.pic_pdf_downloads.vpn_connection import vpn_checking
+from utils.vpn_connection import vpn_checking
 from screens.portal_login_screen import PortalLoginScreen
 from screens.loaded_screen import LoadedScreen
 

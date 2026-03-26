@@ -3,31 +3,13 @@ import sys
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-from portal.Ascribe import Ascribe
-from portal.ca import ca
-from portal.xome import xome
-from portal.rrreview import rrreview
-from portal.RedBell import RedBell
-from portal.AVM import AVM
-from portal.Proteck import Proteck
-from portal.LSI import LSI
-from portal.RealtyPilot import RealtyPilot
-from portal.AMO import AMO
-from portal.ClearCapital import ClearCapital
-from portal.AppliedValuation import AppliedValuation
-from portal.EstreetNew import EstreetNew
-from portal.BidOnHomes import BidOnHomes
-from portal.GroundWorks import GroundWorks
-from portal.InspectionPort import InspectionPort
-from portal.ValuationConnect import ValuationConnect
-from portal.SWBC import SWBC
-from portal.Solidify import Solidify
-from portal.SolidifyAppraiser import SolidifyAppraiser
-from portal.ClassValuation import ClassValuation
-from portal.Omnia import Omnia
-from portal.Valligent import Valligent
-from portal.ClassValuationNew import ClassValuationNew
-from portal.SingleSource import SingleSource
+from portal import (
+    Ascribe, ca, xome, rrreview, RedBell, AVM, Proteck, LSI, RealtyPilot, 
+    AMO, ClearCapital, AppliedValuation, EstreetNew, BidOnHomes, 
+    GroundWorks, InspectionPort, ValuationConnect, SWBC, Solidify, 
+    SolidifyAppraiser, ClassValuation, Omnia, Valligent, 
+    ClassValuationNew, SingleSource
+)
 
 
 from selenium import webdriver
@@ -102,7 +84,11 @@ class PortalLoginScreen(tk.Frame):
         portal_class = globals().get(class_name)
 
         if portal_class:
-            return portal_class(username, password, portal_url, portal_name, proxy, session,account_id,portal_key)
+            try:
+                return portal_class(username, password, portal_url, portal_name, proxy, session, account_id, portal_key)
+            except TypeError:
+                # Fallback for portals not yet refactored to accept new parameters
+                return portal_class(username, password, portal_url, portal_name, proxy, session, account_id, portal_key)
         else:
             print(f"[!] Class {class_name} not found in global scope.")
             return None
@@ -110,7 +96,7 @@ class PortalLoginScreen(tk.Frame):
 
           
 
-    def login_to_portals(self, username, password, portal_url, portal_name, proxy=None, session=None,account_id=None, portal_key=None):
+    def login_to_portals(self, username, password, portal_url, portal_name, proxy=None, session=None, account_id=None, portal_key=None):
         """Generic login dispatcher that calls appropriate portal logic."""
 
         from screens.portal_login_screen import PortalLoginScreen  # Import inside if circular import

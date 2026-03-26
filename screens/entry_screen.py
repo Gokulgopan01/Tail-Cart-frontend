@@ -7,7 +7,7 @@ from urllib.parse import parse_qs, urlparse
 
 from screens.loaded_screen import LoadedScreen
 from utils.helper import get_order_address_from_assigned_order, params_check, update_order_status
-from utils.pic_pdf_downloads.vpn_connection import vpn_checking
+from utils.vpn_connection import vpn_checking
 import sys
 import threading
 from integrations import hybrid_bpo_api
