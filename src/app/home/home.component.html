@@ -134,7 +134,7 @@
   </div>
   <!-- Progress Bar -->
   <div class="hero-progress">
-    <div class="hero-progress-bar running" [attr.key]="heroSlide"
+    <div *ngFor="let s of [heroSlide]" class="hero-progress-bar running"
       [style.animation-duration]="heroAutoPlayDuration + 'ms'"></div>
   </div>
 
@@ -553,11 +553,10 @@
       </div>
     </div>
 
-    <div class="section-header documents-centered-header" data-aos="fade-up">
+    <div class="documents-mobile-wrapper" data-aos="fade-up">
       <p class="section-subtitle documents-description-centered">
         Securely store and manage all your pet's health records, vaccination schedules, and medical history in one
-        place. Set smart reminders for appointments and medications, ensuring your pet never misses critical care.
-        Access everything anytime, anywhere.
+        place. Set smart reminders for appointments and medications.
       </p>
 
       <div class="cta-buttons documents-cta-centered">
