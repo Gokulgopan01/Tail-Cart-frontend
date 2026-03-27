@@ -127,11 +127,12 @@ export class DocumentsComponent implements OnInit {
     if (this.userId) {
       this.loadDocuments();
       this.loadRemainders();
-      this.loadUserPets(); // <-- ADD THIS
+      this.loadUserPets();
     } else {
       this.showSnackbar('Please log in to access documents.', 'error');
     }
   }
+
 
   loadUserPets(): void {
     const token = localStorage.getItem('access_token');
@@ -754,6 +755,9 @@ export class DocumentsComponent implements OnInit {
       return 'Annual review reminder for document validity';
     }
     return 'Reminder for your document';
+  }
+
+  ngOnDestroy(): void {
   }
 
   openEditModal(doc: Document): void {

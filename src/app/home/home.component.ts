@@ -1,4 +1,4 @@
-import { Component, HostListener, AfterViewInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, HostListener, AfterViewInit, ElementRef, ViewChild, OnDestroy, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
@@ -7,9 +7,14 @@ import { Router, RouterModule } from '@angular/router';
   standalone: true,
   imports: [NgFor, NgIf, RouterModule],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class HomeComponent implements AfterViewInit, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+  // Vault Animation State
+  activeVaultStep: number = 1;
+  vaultToastMessage: string = '';
+  private vaultAnimationTimer: any;
 
   // ── Hero Carousel ──────────────────────────────────────────────
   heroSlide = 0;
@@ -180,21 +185,22 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   isScrolled = false;
 
   @ViewChild('featureVideo', { static: false }) featureVideo!: ElementRef<HTMLVideoElement>;
-  @ViewChild('documentsVideo', { static: false }) documentsVideo!: ElementRef<HTMLVideoElement>;
 
   faqStates: boolean[] = [false, false, false, false];
   isDetailedVideoMuted = true;
   isDetailedVideoPlaying = false;
-  isDocumentsVideoMuted = true;
-  isDocumentsVideoPlaying = false;
 
   constructor(private router: Router) { }
+
+  ngOnInit(): void {
+    this.startVaultAnimation();
+    this.isScrolled = window.scrollY > 300;
+  }
 
   ngAfterViewInit(): void {
     this.startTimer();
     // Wait a bit for video to load
     this.initializeVideo();
-    this.initializeDocumentsVideo();
     setTimeout(() => {
       this.isScrolled = window.scrollY > 300;
     }, 100);
@@ -223,7 +229,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   private hasAutoPlayed = false;
-  private documentsHasAutoPlayed = false;
 
   // Initialize first video
   private initializeVideo(): void {
@@ -255,93 +260,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     video.addEventListener('ended', () => this.onVideoEnded());
   }
 
-  // Initialize documents video
-  private initializeDocumentsVideo(): void {
-    const video = this.documentsVideo?.nativeElement;
-    if (!video) return;
-
-    video.muted = true;
-    video.autoplay = true;
-    video.playsInline = true;
-    video.preload = 'auto';
-    video.controls = true;
-
-    video.load();
-
-    if (!this.documentsHasAutoPlayed) {
-      video.play()
-        .then(() => {
-          this.documentsHasAutoPlayed = true;
-          video.classList.add('playing');
-        })
-        .catch(err => {
-          console.warn('Documents video autoplay blocked:', err);
-        });
-    }
-
-    video.addEventListener('play', () => this.onDocumentsVideoPlay());
-    video.addEventListener('pause', () => this.onDocumentsVideoPause());
-    video.addEventListener('ended', () => this.onDocumentsVideoEnded());
-  }
-
-  // Play documents video when custom button is clicked
-  playDocumentsVideo(event: any): void {
-    const container = event.currentTarget.closest('.video-container-premium');
-    const video: HTMLVideoElement = container.querySelector('.documents-feature-video');
-    const overlay = container.querySelector('.play-button-overlay-luxury');
-
-    if (!video) return;
-
-    video.muted = false;
-    video.controls = true;
-
-    video.play().then(() => {
-      overlay?.classList.add('hidden');
-      video.classList.add('playing');
-      this.isDocumentsVideoPlaying = true;
-      this.isDocumentsVideoMuted = false;
-    });
-  }
-
-
-  // Documents video event handlers
-  onDocumentsVideoPlay(): void {
-    const playOverlay = document.querySelector('.pet-documents-section .play-button-overlay-luxury');
-    if (playOverlay) {
-      playOverlay.classList.add('hidden');
-    }
-  }
-
-  onDocumentsVideoPause(): void {
-    const playOverlay = document.querySelector('.pet-documents-section .play-button-overlay-luxury');
-    if (playOverlay) {
-      playOverlay.classList.remove('hidden');
-    }
-  }
-
-  onDocumentsVideoEnded(): void {
-    const playOverlay = document.querySelector('.pet-documents-section .play-button-overlay-luxury');
-    if (playOverlay) {
-      playOverlay.classList.remove('hidden');
-    }
-  }
-
-  toggleDocumentsVideo(): void {
-    const video = this.documentsVideo.nativeElement;
-    if (video.paused) {
-      video.play();
-      this.isDocumentsVideoPlaying = true;
-    } else {
-      video.pause();
-      this.isDocumentsVideoPlaying = false;
-    }
-  }
-
-  toggleDocumentsMute(): void {
-    const video = this.documentsVideo.nativeElement;
-    video.muted = !video.muted;
-    this.isDocumentsVideoMuted = video.muted;
-  }
 
 
   // Existing video methods (keep all existing code below)
@@ -504,8 +422,40 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     card.style.transform = 'translateY(0)';
   }
 
+  // Vault Animation Logic
+  startVaultAnimation(): void {
+    if (this.vaultAnimationTimer) clearInterval(this.vaultAnimationTimer);
+
+    this.vaultAnimationTimer = setInterval(() => {
+      this.activeVaultStep++;
+
+      if (this.activeVaultStep === 2) {
+        // Step 2: Simulate "Add Document" click and success
+        setTimeout(() => {
+          this.vaultToastMessage = 'Document uploaded successfully!';
+          setTimeout(() => this.vaultToastMessage = '', 2000);
+        }, 1000);
+      } else if (this.activeVaultStep === 3) {
+        // Step 3: Switch to Reminders tab
+        this.vaultToastMessage = '';
+      } else if (this.activeVaultStep === 4) {
+        // Step 4: Show Reminder toast
+        setTimeout(() => {
+          this.vaultToastMessage = 'Reminder set for Buddy!';
+          setTimeout(() => this.vaultToastMessage = '', 2000);
+        }, 800);
+      }
+
+      if (this.activeVaultStep > 4) {
+        this.activeVaultStep = 1;
+        this.vaultToastMessage = '';
+      }
+    }, 4000); // 4 seconds per state
+  }
+
   ngOnDestroy(): void {
-    clearInterval(this.heroTimer);
-    clearInterval(this.serviceTimer);
+    if (this.heroTimer) clearInterval(this.heroTimer);
+    if (this.serviceTimer) clearInterval(this.serviceTimer);
+    if (this.vaultAnimationTimer) clearInterval(this.vaultAnimationTimer);
   }
 }

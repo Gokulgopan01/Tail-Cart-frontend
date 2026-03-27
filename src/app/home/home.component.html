@@ -524,32 +524,105 @@
         anywhere.</p>
     </div>
 
-    <div class="detailed-video-wrapper">
-      <div class="video-container-premium">
-        <video #documentsVideo class="feature-video documents-feature-video" [muted]="isDocumentsVideoMuted" playsinline
-          preload="auto">
-          <source src="assets/videos/Document_Locker.mp4" type="video/mp4">
-        </video>
+    <!-- High-Fidelity Vault Animation Mockup -->
+    <div class="documents-animation-wrapper" data-aos="zoom-in">
+      <div class="vault-mockup-luxury">
+        <div class="vault-phone">
+          <div class="vault-screen">
+            <!-- Simulated App Header -->
+            <div class="vault-mock-header">
+              <div class="vault-status-bar">
+                <span class="v-time">10:00</span>
+                <div class="v-icons">
+                  <i class="fas fa-signal"></i>
+                  <i class="fas fa-wifi"></i>
+                  <i class="fas fa-battery-full"></i>
+                </div>
+              </div>
+              <div class="vault-nav">
+                <i class="fas fa-bars"></i>
+                <span class="vault-title">TAIL VAULT</span>
+                <div class="v-icons-right">
+                  <i class="fas fa-bell"></i>
+                  <i class="fas fa-shopping-bag"></i>
+                </div>
+              </div>
+              <div class="vault-mock-tabs">
+                <div class="v-tab" [class.active]="activeVaultStep <= 2">
+                  <i class="fas fa-folder"></i> Documents <span class="v-badge">1</span>
+                </div>
+                <div class="v-tab" [class.active]="activeVaultStep >= 3">
+                  <i class="fas fa-bell"></i> Reminders <span class="v-badge">2</span>
+                </div>
+              </div>
+            </div>
 
-        <div class="video-controls-overlay" [class.hidden]="!isDocumentsVideoPlaying">
-          <button class="video-control-btn" (click)="toggleDocumentsVideo()">
-            <i class="fas" [class.fa-pause]="isDocumentsVideoPlaying" [class.fa-play]="!isDocumentsVideoPlaying"></i>
-          </button>
-          <button class="video-control-btn" (click)="toggleDocumentsMute()">
-            <i class="fas" [class.fa-volume-mute]="isDocumentsVideoMuted"
-              [class.fa-volume-up]="!isDocumentsVideoMuted"></i>
-          </button>
-        </div>
+            <!-- Simulated App Body -->
+            <div class="vault-mock-body">
+              <!-- Documents View (Steps 1 & 2) -->
+              <div class="view-documents" *ngIf="activeVaultStep <= 2">
+                <div class="mock-search">
+                  <i class="fas fa-search"></i> Search by document...
+                </div>
+                
+                <div class="mock-btn-add" [class.v-press]="activeVaultStep === 2">
+                  <i class="fas fa-plus"></i> Add Document
+                </div>
 
-        <!-- Custom play button overlay -->
-        <div class="play-button-overlay-luxury" *ngIf="!isDocumentsVideoPlaying" (click)="playDocumentsVideo($event)">
-          <div class="luxury-play-circle">
-            <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon">
-              <path d="M8 5v14l11-7z" />
-            </svg>
+                <div class="mock-card-vault">
+                  <div class="m-card-left">
+                    <div class="m-pdf-tag">PDF</div>
+                    <div class="m-content">
+                      <div class="m-name">Rabies Certificate</div>
+                      <div class="m-id">a74cb247-e • 1.2 MB</div>
+                    </div>
+                  </div>
+                  <div class="m-card-actions">
+                    <i class="fas fa-download"></i>
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-trash"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Reminders View (Step 3 & 4) -->
+              <div class="view-reminders" *ngIf="activeVaultStep >= 3">
+                <div class="mock-filter-row">
+                  <div class="m-filter-pill">All Pets <i class="fas fa-chevron-down"></i></div>
+                  <div class="m-filter-pill">Scheduled <i class="fas fa-chevron-down"></i></div>
+                </div>
+
+                <div class="mock-reminder-card">
+                  <div class="rem-header">
+                    <span class="p-name">Buddy</span>
+                    <span class="rem-status">Scheduled</span>
+                  </div>
+                  <div class="rem-main">
+                    <i class="fas fa-calendar-alt"></i>
+                    <div class="rem-info">
+                      <div class="rem-title">Go to grooming at 9</div>
+                      <div class="rem-type">Grooming • Bath</div>
+                    </div>
+                  </div>
+                  <div class="rem-footer">
+                    31 Mar 2026 • 12:30:00
+                  </div>
+                </div>
+              </div>
+
+              <!-- Toast / Tooltip Overlay -->
+              <div class="vault-mock-toast" [class.visible]="vaultToastMessage">
+                <i class="fas fa-check-circle"></i> {{vaultToastMessage}}
+              </div>
+            </div>
+
+            <!-- Virtual Cursor -->
+            <div class="vault-virtual-cursor" [class]="'v-pos-' + activeVaultStep">
+              <div class="v-cursor-inner"></div>
+            </div>
           </div>
-          <span class="play-text-luxury">PLAY VIDEO</span>
         </div>
+        <div class="visual-glow-halo"></div>
       </div>
     </div>
 

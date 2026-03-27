@@ -3755,3 +3755,496 @@ html {
     border-radius: 12px !important;
   }
 }
+
+/* Lottie Illustration for Pet Documents Section */
+.pet-docs-lottie-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+lottie-player {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .pet-docs-lottie-container {
+    padding: 0;
+    min-height: 300px;
+  }
+}
+
+/* =========================================== */
+/* PREMIUM VAULT ANIMATION MOCKUP */
+/* =========================================== */
+
+.documents-animation-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+  perspective: 2000px;
+}
+
+.vault-mockup-luxury {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  justify-content: center;
+}
+
+.vault-phone {
+  width: 290px;
+  height: 580px;
+  background: #111;
+  border-radius: 45px;
+  padding: 12px;
+  box-shadow:
+    0 50px 100px -20px rgba(0, 0, 0, 0.5),
+    0 0 0 2px #333,
+    inset 0 0 15px rgba(255, 255, 255, 0.1);
+  position: relative;
+  transform: rotateY(-8deg) rotateX(4deg);
+  transition: transform 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.vault-phone:hover {
+  transform: rotateY(0deg) rotateX(0deg) scale(1.02);
+}
+
+.vault-screen {
+  width: 100%;
+  height: 100%;
+  background: #f8fafc;
+  border-radius: 35px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mock App Header */
+.vault-mock-header {
+  background: #003c30;
+  padding: 10px 18px 15px;
+  color: white;
+}
+
+.vault-status-bar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  margin-bottom: 12px;
+  opacity: 0.8;
+}
+
+.vault-status-bar .v-icons {
+  display: flex;
+  gap: 5px;
+}
+
+.vault-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.vault-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 850;
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+}
+
+.v-icons-right {
+  display: flex;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.vault-mock-tabs {
+  display: flex;
+  gap: 12px;
+}
+
+.v-tab {
+  flex: 1;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.4s;
+  opacity: 0.7;
+}
+
+.v-tab.active {
+  background: white;
+  color: #003c30;
+  opacity: 1;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.v-badge {
+  background: #D4AF37;
+  color: white;
+  font-size: 0.5rem;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+/* Mock App Body */
+.vault-mock-body {
+  flex: 1;
+  padding: 18px;
+  position: relative;
+}
+
+.mock-search {
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 10px 15px;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mock-btn-add {
+  background: #003c30;
+  color: white;
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.mock-btn-add.v-press {
+  transform: scale(0.95);
+  background: #002a22;
+}
+
+/* Document Card */
+.mock-card-vault {
+  background: white;
+  border-radius: 15px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+  animation: slide-up-card 0.6s ease-out;
+}
+
+@keyframes slide-up-card {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.m-card-left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.m-pdf-tag {
+  width: 32px;
+  height: 32px;
+  background: #fee2e2;
+  color: #ef4444;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-weight: 800;
+}
+
+.m-name {
+  font-size: 0.75rem;
+  font-weight: 750;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.m-id {
+  font-size: 0.55rem;
+  color: #94a3b8;
+}
+
+.m-card-actions {
+  display: flex;
+  gap: 10px;
+  color: #64748b;
+  font-size: 0.7rem;
+}
+
+/* Reminder View */
+.mock-filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.m-filter-pill {
+  padding: 6px 12px;
+  background: #f1f5f9;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mock-reminder-card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  animation: slide-right-card 0.6s ease-out;
+}
+
+@keyframes slide-right-card {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.rem-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.p-name {
+  font-weight: 800;
+  font-size: 0.6rem;
+  color: #003c30;
+  background: rgba(0, 60, 48, 0.05);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.rem-status {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #D4AF37;
+}
+
+.rem-main {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.rem-main i {
+  font-size: 1.2rem;
+  color: #003c30;
+}
+
+.rem-title {
+  font-size: 0.75rem;
+  font-weight: 750;
+  color: #0f172a;
+}
+
+.rem-type {
+  font-size: 0.6rem;
+  color: #64748b;
+}
+
+.rem-footer {
+  font-size: 0.55rem;
+  color: #94a3b8;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 10px;
+}
+
+/* Virtual Cursor */
+.vault-virtual-cursor {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  z-index: 100;
+  pointer-events: none;
+  transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  top: 80%;
+  left: 50%;
+}
+
+.v-cursor-inner {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 60, 48, 0.3);
+  border: 1.5px solid white;
+  border-radius: 50%;
+  position: relative;
+}
+
+.v-cursor-inner::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  background: rgba(0, 60, 48, 0.1);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Cursor States */
+.v-pos-1 {
+  top: 180px;
+  left: 220px;
+}
+
+/* Over Add Button */
+.v-pos-2 {
+  top: 180px;
+  left: 220px;
+}
+
+/* Clicking Add */
+.v-pos-3 {
+  top: 130px;
+  left: 180px;
+}
+
+/* Moving to Reminders tab */
+.v-pos-4 {
+  top: 250px;
+  left: 140px;
+}
+
+/* Idle on Reminders view */
+
+/* Toast */
+.vault-mock-toast {
+  position: absolute;
+  bottom: 25px;
+  left: 18px;
+  right: 18px;
+  background: #0f172a;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 12px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateY(50px);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.vault-mock-toast.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.vault-mock-toast i {
+  color: #10b981;
+}
+
+@media (max-width: 450px) {
+  .vault-phone {
+    width: 240px;
+    height: 480px;
+    padding: 10px;
+  }
+}
+
+/* Responsive Vault Layout */
+.documents-mobile-wrapper {
+  display: block;
+  /* Visible on all devices to show buttons */
+  text-align: center;
+  margin-top: 30px;
+}
+
+@media (max-width: 1024px) {
+  .documents-animation-wrapper {
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  .documents-mobile-wrapper {
+    margin-top: 20px;
+  }
+
+  .cta-buttons.documents-cta-centered {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-premium {
+    width: 100% !important;
+    max-width: 300px;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .cta-buttons.documents-cta-centered {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+/* Extra small mobile fix */
+@media (max-width: 480px) {
+  .documents-animation-wrapper {
+    transform: scale(0.85);
+    margin: -40px 0;
+  }
+
+  .documents-mobile-wrapper {
+    padding: 0 10px;
+  }
+}
