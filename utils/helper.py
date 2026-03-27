@@ -1051,7 +1051,7 @@ def rrr_fill_repair_details(driver, repair_list):
         "structural": ("txtExteriorStructural", "txtExteriorStructuralLow"),
         "landscaping": ("txtExteriorLandscaping", "txtExteriorLandscapingLow"),
         "outbuildings": ("txtExteriorOutbuildings", "txtExteriorOutbuildingsLow"),
-        "debrisremoval": ("txtExteriorDebris_Removal", "txtExteriorDebris_RemovalLow"),
+        "CleaningTrashRemoval": ("txtExteriorDebris_Removal", "txtExteriorDebris_RemovalLow"),
         "utility": ("txtExteriorUtility", "txtExteriorUtilityLow"),
         "other": ("txtExteriorOther", "txtExteriorOtherLow"),
     }

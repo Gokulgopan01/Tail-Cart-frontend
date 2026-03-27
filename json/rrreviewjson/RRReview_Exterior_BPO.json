@@ -954,7 +954,7 @@
           "values": [
             [
               "sold1['View']",
-              "//*[@id='rrrSale1$ddlView']",
+              "//*[@id='rrrSale1_ddlView']",
               "xpath"
             ]
           ]
@@ -1304,7 +1304,7 @@
           "values": [
             [
               "sold2['View']",
-              "//*[@id='rrrSale2$ddlView']",
+              "//*[@id='rrrSale2_ddlView']",
               "xpath"
             ]
           ]
@@ -1654,7 +1654,7 @@
           "values": [
             [
               "sold3['View']",
-              "//*[@id='rrrSale3$ddlView']",
+              "//*[@id='rrrSale3_ddlView']",
               "xpath"
             ]
           ]
@@ -1974,7 +1974,7 @@
           "values": [
             [
               "list1['View']",
-              "//*[@id='rrrListing1$ddlView']",
+              "//*[@id='rrrListing1_ddlView']",
               "xpath"
             ]
           ]
@@ -2304,7 +2304,7 @@
           "values": [
             [
               "list2['View']",
-              "//*[@id='rrrListing2$ddlView']",
+              "//*[@id='rrrListing2_ddlView']",
               "xpath"
             ]
           ]
@@ -2614,7 +2614,7 @@
           "values": [
             [
               "list3['View']",
-              "//*[@id='rrrListing3$ddlView']",
+              "//*[@id='rrrListing3_ddlView']",
               "xpath"
             ]
           ]
