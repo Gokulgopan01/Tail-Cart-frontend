@@ -2410,6 +2410,16 @@
           ]
         },
         {
+          "filedtype": "Textbox",
+          "values": [
+            [
+              "list2['#ofCars']",
+              "//*[@id='rrrListing2_txtGarages']",
+              "xpath"
+            ]
+          ]
+        },
+        {
           "filedtype": "select_data",
           "values": [
             [
@@ -2715,6 +2725,16 @@
             [
               "list3['GarCarType']",
               "//*[@id='rrrListing3_ddlGarageType']",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "Textbox",
+          "values": [
+            [
+              "list3['#ofCars']",
+              "//*[@id='rrrListing3_txtGarages']",
               "xpath"
             ]
           ]
