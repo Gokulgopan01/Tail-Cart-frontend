@@ -851,7 +851,8 @@ class rrreview:
             
 
             if form_fill_success and photo_upload_success:
-                update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed", hybrid_token)
+                #update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed", hybrid_token)
+                update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled", hybrid_token)
                 logger.log(
                     module="rrreview-fill_form_multi",
                     order_id=hybrid_orderid,
