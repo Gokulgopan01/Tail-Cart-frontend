@@ -18,6 +18,9 @@ export class NavbarComponent implements OnInit {
   isPastHalfScreen = false;
   hideTopNav = false;
   hideBottomNav = false;
+  
+  lastScrollTop = 0;
+  isScrollingDown = false;
 
   constructor(private router: Router) {
     this.router.events.pipe(
@@ -43,8 +46,20 @@ export class NavbarComponent implements OnInit {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    this.isScrolled = window.scrollY > 50;
-    this.isPastHalfScreen = window.scrollY > (window.innerHeight / 2);
+    const st = window.scrollY;
+    
+    this.isScrolled = st > 50;
+    this.isPastHalfScreen = st > (window.innerHeight / 2);
+    
+    // Determine scroll direction for hiding navbar
+    if (st > this.lastScrollTop && st > 80) {
+      // Downscroll code
+      this.isScrollingDown = true;
+    } else {
+      // Upscroll code
+      this.isScrollingDown = false;
+    }
+    this.lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
   }
 
   toggleMobileMenu() {

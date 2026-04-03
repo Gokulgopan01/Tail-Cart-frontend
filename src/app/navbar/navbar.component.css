@@ -8,7 +8,13 @@
   z-index: 9999;
   padding: 0;
   background: transparent;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s, opacity 0.4s;
+}
+
+.luxury-navbar.nav-hidden {
+  transform: translateY(-200%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Floating Pill Body */
@@ -358,42 +364,53 @@
   }
 }
 
-/* MOBILE BOTTOM NAV BAR: Full-width and Permanent */
+/* MOBILE BOTTOM NAV BAR: Sleek Floating Premium Pill */
 .mobile-bottom-nav {
   position: fixed;
-  bottom: 0;
+  bottom: 25px;
   left: 0;
-  width: 100%;
-  background: white;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+  right: 0;
+  margin: 0 auto;
+  width: 90%;
+  max-width: 400px;
+  background: rgba(22, 22, 22, 0.85); /* Premium Dark Glass */
+  backdrop-filter: blur(25px) saturate(200%);
+  -webkit-backdrop-filter: blur(25px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 40px; /* Slim Pill Shape */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   display: none;
   /* Only flex on mobile/tablet via media query */
   justify-content: space-around;
   align-items: center;
   z-index: 9999;
-  padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
-  transition: transform 0.3s ease;
+  padding: 8px 12px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bottom-nav-link {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-decoration: none;
-  gap: 4px;
+  gap: 3px;
   flex: 1;
-  color: #a0aec0; /* Inactive color */
-  transition: all 0.3s ease;
+  color: #6a7c92; /* Cool slim grey */
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  padding: 4px 0 2px 0;
 }
 
 .bottom-nav-icon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: inherit;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 2;
 }
 
 .bottom-nav-icon svg {
@@ -402,19 +419,65 @@
 }
 
 .bottom-nav-link span {
-  font-size: 0.65rem;
-  font-weight: 700;
+  font-size: 0.58rem;
+  font-weight: 800;
   color: inherit;
   letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  z-index: 2;
 }
 
-/* Active State Styles: Primary Dark Green as requested */
+/* Premium Active State: Gold/Yellow */
 .bottom-nav-link.active {
-  color: var(--primary-dark-green) !important;
+  color: #d4af37 !important; 
 }
 
 .bottom-nav-link.active .bottom-nav-icon {
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.05);
+  filter: drop-shadow(0 4px 6px rgba(212, 175, 55, 0.4));
+}
+
+.bottom-nav-link.active span {
+  transform: translateY(1px);
+  color: #fff; /* White text pops against dark glass */
+}
+
+/* Active Glow Aura */
+.bottom-nav-link::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  width: 32px;
+  height: 32px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, transparent 60%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bottom-nav-link.active::before {
+  opacity: 1;
+}
+
+/* Active Dot Indicator */
+.bottom-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  width: 3px;
+  height: 3px;
+  background: #d4af37;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bottom-nav-link.active::after {
+  opacity: 1;
+  transform: scale(1);
 }
 
 @media (max-width: 1024px) {
@@ -424,12 +487,18 @@
 }
 
 @media (max-width: 369px) {
+  .mobile-bottom-nav {
+    width: 94%;
+    bottom: 20px;
+    padding: 6px 10px;
+  }
+  
   .bottom-nav-link span {
-    font-size: 0.6rem;
+    font-size: 0.5rem;
   }
   
   .bottom-nav-icon {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 }

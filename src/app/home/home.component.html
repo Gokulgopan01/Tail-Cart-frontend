@@ -129,7 +129,7 @@
 <div class="home-free-delivery-banner">
   <div class="container fd-home-container">
     <div class="fd-content-centered">
-      <span class="fd-banner-text">FREE DELIVERY ON ALL <br class="mobile-break"> PREMIUM SMART TAGS</span>
+      <span class="fd-banner-text">FREE DELIVERY ON ALL PREMIUM SMART TAGS</span>
     </div>
   </div>
 </div>
@@ -222,59 +222,58 @@
 </section>
 
 
-<!-- Explore TailCart Services Section (3D Carousel) -->
+<!-- Explore TailCart Services Section (3D Modern Carousel) -->
 <section class="services-3d-section fade-in">
   <div class="container">
-    <div class="section-header" data-aos="fade-up">
-      <div class="premium-tag tag-emerald"><i class="fas fa-gem"></i> Premium Services</div>
-      <h2 class="section-title">Explore <span class="highlight-green">TailCart</span> Services</h2>
+    <div class="modern-header-v2" data-aos="fade-up">
+      <div class="premium-text-tag">PREMIUM ECOSYSTEM</div>
+      <h2 class="modern-title-v2">
+        Explore TailCart<br>
+        <span class="gradient-text">Services</span>
+      </h2>
     </div>
 
     <!-- 3D Carousel Container -->
-    <div class="services-3d-carousel-container" data-aos="zoom-in">
+    <div class="services-slider-container" data-aos="zoom-in">
       <div class="carousel-stage">
         <div class="carousel-rotator" [style.transform]="'rotateY(' + (activeServiceIndex * -72) + 'deg)'">
           <div *ngFor="let service of services; let i = index" class="carousel-slide"
             [class.active]="activeServiceIndex === i"
             [style.transform]="'rotateY(' + (i * 72) + 'deg) translateZ(var(--carousel-z))'">
 
-            <div class="service-slide-content">
-              <!-- Left Side: Visual -->
-              <div class="service-visual-column">
-                <div class="service-round-visual" [style.background]="service.bgColor">
-                  <!-- <div class="visual-glow" [style.background]="service.color"></div> -->
-                  <img [src]="service.img" [alt]="service.name" class="service-3d-img">
-                </div>
+            <div class="modern-card">
+              <div class="modern-sticker-wrapper">
+                <div class="sticker-glow" [style.background]="service.color"></div>
+                <img [src]="service.img" [alt]="service.name" class="modern-sticker-img">
               </div>
 
-              <!-- Right Side: Info -->
-              <div class="service-info-column">
-                <h3 class="service-3d-name" [style.color]="service.color">{{service.name}}</h3>
-                <p class="service-3d-desc">{{service.desc}}</p>
-                <button class="btn-service-cta" [style.background-color]="service.color"
-                  (click)="navigateToService(service.route)">
-                  {{service.cta}} <i class="fas fa-arrow-right"></i>
-                </button>
-              </div>
+              <h3 class="modern-service-name" [style.color]="service.color">{{service.name}}</h3>
+              <p class="modern-service-desc">{{service.desc}}</p>
+
+              <button class="btn-modern-cta" [style.background-color]="service.color"
+                (click)="navigateToService(service.route)">
+                {{service.cta}} <i class="fas fa-arrow-right"></i>
+              </button>
             </div>
+
           </div>
         </div>
       </div>
 
       <!-- Navigation Controls -->
-      <div class="services-3d-nav">
-        <button class="nav-arrow prev" (click)="prevService()" aria-label="Previous Service">
+      <div class="modern-nav-controls">
+        <button class="modern-arrow prev" (click)="prevService()" aria-label="Previous Service">
           <i class="fas fa-chevron-left"></i>
         </button>
 
-        <div class="nav-indicators">
-          <button *ngFor="let service of services; let i = index" class="nav-dot"
+        <div class="modern-indicators">
+          <button *ngFor="let service of services; let i = index" class="modern-dot"
             [class.active]="activeServiceIndex === i" (click)="goToService(i)"
-            [style.background-color]="i === activeServiceIndex ? service.color : 'rgba(255,255,255,0.2)'">
+            [style.background-color]="i === activeServiceIndex ? service.color : 'rgba(255,255,255,0.15)'">
           </button>
         </div>
 
-        <button class="nav-arrow next" (click)="nextService()" aria-label="Next Service">
+        <button class="modern-arrow next" (click)="nextService()" aria-label="Next Service">
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
@@ -375,7 +374,7 @@
   <div class="container">
     <div class="si-header" data-aos="fade-up">
       <h2 class="si-title">Seamless Integration</h2>
-      <p class="si-subtitle">Four simple steps to eternal peace of mind.<br>Sophisticated technology, human-centric
+      <p class="si-subtitle">Four effortless steps to keep your pet safe.<br>Sophisticated technology, human-centric
         design.</p>
     </div>
 
