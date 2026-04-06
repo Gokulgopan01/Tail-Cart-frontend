@@ -1,802 +1,247 @@
-<!--Home First section----------------------------------------------------------------------------------------------------------------------------->
-<section class="hero-section" id="heroSection" (touchstart)="onHeroTouchStart($event)"
-  (touchend)="onHeroTouchEnd($event)">
-
-  <!-- Carousel Track -->
-  <div class="hero-carousel" [style.transform]="'translateX(-' + (heroSlide * 25) + '%)'">
-
-    <!-- Slide 1: QR Keychain -->
-    <div class="hero-slide slide-qr" [class.active]="heroSlide === 0">
-      <div class="slide-bg" style="background-image: url('assets/images/hero_qr_keychain.png')"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <div class="slide-tag">
-          <svg class="tag-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-            style="width:14px;height:14px;margin-right:6px;">
-            <path
-              d="M5 5h4v4H5V5zm10 0h4v4h-4V5zM5 15h4v4H5v-4zm10 0h4v4h-4v-4zM7 7h0m0 10h0m10-10h0M7 7v0m0 10v0m10-10v0m0 10v0"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
-          Tail Tag
-        </div>
-        <h1 class="slide-title">QR Tagged<br><span class="slide-accent">Pet Keychains</span></h1>
-        <p class="slide-desc">Buy a smart QR keychain for your dog&apos;s collar. Anyone who finds them can scan &amp;
-          instantly get your details, call you, or share live location.</p>
-        <div class="slide-actions">
-          <button class="btn-hero-primary" (click)="navigateToShop()">SHOP NOW</button>
-          <button class="btn-hero-ghost" (click)="navigateToAbout()">LEARN MORE</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 2: Document Locker -->
-    <div class="hero-slide slide-docs" [class.active]="heroSlide === 1">
-      <div class="slide-bg" style="background-image: url('assets/images/hero_document_locker.png')"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <div class="slide-tag">
-          <svg class="tag-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-            style="width:14px;height:14px;margin-right:6px;">
-            <path
-              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          Tail Vault
-        </div>
-        <h1 class="slide-title">Pet Document<br><span class="slide-accent">Locker</span></h1>
-        <p class="slide-desc">Store your pet&apos;s vaccination records, prescriptions &amp; certificates securely in
-          the cloud. Download or view anytime, anywhere.</p>
-        <div class="slide-actions">
-          <button class="btn-hero-primary" (click)="navigateToDocuments()">UPLOAD DOCUMENT</button>
-          <button class="btn-hero-ghost" (click)="navigateToAbout()">LEARN MORE</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 3: Alert System -->
-    <div class="hero-slide slide-alerts" [class.active]="heroSlide === 2">
-      <div class="slide-bg" style="background-image: url('assets/images/hero_alert_system.png')"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <div class="slide-tag">
-          <svg class="tag-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-            style="width:14px;height:14px;margin-right:6px;">
-            <path
-              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          Tail Scheduler
-        </div>
-        <h1 class="slide-title">Smart<br><span class="slide-accent">Remainder System</span></h1>
-        <p class="slide-desc">Set vaccination reminders and medical appointments. Get notified via Email &amp; Mobile so
-          your pet never misses a critical care date.</p>
-        <div class="slide-actions">
-          <button class="btn-hero-primary" (click)="navigateToAlerts()">SET REMINDERS</button>
-          <button class="btn-hero-ghost" (click)="navigateToAbout()">LEARN MORE</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 4: AI Doctor -->
-    <div class="hero-slide slide-ai" [class.active]="heroSlide === 3">
-      <div class="slide-bg" style="background-image: url('assets/images/hero_ai_doctor.png')"></div>
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <div class="slide-tag">
-          <svg class="tag-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-            style="width:14px;height:14px;margin-right:6px;">
-            <path
-              d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          Tail Care+
-        </div>
-        <h1 class="slide-title">AI Pet<br><span class="slide-accent">Doctor</span></h1>
-        <p class="slide-desc">Ask anything about your pet&apos;s health, diet, or behavior. Our specially trained AI
-          model acts as a 24/7 veterinary doctor for your pet.</p>
-        <div class="slide-actions">
-          <button class="btn-hero-primary" (click)="navigateToDoctor()">ASK DOCTOR</button>
-          <button class="btn-hero-ghost" (click)="navigateToAbout()">LEARN MORE</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <!-- Progress Bar -->
-  <div class="hero-progress">
-    <div *ngFor="let s of [heroSlide]" class="hero-progress-bar running"
-      [style.animation-duration]="heroAutoPlayDuration + 'ms'"></div>
-  </div>
-
-  <!-- Dots -->
-  <div class="hero-dots">
-    <button *ngFor="let s of heroSlides; let i = index" class="hero-dot" [class.active]="heroSlide === i"
-      (click)="goToHeroSlide(i)">
-    </button>
-  </div>
-
-  <!-- Slide Counter -->
-  <div class="hero-counter">
-    <span class="counter-current">0{{ heroSlide + 1 }}</span>
-    <span class="counter-sep"> / </span>
-    <span class="counter-total">04</span>
-  </div>
-
-</section>
-
-<!-- Free Delivery Banner -->
-<div class="home-free-delivery-banner">
-  <div class="container fd-home-container">
-    <div class="fd-content-centered">
-      <span class="fd-banner-text">FREE DELIVERY ON ALL PREMIUM SMART TAGS</span>
-    </div>
-  </div>
-</div>
-
-<!-- Precision Tracking Section -->
-<section class="precision-tracking-section" data-aos="fade-up">
-  <div class="container precision-container">
-    <div class="precision-content">
-      <div class="precision-tag">THE INTELLIGENT GUARDIAN</div>
-      <h2 class="precision-title">
-        Precision tracking.<br>
-        <span class="precision-italic">Refined design.</span>
-      </h2>
-      <p class="precision-desc">
-        The next evolution of pet safety. Encapsulated in aerospace-grade materials, engineered for the modern explorer.
-      </p>
-      <button class="btn-explore-collection" (click)="navigateToShop()">
-        EXPLORE THE COLLECTION <i class="fas fa-arrow-right arrow-icon"></i>
-      </button>
+<!-- Hero Section -->
+<section class="hero-wrapper">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-tag fade-in" data-aos="fade-down">The Future of Pet Security</div>
+    <h1 class="hero-title fade-in" data-aos="fade-up">
+      Total Pet Safety.<br>
+      <span class="highlight">Smart. Secure. Seamless.</span>
+    </h1>
+    <p class="hero-desc fade-in" data-aos="fade-up" data-aos-delay="200">
+      The only ecosystem your pet ever needs. From precision tracking to AI-powered health insights, all in one place.
+    </p>
+    <div class="hero-actions fade-in" data-aos="fade-up" data-aos-delay="400">
+      <button class="btn-primary-luxury" (click)="navigateToShop()">SHOP COLLECTION</button>
+      <button class="btn-glass-luxury" (click)="navigateToAbout()">LEARN MORE</button>
     </div>
   </div>
 </section>
 
-<!-- Trending Products Section -->
-<section class="trending-products-section">
-  <div class="container">
-    <div class="trending-header-row" data-aos="fade-up">
-      <h2 class="trending-title">Trending Now</h2>
-      <a href="#" class="view-all-link" (click)="navigateToShop(); $event.preventDefault()">View All</a>
+<!-- Offer Banner Section -->
+<section class="offer-banner-section" data-aos="fade-up">
+  <div class="banner-container-premium">
+    <div class="banner-photo-bg">
+      <img src="assets/images/banner_dog.png" alt="Pet Promotion" class="banner-photo">
+      <div class="banner-overlay-content">
+        <div class="offer-tag">20% discount on all, limited offer</div>
+        <button class="btn-shop-now-banner" (click)="navigateToShop()">Shop Now</button>
+      </div>
     </div>
+  </div>
+</section>
 
-    <div class="product-grid">
-      <!-- Product 1 -->
-      <div class="product-card" data-aos="fade-up" data-aos-delay="100" (click)="navigateToShop()">
-        <div class="product-badge badge-amber">BESTSELLER</div>
-        <div class="product-image-wrapper">
-          <img src="assets/images/product_trending_1.png" alt="Guardian Alpha" class="product-img">
+<!-- Categories Section -->
+<section class="categories-section" data-aos="fade-up">
+  <div class="section-container">
+    <div class="category-header">
+      <h2 class="category-title">Categories</h2>
+      <a routerLink="/shop" class="view-all-link">View All</a>
+    </div>
+    <div class="category-grid">
+      <div class="category-item active" (click)="navigateToShop()">
+        <div class="category-icon dogs-icon">
+          <i class="fas fa-paw"></i>
         </div>
-        <div class="product-info">
-          <h3 class="product-title">Guardian Alpha</h3>
-          <p class="product-subtitle">Polished Gold Neck Band</p>
-          <div class="product-price">₹688.00</div>
-          <button class="product-btn" (click)="navigateToShop(); $event.stopPropagation()">SHOP NOW</button>
-        </div>
+        <span class="category-label">Dogs</span>
       </div>
-
-      <!-- Product 2 -->
-      <div class="product-card" data-aos="fade-up" data-aos-delay="200" (click)="navigateToShop()">
-        <div class="product-badge badge-gold">Hot Sale</div>
-        <div class="product-image-wrapper">
-          <img src="assets/images/product_trending_2.jpg" alt="Guardian Ceramic" class="product-img">
+      <div class="category-item" (click)="navigateToShop()">
+        <div class="category-icon cats-icon">
+          <i class="fas fa-cat"></i>
         </div>
-        <div class="product-info">
-          <h3 class="product-title">Wooden Frame</h3>
-          <p class="product-subtitle">Wooden Frame keychain</p>
-          <div class="product-price">₹499.00</div>
-          <button class="product-btn" (click)="navigateToShop(); $event.stopPropagation()">SHOP NOW</button>
-        </div>
+        <span class="category-label">Cats</span>
       </div>
-
-      <!-- Product 3 -->
-      <div class="product-card" data-aos="fade-up" data-aos-delay="300" (click)="navigateToShop()">
-        <div class="product-badge badge-amber">BESTSELLER</div>
-        <div class="product-image-wrapper">
-          <img src="assets/images/product_trending_3.png" alt="Guardian Sport" class="product-img">
+      <div class="category-item" (click)="navigateToShop()">
+        <div class="category-icon birds-icon">
+          <i class="fas fa-kiwi-bird"></i>
         </div>
-        <div class="product-info">
-          <h3 class="product-title">Rounded Frames</h3>
-          <p class="product-subtitle">Fiber Frame keychain</p>
-          <div class="product-price">₹499.00</div>
-          <button class="product-btn" (click)="navigateToShop(); $event.stopPropagation()">SHOP NOW</button>
-        </div>
+        <span class="category-label">Birds</span>
       </div>
-
-      <!-- Product 4 -->
-      <div class="product-card" data-aos="fade-up" data-aos-delay="400" (click)="navigateToShop()">
-        <div class="product-badge badge-silver">LIMITED</div>
-        <div class="product-image-wrapper">
-          <img src="assets/images/product_trending_4.png" alt="Guardian Stealth" class="product-img">
+      <div class="category-item" (click)="navigateToShop()">
+        <div class="category-icon fish-icon">
+          <i class="fas fa-fish"></i>
         </div>
-        <div class="product-info">
-          <h3 class="product-title">Waterproof Keychains</h3>
-          <p class="product-subtitle">Waterproof carbon fiber keychain</p>
-          <div class="product-price">₹499.00</div>
-          <button class="product-btn" (click)="navigateToShop(); $event.stopPropagation()">SHOP NOW</button>
+        <span class="category-label">Fish</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recommended for You Section -->
+<section class="recommended-section" data-aos="fade-up">
+  <div class="section-container">
+    <div class="section-header-row">
+      <h2 class="section-title-alt">Recommended for you</h2>
+      <a routerLink="/shop" class="view-all-shop-link">View All</a>
+    </div>
+    <div class="recommended-grid-premium">
+      <div *ngFor="let product of products.slice(0, 4)" class="recommendation-card-luxury" (click)="navigateToShop()">
+        <div class="card-image-wrapper-luxury">
+          <img [src]="product.img" [alt]="product.name" class="card-img-luxury">
+        </div>
+        <div class="card-info-luxury">
+          <h3 class="product-name-luxury">{{product.name}}</h3>
+          <p class="product-desc-luxury">{{product.subtitle}}</p>
+          <div class="card-footer-luxury">
+            <span class="product-price-luxury">{{product.price}}</span>
+            <button class="btn-arrow-luxury">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- The TailCart Ecosystem (Tabbed Carousel) -->
+<section class="ecosystem-revamp">
+  <div class="ecosystem-container">
+    <h2 class="ecosystem-heading fade-in">The TailCart Ecosystem</h2>
 
-<!-- Explore TailCart Services Section (3D Modern Carousel) -->
-<section class="services-3d-section fade-in">
-  <div class="container">
-    <div class="modern-header-v2" data-aos="fade-up">
-      <div class="premium-text-tag">PREMIUM ECOSYSTEM</div>
-      <h2 class="modern-title-v2">
-        Explore TailCart<br>
-        <span class="gradient-text">Services</span>
-      </h2>
+    <!-- Tab Bar -->
+    <div class="tab-bar-container fade-in">
+      <div class="tab-bar">
+        <button *ngFor="let service of services; let i = index" class="tab-item"
+          [class.active]="activeEcosystemIndex === i" (click)="selectEcosystemTab(i)">
+          {{service.name}}
+        </button>
+      </div>
     </div>
 
-    <!-- 3D Carousel Container -->
-    <div class="services-slider-container" data-aos="zoom-in">
-      <div class="carousel-stage">
-        <div class="carousel-rotator" [style.transform]="'rotateY(' + (activeServiceIndex * -72) + 'deg)'">
-          <div *ngFor="let service of services; let i = index" class="carousel-slide"
-            [class.active]="activeServiceIndex === i"
-            [style.transform]="'rotateY(' + (i * 72) + 'deg) translateZ(var(--carousel-z))'">
-
-            <div class="modern-card">
-              <div class="modern-sticker-wrapper">
-                <div class="sticker-glow" [style.background]="service.color"></div>
-                <img [src]="service.img" [alt]="service.name" class="modern-sticker-img">
-              </div>
-
-              <h3 class="modern-service-name" [style.color]="service.color">{{service.name}}</h3>
-              <p class="modern-service-desc">{{service.desc}}</p>
-
-              <button class="btn-modern-cta" [style.background-color]="service.color"
-                (click)="navigateToService(service.route)">
-                {{service.cta}} <i class="fas fa-arrow-right"></i>
+    <!-- Manual Carousel -->
+    <div class="ecosystem-carousel-wrapper fade-in">
+      <div class="ecosystem-carousel" #ecoCarousel (scroll)="onEcosystemScroll($event)">
+        <div *ngFor="let service of services; let i = index" class="eco-slide">
+          <div class="eco-card-luxury">
+            <div class="eco-card-image">
+              <img [src]="service.img" [alt]="service.name">
+            </div>
+            <div class="eco-card-content">
+              <h3 class="eco-card-title">{{service.name}}</h3>
+              <p class="eco-card-desc">{{service.desc}}</p>
+              <button class="btn-eco-action" (click)="navigateToService(service.route)">
+                {{ service.cta | uppercase }}
               </button>
             </div>
-
           </div>
         </div>
-      </div>
-
-      <!-- Navigation Controls -->
-      <div class="modern-nav-controls">
-        <button class="modern-arrow prev" (click)="prevService()" aria-label="Previous Service">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-
-        <div class="modern-indicators">
-          <button *ngFor="let service of services; let i = index" class="modern-dot"
-            [class.active]="activeServiceIndex === i" (click)="goToService(i)"
-            [style.background-color]="i === activeServiceIndex ? service.color : 'rgba(255,255,255,0.15)'">
-          </button>
-        </div>
-
-        <button class="modern-arrow next" (click)="nextService()" aria-label="Next Service">
-          <i class="fas fa-chevron-right"></i>
-        </button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Divider -->
-<div class="divider-wrapper">
-  <div class="section-divider fade-in"></div>
-</div>
-
-
-<!-- detailed section ------------------------------------------------------------------------------------------------------------------------------->
-
-<!-- Detailed Section pet scanning -->
-<section class="detailed-section fade-in">
-  <div class="detailed-background-visual"></div>
-  <div class="container relative">
-    <div class="section-header" data-aos="fade-up">
-      <div class="premium-tag tag-indigo"><i class="fas fa-shield-alt"></i> PRO-GRADE PROTECTION</div>
-      <h2 class="section-title">How TailCart <span class="highlight-green">Protects</span></h2>
-      <p class="section-subtitle">Advanced security and real-time monitoring to keep your pets safe, 24/7.</p>
+<!-- How It Works (Video Section) -->
+<section class="process-section">
+  <div class="process-layout">
+    <div class="video-mockup-frame fade-in" data-aos="fade-right">
+      <video #featureVideo class="feature-video" [muted]="isDetailedVideoMuted" playsinline preload="auto" loop muted
+        autoplay>
+        <source src="assets/videos/pet_scan.mp4" type="video/mp4">
+      </video>
     </div>
 
-    <div class="detailed-video-wrapper">
-      <div class="video-container-premium">
-        <video #featureVideo class="feature-video" [muted]="isDetailedVideoMuted" playsinline preload="auto">
-          <source src="assets/videos/pet_scan.mp4" type="video/mp4">
-        </video>
+    <div class="process-steps">
+      <div class="section-intro" style="text-align: left; padding: 0;">
+        <span class="section-tag">Seamless Recovery</span>
+        <h2 class="section-title">How It Works</h2>
+      </div>
 
-        <div class="video-controls-overlay" [class.hidden]="!isDetailedVideoPlaying">
-          <button class="video-control-btn" (click)="toggleDetailedVideo()">
-            <i class="fas" [class.fa-pause]="isDetailedVideoPlaying" [class.fa-play]="!isDetailedVideoPlaying"></i>
-          </button>
-          <button class="video-control-btn" (click)="toggleDetailedMute()">
-            <i class="fas" [class.fa-volume-mute]="isDetailedVideoMuted"
-              [class.fa-volume-up]="!isDetailedVideoMuted"></i>
-          </button>
+      <div class="step-item fade-in" data-aos="fade-up" data-aos-delay="100">
+        <div class="step-number">1</div>
+        <div class="step-info">
+          <h3>Secure & Attach</h3>
+          <p>Attach the premium smart tag to your pet's collar. It's waterproof, lightweight, and durable.</p>
         </div>
+      </div>
 
-        <!-- Initial play overlay -->
-        <div class="play-button-overlay-luxury" *ngIf="!isDetailedVideoPlaying" (click)="toggleDetailedVideo()">
-          <div class="luxury-play-circle">
-            <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-          <span class="play-text-luxury">WATCH THE RECOVERY PROCESS</span>
+      <div class="step-item fade-in" data-aos="fade-up" data-aos-delay="200">
+        <div class="step-number">2</div>
+        <div class="step-info">
+          <h3>Instant Scan</h3>
+          <p>If your pet gets lost, any smartphone can scan the tag without needing an app to view your contact info.
+          </p>
+        </div>
+      </div>
+
+      <div class="step-item fade-in" data-aos="fade-up" data-aos-delay="300">
+        <div class="step-number">3</div>
+        <div class="step-info">
+          <h3>Safe Reunion</h3>
+          <p>Receive immediate alerts with the finder's location and reunite with your furry friend in minutes.</p>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="detailed-info-grid">
-      <div class="info-card">
-        <div class="info-icon">
-          <i class="fas fa-qrcode"></i>
-        </div>
-        <h3>Instant Scan</h3>
-        <p>No apps needed. Anyone with a smartphone can scan the tag to identify your pet.</p>
-      </div>
-      <div class="info-card highlight">
-        <div class="info-icon">
-          <i class="fas fa-location-arrow"></i>
-        </div>
-        <h3>Live GPS Alert</h3>
-        <p>Receive an instant notification with the exact location when your pet's tag is scanned.</p>
-      </div>
-      <div class="info-card">
-        <div class="info-icon">
-          <i class="fas fa-phone-alt"></i>
-        </div>
-        <h3>Direct Contact</h3>
-        <p>Finders can call you immediately through the secure public profile on the tag.</p>
-      </div>
-    </div>
+<!-- FAQ Section -->
+<section class="faq-section">
+  <div class="section-intro fade-in">
+    <span class="section-tag">Common Inquiries</span>
+    <h2 class="section-title">Pet Parent FAQs</h2>
+  </div>
 
-    <div class="detailed-cta-center">
-      <button class="btn-premium" (click)="navigateToShop()" data-aos="zoom-in" data-aos-delay="400">
-        GET PROTECTED NOW
-        <i class="fas fa-arrow-right"></i>
+  <div class="faq-container">
+    <div *ngFor="let item of [0,1,2,3]; let i = index" class="faq-item fade-in" [class.active]="faqStates[i]">
+      <button class="faq-trigger" (click)="toggleFaq(i)">
+        <span *ngIf="i === 0">How does the QR pet tag work?</span>
+        <span *ngIf="i === 1">Is my pet's data secure?</span>
+        <span *ngIf="i === 2">Do I need a battery for the tag?</span>
+        <span *ngIf="i === 3">Can I update my details later?</span>
+        <span class="faq-plus">+</span>
       </button>
-      <p class="cta-subtext">Join thousands of protected pets across the country.</p>
-    </div>
-  </div>
-</section>
-
-<!-- Divider -->
-<div class="divider-wrapper">
-  <div class="section-divider fade-in"></div>
-</div>
-
-
-<!--How it works section ----------------------------------------------------------------------------------------------------------------------->
-
-<!-- Seamless Integration Section -->
-<section class="seamless-integration-section">
-  <div class="container">
-    <div class="si-header" data-aos="fade-up">
-      <h2 class="si-title">Seamless Integration</h2>
-      <p class="si-subtitle">Four effortless steps to keep your pet safe.<br>Sophisticated technology, human-centric
-        design.</p>
-    </div>
-
-    <div class="si-steps-container">
-      <!-- Step 1: Purchase -->
-      <div class="si-step" data-aos="fade-up" data-aos-delay="100">
-        <div class="si-icon-wrapper">
-          <div class="si-icon-box">
-            <i class="fas fa-shopping-cart"></i>
-          </div>
-          <div class="si-accent-dot"></div>
-        </div>
-        <h3 class="si-step-title">Purchase & Register</h3>
-        <p class="si-step-desc">Buy your smart QR tag and register your pet on our platform with their details and
-          your contact information.</p>
-      </div>
-
-      <!-- Step 2: Attach -->
-      <div class="si-step" data-aos="fade-up" data-aos-delay="200">
-        <div class="si-icon-wrapper">
-          <div class="si-icon-box">
-            <i class="fas fa-paw"></i>
-          </div>
-          <div class="si-accent-dot"></div>
-        </div>
-        <h3 class="si-step-title">Attach to Collar</h3>
-        <p class="si-step-desc">Securely attach the waterproof QR tag to your pet's collar. It's lightweight,
-          durable and pet-friendly.</p>
-      </div>
-
-      <!-- Step 3: Lost -->
-      <div class="si-step" data-aos="fade-up" data-aos-delay="300">
-        <div class="si-icon-wrapper">
-          <div class="si-icon-box">
-            <i class="fas fa-exclamation-triangle"></i>
-          </div>
-          <div class="si-accent-dot"></div>
-        </div>
-        <h3 class="si-step-title">When Lost</h3>
-        <p class="si-step-desc">Switch on the "is lost" button in the website to turn on access to your details in
-          the QR Code.</p>
-      </div>
-
-      <div class="si-step" data-aos="fade-up" data-aos-delay="300">
-        <div class="si-icon-wrapper">
-          <div class="si-icon-box">
-            <i class="fas fa-qrcode"></i>
-          </div>
-          <div class="si-accent-dot"></div>
-        </div>
-        <h3 class="si-step-title">Scan When Found</h3>
-        <p class="si-step-desc">If your pet gets lost, anyone can scan the QR code with their phone to see owner
-          details and exact location.</p>
-      </div>
-
-      <div class="si-step" data-aos="fade-up" data-aos-delay="300">
-        <div class="si-icon-wrapper">
-          <div class="si-icon-box">
-            <i class="fas fa-handshake"></i>
-          </div>
-          <div class="si-accent-dot"></div>
-        </div>
-        <h3 class="si-step-title">Instant Reunion</h3>
-        <p class="si-step-desc">You receive immediate alerts with the finder's location. Contact them directly and
-          reunite with your pet quickly.</p>
+      <div class="faq-answer">
+        <p *ngIf="i === 0">Each tag carries a unique encrypted QR code. When scanned, it opens a secure pet profile
+          showing your contact details instantly.</p>
+        <p *ngIf="i === 1">Absolutely. Your data is encrypted and you have full control over what information is
+          displayed publicly during a scan.</p>
+        <p *ngIf="i === 2">No batteries required. Our tags use passive QR technology, ensuring they never run out of
+          power when you need them most.</p>
+        <p *ngIf="i === 3">Yes, you can edit your pet's information, owner details, and medical records anytime through
+          your dashboard.</p>
       </div>
     </div>
   </div>
 </section>
-<!--Docuemnt upload section--------------------------------------------------------------------------->
 
-<!-- Pet Documents Section -->
-<section class="pet-documents-section fade-in">
-  <div class="detailed-background-visual"></div>
-  <div class="container relative">
-
-    <div class="section-header documents-centered-header" data-aos="fade-up">
-      <div class="premium-tag tag-silver"><i class="fas fa-heartbeat"></i> HEALTH & WELLNESS</div>
-      <h2 class="section-title documents-title-centered">
-        Pet <span class="highlight-green">Health</span> Management
-      </h2>
-      <p class="section-subtitle">Securely manage your pet’s health records and get smart reminders for care anytime,
-        anywhere.</p>
-    </div>
-
-    <!-- High-Fidelity Vault Animation Mockup -->
-    <div class="documents-animation-wrapper" data-aos="zoom-in">
-      <div class="vault-mockup-luxury">
-        <div class="vault-phone">
-          <div class="vault-screen">
-            <!-- Simulated App Header -->
-            <div class="vault-mock-header">
-              <div class="vault-status-bar">
-                <span class="v-time">10:00</span>
-                <div class="v-icons">
-                  <i class="fas fa-signal"></i>
-                  <i class="fas fa-wifi"></i>
-                  <i class="fas fa-battery-full"></i>
-                </div>
-              </div>
-              <div class="vault-nav">
-                <i class="fas fa-bars"></i>
-                <span class="vault-title">TAIL VAULT</span>
-                <div class="v-icons-right">
-                  <i class="fas fa-bell"></i>
-                  <i class="fas fa-shopping-bag"></i>
-                </div>
-              </div>
-              <div class="vault-mock-tabs">
-                <div class="v-tab" [class.active]="activeVaultStep <= 2">
-                  <i class="fas fa-folder"></i> Documents <span class="v-badge">1</span>
-                </div>
-                <div class="v-tab" [class.active]="activeVaultStep >= 3">
-                  <i class="fas fa-bell"></i> Reminders <span class="v-badge">2</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Simulated App Body -->
-            <div class="vault-mock-body">
-              <!-- Documents View (Steps 1 & 2) -->
-              <div class="view-documents" *ngIf="activeVaultStep <= 2">
-                <div class="mock-search">
-                  <i class="fas fa-search"></i> Search by document...
-                </div>
-
-                <div class="mock-btn-add" [class.v-press]="activeVaultStep === 2">
-                  <i class="fas fa-plus"></i> Add Document
-                </div>
-
-                <div class="mock-card-vault">
-                  <div class="m-card-left">
-                    <div class="m-pdf-tag">PDF</div>
-                    <div class="m-content">
-                      <div class="m-name">Rabies Certificate</div>
-                      <div class="m-id">a74cb247-e • 1.2 MB</div>
-                    </div>
-                  </div>
-                  <div class="m-card-actions">
-                    <i class="fas fa-download"></i>
-                    <i class="fas fa-bell"></i>
-                    <i class="fas fa-trash"></i>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Reminders View (Step 3 & 4) -->
-              <div class="view-reminders" *ngIf="activeVaultStep >= 3">
-                <div class="mock-filter-row">
-                  <div class="m-filter-pill">All Pets <i class="fas fa-chevron-down"></i></div>
-                  <div class="m-filter-pill">Scheduled <i class="fas fa-chevron-down"></i></div>
-                </div>
-
-                <div class="mock-reminder-card">
-                  <div class="rem-header">
-                    <span class="p-name">Buddy</span>
-                    <span class="rem-status">Scheduled</span>
-                  </div>
-                  <div class="rem-main">
-                    <i class="fas fa-calendar-alt"></i>
-                    <div class="rem-info">
-                      <div class="rem-title">Go to grooming at 9</div>
-                      <div class="rem-type">Grooming • Bath</div>
-                    </div>
-                  </div>
-                  <div class="rem-footer">
-                    31 Mar 2026 • 12:30:00
-                  </div>
-                </div>
-              </div>
-
-              <!-- Toast / Tooltip Overlay -->
-              <div class="vault-mock-toast" [class.visible]="vaultToastMessage">
-                <i class="fas fa-check-circle"></i> {{vaultToastMessage}}
-              </div>
-            </div>
-
-            <!-- Virtual Cursor -->
-            <div class="vault-virtual-cursor" [class]="'v-pos-' + activeVaultStep">
-              <div class="v-cursor-inner"></div>
-            </div>
-          </div>
-        </div>
-        <div class="visual-glow-halo"></div>
-      </div>
-    </div>
-
-    <div class="documents-mobile-wrapper" data-aos="fade-up">
-      <p class="section-subtitle documents-description-centered">
-        Securely store and manage all your pet's health records, vaccination schedules, and medical history in one
-        place. Set smart reminders for appointments and medications.
+<!-- Minimal Luxury Footer -->
+<footer class="minimal-footer">
+  <div class="footer-main">
+    <div class="brand-sphere">
+      <a href="/" class="footer-logo">TAIL<span>CART</span></a>
+      <p class="footer-desc">
+        Pioneering the future of pet care with world-class technology and sophisticated design. Keeping your companions
+        safe, anywhere.
       </p>
-
-      <div class="cta-buttons documents-cta-centered">
-        <button class="btn-premium" (click)="navigateToDocuments()">
-          MANAGE DOCUMENTS
-          <i class="fas fa-arrow-right"></i>
-        </button>
-        <button class="btn-premium" (click)="navigateToAlerts()">
-          SET REMINDERS
-          <i class="fas fa-arrow-right"></i>
-        </button>
-      </div>
     </div>
-
-  </div>
-</section>
-
-
-
-<!--Mini FAQ ------------------------------------------------------------------------------------------------------------>
-<!-- Premium FAQ Section -->
-<section class="premium-faq-section fade-in">
-  <div class="faq-background-overlay"></div>
-  <div class="container relative">
-
-    <div class="section-header" data-aos="fade-up">
-      <h2 class="section-title faq-title-centered">
-        Frequently Asked <span class="highlight-green">Questions</span>
-      </h2>
+    <div class="footer-links">
+      <h4>Company</h4>
+      <ul>
+        <li><a (click)="navigateToAbout()">Our Story</a></li>
+        <li><a (click)="navigateToShop()">Collection</a></li>
+        <li><a (click)="navigateToAbout()">Contact Us</a></li>
+      </ul>
     </div>
-
-    <div class="faq-accordion-premium">
-
-      <!-- FAQ Item 1 -->
-      <div class="faq-item-premium" [class.active]="faqStates[0]">
-        <button class="faq-question-premium" (click)="toggleFaq(0)">
-          How does the QR pet tag work?
-          <span class="faq-icon-premium" [class.open]="faqStates[0]">+</span>
-        </button>
-        <div class="faq-answer-premium" [class.active]="faqStates[0]">
-          Each tag has a unique QR code. When scanned, it opens your pet's profile instantly with owner contact and
-          recovery options.
-        </div>
-      </div>
-
-      <!-- FAQ Item 2 -->
-      <div class="faq-item-premium" [class.active]="faqStates[1]">
-        <button class="faq-question-premium" (click)="toggleFaq(1)">
-          Do I need to install an app to scan and get the owner?
-          <span class="faq-icon-premium" [class.open]="faqStates[1]">+</span>
-        </button>
-        <div class="faq-answer-premium" [class.active]="faqStates[1]">
-          No app required. The QR works directly from any smartphone camera.
-        </div>
-      </div>
-
-      <!-- FAQ Item 3 -->
-      <div class="faq-item-premium" [class.active]="faqStates[2]">
-        <button class="faq-question-premium" (click)="toggleFaq(2)">
-          Is my pet's data secure?
-          <span class="faq-icon-premium" [class.open]="faqStates[2]">+</span>
-        </button>
-        <div class="faq-answer-premium" [class.active]="faqStates[2]">
-          Yes. Your data is encrypted and only essential details are shown during a scan.
-        </div>
-      </div>
-
-      <!-- FAQ Item 4 -->
-      <div class="faq-item-premium" [class.active]="faqStates[3]">
-        <button class="faq-question-premium" (click)="toggleFaq(3)">
-          Can I update details later?
-          <span class="faq-icon-premium" [class.open]="faqStates[3]">+</span>
-        </button>
-        <div class="faq-answer-premium" [class.active]="faqStates[3]">
-          Absolutely. You can update pet info, owner info, and documents anytime from your dashboard.
-        </div>
-      </div>
-
+    <div class="footer-links">
+      <h4>Support</h4>
+      <ul>
+        <li><a (click)="navigateToAbout()">Help Center</a></li>
+        <li><a (click)="navigateToAbout()">Shipping Policy</a></li>
+        <li><a (click)="navigateToAbout()">Privacy</a></li>
+      </ul>
     </div>
   </div>
-</section>
-
-
-<!-- Social Feed Section ------------------------------------------------------------------------------------>
-<section class="social-feed-section fade-in">
-  <div class="social-container">
-    <div class="section-header" data-aos="fade-up">
-      <div class="premium-tag tag-cyan"><i class="fab fa-instagram"></i> #TAILCART</div>
-      <h2 class="section-title">Follow Us on <span class="highlight-green">Instagram</span></h2>
-      <p class="section-subtitle">Join our community of pet parents sharing their stories.</p>
-    </div>
-
-    <div class="social-grid">
-      <div class="social-item">
-        <img src="assets/images/social_pet_1.png" alt="Happy Border Collie" class="social-img">
-      </div>
-      <div class="social-item">
-        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=400"
-          alt="Cute Puppy" class="social-img">
-      </div>
-      <div class="social-item">
-        <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&q=80&w=400"
-          alt="Running Dogs" class="social-img">
-      </div>
-      <div class="social-item">
-        <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=400"
-          alt="Cat on shoulder" class="social-img">
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
-
-<!--Footer final ------------------------------------------------------------------------------------------------------------>
-<!-- Premium Luxury Footer -->
-<footer class="premium-luxury-footer">
-  <div class="footer-background-overlay"></div>
-  <div class="footer-wave"></div>
-
-  <div class="footer-container relative">
-    <!-- Top Section -->
-    <div class="footer-top-premium">
-      <div class="footer-brand-premium">
-        <div class="logo-container">
-          <div class="logo-icon-premium">
-            <svg viewBox="0 0 24 24" fill="currentColor" style="width:28px;height:28px;">
-              <path
-                d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-            </svg>
-          </div>
-          <div class="logo-text">
-            <h2 class="logo-title-premium">TailCart</h2>
-            <p class="logo-subtitle-premium">Premium Pet Care Solutions</p>
-          </div>
-        </div>
-        <p class="brand-tagline-premium">Keeping your furry friends safe, healthy, and happy with cutting-edge
-          technology.</p>
-
-        <div class="social-links-premium">
-          <a href="#" class="social-link" aria-label="Instagram">
-            <div class="social-icon"><i class="fab fa-instagram"></i></div>
-          </a>
-          <a href="#" class="social-link" aria-label="Facebook">
-            <div class="social-icon"><i class="fab fa-facebook-f"></i></div>
-          </a>
-          <a href="#" class="social-link" aria-label="Twitter">
-            <div class="social-icon"><i class="fab fa-twitter"></i></div>
-          </a>
-          <a href="#" class="social-link" aria-label="YouTube">
-            <div class="social-icon"><i class="fab fa-youtube"></i></div>
-          </a>
-        </div>
-      </div>
-
-      <!-- Quick Links -->
-      <div class="footer-links-premium">
-        <div class="links-grid-premium">
-          <div class="link-column">
-            <h3 class="column-title-premium">Products</h3>
-            <ul class="link-list">
-              <li><a routerLink="/shop" class="footer-link">TailTags</a></li>
-              <li><a routerLink="/document" class="footer-link">TailVault</a></li>
-              <li><a routerLink="/document" class="footer-link">TailScheduler</a></li>
-              <li><a routerLink="/doctor-ai" class="footer-link">TailCare</a></li>
-            </ul>
-          </div>
-
-          <div class="link-column">
-            <h3 class="column-title-premium">Company</h3>
-            <ul class="link-list">
-              <li><a routerLink="/about" class="footer-link">About Us</a></li>
-              <li><a routerLink="/about" class="footer-link">Our Story</a></li>
-              <li><a routerLink="/about" class="footer-link">Careers</a></li>
-              <li><a routerLink="/about" class="footer-link">Contact</a></li>
-            </ul>
-          </div>
-
-          <div class="link-column">
-            <h3 class="column-title-premium">Support</h3>
-            <ul class="link-list">
-              <li><a routerLink="/about" class="footer-link">Help Center</a></li>
-              <li><a routerLink="/about" class="footer-link">FAQs</a></li>
-              <li><a routerLink="/about" class="footer-link">Shipping</a></li>
-              <li><a routerLink="/about" class="footer-link">Returns</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Newsletter -->
-    <div class="footer-middle-premium">
-      <div class="newsletter-section">
-        <div class="newsletter-content">
-          <h3 class="newsletter-title-premium">Stay Updated</h3>
-          <p class="newsletter-text-premium">Get exclusive offers, pet care tips, and product updates delivered to your
-            inbox.</p>
-        </div>
-        <div class="newsletter-form-premium">
-          <input type="email" placeholder="Your email address" class="newsletter-input-premium">
-          <button class="newsletter-button-premium">SUBSCRIBE</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom Section -->
-    <div class="footer-bottom-premium">
-      <div class="payment-methods-premium">
-        <i class="fab fa-cc-visa payment-icon-premium"></i>
-        <i class="fab fa-cc-mastercard payment-icon-premium"></i>
-        <i class="fab fa-cc-amex payment-icon-premium"></i>
-        <i class="fab fa-cc-paypal payment-icon-premium"></i>
-      </div>
-
-      <div class="copyright-premium">
-        <p>© 2026 TailCart. All rights reserved.</p>
-        <div class="legal-links-premium">
-          <a routerLink="/about" class="legal-link">Privacy Policy</a>
-          <a routerLink="/about" class="legal-link">Terms of Service</a>
-        </div>
-      </div>
+  <div class="footer-bottom">
+    <div class="copyright">© 2026 TailCart. Luxury Pet Care Solutions.</div>
+    <div class="socials">
+      <i class="fab fa-instagram"></i>
+      <i class="fab fa-twitter"></i>
+      <i class="fab fa-facebook"></i>
     </div>
   </div>
 </footer>
 
 <!-- Scroll to Top Button -->
 <button class="scroll-top-btn" (click)="scrollToTop()" [class.visible]="isScrolled">
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:24px;height:24px;">
-    <path d="M12 19V5m0 0l-7 7m7-7l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-      stroke-linejoin="round" />
-  </svg>
+  <i class="fas fa-chevron-up"></i>
 </button>

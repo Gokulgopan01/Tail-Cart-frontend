@@ -1,179 +1,141 @@
 import { Component, HostListener, AfterViewInit, ElementRef, ViewChild, OnDestroy, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf, RouterModule],
+  imports: [NgFor, NgIf, RouterModule, UpperCasePipe],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-  // Vault Animation State
+  // ── Bento Grid Ecosystem State ────────────────────────────────
   activeVaultStep: number = 1;
   vaultToastMessage: string = '';
   private vaultAnimationTimer: any;
-
-  // ── Hero Carousel ──────────────────────────────────────────────
-  heroSlide = 0;
-  heroSlides = [0, 1, 2, 3];
-  heroAutoPlay = true;
-  heroAutoPlayDuration = 5000;
-  private heroTimer: any;
-
-  nextHeroSlide(): void {
-    this.heroSlide = (this.heroSlide + 1) % 4;
-    this.restartTimer();
-  }
-
-  prevHeroSlide(): void {
-    this.heroSlide = (this.heroSlide + 3) % 4;
-    this.restartTimer();
-  }
-
-  goToHeroSlide(index: number): void {
-    this.heroSlide = index;
-    this.restartTimer();
-  }
-
-  private startTimer(): void {
-    this.heroTimer = setInterval(() => this.nextHeroSlide(), this.heroAutoPlayDuration);
-  }
-
-  private restartTimer(): void {
-    clearInterval(this.heroTimer);
-    this.startTimer();
-  }
-
-  // Touch swipe support
-  private touchStartX = 0;
-  onHeroTouchStart(event: TouchEvent): void {
-    this.touchStartX = event.touches[0].clientX;
-  }
-  onHeroTouchEnd(event: TouchEvent): void {
-    const diff = this.touchStartX - event.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
-      diff > 0 ? this.nextHeroSlide() : this.prevHeroSlide();
-    }
-  }
-
-  // ── How It Works Carousel ──────────────────────────────────────
-  processSlide = 0;
-  private processTouchStartX = 0;
-
-  nextProcessSlide(): void {
-    if (this.processSlide < 4) {
-      this.processSlide++;
-    } else {
-      this.processSlide = 0; // Loop back
-    }
-  }
-
-  prevProcessSlide(): void {
-    if (this.processSlide > 0) {
-      this.processSlide--;
-    } else {
-      this.processSlide = 4; // Loop to end
-    }
-  }
-
-  goToProcessSlide(index: number): void {
-    this.processSlide = index;
-  }
-
-  onProcessTouchStart(event: TouchEvent): void {
-    this.processTouchStartX = event.touches[0].clientX;
-  }
-
-  onProcessTouchEnd(event: TouchEvent): void {
-    const diff = this.processTouchStartX - event.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
-      diff > 0 ? this.nextProcessSlide() : this.prevProcessSlide();
-    }
-  }
-
-  // ── Services 3D Carousel ──────────────────────────────────────
-  activeServiceIndex = 0;
-  serviceAutoPlayDuration = 6000;
-  private serviceTimer: any;
 
   services = [
     {
       id: 'keychain',
       name: 'Tail Tag',
-      desc: 'Secure tracking for your pet with instant notification technology anywhere in the world.',
-      img: 'assets/images/service_keychain.png',
-      color: '#fb8c00', // orange
-      bgColor: 'rgba(251, 140, 0, 0.1)',
+      desc: 'Premium aerospace-grade smart tags with instant scan recovery technology.',
+      img: 'assets/images/hero_qr_keychain.png',
+      color: '#fb8c00',
       route: '/shop',
-      cta: 'Get Item'
-    },
-    {
-      id: 'reminders',
-      name: 'Tail Scheduler',
-      desc: 'Never miss a vet visit or medication with intelligent scheduling and smart reminders.',
-      img: 'assets/images/service_reminders.png',
-      color: '#8e24aa', // purple
-      bgColor: 'rgba(142, 36, 170, 0.1)',
-      route: '/document',
-      cta: 'Add Document'
-    },
-    {
-      id: 'notifications',
-      name: 'Live Alerts',
-      desc: 'Get instant map alerts when your lost pet\'s tag is scanned by anyone with a smartphone.',
-      img: 'assets/images/service_notifications.png',
-      color: '#1e88e5', // blue
-      bgColor: 'rgba(30, 136, 229, 0.1)',
-      route: '/profile',
-      cta: 'Add Pet'
-    },
-    {
-      id: 'doctor',
-      name: 'Tail Care+',
-      desc: 'Instant pediatric and behavioral health insights from our advanced AI model for your pet.',
-      img: 'assets/images/service_doctor.png',
-      color: '#43a047', // emerald
-      bgColor: 'rgba(67, 160, 71, 0.1)',
-      route: '/doctor-ai',
-      cta: 'Visit Doctor'
+      cta: 'Explore Tags'
     },
     {
       id: 'vault',
       name: 'Tail Vault',
-      desc: 'Securely store and share all your pet paperwork, vaccinations, and history in one smart cloud.',
-      img: 'assets/images/service_vault.png',
-      color: '#fbc02d', // gold
-      bgColor: 'rgba(251, 192, 45, 0.1)',
+      desc: 'Securely manage all your pet\'s health records and paperwork in one place.',
+      img: 'assets/images/hero_document_locker.png',
+      color: '#fbc02d',
       route: '/documents',
-      cta: 'Upload Document'
+      cta: 'Open Vault'
+    },
+    {
+      id: 'reminders',
+      name: 'Smart Scheduler',
+      desc: 'Never miss a critical care date with intelligent alerts.',
+      img: 'assets/images/hero_alert_system.png',
+      color: '#8e24aa',
+      route: '/document',
+      cta: 'Set Reminders'
+    },
+    {
+      id: 'doctor',
+      name: 'Tail Care+',
+      desc: '24/7 AI-powered health insights for your pets.',
+      img: 'assets/images/hero_ai_doctor.png',
+      color: '#43a047',
+      route: '/doctor-ai',
+      cta: 'Ask AI Doctor'
     }
   ];
 
-  nextService(): void {
-    this.activeServiceIndex = (this.activeServiceIndex + 1) % this.services.length;
-    this.restartServiceTimer();
+  products = [
+    {
+      id: 1,
+      name: 'Guardian Alpha',
+      subtitle: 'Polished Gold Edition',
+      price: '₹688.00',
+      img: 'assets/images/product_trending_1.png',
+      badge: 'BESTSELLER',
+      badgeClass: 'badge-gold'
+    },
+    {
+      id: 2,
+      name: 'Wooden Frame',
+      subtitle: 'Artisan Walnut Craft',
+      price: '₹499.00',
+      img: 'assets/images/product_trending_2.jpg',
+      badge: 'CLASSIC',
+      badgeClass: 'badge-amber'
+    },
+    {
+      id: 3,
+      name: 'Fiber Frame',
+      subtitle: 'Lightweight Carbon',
+      price: '₹499.00',
+      img: 'assets/images/product_trending_3.png',
+      badge: 'DURABLE',
+      badgeClass: 'badge-silver'
+    },
+    {
+      id: 4,
+      name: 'Stealth Carbon',
+      subtitle: 'Waterproof Performance',
+      price: '₹499.00',
+      img: 'assets/images/product_trending_4.png',
+      badge: 'LIMITED',
+      badgeClass: 'badge-dark'
+    },
+    {
+      id: 5,
+      name: 'Guardian Onyx',
+      subtitle: 'Matte Black Series',
+      price: '₹750.00',
+      img: 'assets/images/product_trending_1.png',
+      badge: 'NEW',
+      badgeClass: 'badge-dark'
+    },
+    {
+      id: 6,
+      name: 'Guardian Aero',
+      subtitle: 'Titanium Finish',
+      price: '₹899.00',
+      img: 'assets/images/product_trending_3.png',
+      badge: 'PREMIUM',
+      badgeClass: 'badge-gold'
+    }
+  ];
+
+  // ── Ecosystem Carousel Logic ────────────────────────────────
+  activeEcosystemIndex: number = 0;
+  @ViewChild('ecoCarousel', { static: false }) ecoCarousel!: ElementRef<HTMLDivElement>;
+
+  selectEcosystemTab(index: number): void {
+    this.activeEcosystemIndex = index;
+    const carousel = this.ecoCarousel.nativeElement;
+    const slideWidth = carousel.offsetWidth;
+
+    carousel.scrollTo({
+      left: index * slideWidth,
+      behavior: 'smooth'
+    });
   }
 
-  prevService(): void {
-    this.activeServiceIndex = (this.activeServiceIndex - 1 + this.services.length) % this.services.length;
-    this.restartServiceTimer();
-  }
+  onEcosystemScroll(event: any): void {
+    const carousel = event.target;
+    const scrollPosition = carousel.scrollLeft;
+    const slideWidth = carousel.offsetWidth;
+    const newIndex = Math.round(scrollPosition / slideWidth);
 
-  goToService(index: number): void {
-    this.activeServiceIndex = index;
-    this.restartServiceTimer();
-  }
-
-  private startServiceTimer(): void {
-    this.serviceTimer = setInterval(() => this.nextService(), this.serviceAutoPlayDuration);
-  }
-
-  private restartServiceTimer(): void {
-    clearInterval(this.serviceTimer);
-    this.startServiceTimer();
+    if (newIndex !== this.activeEcosystemIndex) {
+      this.activeEcosystemIndex = newIndex;
+    }
   }
 
   navigateToService(route: string): void {
@@ -198,18 +160,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.startTimer();
     // Wait a bit for video to load
     this.initializeVideo();
     setTimeout(() => {
       this.isScrolled = window.scrollY > 300;
     }, 100);
 
-    this.startServiceTimer();
-
-    //how it works section scroll animation
-    const cards = document.querySelectorAll('.step-card');
-
+    // Fade-in observer
+    const fadeElements = document.querySelectorAll('.fade-in');
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
@@ -218,9 +176,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
-    cards.forEach(card => observer.observe(card));
+    fadeElements.forEach(el => observer.observe(el));
   }
 
 
@@ -454,8 +412,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.heroTimer) clearInterval(this.heroTimer);
-    if (this.serviceTimer) clearInterval(this.serviceTimer);
     if (this.vaultAnimationTimer) clearInterval(this.vaultAnimationTimer);
   }
 }
