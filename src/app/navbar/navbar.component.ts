@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       const url = event.urlAfterRedirects;
-      this.hideTopNav = url.includes('/profile') || url.includes('/checkout');
+      this.hideTopNav = url.includes('/profile') || url.includes('/checkout') || url.includes('/shop');
       this.hideBottomNav = url.includes('/checkout');
     });
   }

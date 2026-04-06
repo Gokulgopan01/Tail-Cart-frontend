@@ -1,218 +1,224 @@
 <div class="shop-wrapper">
-  <!-- Lottie Banner Heading - Clean Hero -->
-  <div class="shop-banner">
-    <img src="assets/shop_banner.png" alt="Luxury Pet Store Banner" class="header-banner-img">
-    <div class="lottie-label">tail store</div>
-  </div>
 
-  <div class="container main-content">
-    <!-- Toolbar Section -->
-    <div class="shop-toolbar-wrapper">
-      <!-- Search Bar -->
-      <div class="search-container">
+  <div class="container main-content modern-shop">
+    <!-- Top Welcome Navbar -->
+    <div class="shop-top-nav-premium">
+      <h1 class="welcome-heading">Welcome, <span class="highlight">User</span></h1>
+    </div>
+
+    <!-- Search Bar with Filter Icon inside -->
+    <div class="search-flex-container">
+      <div class="search-container modern">
         <i class="fas fa-search search-icon"></i>
-        <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery" (input)="applyFilters()"
+        <input type="text" placeholder="Search supplies..." [(ngModel)]="searchQuery" (input)="applyFilters()"
           class="search-input">
-      </div>
-
-      <!-- Material Filters Chips -->
-      <div class="chips-scroll">
-        <button *ngFor="let mat of materialOptions" class="chip-btn" [class.active]="selectedMaterial === mat"
-          (click)="setMaterial(mat)">
-          {{ mat }}
+        <button class="inline-filter-btn" (click)="toggleFilters()" [class.active]="showFilters">
+          <i class="fas fa-sliders-h"></i>
         </button>
       </div>
+    </div>
 
-      <!-- Secondary Toolbar: Sort, Filters, View -->
-      <div class="toolbar-actions">
-        <div class="sort-select-wrapper">
-          <select [(ngModel)]="sortOption" (change)="applyFilters()" class="sort-select">
-            <option value="newest">Sort By: Newest</option>
-            <option value="priceLow">Price: Low to High</option>
-            <option value="priceHigh">Price: High to Low</option>
-            <option value="name">Name: A-Z</option>
-          </select>
-        </div>
-
-        <button class="action-btn toggle-filters" (click)="toggleFilters()" [class.active]="showFilters">
-          <i class="fas fa-sliders-h"></i> Filters
-        </button>
-
-        <div class="view-toggle">
-          <button class="view-btn" [class.active]="isGridView" (click)="toggleViewMode(true)">
-            <i class="fas fa-th-large"></i>
-          </button>
-          <button class="view-btn" [class.active]="!isGridView" (click)="toggleViewMode(false)">
-            <i class="fas fa-bars"></i>
-          </button>
-        </div>
+    <!-- New Banner (Exact Image Layout) -->
+    <div class="new-shop-banner premium">
+      <div class="banner-content">
+        <h2 class="banner-title premium">limited times.</h2>
+        <p class="banner-desc premium">plus free delivery on your first<br>2 purchases.</p>
+        <button class="banner-btn premium">Shop Now</button>
       </div>
-
-      <!-- Price Range Filter Overlay -->
-      <div class="filters-overlay" *ngIf="showFilters">
-        <div class="price-filter-card">
-          <div class="filter-header">
-            <h3>Max Price: ₹{{ maxPrice }}</h3>
-            <button class="clear-btn" (click)="clearFilters()">Clear All Filters</button>
-          </div>
-          <input type="range" min="0" max="30000" step="100" [(ngModel)]="maxPrice" (input)="applyFilters()"
-            class="price-slider">
-        </div>
+      <div class="banner-img-wrapper premium">
+        <!-- Re-using image but displaying it appropriately filling the right side -->
+        <img src="assets/images/banner_dog.png" alt="Promo Dog" class="banner-dog-img premium">
       </div>
     </div>
 
-    <!-- Product Display Area -->
-    <div class="showing-count" *ngIf="filteredProducts.length > 0">
-      Showing {{ filteredProducts.length }} products
-    </div>
-
-    <div [class.products-grid]="isGridView" [class.products-list]="!isGridView">
-      <div class="product-card" *ngFor="let product of filteredProducts">
-        <div class="card-image-area">
-          <img [src]="product.thumbnail_image" [alt]="product.product_name" class="product-thumb">
-          <div class="card-badge" *ngIf="product.deals">{{ product.deals }}</div>
+    <!-- Categories -->
+    <div class="shop-categories-wrapper">
+      <h3 class="categories-title">Categories</h3>
+      <div class="categories-flex">
+        <div class="category-item" [class.active]="selectedMaterial === 'ALL'" (click)="setMaterial('ALL')">
+          <div class="cat-circle"><img src="assets/images/cat_other.png" alt="All"></div>
+          <span>All</span>
         </div>
-
-        <div class="card-content">
-          <div class="shop-name">TailCart Luxury</div>
-          <h3 class="product-title">{{ product.product_name }}</h3>
-
-          <!-- Rating Pill -->
-          <div class="rating-pill">
-            <span class="rating-val">{{ product.reviews_stars }}</span>
-            <i class="fas fa-star star-icon"></i>
-            <span class="rating-divider">|</span>
-            <span class="rating-count">2.4K</span>
-          </div>
-
-          <!-- Price Row -->
-          <div class="price-row">
-            <span class="selling-price">₹{{ product.selling_price }}</span>
-            <span class="original-price" *ngIf="product.discount_percentage! > 0">₹{{ product.original_price }}</span>
-            <span class="discount-tag" *ngIf="product.discount_percentage! > 0">{{ product.discount_percentage }}%
-              off</span>
-          </div>
-
-          <!-- Offer Price -->
-          <div class="offer-row">
-            <span class="offer-label">Offer Price</span>
-            <span class="offer-val">₹{{ product.selling_price }}</span>
-          </div>
-
-          <!-- Quick View Button (+) -->
-          <button class="floating-add-btn" (click)="openQuickView(product, $event)">
-            <i class="fas fa-plus"></i>
-          </button>
+        <div class="category-item" [class.active]="selectedMaterial === 'Wood'" (click)="setMaterial('Wood')">
+          <div class="cat-circle"><img src="assets/images/cat_dog.png" alt="Dogs"></div>
+          <span>Dogs</span>
+        </div>
+        <div class="category-item" [class.active]="selectedMaterial === 'Metal'" (click)="setMaterial('Metal')">
+          <div class="cat-circle"><img src="assets/images/cat_cat.png" alt="Cats"></div>
+          <span>Cats</span>
+        </div>
+        <div class="category-item" [class.active]="selectedMaterial === 'Fiber'" (click)="setMaterial('Fiber')">
+          <div class="cat-circle"><img src="assets/images/cat_bird.png" alt="Birds"></div>
+          <span>Birds</span>
         </div>
       </div>
     </div>
 
-    <!-- Empty State -->
-    <div class="empty-state" *ngIf="filteredProducts.length === 0 && !isLoading">
-      <div #noProductsLottie class="empty-lottie"></div>
-      <h3>No products found</h3>
-      <button class="btn-primary" (click)="clearFilters()" *ngIf="searchQuery || selectedMaterial !== 'ALL'">Clear
-        Filters</button>
+    <!-- Secondary Toolbar: Sort -->
+    <div class="modern-sort-wrapper">
+      <div class="sort-select-wrapper simple-sort">
+        <select [(ngModel)]="sortOption" (change)="applyFilters()" class="sort-select">
+          <option value="newest">Sort by</option>
+          <option value="priceLow">Price: Low to High</option>
+          <option value="priceHigh">Price: High to Low</option>
+          <option value="name">Name: A-Z</option>
+        </select>
+      </div>
     </div>
 
-    <!-- Load More Section -->
-    <div class="load-more-container" *ngIf="nextPageUrl">
-      <button class="load-more-btn" (click)="loadMore()" [disabled]="isLoading">
-        <span *ngIf="!isLoading">Explore More</span>
-        <span *ngIf="isLoading" class="spinner"><i class="fas fa-circle-notch fa-spin"></i> Loading...</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- QUICK VIEW MODAL (IMAGE 2 STYLE) -->
-  <div class="qv-modal-overlay" *ngIf="showQuickView" (click)="closeQuickView()">
-    <div class="qv-modal-card" (click)="$event.stopPropagation()">
-      <button class="qv-close" (click)="closeQuickView()">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-
-      <!-- Image Slider Section -->
-      <div class="qv-image-slider">
-        <div class="qv-slide-track" [style.transform]="'translateX(' + (-currentQuickImageIndex * 100) + '%)'">
-          <div class="qv-slide">
-            <img [src]="selectedProductForQuickView?.thumbnail_image" [alt]="selectedProductForQuickView?.product_name">
-          </div>
-          <div class="qv-slide">
-            <img [src]="selectedProductForQuickView?.second_image_1" [alt]="selectedProductForQuickView?.product_name">
-          </div>
+    <!-- Price Range Filter Overlay -->
+    <div class="filters-overlay" *ngIf="showFilters">
+      <div class="price-filter-card">
+        <div class="filter-header">
+          <h3>Max Price: ₹{{ maxPrice }}</h3>
+          <button class="clear-btn" (click)="clearFilters()">Clear All Filters</button>
         </div>
-        <!-- Slider Indicators -->
-        <div class="qv-indicators">
-          <span class="dot" [class.active]="currentQuickImageIndex === 0" (click)="currentQuickImageIndex = 0"></span>
-          <span class="dot" [class.active]="currentQuickImageIndex === 1" (click)="currentQuickImageIndex = 1"></span>
-        </div>
-        <!-- Slider Nav -->
-        <button class="qv-nav-btn prev" (click)="prevQuickImage()"><i class="fas fa-chevron-left"></i></button>
-        <button class="qv-nav-btn next" (click)="nextQuickImage()"><i class="fas fa-chevron-right"></i></button>
-      </div>
-
-      <!-- Details Section -->
-      <div class="qv-details-scroll">
-        <div class="qv-body">
-          <div class="qv-shop-brand">TailCart Luxury</div>
-          <h2 class="qv-item-title">{{ selectedProductForQuickView?.product_name }}</h2>
-
-          <div class="qv-price-info">
-            <span class="qv-sell-price">₹{{ selectedProductForQuickView?.selling_price }}</span>
-            <span class="qv-mrp-label">MRP</span>
-            <span class="qv-orig-price">₹{{ selectedProductForQuickView?.original_price }}</span>
-            <span class="qv-discount-pill">{{ selectedProductForQuickView?.discount_percentage }}% OFF</span>
-          </div>
-          <p class="qv-tax-note">Price inclusive of all taxes.</p>
-
-          <!-- Offer Highlight Box -->
-          <div class="qv-offer-box">
-            <div class="qv-offer-header">
-              <span class="dot-green"></span>
-              <span class="offer-title">Offer Price ₹{{ selectedProductForQuickView?.selling_price }}</span>
-            </div>
-            <p class="qv-offer-desc">High quality luxury accessory for your pet with laser engraving option.</p>
-            <div class="qv-coupon-code">
-              <div class="code-info">
-                <p class="code-label">Use Code</p>
-                <p class="code-val">LUXURYPET</p>
-              </div>
-              <span class="code-tc">T&C</span>
-            </div>
-          </div>
-
-          <!-- Color Section -->
-          <div class="qv-property-row">
-            <h4 class="qv-prop-title">Color</h4>
-            <p class="qv-prop-val">{{ selectedProductForQuickView?.colours?.join(', ') || 'Default' }}</p>
-            <div class="qv-color-swatches">
-              <div class="color-circle" *ngFor="let color of selectedProductForQuickView?.colours"
-                [style.backgroundColor]="color.toLowerCase()" [title]="color">
-              </div>
-            </div>
-          </div>
-
-          <!-- Description Section -->
-          <div class="qv-desc-section">
-            <h4 class="qv-prop-title">Product Description</h4>
-            <p class="qv-full-desc">{{ selectedProductForQuickView?.product_long_description }}</p>
-            <p class="qv-spec-desc"><strong>Specifications:</strong> {{
-              selectedProductForQuickView?.product_other_specifications }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Action Footer -->
-      <div class="qv-footer">
-        <div class="qv-footer-left">
-          <button class="qv-icon-btn"><i class="fas fa-share-alt"></i></button>
-          <button class="qv-icon-btn"><i class="far fa-heart"></i></button>
-        </div>
-        <button class="qv-add-to-bag" (click)="addToCart(selectedProductForQuickView!)">
-          <i class="fas fa-shopping-bag"></i> Add To Bag
-        </button>
+        <input type="range" min="0" max="30000" step="100" [(ngModel)]="maxPrice" (input)="applyFilters()"
+          class="price-slider">
       </div>
     </div>
   </div>
 
+  <!-- Product Display Area -->
+  <div class="showing-count" *ngIf="filteredProducts.length > 0">
+    Showing {{ filteredProducts.length }} products
+  </div>
+
+  <div [class.products-grid]="isGridView" [class.products-list]="!isGridView" style="padding: 0 15px;">
+    <div class="product-card" *ngFor="let product of filteredProducts" (click)="openQuickView(product, $event)">
+      <div class="card-image-area">
+        <img [src]="product.thumbnail_image" [alt]="product.product_name" class="product-thumb">
+        <div class="card-badge" *ngIf="product.deals">{{ product.deals }}</div>
+      </div>
+
+      <div class="card-content" style="padding: 15px;">
+        <h3 class="product-title" style="font-size: 1rem; font-weight: 800; color: #1e293b; margin: 0 0 5px 0;">{{
+          product.product_name }}</h3>
+        <p class="product-material" style="font-size: 0.85rem; color: #64748B; margin: 0 0 8px 0;">{{
+          product.product_material }}</p>
+
+        <!-- Price Row -->
+        <div class="price-row" style="display: flex; align-items: baseline; gap: 8px;">
+          <span class="selling-price" style="font-size: 1.15rem; font-weight: 800; color: #2d9d4f;">₹{{
+            product.selling_price }}</span>
+          <span class="original-price" *ngIf="product.discount_percentage! > 0"
+            style="text-decoration: line-through; color: #94a3b8; font-size: 0.7rem;">₹{{ product.original_price
+            }}</span>
+        </div>
+
+        <!-- Free Delivery Banner -->
+        <div
+          style="background: #fff0e0; color: #d97706; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 10px; width: fit-content;">
+          <i class="fas fa-truck" style="font-size: 0.5rem;"></i> Free Delivery
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="filteredProducts.length === 0 && !isLoading">
+    <div #noProductsLottie class="empty-lottie"></div>
+    <h3>No products found</h3>
+    <button class="btn-primary" (click)="clearFilters()" *ngIf="searchQuery || selectedMaterial !== 'ALL'">Clear
+      Filters</button>
+  </div>
+
+  <!-- Load More Section -->
+  <div class="load-more-container" *ngIf="nextPageUrl">
+    <button class="load-more-btn" (click)="loadMore()" [disabled]="isLoading">
+      <span *ngIf="!isLoading">Explore More</span>
+      <span *ngIf="isLoading" class="spinner"><i class="fas fa-circle-notch fa-spin"></i> Loading...</span>
+    </button>
+  </div>
+</div>
+
+<!-- QUICK VIEW MODAL (IMAGE 2 STYLE) -->
+<div class="qv-modal-overlay" *ngIf="showQuickView" (click)="closeQuickView()">
+  <div class="qv-modal-card" (click)="$event.stopPropagation()">
+    <button class="qv-close" (click)="closeQuickView()">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+
+    <!-- Image Slider Section -->
+    <div class="qv-image-slider">
+      <div class="qv-slide-track" [style.transform]="'translateX(' + (-currentQuickImageIndex * 100) + '%)'">
+        <div class="qv-slide">
+          <img [src]="selectedProductForQuickView?.thumbnail_image" [alt]="selectedProductForQuickView?.product_name">
+        </div>
+        <div class="qv-slide">
+          <img [src]="selectedProductForQuickView?.second_image_1" [alt]="selectedProductForQuickView?.product_name">
+        </div>
+      </div>
+      <!-- Slider Indicators -->
+      <div class="qv-indicators">
+        <span class="dot" [class.active]="currentQuickImageIndex === 0" (click)="currentQuickImageIndex = 0"></span>
+        <span class="dot" [class.active]="currentQuickImageIndex === 1" (click)="currentQuickImageIndex = 1"></span>
+      </div>
+      <!-- Slider Nav -->
+      <button class="qv-nav-btn prev" (click)="prevQuickImage()"><i class="fas fa-chevron-left"></i></button>
+      <button class="qv-nav-btn next" (click)="nextQuickImage()"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- Details Section -->
+    <div class="qv-details-scroll">
+      <div class="qv-body">
+        <div class="qv-shop-brand">TailCart Luxury</div>
+        <h2 class="qv-item-title">{{ selectedProductForQuickView?.product_name }}</h2>
+
+        <div class="qv-price-info">
+          <span class="qv-sell-price">₹{{ selectedProductForQuickView?.selling_price }}</span>
+          <span class="qv-mrp-label">MRP</span>
+          <span class="qv-orig-price">₹{{ selectedProductForQuickView?.original_price }}</span>
+          <span class="qv-discount-pill">{{ selectedProductForQuickView?.discount_percentage }}% OFF</span>
+        </div>
+        <p class="qv-tax-note">Price inclusive of all taxes.</p>
+
+        <!-- Offer Highlight Box -->
+        <div class="qv-offer-box">
+          <div class="qv-offer-header">
+            <span class="dot-green"></span>
+            <span class="offer-title">Offer Price ₹{{ selectedProductForQuickView?.selling_price }}</span>
+          </div>
+          <p class="qv-offer-desc">High quality luxury accessory for your pet with laser engraving option.</p>
+          <div class="qv-coupon-code">
+            <div class="code-info">
+              <p class="code-label">Use Code</p>
+              <p class="code-val">LUXURYPET</p>
+            </div>
+            <span class="code-tc">T&C</span>
+          </div>
+        </div>
+
+        <!-- Color Section -->
+        <div class="qv-property-row">
+          <h4 class="qv-prop-title">Color</h4>
+          <p class="qv-prop-val">{{ selectedProductForQuickView?.colours?.join(', ') || 'Default' }}</p>
+          <div class="qv-color-swatches">
+            <div class="color-circle" *ngFor="let color of selectedProductForQuickView?.colours"
+              [style.backgroundColor]="color.toLowerCase()" [title]="color">
+            </div>
+          </div>
+        </div>
+
+        <!-- Description Section -->
+        <div class="qv-desc-section">
+          <h4 class="qv-prop-title">Product Description</h4>
+          <p class="qv-full-desc">{{ selectedProductForQuickView?.product_long_description }}</p>
+          <p class="qv-spec-desc"><strong>Specifications:</strong> {{
+            selectedProductForQuickView?.product_other_specifications }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Footer -->
+    <div class="qv-footer">
+      <div class="qv-footer-left">
+        <button class="qv-icon-btn"><i class="fas fa-share-alt"></i></button>
+        <button class="qv-icon-btn"><i class="far fa-heart"></i></button>
+      </div>
+      <button class="qv-add-to-bag" (click)="addToCart(selectedProductForQuickView!)">
+        <i class="fas fa-shopping-bag"></i> Add To Bag
+      </button>
+    </div>
+  </div>
 </div>
