@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 from config import env
 load_dotenv()
 from condtions.all_portal_conditions import generate_condition_data
-from utils.helper import adj_click, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_listing_history, rrr_fill_repair_details, rrr_select_hoa_amenities, rrr_select_amenities, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status, tfs_statuschange
+from utils.helper import adj_click, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_listing_history, rrr_fill_repair_details, rrr_select_hoa_amenities, rrr_select_amenities, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status, tfs_statuschange, select_radio_button, select_drop_button
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.glogger import GLogger
 
@@ -169,11 +169,13 @@ class rrreview:
                 try:
                     # Column 1: Order ID
                     order_id_el = row.find_element(By.XPATH, ".//ion-col[1]//ion-label")
-                    portalorder_id = order_id_el.text.strip()
+                    portalorder_id = order_id_el.get_attribute('textContent').strip()
 
                     # Column 2: Form Type
                     form_type_el = row.find_element(By.XPATH, ".//ion-col[2]//ion-label")
-                    form_type = form_type_el.text.strip()
+                    form_type = form_type_el.get_attribute('textContent').strip().upper()
+
+                    print(f"Discovered Order: {portalorder_id} - {form_type}")
 
                     # Only store valid numeric order IDs
                     if portalorder_id.isdigit():
@@ -283,10 +285,12 @@ class rrreview:
 
             target = None
             for label in labels:
-                text = label.text.strip()
-                if order_id in text:
-                    target = label
-                    break
+                text = label.get_attribute('textContent')
+                if text:
+                    text = text.strip()
+                    if order_id in text:
+                        target = label
+                        break
 
             if not target:
                 raise Exception(f"Order {order_id} not found among portal orders.")
@@ -540,6 +544,8 @@ class rrreview:
             "rrr_listing_history_fill": rrr_fill_listing_history,
             "rrr_hoa_amenities": rrr_select_hoa_amenities,
             "rrr_amenities": rrr_select_amenities,
+            "select_radio": select_radio_button,
+            "select_drop_button": select_drop_button,
         }
 
         # --------------------------
@@ -771,7 +777,7 @@ class rrreview:
 
 
                         for field in values:
-                            if not (isinstance(field, list) and len(field) == 3):
+                            if not (isinstance(field, list) and len(field) in [3, 5]):
                                 #logging.warning(f"Invalid field format: {field}")
                                 logger.log(
                                     module="rrreview-fill_form_multi",
@@ -782,39 +788,45 @@ class rrreview:
                                 )
                                 continue
 
-                            key_expr, xpath, mode = field
-                            # Resolve dynamic parts like {condition_data['...']}
-                            xpath = resolve_template(xpath)
-                            if '{' in field[1]: # Log if it WAS a template
+                            key_expr = field[0]
+                            # Resolve dynamic parts like {condition_data['...']} for field[1]
+                            resolved_xpath = resolve_template(field[1]) if isinstance(field[1], str) else field[1]
+                            
+                            if isinstance(field[1], str) and '{' in field[1]: # Log if it WAS a template
                                 logger.log(
                                     module="rrreview-fill_form_multi",
                                     order_id=hybrid_orderid,
                                     action_type="Info",
-                                    remarks=f"Resolved dynamic locator: {xpath}",
+                                    remarks=f"Resolved dynamic locator: {resolved_xpath}",
                                     severity="INFO"
                                 )
                             try:
                                 value = extract_value_from_expr(key_expr)
-                                # if field_type == "radiobutton_data": # Removed debug print
 
                                 if field_type != "button_click" and value in [None, ""]:
                                     continue
-                                # WebDriverWait(self.driver, 3).until(
-                                #     EC.element_to_be_clickable((By.XPATH, xpath))
-                                # )
+                                
                                 action_func = field_actions.get(field_type)
                                 if action_func:
                                     if field_type == "button_click":
                                         # Only click if button is present and clickable
                                         try:
                                             WebDriverWait(self.driver, 10).until(
-                                                EC.element_to_be_clickable((By.XPATH, xpath))
+                                                EC.element_to_be_clickable((By.XPATH, resolved_xpath))
                                             )
-                                            logger.log(module="rrreview-fill_form_multi", order_id=hybrid_orderid, action_type="Info", remarks=f"Button '{xpath}' is clickable, executing click.", severity="INFO")
+                                            logger.log(module="rrreview-fill_form_multi", order_id=hybrid_orderid, action_type="Info", remarks=f"Button '{resolved_xpath}' is clickable, executing click.", severity="INFO")
                                         except Exception as e:
-                                            logger.log(module="rrreview-fill_form_multi", order_id=hybrid_orderid, action_type="Warning", remarks=f"Button '{xpath}' not clickable/found after wait: {e}", severity="INFO")
+                                            logger.log(module="rrreview-fill_form_multi", order_id=hybrid_orderid, action_type="Warning", remarks=f"Button '{resolved_xpath}' not clickable/found after wait: {e}", severity="INFO")
                                             continue  # Skip click if the button isn't there (e.g., popup didn't open)
-                                    action_func(self.driver, value, xpath, mode)
+                                    
+                                    if len(field) == 5:
+                                        span_xpath = field[2]
+                                        extra_xpath = field[3]
+                                        element_type = field[4]
+                                        action_func(self.driver, value, resolved_xpath, span_xpath, extra_xpath, element_type)
+                                    else:
+                                        mode = field[2]
+                                        action_func(self.driver, value, resolved_xpath, mode)
                                 else:
                                     #logging.warning(f"Unknown field type: {field_type}")
                                     logger.log(

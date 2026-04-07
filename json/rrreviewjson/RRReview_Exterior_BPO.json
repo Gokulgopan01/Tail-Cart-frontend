@@ -3,52 +3,228 @@
     {
       "Order Instructions": [
         {
-          "filedtype": "radiobutton_data",
+          "filedtype": "select_radio",
           "values": [
             [
-              "RB_LotSize_A",
-              "RB_LotSize_A",
-              "id"
-            ],
+              "sub_data['LotCheck']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[3]/span/input",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[4]/span/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_radio",
+          "values": [
             [
-              "RB_PropType_A",
-              "RB_PropType_A",
-              "id"
-            ],
+              "sub_data['PropertyType']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[3]/span/input",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[4]/span/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_radio",
+          "values": [
             [
-              "RB_YearBuilt_A",
-              "RB_YearBuilt_A",
-              "id"
-            ],
+              "sub_data['YearBuilt']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[3]/span/input",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[4]/span/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_radio",
+          "values": [
             [
-              "RB_LivingSqft_A",
-              "RB_LivingSqft_A",
-              "id"
-            ],
+              "sub_data['Gla']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[3]/span/input",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[4]/span/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_radio",
+          "values": [
             [
-              "RB_NumUnits_A",
-              "RB_NumUnits_A",
-              "id"
-            ],
+              "sub_data['Units']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[3]/span/input",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[4]/span/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_radio",
+          "values": [
             [
-              "RB_TotalRoomCount_A",
-              "RB_TotalRoomCount_A",
-              "id"
-            ],
+              "sub_data['TotalRooms']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[3]/span/input",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[4]/span/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_radio",
+          "values": [
             [
-              "RB_BasementYN_A",
-              "RB_BasementYN_A",
-              "id"
-            ],
+              "sub_data['CheckBasement']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[3]/span/input",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[4]/span/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_radio",
+          "values": [
             [
-              "RB_BedCount_A",
-              "RB_BedCount_A",
-              "id"
-            ],
+              "sub_data['Bed']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[3]/span/input",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[4]/span/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_radio",
+          "values": [
             [
-              "RB_BathCount_A",
-              "RB_BathCount_A",
-              "id"
+              "sub_data['FullBath']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[3]/span/input",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[4]/span/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_drop_button",
+          "values": [
+            [
+              "sub_data['LotCheck']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[5]/select",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[6]/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_drop_button",
+          "values": [
+            [
+              "sub_data['PropertyType']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[5]/select",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[6]/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_drop_button",
+          "values": [
+            [
+              "sub_data['YearBuilt']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[5]/select",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[6]/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_drop_button",
+          "values": [
+            [
+              "sub_data['Gla']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[5]/select",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[6]/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_drop_button",
+          "values": [
+            [
+              "sub_data['Units']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[5]/select",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[6]/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_drop_button",
+          "values": [
+            [
+              "sub_data['TotalRooms']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[5]/select",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[6]/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_drop_button",
+          "values": [
+            [
+              "sub_data['CheckBasement']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[5]/select",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[6]/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_drop_button",
+          "values": [
+            [
+              "sub_data['Bed']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[5]/select",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[6]/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "select_drop_button",
+          "values": [
+            [
+              "sub_data['FullBath']",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[5]/select",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[2]/span",
+              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[6]/input",
+              "xpath"
+            ]
+          ]
+        },
+        {
+          "filedtype": "button_click",
+          "values": [
+            [
+              "select",
+              "/html/body/form/div[2]/div[4]/table/tbody[4]/tr/td/div/input",
+              "xpath"
             ]
           ]
         },

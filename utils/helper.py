@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 import logging
 from selenium.webdriver.chrome.service import Service
 import logging
@@ -42,7 +43,7 @@ def params_check():
           # Returns auto for manualy opening Autologin  
 
         return "AutoLogin",None,None
-        #return "SmartEntry","3643","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzQzNDUwMjZ9.pwhdxOUSmfTVHPcrMJ5jJdOyIW112TKmq7H4f0SNlBY"
+        #return "SmartEntry","3854","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
 
 process_type, hybrid_orderid, hybrid_token = params_check()
 
@@ -2034,4 +2035,95 @@ def update_portal_login_confirmation_status(order_id):
            
         )
         return False
+
+def select_radio_button(driver, btn_value, element_identifier, span_xpath, disagree_xpath, element_type):
+    selector_map = selector_mapping(element_type)
+    try:
+        elements = WebDriverWait(driver, 10).until(EC.visibility_of_all_elements_located((selector_map, span_xpath)))
+        element_agree = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, element_identifier)))
+        element_disagree = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, disagree_xpath)))
+        
+        for element in elements:
+            if element.text == btn_value:
+                driver.execute_script("arguments[0].click();", element_agree)
+                logger.log(
+                    module="select_radio_button",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Agree selected: {btn_value}",
+                    severity="INFO"
+                )
+                return
+        
+        # Click disagree if the value is not found
+        driver.execute_script("arguments[0].click();", element_disagree)
+        logger.log(
+            module="select_radio_button",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Disagree selected: {btn_value}",
+            severity="INFO"
+        )
+        
+    except NoSuchElementException as e:
+        logger.log(
+            module="select_radio_button",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Element not found: {e}",
+            severity="INFO"
+        )
+    except ElementClickInterceptedException as e:
+        logger.log(
+            module="select_radio_button",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Element click intercepted: {e}",
+            severity="INFO"
+        )
+    except Exception as e:
+        logger.log(
+            module="select_radio_button",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"An error occurred: {e}",
+            severity="INFO"
+        )
+
+def select_drop_button(driver, btn_value, element_identifier, span_xpath, dropdown_xpath, element_type):
+    selector_map = selector_mapping(element_type)
+    try:
+        elements = driver.find_elements(selector_map, span_xpath)
+        dropdown_element = driver.find_element(By.XPATH, element_identifier)
+        
+        for element in elements:
+            if element.text != btn_value:
+                select = Select(dropdown_element)
+                select.select_by_visible_text('Tax Records')
+                
+                input_element = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.XPATH, dropdown_xpath))
+                )
+                input_element.clear()
+                input_element.send_keys("Verified From Tax")
+                return
+
+        # If btn_value is not found, you might want to handle it
+        logger.log(
+            module="select_drop_button",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Value not found in dropdown: {btn_value}",
+            severity="INFO"
+        )
+
+    except Exception as e:
+        logger.log(
+            module="select_drop_button",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"An error occurred: {e}",
+            severity="INFO"
+        )
+
 
