@@ -17,33 +17,39 @@
   </div>
 </section>
 
-<!-- Offer Banner Section -->
+<!-- Offer Banner Section (Carousel) -->
 <section class="offer-banner-section" data-aos="fade-up">
-  <div class="banner-container-premium">
-    <div class="banner-photo-bg">
-      <img src="assets/images/banner_dog.png" alt="Pet Promotion" class="banner-photo">
-      <div class="banner-overlay-content">
-        <div class="offer-tag">20% discount on all, limited offer</div>
-        <button class="btn-shop-now-banner" (click)="navigateToShop()">Shop Now</button>
+  <div class="banner-carousel-wrapper">
+    <div class="banner-slides" [style.transform]="'translateX(' + (activeBannerIndex * -100) + '%)'">
+      <div *ngFor="let banner of offerBanners; let i = index" class="banner-slide">
+        <img [src]="banner.img" alt="Promotional Offer" class="banner-full-img">
       </div>
     </div>
   </div>
+
+  <!-- Carousel Indicators (Moved outside the image wrapper) -->
+  <div class="banner-indicators">
+    <span *ngFor="let dot of offerBanners; let i = index" class="indicator-dot" [class.active]="activeBannerIndex === i"
+      (click)="setBanner(i)">
+    </span>
+  </div>
 </section>
 
-<!-- Categories Section -->
+<!-- Categories Section (Photo Based) -->
 <section class="categories-section" data-aos="fade-up">
   <div class="section-container">
     <div class="category-header">
-      <h2 class="category-title">Refined Selections</h2>
+      <h2 class="category-title">Browse Categories</h2>
       <a routerLink="/shop" class="view-all-shop-link">VIEW ALL</a>
     </div>
-    <div class="category-grid">
-      <div *ngFor="let cat of categories" class="category-item" [class.active]="selectedCategory === cat.name"
+    <div class="category-grid-photos">
+      <div *ngFor="let cat of categories" class="category-photo-item" [class.active]="selectedCategory === cat.name"
         (click)="selectCategory(cat.name)">
-        <div class="category-icon">
-          <i [class]="cat.icon"></i>
+        <div class="category-photo-wrapper">
+          <i *ngIf="cat.icon" [class]="cat.icon" class="cat-icon"></i>
+          <img *ngIf="cat.img" [src]="cat.img" [alt]="cat.name" class="cat-img">
         </div>
-        <span class="category-label">{{cat.name}}</span>
+        <span class="category-label-alt">{{cat.name}}</span>
       </div>
     </div>
   </div>
@@ -54,7 +60,6 @@
   <div class="section-container">
     <div class="section-header-row">
       <h2 class="section-title-alt">Curated Essentials</h2>
-
     </div>
     <div class="recommended-grid-premium">
       <div *ngFor="let product of filteredProducts.slice(0, 4)" class="recommendation-card-luxury"

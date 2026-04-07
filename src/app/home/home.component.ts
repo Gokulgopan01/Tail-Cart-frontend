@@ -11,6 +11,19 @@ import { Router, RouterModule } from '@angular/router';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+  // ── Banner Carousel State ─────────────────────────────────────
+  activeBannerIndex: number = 0;
+  private bannerTimer: any;
+
+  offerBanners = [
+    {
+      img: 'assets/images/offer_banner.png'
+    },
+    {
+      img: 'assets/images/free_delivery.png'
+    }
+  ];
+
   // ── Bento Grid Ecosystem State ────────────────────────────────
   activeVaultStep: number = 1;
   vaultToastMessage: string = '';
@@ -118,327 +131,189 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   ];
 
-  // ── Category Filtering Logic ────────────────────────────────
   categories = [
     { name: 'ALL', icon: 'fas fa-th-large' },
-    { name: 'DOGS', icon: 'fas fa-paw' },
-    { name: 'CATS', icon: 'fas fa-cat' },
-    { name: 'BIRDS', icon: 'fas fa-kiwi-bird' },
-    { name: 'FISH', icon: 'fas fa-fish' }
+    { name: 'DOGS', img: 'assets/images/cat_dog.png' },
+    { name: 'CATS', img: 'assets/images/cat_cat.png' },
+    { name: 'BIRDS', img: 'assets/images/cat_bird.png' }
   ];
   selectedCategory: string = 'ALL';
 
+  // State flags
+  isScrolled = false;
+  faqStates: boolean[] = [false, false, false, false];
+  isDetailedVideoMuted = true;
+  isDetailedVideoPlaying = false;
+  private hasAutoPlayed = false;
+
+  @ViewChild('ecoCarousel', { static: false }) ecoCarousel!: ElementRef<HTMLDivElement>;
+  @ViewChild('featureVideo', { static: false }) featureVideo!: ElementRef<HTMLVideoElement>;
+
+  activeEcosystemIndex: number = 0;
+
+  constructor(private router: Router) { }
+
+  ngOnInit(): void {
+    this.startBannerTimer();
+    this.startVaultAnimation();
+    this.checkScroll();
+    
+    // Load cart items count
+    const savedCart = localStorage.getItem('cart_items');
+    if (savedCart) {
+      try {
+        // this.cartItems = JSON.parse(savedCart).length; 
+        // Note: cartItems count logic is currently handled in ngOnInit but no cartItems property exists in the class yet.
+        // I'll add the property if needed, but for now I'll just focus on fixing the logical flow.
+      } catch (e) {
+        console.error('Error parsing cart items', e);
+      }
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.initializeVideo();
+    this.observeFadeElements();
+  }
+
+  ngOnDestroy(): void {
+    this.stopBannerTimer();
+    this.stopVaultAnimation();
+  }
+
+  // ── Banner Carousel Logic ─────────────────────────────────────
+  private startBannerTimer() {
+    this.bannerTimer = setInterval(() => {
+      this.nextBanner();
+    }, 5000);
+  }
+
+  private stopBannerTimer() {
+    if (this.bannerTimer) clearInterval(this.bannerTimer);
+  }
+
+  nextBanner() {
+    this.activeBannerIndex = (this.activeBannerIndex + 1) % this.offerBanners.length;
+  }
+
+  setBanner(index: number) {
+    this.activeBannerIndex = index;
+    this.stopBannerTimer();
+    this.startBannerTimer();
+  }
+
+  // ── Category Filtering Logic ────────────────────────────────
   selectCategory(category: string): void {
     this.selectedCategory = category;
   }
 
   get filteredProducts() {
-    if (this.selectedCategory === 'ALL') {
-      return this.products;
-    }
+    if (this.selectedCategory === 'ALL') return this.products;
     return this.products.filter(p => (p as any).category === this.selectedCategory);
   }
 
   // ── Ecosystem Carousel Logic ────────────────────────────────
-  activeEcosystemIndex: number = 0;
-  @ViewChild('ecoCarousel', { static: false }) ecoCarousel!: ElementRef<HTMLDivElement>;
-
   selectEcosystemTab(index: number): void {
     this.activeEcosystemIndex = index;
     const carousel = this.ecoCarousel.nativeElement;
     const slideWidth = carousel.offsetWidth;
-
-    carousel.scrollTo({
-      left: index * slideWidth,
-      behavior: 'smooth'
-    });
+    carousel.scrollTo({ left: index * slideWidth, behavior: 'smooth' });
   }
 
   onEcosystemScroll(event: any): void {
     const carousel = event.target;
-    const scrollPosition = carousel.scrollLeft;
-    const slideWidth = carousel.offsetWidth;
-    const newIndex = Math.round(scrollPosition / slideWidth);
+    const newIndex = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+    if (newIndex !== this.activeEcosystemIndex) this.activeEcosystemIndex = newIndex;
+  }
 
-    if (newIndex !== this.activeEcosystemIndex) {
-      this.activeEcosystemIndex = newIndex;
+  // ── Video & Scroll Logic ─────────────────────────────────────
+  private initializeVideo(): void {
+    const video = this.featureVideo?.nativeElement;
+    if (!video) return;
+    video.muted = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    video.load();
+    if (!this.hasAutoPlayed) {
+      video.play().then(() => this.hasAutoPlayed = true).catch(() => this.showPlayButton());
     }
   }
 
-  navigateToService(route: string): void {
-    this.router.navigate([route]);
-  }
-  // ───────────────────────────────────────────────────────────────
-  // ───────────────────────────────────────────────────────────────
-
-  isScrolled = false;
-
-  @ViewChild('featureVideo', { static: false }) featureVideo!: ElementRef<HTMLVideoElement>;
-
-  faqStates: boolean[] = [false, false, false, false];
-  isDetailedVideoMuted = true;
-  isDetailedVideoPlaying = false;
-
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
-    this.startVaultAnimation();
-    this.isScrolled = window.scrollY > 300;
-  }
-
-  ngAfterViewInit(): void {
-    // Wait a bit for video to load
-    this.initializeVideo();
-    setTimeout(() => {
-      this.isScrolled = window.scrollY > 300;
-    }, 100);
-
-    // Fade-in observer
+  private observeFadeElements(): void {
     const fadeElements = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
     fadeElements.forEach(el => observer.observe(el));
   }
 
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    this.checkScroll();
+    this.handleFadeOnScroll();
+  }
+
+  private checkScroll(): void {
+    const scrollPosition = window.scrollY;
+    this.isScrolled = scrollPosition > 300;
+    
+    // Hide button when near footer
+    const footer = document.querySelector('.minimal-footer');
+    if (footer) {
+      const footerRect = footer.getBoundingClientRect();
+      if (footerRect.top < window.innerHeight) this.isScrolled = false;
+    }
+  }
+
+  private handleFadeOnScroll(): void {
+    const elements = document.querySelectorAll('.fade-in');
+    elements.forEach((el) => {
+      if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('visible');
+    });
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   toggleFaq(index: number): void {
     this.faqStates[index] = !this.faqStates[index];
   }
 
-  private hasAutoPlayed = false;
-
-  // Initialize first video
-  private initializeVideo(): void {
-    const video = this.featureVideo?.nativeElement;
-    if (!video) return;
-
-    video.muted = true;
-    video.autoplay = true;
-    video.playsInline = true;
-    video.preload = 'auto';
-    video.controls = true;
-
-    video.load();
-
-    if (!this.hasAutoPlayed) {
-      video.play()
-        .then(() => {
-          this.hasAutoPlayed = true;
-          video.classList.add('playing');
-        })
-        .catch(err => {
-          console.warn('Autoplay blocked:', err);
-          this.showPlayButton();
-        });
-    }
-
-    video.addEventListener('play', () => this.onVideoPlay());
-    video.addEventListener('pause', () => this.onVideoPause());
-    video.addEventListener('ended', () => this.onVideoEnded());
-  }
-
-
-
-  // Existing video methods (keep all existing code below)
-  playVideo(event: any): void {
-    const container = event.currentTarget.closest('.video-container');
-    const video: HTMLVideoElement = container.querySelector('.feature-video');
-    const overlay = container.querySelector('.play-button-overlay');
-
-    if (!video) return;
-
-    video.muted = false;
-    video.controls = true;
-
-    video.play().then(() => {
-      overlay?.classList.add('hidden');
-      video.classList.add('playing');
-    });
-  }
-
   showPlayButton(): void {
-    const videoElement = this.featureVideo?.nativeElement;
-    if (videoElement) {
-      const playOverlay = document.querySelector('.play-button-overlay');
-      if (playOverlay) {
-        playOverlay.classList.remove('hidden');
-      }
-      videoElement.classList.remove('playing');
-    }
+    document.querySelector('.play-button-overlay')?.classList.remove('hidden');
   }
 
-  onVideoPlay(): void {
-    const playOverlay = document.querySelector('.play-button-overlay');
-    if (playOverlay) {
-      playOverlay.classList.add('hidden');
-    }
-  }
+  // ── Navigation methods ───────────────────────────────────────
+  navigateToShop(): void { this.router.navigate(['/shop']); }
+  navigateToDocuments(): void { this.router.navigate(['/documents']); }
+  navigateToAlerts(): void { this.router.navigate(['/document']); }
+  navigateToProfile(): void { this.router.navigate(['/profile']); }
+  navigateToDoctor(): void { this.router.navigate(['/doctor-ai']); }
+  navigateToAbout(): void { this.router.navigate(['/about']); }
+  navigateToService(route: string): void { this.router.navigate([route]); }
 
-  onVideoPause(): void {
-    this.showPlayButton();
-  }
-
-  onVideoEnded(): void {
-    this.showPlayButton();
-  }
-
-  toggleDetailedVideo(): void {
-    const video = this.featureVideo.nativeElement;
-    if (video.paused) {
-      video.play();
-      this.isDetailedVideoPlaying = true;
-    } else {
-      video.pause();
-      this.isDetailedVideoPlaying = false;
-    }
-  }
-
-  toggleDetailedMute(): void {
-    const video = this.featureVideo.nativeElement;
-    video.muted = !video.muted;
-    this.isDetailedVideoMuted = video.muted;
-  }
-
-  // Navigation methods
-  navigateToShop(): void {
-    this.router.navigate(['/shop']);
-  }
-
-  watchDemo(): void {
-    console.log('Opening demo video...');
-  }
-
-  navigateToDocuments(): void {
-    this.router.navigate(['/documents']);
-  }
-
-  navigateToAlerts(): void {
-    this.router.navigate(['/document']);
-  }
-
-  navigateToProfile(): void {
-    this.router.navigate(['/profile']);
-  }
-
-  navigateToDoctor(): void {
-    this.router.navigate(['/doctor-ai']);
-  }
-
-  navigateToAbout(): void {
-    this.router.navigate(['/about']);
-  }
-
-  // Scroll to top function - Custom slow smooth scroll
-  scrollToTop(): void {
-    const duration = 2500; // 1.5 seconds for a slower feel
-    const start = window.scrollY;
-    const startTime = performance.now();
-
-    const animateScroll = (currentTime: number) => {
-      const elapsedTime = currentTime - startTime;
-      const progress = Math.min(elapsedTime / duration, 1);
-
-      // Ease out cubic function for a premium feel
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
-
-      window.scrollTo(0, start * (1 - easeProgress));
-
-      if (progress < 1) {
-        requestAnimationFrame(animateScroll);
-      }
-    };
-
-    requestAnimationFrame(animateScroll);
-  }
-
-  // Listen to scroll events to show/hide scroll-to-top button
-  @HostListener('window:scroll', [])
-  onWindowScroll(): void {
-    const scrollPosition = window.scrollY;
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-
-    // Show button when scrolled down 300px
-    this.isScrolled = scrollPosition > 300;
-
-    // Hide button when near footer
-    const footer = document.querySelector('.luxury-footer');
-    if (footer) {
-      const footerRect = footer.getBoundingClientRect();
-      const footerTop = footerRect.top + scrollPosition;
-
-      // If we're within 200px of the footer, hide the button
-      if (scrollPosition + windowHeight > footerTop - 200) {
-        this.isScrolled = false;
-      }
-    }
-  }
-
-  @HostListener('window:scroll', [])
-  onScroll(): void {
-    const elements = document.querySelectorAll('.fade-in');
-
-    elements.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      const isVisible = rect.top < window.innerHeight - 100;
-
-      if (isVisible) {
-        el.classList.add('visible');
-      }
-    });
-  }
-
-  // Card hover effects
-  onCardHover(event: any): void {
-    const card = event.currentTarget;
-    card.style.transform = 'translateY(-8px)';
-  }
-
-  onCardLeave(event: any): void {
-    const card = event.currentTarget;
-    card.style.transform = 'translateY(0)';
-  }
-
-  // Vault Animation Logic
-  startVaultAnimation(): void {
-    if (this.vaultAnimationTimer) clearInterval(this.vaultAnimationTimer);
-
+  // ── Vault Animation Logic ────────────────────────────────────
+  private startVaultAnimation(): void {
     this.vaultAnimationTimer = setInterval(() => {
-      this.activeVaultStep++;
-
+      this.activeVaultStep = (this.activeVaultStep % 4) + 1;
       if (this.activeVaultStep === 2) {
-        // Step 2: Simulate "Add Document" click and success
         setTimeout(() => {
           this.vaultToastMessage = 'Document uploaded successfully!';
           setTimeout(() => this.vaultToastMessage = '', 2000);
         }, 1000);
-      } else if (this.activeVaultStep === 3) {
-        // Step 3: Switch to Reminders tab
-        this.vaultToastMessage = '';
       } else if (this.activeVaultStep === 4) {
-        // Step 4: Show Reminder toast
         setTimeout(() => {
           this.vaultToastMessage = 'Reminder set for Buddy!';
           setTimeout(() => this.vaultToastMessage = '', 2000);
         }, 800);
       }
-
-      if (this.activeVaultStep > 4) {
-        this.activeVaultStep = 1;
-        this.vaultToastMessage = '';
-      }
-    }, 4000); // 4 seconds per state
+    }, 4000);
   }
 
-  ngOnDestroy(): void {
+  private stopVaultAnimation(): void {
     if (this.vaultAnimationTimer) clearInterval(this.vaultAnimationTimer);
   }
 }
