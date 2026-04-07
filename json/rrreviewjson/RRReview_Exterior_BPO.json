@@ -7,9 +7,9 @@
           "values": [
             [
               "sub_data['LotCheck']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[3]/span/input",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[4]/span/input",
+              "//*[@id='RB_LotSize_A']",
+              "//*[@id='LB_LotSize_Display_Value']",
+              "//*[@id='RB_LotSize_D']",
               "xpath"
             ]
           ]
@@ -19,9 +19,9 @@
           "values": [
             [
               "sub_data['PropertyType']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[3]/span/input",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[4]/span/input",
+              "//*[@id='RB_PropType_A']",
+              "//*[@id='LB_PropType_Display_Value_Show']",
+              "//*[@id='RB_PropType_D']",
               "xpath"
             ]
           ]
@@ -31,9 +31,9 @@
           "values": [
             [
               "sub_data['YearBuilt']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[3]/span/input",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[4]/span/input",
+              "//*[@id='RB_YearBuilt_A']",
+              "//*[@id='LB_YearBuilt_Display_Value']",
+              "//*[@id='RB_YearBuilt_D']",
               "xpath"
             ]
           ]
@@ -43,9 +43,9 @@
           "values": [
             [
               "sub_data['Gla']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[3]/span/input",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[4]/span/input",
+              "//*[@id='RB_LivingSqft_A']",
+              "//*[@id='LB_LivingSqft_Display_Value']",
+              "//*[@id='RB_LivingSqft_D']",
               "xpath"
             ]
           ]
@@ -55,9 +55,9 @@
           "values": [
             [
               "sub_data['Units']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[3]/span/input",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[4]/span/input",
+              "//*[@id='RB_NumUnits_A']",
+              "//*[@id='LB_NumUnits_Display_Value']",
+              "//*[@id='RB_NumUnits_D']",
               "xpath"
             ]
           ]
@@ -67,9 +67,9 @@
           "values": [
             [
               "sub_data['TotalRooms']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[3]/span/input",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[4]/span/input",
+              "//*[@id='RB_TotalRoomCount_A']",
+              "//*[@id='LB_TotalRoomCount_Display_Value']",
+              "//*[@id='RB_TotalRoomCount_D']",
               "xpath"
             ]
           ]
@@ -79,9 +79,9 @@
           "values": [
             [
               "sub_data['CheckBasement']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[3]/span/input",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[4]/span/input",
+              "//*[@id='RB_BasementYN_A']",
+              "//*[@id='LB_BasementYN_Display_Value']",
+              "//*[@id='RB_BasementYN_D']",
               "xpath"
             ]
           ]
@@ -91,9 +91,9 @@
           "values": [
             [
               "sub_data['Bed']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[3]/span/input",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[4]/span/input",
+              "//*[@id='RB_BedCount_A']",
+              "//*[@id='LB_BedCount_Display_Value']",
+              "//*[@id='RB_BedCount_D']",
               "xpath"
             ]
           ]
@@ -103,9 +103,9 @@
           "values": [
             [
               "sub_data['FullBath']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[3]/span/input",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[4]/span/input",
+              "//*[@id='RB_BathCount_A']",
+              "//*[@id='LB_BathCount_Display_Value']",
+              "//*[@id='RB_BathCount_D']",
               "xpath"
             ]
           ]
@@ -115,9 +115,9 @@
           "values": [
             [
               "sub_data['LotCheck']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[5]/select",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[2]/td[6]/input",
+              "//*[@id='DDL_LotSize_SoD']",
+              "//*[@id='LB_LotSize_Display_Value']",
+              "//*[@id='TB_LotSize_Detail']",
               "xpath"
             ]
           ]
@@ -127,9 +127,9 @@
           "values": [
             [
               "sub_data['PropertyType']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[5]/select",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[3]/td[6]/input",
+              "//*[@id='DDL_PropType_SoD']",
+              "//*[@id='LB_PropType_Display_Value_Show']",
+              "//*[@id='TB_PropType_Detail']",
               "xpath"
             ]
           ]
@@ -139,9 +139,9 @@
           "values": [
             [
               "sub_data['YearBuilt']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[5]/select",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[4]/td[6]/input",
+              "//*[@id='DDL_YearBuilt_SoD']",
+              "//*[@id='LB_YearBuilt_Display_Value']",
+              "//*[@id='TB_YearBuilt_Detail']",
               "xpath"
             ]
           ]
@@ -151,9 +151,9 @@
           "values": [
             [
               "sub_data['Gla']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[5]/select",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[5]/td[6]/input",
+              "//*[@id='DDL_LivingSqft_SoD']",
+              "//*[@id='LB_LivingSqft_Display_Value']",
+              "//*[@id='TB_LivingSqft_Detail']",
               "xpath"
             ]
           ]
@@ -163,9 +163,9 @@
           "values": [
             [
               "sub_data['Units']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[5]/select",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[6]/td[6]/input",
+              "//*[@id='DDL_NumUnits_SoD']",
+              "//*[@id='LB_NumUnits_Display_Value']",
+              "//*[@id='TB_NumUnits_Detail']",
               "xpath"
             ]
           ]
@@ -175,9 +175,9 @@
           "values": [
             [
               "sub_data['TotalRooms']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[5]/select",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[7]/td[6]/input",
+              "//*[@id='DDL_TotalRoomCount_SoD']",
+              "//*[@id='LB_TotalRoomCount_Display_Value']",
+              "//*[@id='TB_TotalRoomCount_Detail']",
               "xpath"
             ]
           ]
@@ -187,9 +187,9 @@
           "values": [
             [
               "sub_data['CheckBasement']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[5]/select",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[8]/td[6]/input",
+              "//*[@id='DDL_BasementYN_SoD']",
+              "//*[@id='LB_BasementYN_Display_Value']",
+              "//*[@id='TB_BasementYN_Detail']",
               "xpath"
             ]
           ]
@@ -199,9 +199,9 @@
           "values": [
             [
               "sub_data['Bed']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[5]/select",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[9]/td[6]/input",
+              "//*[@id='DDL_BedCount_SoD']",
+              "//*[@id='LB_BedCount_Display_Value']",
+              "//*[@id='TB_BedCount_Detail']",
               "xpath"
             ]
           ]
@@ -211,9 +211,9 @@
           "values": [
             [
               "sub_data['FullBath']",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[5]/select",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[2]/span",
-              "/html/body/form/div[2]/div[4]/table/tbody[3]/tr[10]/td[6]/input",
+              "//*[@id='DDL_BathCount_SoD']",
+              "//*[@id='LB_BathCount_Display_Value']",
+              "//*[@id='TB_BathCount_Detail']",
               "xpath"
             ]
           ]
@@ -223,7 +223,7 @@
           "values": [
             [
               "select",
-              "/html/body/form/div[2]/div[4]/table/tbody[4]/tr/td/div/input",
+              "//*[@id='chkPCond']",
               "xpath"
             ]
           ]
