@@ -21,6 +21,7 @@ export class NavbarComponent implements OnInit {
   
   lastScrollTop = 0;
   isScrollingDown = false;
+  activeIndex = 0;
 
   constructor(private router: Router) {
     this.router.events.pipe(
@@ -29,7 +30,15 @@ export class NavbarComponent implements OnInit {
       const url = event.urlAfterRedirects;
       this.hideTopNav = url.includes('/profile') || url.includes('/checkout') || url.includes('/shop');
       this.hideBottomNav = url.includes('/checkout');
+      this.updateActiveIndex(url);
     });
+  }
+
+  private updateActiveIndex(url: string) {
+    if (url.includes('/home')) this.activeIndex = 0;
+    else if (url.includes('/shop')) this.activeIndex = 1;
+    else if (url.includes('/document')) this.activeIndex = 2;
+    else if (url.includes('/profile')) this.activeIndex = 3;
   }
 
   ngOnInit() {

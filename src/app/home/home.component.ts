@@ -63,7 +63,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       price: '₹688.00',
       img: 'assets/images/product_trending_1.png',
       badge: 'BESTSELLER',
-      badgeClass: 'badge-gold'
+      badgeClass: 'badge-gold',
+      category: 'DOGS'
     },
     {
       id: 2,
@@ -72,7 +73,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       price: '₹499.00',
       img: 'assets/images/product_trending_2.jpg',
       badge: 'CLASSIC',
-      badgeClass: 'badge-amber'
+      badgeClass: 'badge-amber',
+      category: 'CATS'
     },
     {
       id: 3,
@@ -81,7 +83,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       price: '₹499.00',
       img: 'assets/images/product_trending_3.png',
       badge: 'DURABLE',
-      badgeClass: 'badge-silver'
+      badgeClass: 'badge-silver',
+      category: 'BIRDS'
     },
     {
       id: 4,
@@ -90,7 +93,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       price: '₹499.00',
       img: 'assets/images/product_trending_4.png',
       badge: 'LIMITED',
-      badgeClass: 'badge-dark'
+      badgeClass: 'badge-dark',
+      category: 'DOGS'
     },
     {
       id: 5,
@@ -99,7 +103,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       price: '₹750.00',
       img: 'assets/images/product_trending_1.png',
       badge: 'NEW',
-      badgeClass: 'badge-dark'
+      badgeClass: 'badge-dark',
+      category: 'FISH'
     },
     {
       id: 6,
@@ -108,9 +113,31 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       price: '₹899.00',
       img: 'assets/images/product_trending_3.png',
       badge: 'PREMIUM',
-      badgeClass: 'badge-gold'
+      badgeClass: 'badge-gold',
+      category: 'CATS'
     }
   ];
+
+  // ── Category Filtering Logic ────────────────────────────────
+  categories = [
+    { name: 'ALL', icon: 'fas fa-th-large' },
+    { name: 'DOGS', icon: 'fas fa-paw' },
+    { name: 'CATS', icon: 'fas fa-cat' },
+    { name: 'BIRDS', icon: 'fas fa-kiwi-bird' },
+    { name: 'FISH', icon: 'fas fa-fish' }
+  ];
+  selectedCategory: string = 'ALL';
+
+  selectCategory(category: string): void {
+    this.selectedCategory = category;
+  }
+
+  get filteredProducts() {
+    if (this.selectedCategory === 'ALL') {
+      return this.products;
+    }
+    return this.products.filter(p => (p as any).category === this.selectedCategory);
+  }
 
   // ── Ecosystem Carousel Logic ────────────────────────────────
   activeEcosystemIndex: number = 0;

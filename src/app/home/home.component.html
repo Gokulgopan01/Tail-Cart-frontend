@@ -34,59 +34,41 @@
 <section class="categories-section" data-aos="fade-up">
   <div class="section-container">
     <div class="category-header">
-      <h2 class="category-title">Categories</h2>
-      <a routerLink="/shop" class="view-all-link">View All</a>
+      <h2 class="category-title">Refined Selections</h2>
+      <a routerLink="/shop" class="view-all-shop-link">VIEW ALL</a>
     </div>
     <div class="category-grid">
-      <div class="category-item active" (click)="navigateToShop()">
-        <div class="category-icon dogs-icon">
-          <i class="fas fa-paw"></i>
+      <div *ngFor="let cat of categories" class="category-item" [class.active]="selectedCategory === cat.name"
+        (click)="selectCategory(cat.name)">
+        <div class="category-icon">
+          <i [class]="cat.icon"></i>
         </div>
-        <span class="category-label">Dogs</span>
-      </div>
-      <div class="category-item" (click)="navigateToShop()">
-        <div class="category-icon cats-icon">
-          <i class="fas fa-cat"></i>
-        </div>
-        <span class="category-label">Cats</span>
-      </div>
-      <div class="category-item" (click)="navigateToShop()">
-        <div class="category-icon birds-icon">
-          <i class="fas fa-kiwi-bird"></i>
-        </div>
-        <span class="category-label">Birds</span>
-      </div>
-      <div class="category-item" (click)="navigateToShop()">
-        <div class="category-icon fish-icon">
-          <i class="fas fa-fish"></i>
-        </div>
-        <span class="category-label">Fish</span>
+        <span class="category-label">{{cat.name}}</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Recommended for You Section -->
+<!-- Recommended for You Section (Curated Essentials) -->
 <section class="recommended-section" data-aos="fade-up">
   <div class="section-container">
     <div class="section-header-row">
-      <h2 class="section-title-alt">Recommended for you</h2>
-      <a routerLink="/shop" class="view-all-shop-link">View All</a>
+      <h2 class="section-title-alt">Curated Essentials</h2>
+
     </div>
     <div class="recommended-grid-premium">
-      <div *ngFor="let product of products.slice(0, 4)" class="recommendation-card-luxury" (click)="navigateToShop()">
+      <div *ngFor="let product of filteredProducts.slice(0, 4)" class="recommendation-card-luxury"
+        (click)="navigateToShop()">
         <div class="card-image-wrapper-luxury">
           <img [src]="product.img" [alt]="product.name" class="card-img-luxury">
+          <button class="btn-arrow-on-image">
+            <i class="fas fa-arrow-right"></i>
+          </button>
         </div>
         <div class="card-info-luxury">
           <h3 class="product-name-luxury">{{product.name}}</h3>
           <p class="product-desc-luxury">{{product.subtitle}}</p>
-          <div class="card-footer-luxury">
-            <span class="product-price-luxury">{{product.price}}</span>
-            <button class="btn-arrow-luxury">
-              <i class="fas fa-arrow-right"></i>
-            </button>
-          </div>
+          <span class="product-price-luxury">{{product.price}}</span>
         </div>
       </div>
     </div>
@@ -111,7 +93,8 @@
     <!-- Manual Carousel -->
     <div class="ecosystem-carousel-wrapper fade-in">
       <div class="ecosystem-carousel" #ecoCarousel (scroll)="onEcosystemScroll($event)">
-        <div *ngFor="let service of services; let i = index" class="eco-slide">
+        <div *ngFor="let service of services; let i = index" class="eco-slide"
+          [class.active-slide]="activeEcosystemIndex === i">
           <div class="eco-card-luxury">
             <div class="eco-card-image">
               <img [src]="service.img" [alt]="service.name">
