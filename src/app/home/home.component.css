@@ -624,7 +624,8 @@
   gap: 1.5rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scroll-behavior: smooth; /* Essential for fluid JS scrolling */
+  scroll-behavior: smooth;
+  /* Essential for fluid JS scrolling */
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   padding: 1rem 0.2rem;
@@ -712,8 +713,8 @@
   gap: 1.2rem;
   transform: translateY(30px) scale(0.98);
   opacity: 0;
-  transition: transform 0.9s cubic-bezier(0.2, 1, 0.2, 1), 
-              opacity 0.9s cubic-bezier(0.2, 1, 0.2, 1);
+  transition: transform 0.9s cubic-bezier(0.2, 1, 0.2, 1),
+    opacity 0.9s cubic-bezier(0.2, 1, 0.2, 1);
   will-change: transform, opacity;
 }
 
@@ -729,8 +730,8 @@
   margin: 0;
   transform: translateY(40px);
   opacity: 0;
-  transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.1s, 
-              opacity 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.1s;
+  transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.1s,
+    opacity 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.1s;
 }
 
 .active-slide .eco-card-title {
@@ -745,8 +746,8 @@
   max-width: 550px;
   transform: translateY(40px);
   opacity: 0;
-  transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.2s, 
-              opacity 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.2s;
+  transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.2s,
+    opacity 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.2s;
 }
 
 .active-slide .eco-card-desc {
@@ -766,11 +767,11 @@
   box-shadow: 0 8px 15px rgba(242, 140, 40, 0.4);
   transform: translateY(40px);
   opacity: 0;
-  transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.3s, 
-              opacity 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.3s,
-              background 0.3s ease,
-              color 0.3s ease,
-              box-shadow 0.3s ease;
+  transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.3s,
+    opacity 0.8s cubic-bezier(0.2, 1, 0.2, 1) 0.3s,
+    background 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .active-slide .btn-eco-action {
@@ -916,7 +917,8 @@
 
 /* ── FAQ Section ── */
 .faq-section {
-  background-color: #ffffff; /* Replaced dark green with white */
+  background-color: #ffffff;
+  /* Replaced dark green with white */
   padding: 8rem 2rem;
 }
 
@@ -927,7 +929,8 @@
 
 .faq-item {
   margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* Darker separator for light theme */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  /* Darker separator for light theme */
 }
 
 .faq-trigger {
@@ -938,7 +941,8 @@
   align-items: center;
   background: none;
   border: none;
-  color: var(--primary-dark-green); /* Use brand green for text */
+  color: var(--primary-dark-green);
+  /* Use brand green for text */
   font-size: 1.25rem;
   font-weight: 700;
   cursor: pointer;
@@ -959,7 +963,8 @@
   max-height: 0;
   overflow: hidden;
   transition: all 0.5s ease;
-  color: #555; /* Slightly darker description text for readability */
+  color: #555;
+  /* Slightly darker description text for readability */
   line-height: 1.8;
 }
 
@@ -1272,12 +1277,81 @@
   background: var(--primary-dark-green);
   box-shadow: 0 4px 10px rgba(0, 60, 48, 0.2);
 }
+
+/* ── Offer Section Header ── */
+.offer-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto 0.8rem;
+  padding: 0 0.25rem;
+}
+
+.offer-section-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #2d1a0a;
+  margin: 0;
+}
+
+.offer-shop-all-link {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #003c30;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  letter-spacing: 0.3px;
+}
+
+.offer-shop-all-link:hover {
+  color: var(--gold-primary);
+}
+
+/* ── Categories Section Base ── */
+.categories-section {
+  padding: 0 1rem 1.5rem;
+  background-color: var(--light-fun-bg);
+}
+
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.25rem 0.75rem;
+}
+
+.category-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #2d1a0a;
+  margin: 0;
+}
+
+.browse-all-link {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #003c30;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  letter-spacing: 0.3px;
+}
+
+.browse-all-link:hover {
+  color: var(--gold-primary);
+}
+
 /* Category Photo Grid */
 .category-grid-photos {
   display: flex;
-  gap: 3rem;
-  justify-content: center;
-  padding: 3rem 0;
+  gap: 1.2rem;
+  justify-content: flex-start;
+  padding: 0.5rem 0 0.25rem;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -1335,6 +1409,94 @@
   font-size: 2.2rem;
   color: var(--primary-dark-green);
   transition: all 0.3s ease;
+}
+
+/* ── Sticker Category Cards ── */
+.sticker-card {
+  border-radius: 18px;
+  width: 105px;
+  min-width: 105px;
+  height: 105px;
+  position: relative;
+  overflow: hidden;
+  flex-direction: row;
+  gap: 0;
+  align-items: stretch;
+  justify-content: flex-end;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s ease;
+}
+
+.sticker-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+}
+
+.sticker-card.active {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.18);
+}
+
+.sticker-card .category-photo-wrapper {
+  position: absolute;
+  bottom: -4px;
+  right: 0px;
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.sticker-card .cat-img {
+  border-radius: 0 !important;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.category-label-sticker {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #fff;
+  text-transform: capitalize;
+  letter-spacing: 0.3px;
+  z-index: 2;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  line-height: 1;
+}
+
+/* Icon-only (ALL category) */
+.category-photo-item:not(.sticker-card) .category-photo-wrapper {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  border: 2px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.4s ease;
+}
+
+.category-photo-item:not(.sticker-card) {
+  gap: 0.4rem;
+  min-width: 72px;
+}
+
+.category-photo-item:not(.sticker-card).active .category-photo-wrapper {
+  background: #003c30;
+  border-color: #003c30;
+}
+
+.category-photo-item:not(.sticker-card).active .cat-icon {
+  color: #fff;
 }
 
 /* ── Recommended Section ── */
@@ -1511,11 +1673,13 @@
   .faq-section,
   .recommended-section,
   .categories-section {
-    padding: 1rem 1rem !important; /* Reduced from 1.5rem */
+    padding: 1rem 1rem !important;
+    /* Reduced from 1.5rem */
   }
 
   .section-intro {
-    padding: 0.8rem 1rem 0.4rem !important; /* Reduced from 1.5rem */
+    padding: 0.8rem 1rem 0.4rem !important;
+    /* Reduced from 1.5rem */
     margin-bottom: 0 !important;
   }
 
@@ -1529,7 +1693,8 @@
   .section-tag {
     font-size: 0.65rem !important;
     letter-spacing: 2px !important;
-    margin-bottom: 0.1rem !important; /* Reduced from 0.2rem */
+    margin-bottom: 0.1rem !important;
+    /* Reduced from 0.2rem */
   }
 
   /* Hero Section Refinement */
@@ -1604,8 +1769,43 @@
     font-size: 1.3rem !important;
   }
 
-  .view-all-shop-link {
-    font-size: 0.7rem !important;
+  .section-title-alt {
+    font-size: 1.3rem !important;
+  }
+
+  .browse-all-link,
+  .offer-shop-all-link {
+    font-size: 0.75rem !important;
+  }
+
+  .offer-section-title,
+  .category-title {
+    font-size: 1.1rem !important;
+  }
+
+  .ecosystem-heading {
+    font-size: 1.3rem !important;
+  }
+
+  .sticker-card {
+    width: 88px !important;
+    min-width: 88px !important;
+    height: 88px !important;
+    border-radius: 14px !important;
+  }
+
+  .sticker-card .category-photo-wrapper {
+    width: 65px !important;
+    height: 65px !important;
+  }
+
+  .category-label-sticker {
+    font-size: 0.62rem !important;
+  }
+
+  .category-photo-item:not(.sticker-card) .category-photo-wrapper {
+    width: 58px !important;
+    height: 58px !important;
   }
 
   .category-grid-photos {

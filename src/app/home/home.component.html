@@ -19,15 +19,22 @@
 
 <!-- Offer Banner Section (Carousel) -->
 <section class="offer-banner-section" data-aos="fade-up">
+  <!-- Banner Header Row -->
+  <div class="offer-section-header">
+    <h2 class="offer-section-title">Special Offers</h2>
+    <a routerLink="/shop" class="offer-shop-all-link">Shop all &rsaquo;</a>
+  </div>
+
+  <!-- Banner Carousel -->
   <div class="banner-carousel-wrapper">
-    <div class="banner-slides" [style.transform]="'translateX(' + (activeBannerIndex * -100) + '%)'">
+    <div class="banner-slides" [style.transform]="'translateX(' + (activeBannerIndex * -100) + '%)'">>
       <div *ngFor="let banner of offerBanners; let i = index" class="banner-slide">
         <img [src]="banner.img" alt="Promotional Offer" class="banner-full-img">
       </div>
     </div>
   </div>
 
-  <!-- Carousel Indicators (Moved outside the image wrapper) -->
+  <!-- Carousel Indicators -->
   <div class="banner-indicators">
     <span *ngFor="let dot of offerBanners; let i = index" class="indicator-dot" [class.active]="activeBannerIndex === i"
       (click)="setBanner(i)">
@@ -35,21 +42,25 @@
   </div>
 </section>
 
-<!-- Categories Section (Photo Based) -->
+<!-- Categories Section -->
 <section class="categories-section" data-aos="fade-up">
   <div class="section-container">
     <div class="category-header">
-      <h2 class="category-title">Browse Categories</h2>
-      <a routerLink="/shop" class="view-all-shop-link">VIEW ALL</a>
+      <h2 class="category-title">Categories</h2>
+      <a routerLink="/shop" class="browse-all-link">Browse all &rsaquo;</a>
     </div>
     <div class="category-grid-photos">
+      <!-- Sticker-style cards for Dog & Cat -->
       <div *ngFor="let cat of categories" class="category-photo-item" [class.active]="selectedCategory === cat.name"
+        [class.sticker-card]="cat.cardColor" [style.background]="cat.cardColor || ''"
         (click)="selectCategory(cat.name)">
         <div class="category-photo-wrapper">
-          <i *ngIf="cat.icon" [class]="cat.icon" class="cat-icon"></i>
+          <!-- Icon-only for categories without image -->
+          <i *ngIf="cat.icon && !cat.img" [class]="cat.icon" class="cat-icon"></i>
+          <!-- Photo for sticker-style cards -->
           <img *ngIf="cat.img" [src]="cat.img" [alt]="cat.name" class="cat-img">
         </div>
-        <span class="category-label-alt">{{cat.name}}</span>
+        <span *ngIf="cat.cardColor" class="category-label-sticker">{{cat.name}}</span>
       </div>
     </div>
   </div>
@@ -59,7 +70,7 @@
 <section class="recommended-section" data-aos="fade-up">
   <div class="section-container">
     <div class="section-header-row">
-      <h2 class="section-title-alt">Curated Essentials</h2>
+      <h2 class="section-title-alt">New In</h2>
     </div>
     <div class="recommended-grid-premium">
       <div *ngFor="let product of filteredProducts.slice(0, 4)" class="recommendation-card-luxury"

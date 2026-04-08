@@ -131,11 +131,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   ];
 
-  categories = [
+  categories: { name: string; icon?: string; img?: string; cardColor?: string }[] = [
     { name: 'ALL', icon: 'fas fa-th-large' },
-    { name: 'DOGS', img: 'assets/images/cat_dog.png' },
-    { name: 'CATS', img: 'assets/images/cat_cat.png' },
-    { name: 'BIRDS', img: 'assets/images/cat_bird.png' }
+    { name: 'DOGS', img: 'assets/images/cat_dog.png', cardColor: '#79c2b8' },
+    { name: 'CATS', img: 'assets/images/cat_cat.png', cardColor: '#f5c97a' },
+    { name: 'BIRDS', img: 'assets/images/cat_bird.png', cardColor: '#adf57aff' }
   ];
   selectedCategory: string = 'ALL';
 
@@ -157,7 +157,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.startBannerTimer();
     this.startVaultAnimation();
     this.checkScroll();
-    
+
     // Load cart items count
     const savedCart = localStorage.getItem('cart_items');
     if (savedCart) {
@@ -258,7 +258,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private checkScroll(): void {
     const scrollPosition = window.scrollY;
     this.isScrolled = scrollPosition > 300;
-    
+
     // Hide button when near footer
     const footer = document.querySelector('.minimal-footer');
     if (footer) {
