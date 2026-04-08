@@ -31,8 +31,8 @@
       <h3 class="categories-title">Categories</h3>
       <div class="categories-flex">
         <div class="category-item" [class.active]="selectedMaterial === 'ALL'" (click)="setMaterial('ALL')">
-          <i class="fa fa-th-large"></i> <!-- 👈 ALL icon -->
           <div class="cat-circle">
+            <i class="fa fa-th-large"></i>
           </div>
           <span>All</span>
         </div>
@@ -53,7 +53,7 @@
 
     <!-- Free Delivery Ad Banner (Moved after categories) -->
     <div class="free-delivery-banner-wrap" data-aos="fade-up">
-      <img src="assets/images/free_delivery.png" alt="Free Delivery Offer" class="ad-banner-img">
+      <img src="assets/images/Shop_banner.png" alt="Free Delivery Offer" class="ad-banner-img">
     </div>
 
     <!-- Products Section Header -->
@@ -89,32 +89,28 @@
     Showing {{ filteredProducts.length }} products
   </div>
 
-  <div [class.products-grid]="isGridView" [class.products-list]="!isGridView" style="padding: 0 15px;">
+  <div [class.products-grid]="isGridView" [class.products-list]="!isGridView">
     <div class="product-card" *ngFor="let product of filteredProducts" (click)="openQuickView(product, $event)">
       <div class="card-image-area">
         <img [src]="product.thumbnail_image" [alt]="product.product_name" class="product-thumb">
-        <div class="card-badge" *ngIf="product.deals">{{ product.deals }}</div>
+        <div class="card-badge bestseller" *ngIf="product.deals">BESTSELLER</div>
       </div>
 
-      <div class="card-content" style="padding: 15px;">
-        <h3 class="product-title" style="font-size: 1rem; font-weight: 800; color: #1e293b; margin: 0 0 5px 0;">{{
-          product.product_name }}</h3>
-        <p class="product-material" style="font-size: 0.85rem; color: #64748B; margin: 0 0 8px 0;">{{
-          product.product_material }}</p>
+      <div class="card-content">
+        <h3 class="product-title">{{ product.product_name }}</h3>
+        <p class="product-material">{{ product.product_material }}</p>
 
         <!-- Price Row -->
-        <div class="price-row" style="display: flex; align-items: baseline; gap: 8px;">
-          <span class="selling-price" style="font-size: 1.15rem; font-weight: 800; color: #2d9d4f;">₹{{
-            product.selling_price }}</span>
-          <span class="original-price" *ngIf="product.discount_percentage! > 0"
-            style="text-decoration: line-through; color: #94a3b8; font-size: 0.7rem;">₹{{ product.original_price
-            }}</span>
+        <div class="price-row">
+          <span class="selling-price">₹{{ product.selling_price }}</span>
+          <span class="original-price" *ngIf="product.discount_percentage! > 0">
+            ₹{{ product.original_price }}
+          </span>
         </div>
 
-        <!-- Free Delivery Banner -->
-        <div
-          style="background: #fff0e0; color: #d97706; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 10px; width: fit-content;">
-          <i class="fas fa-truck" style="font-size: 0.5rem;"></i> Free Delivery
+        <!-- Free Delivery Minimalist Tag -->
+        <div class="free-delivery-tag">
+          <i class="fas fa-truck"></i> FREE DELIVERY
         </div>
       </div>
     </div>

@@ -33,6 +33,8 @@
   overflow: hidden;
   background: #fdfaf5;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
 }
 
 .shop-hero-bg {
@@ -426,41 +428,74 @@
   transform: scale(1.1);
 }
 
-.card-badge {
-  position: absolute;
+.card-badge.bestseller {
+  background: #2D6A4F;
+  color: #FFFFFF;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 8px;
   top: 15px;
   left: 15px;
-  background: #fff;
-  padding: 6px 14px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: var(--primary-dark);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  text-transform: uppercase;
 }
 
 .card-content {
-  padding: 20px;
+  padding: 12px 0;
   position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.shop-name {
-  font-size: 0.8rem;
+.product-title {
+  font-size: 1.15rem;
   font-weight: 700;
-  color: var(--text-muted);
-  margin-bottom: 6px;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+  line-height: 1.25;
 }
 
-.product-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-main);
-  margin: 0 0 12px 0;
-  line-height: 1.4;
+.product-material {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px 0;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.selling-price {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1e3a34;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.free-delivery-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #2D9D4F;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.free-delivery-tag i {
+  font-size: 0.8rem;
 }
 
 .rating-pill {
@@ -1416,6 +1451,18 @@
   color: #2d9d4f;
 }
 
+.cat-circle i {
+  color: #17203E;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-item.active .cat-circle i {
+  color: #2d9d4f;
+}
+
 /* ── Products Header & Sort Pill ── */
 .products-section-header {
   display: flex;
@@ -1426,7 +1473,7 @@
 }
 
 .our-products-title {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   font-weight: 800;
   color: #17203E;
   margin: 0;
@@ -1485,20 +1532,30 @@
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  /* Two cards per row on mobile */
-  gap: 15px;
-  /* Adjusted card spacing */
-  padding-bottom: 50px;
+  gap: 20px;
+  padding: 0 20px 50px;
 }
 
 .product-card {
-  border-radius: 20px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  /* Softer shadow */
-  border: none;
-  background: #fff;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+  transition: transform 0.3s ease;
+  position: relative;
   display: flex;
   flex-direction: column;
+  border: none;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-image-area {
+  position: relative;
+  aspect-ratio: 1/1.1;
+  overflow: hidden;
+  border-radius: 32px;
 }
 
 .product-title {
@@ -1524,7 +1581,7 @@
 
   .shop-hero-container {
     min-height: 320px !important;
-    border-radius: 0 !important;
+    border-radius: 0 0 32px 32px !important; /* Rounded bottom only */
     margin-bottom: 20px !important;
   }
 
@@ -1534,7 +1591,7 @@
   }
 
   .welcome-main {
-    font-size: 2.8rem !important;
+    font-size: clamp(2.2rem, 10vw, 2.8rem) !important;
     letter-spacing: -1.5px !important;
   }
 
@@ -1578,18 +1635,46 @@
     height: 150px !important;
   }
 
-  /* Grid spacing for small screens */
+  /* New Minimalist Grid Overrides */
   .products-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 15px !important;
+    padding: 0 12px 40px !important;
   }
 
   .product-card {
-    border-radius: 15px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .card-image-area {
+    border-radius: 24px !important;
+    aspect-ratio: 1/1.1;
   }
 
   .card-content {
-    padding: 10px !important;
+    padding: 8px 0 !important;
+  }
+
+  .product-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+  }
+
+  .product-material {
+    font-size: 0.65rem !important;
+    margin: 0 0 6px 0 !important;
+  }
+
+  .selling-price {
+    font-size: 1.05rem !important;
+  }
+
+  .free-delivery-tag {
+    font-size: 0.65rem !important;
+    gap: 4px !important;
   }
 
   .product-title {
