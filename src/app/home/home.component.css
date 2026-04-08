@@ -596,7 +596,7 @@
   padding: 0.8rem 1.5rem;
   border-radius: 50px;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  background: white;
+  background: #DEE4DE;
   color: #888;
   font-weight: 700;
   font-size: 0.9rem;
@@ -1351,6 +1351,8 @@
   display: flex;
   gap: 1.2rem;
   justify-content: flex-start;
+  align-items: center;
+  /* Align items by their horizontal center */
   padding: 0.5rem 0 0.25rem;
   overflow-x: auto;
   scrollbar-width: none;
@@ -1395,6 +1397,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.arrow {
+  margin-left: 6px;
+  transition: transform 0.3s ease;
+}
+
+.btn-eco-action:hover .arrow {
+  transform: translateX(4px);
 }
 
 .cat-img {
@@ -1473,21 +1484,24 @@
 
 /* Icon-only (ALL category) */
 .category-photo-item:not(.sticker-card) .category-photo-wrapper {
-  width: 72px;
-  height: 72px;
+  width: 85px;
+  /* Increased for better visual weight */
+  height: 85px;
   border-radius: 50%;
-  background: #f0f0f0;
-  border: 2px solid #e0e0e0;
+  background: var(--primary-dark-green);
+  /* Use brand green for premium feel */
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  transition: all 0.4s ease;
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0 10px 25px rgba(0, 60, 48, 0.15);
 }
 
 .category-photo-item:not(.sticker-card) {
-  gap: 0.4rem;
-  min-width: 72px;
+  gap: 0;
+  min-width: 85px;
 }
 
 .category-photo-item:not(.sticker-card).active .category-photo-wrapper {
@@ -1711,7 +1725,12 @@
   }
 
   .hero-content {
-    padding: 0 1.2rem !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 12vh 1.2rem 10vh !important;
+    text-align: center;
   }
 
   .hero-title {
@@ -1728,6 +1747,19 @@
 
   .hero-actions {
     gap: 0.8rem !important;
+    margin-top: 1.5rem !important;
+  }
+
+  .hero-tag {
+    margin-bottom: 0 !important;
+    width: fit-content;
+    align-self: center;
+  }
+
+  .hero-bottom-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .btn-primary-luxury,
@@ -1809,8 +1841,13 @@
   }
 
   .category-grid-photos {
+    display: flex;
     gap: 1rem;
+    align-items: center;
+    /* Vertical alignment for all items */
     padding: 1rem 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
 
   .category-photo-item {
@@ -1883,7 +1920,7 @@
   }
 
   .eco-card-title {
-    font-size: 1.8rem !important;
+    font-size: 1.4rem !important;
   }
 
   .eco-card-desc {

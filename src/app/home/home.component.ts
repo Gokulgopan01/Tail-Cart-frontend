@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'Tail Tag',
       desc: 'Premium aerospace-grade smart tags with instant scan recovery technology.',
       img: 'assets/images/hero_qr_keychain.png',
-      color: '#fb8c00',
+      color: '#003c30',
       route: '/shop',
       cta: 'Explore Tags'
     },

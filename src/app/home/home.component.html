@@ -3,16 +3,22 @@
   <div class="hero-bg"></div>
   <div class="hero-content">
     <div class="hero-tag fade-in" data-aos="fade-down">The Future of Pet Security</div>
-    <h1 class="hero-title fade-in" data-aos="fade-up">
-      Total Pet Safety.<br>
-      <span class="highlight">Smart. Secure. Seamless.</span>
-    </h1>
-    <p class="hero-desc fade-in" data-aos="fade-up" data-aos-delay="200">
-      The only ecosystem your pet ever needs. From precision tracking to AI-powered health insights, all in one place.
-    </p>
-    <div class="hero-actions fade-in" data-aos="fade-up" data-aos-delay="400">
-      <button class="btn-primary-luxury" (click)="navigateToShop()">SHOP COLLECTION</button>
-      <button class="btn-glass-luxury" (click)="navigateToAbout()">LEARN MORE</button>
+    <div class="hero-bottom-group">
+      <h1 class="hero-title fade-in" data-aos="fade-up">
+        Total Pet Safety.<br>
+        <span class="highlight">Smart. Secure. Seamless.</span>
+      </h1>
+      <p class="hero-desc fade-in" data-aos="fade-up" data-aos-delay="200">
+        The only ecosystem your pet ever needs. From precision tracking to AI-powered health insights, all in one place.
+      </p>
+      <div class="hero-actions fade-in" data-aos="fade-up" data-aos-delay="400">
+        <button class="btn-primary-luxury" (click)="navigateToShop()">SHOP COLLECTION
+          <span class="arrow">→</span>
+        </button>
+        <button class="btn-glass-luxury" (click)="navigateToAbout()">LEARN MORE
+          <span class="arrow">→</span>
+        </button>
+      </div>
     </div>
   </div>
 </section>
@@ -27,7 +33,7 @@
 
   <!-- Banner Carousel -->
   <div class="banner-carousel-wrapper">
-    <div class="banner-slides" [style.transform]="'translateX(' + (activeBannerIndex * -100) + '%)'">>
+    <div class="banner-slides" [style.transform]="'translateX(' + (activeBannerIndex * -100) + '%)'">
       <div *ngFor="let banner of offerBanners; let i = index" class="banner-slide">
         <img [src]="banner.img" alt="Promotional Offer" class="banner-full-img">
       </div>
@@ -71,6 +77,7 @@
   <div class="section-container">
     <div class="section-header-row">
       <h2 class="section-title-alt">New In</h2>
+      <a routerLink="/shop" class="browse-all-link">Explore Now &rsaquo;</a>
     </div>
     <div class="recommended-grid-premium">
       <div *ngFor="let product of filteredProducts.slice(0, 4)" class="recommendation-card-luxury"
@@ -118,8 +125,10 @@
             <div class="eco-card-content">
               <h3 class="eco-card-title">{{service.name}}</h3>
               <p class="eco-card-desc">{{service.desc}}</p>
-              <button class="btn-eco-action" (click)="navigateToService(service.route)">
+              <button class="btn-eco-action" [style.background-color]="service.color"
+                (click)="navigateToService(service.route)">
                 {{ service.cta | uppercase }}
+                <span class="arrow">→</span>
               </button>
             </div>
           </div>

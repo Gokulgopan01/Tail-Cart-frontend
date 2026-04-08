@@ -1,42 +1,39 @@
 <div class="shop-wrapper">
 
+  <!-- Joyful Hero Section - Full Width Edge-to-Edge -->
+  <div class="shop-hero-container">
+    <div class="shop-hero-bg">
+      <img src="assets/images/catdog_friends-HomeCover.jpg" alt="Happy Pet" class="joyful-pet-img">
+    </div>
+
+    <div class="shop-hero-content">
+      <div class="welcome-text-group">
+        <span class="welcome-sub">WELCOME BACK</span>
+        <h1 class="welcome-main">Hi User</h1>
+      </div>
+
+      <div class="search-pill-container">
+        <div class="search-pill-modern">
+          <i class="fas fa-search magnifier-icon"></i>
+          <input type="text" placeholder="Search products" [(ngModel)]="searchQuery" (input)="applyFilters()"
+            class="pill-input">
+          <button class="pill-filter-btn" (click)="toggleFilters()" [class.active]="showFilters">
+            <i class="fas fa-sliders-h"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container main-content modern-shop">
-    <!-- Top Welcome Navbar -->
-    <div class="shop-top-nav-premium">
-      <h1 class="welcome-heading">Welcome, <span class="highlight">User</span></h1>
-    </div>
-
-    <!-- Search Bar with Filter Icon inside -->
-    <div class="search-flex-container">
-      <div class="search-container modern">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" placeholder="Search supplies..." [(ngModel)]="searchQuery" (input)="applyFilters()"
-          class="search-input">
-        <button class="inline-filter-btn" (click)="toggleFilters()" [class.active]="showFilters">
-          <i class="fas fa-sliders-h"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- New Banner (Exact Image Layout) -->
-    <div class="new-shop-banner premium">
-      <div class="banner-content">
-        <h2 class="banner-title premium">limited times.</h2>
-        <p class="banner-desc premium">plus free delivery on your first<br>2 purchases.</p>
-        <button class="banner-btn premium">Shop Now</button>
-      </div>
-      <div class="banner-img-wrapper premium">
-        <!-- Re-using image but displaying it appropriately filling the right side -->
-        <img src="assets/images/banner_dog.png" alt="Promo Dog" class="banner-dog-img premium">
-      </div>
-    </div>
-
     <!-- Categories -->
     <div class="shop-categories-wrapper">
       <h3 class="categories-title">Categories</h3>
       <div class="categories-flex">
         <div class="category-item" [class.active]="selectedMaterial === 'ALL'" (click)="setMaterial('ALL')">
-          <div class="cat-circle"><img src="assets/images/cat_other.png" alt="All"></div>
+          <i class="fa fa-th-large"></i> <!-- 👈 ALL icon -->
+          <div class="cat-circle">
+          </div>
           <span>All</span>
         </div>
         <div class="category-item" [class.active]="selectedMaterial === 'Wood'" (click)="setMaterial('Wood')">
@@ -54,33 +51,41 @@
       </div>
     </div>
 
-    <!-- Secondary Toolbar: Sort -->
-    <div class="modern-sort-wrapper">
-      <div class="sort-select-wrapper simple-sort">
-        <select [(ngModel)]="sortOption" (change)="applyFilters()" class="sort-select">
-          <option value="newest">Sort by</option>
-          <option value="priceLow">Price: Low to High</option>
-          <option value="priceHigh">Price: High to Low</option>
-          <option value="name">Name: A-Z</option>
-        </select>
+    <!-- Free Delivery Ad Banner (Moved after categories) -->
+    <div class="free-delivery-banner-wrap" data-aos="fade-up">
+      <img src="assets/images/free_delivery.png" alt="Free Delivery Offer" class="ad-banner-img">
+    </div>
+
+    <!-- Products Section Header -->
+    <div class="products-section-header">
+      <div class="products-title-group">
+        <h2 class="our-products-title">Our Products</h2>
+        <p class="showing-count-alt" *ngIf="filteredProducts.length > 0">
+          Found {{ filteredProducts.length }} premium items
+        </p>
+      </div>
+
+      <div class="sort-action-wrap">
+        <div class="sort-select-wrapper simple-sort">
+          <!-- Hidden real select overlaying the pill -->
+          <select [(ngModel)]="sortOption" (change)="applyFilters()" class="sort-select-overlay">
+            <option value="newest">Sort by</option>
+            <option value="priceLow">Price: Low to High</option>
+            <option value="priceHigh">Price: High to Low</option>
+            <option value="name">Name: A-Z</option>
+          </select>
+          <div class="sort-pill-visual">
+            <i class="fas fa-bars sort-bars-icon"></i>
+            <span>Sort by</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Price Range Filter Overlay -->
-    <div class="filters-overlay" *ngIf="showFilters">
-      <div class="price-filter-card">
-        <div class="filter-header">
-          <h3>Max Price: ₹{{ maxPrice }}</h3>
-          <button class="clear-btn" (click)="clearFilters()">Clear All Filters</button>
-        </div>
-        <input type="range" min="0" max="30000" step="100" [(ngModel)]="maxPrice" (input)="applyFilters()"
-          class="price-slider">
-      </div>
-    </div>
   </div>
 
   <!-- Product Display Area -->
-  <div class="showing-count" *ngIf="filteredProducts.length > 0">
+  <div class="showing-count" *ngIf="false"> <!-- Hidden in favor of new header -->
     Showing {{ filteredProducts.length }} products
   </div>
 
