@@ -664,6 +664,66 @@ def data_filling_text(driver, data, elementlocator, selector):
         )
 
 
+# def select_field(driver, data, elementlocator, selector):
+#     try:
+#         if data is None:
+#             data = ""
+#         else:
+#             data = str(data).strip().lower()
+#         selector_map = selector_mapping(selector)
+#         element = find_elem(driver, selector_map, elementlocator)
+        
+#         # Scroll to element to ensure it's in view
+#         driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});", element)
+        
+#         dropdown = Select(element)
+
+#         # If multi-select, deselect all before picking
+#         if dropdown.is_multiple:
+#             dropdown.deselect_all()
+        
+#         # Loop through options and match by lowercase text (including empty string for blank options)
+#         matched = False
+#         for option in dropdown.options:
+#             if option.text.strip().lower() == data:
+#                 try:
+#                     if option.text.strip() in ["","null"]:
+#                         # select_by_visible_text("") fails in Selenium for blank options
+#                         # Directly JS-click the option element to select it
+#                         driver.execute_script("arguments[0].selected = true;", option)
+#                     else:
+#                         dropdown.select_by_visible_text(option.text)
+#                 except Exception as click_err:
+#                     print(f"[select_field] Selection intercepted, clearing overlays: {click_err}")
+#                     close_validation_popup(driver)
+#                     driver.execute_script("arguments[0].selected = true;", option)
+                
+#                 matched = True
+#                 break
+        
+#         if matched:
+#             # Trigger events to ensure portal Reacts
+#             driver.execute_script("""
+#                 arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+#                 arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+#             """, element)
+#         else:
+#             logger.log(
+#                 module="select_field",
+#                 order_id=hybrid_orderid,
+#                 action_type="Condition-check",
+#                 remarks=f"[select_field] No matching option found for: {data}",
+#                 severity="INFO"
+#             )
+#     except Exception as e:
+#         logger.log(
+#             module="select_field",
+#             order_id=hybrid_orderid,
+#             action_type="Exception",
+#             remarks=f"[select_field] Error selecting option: {e}",
+#             severity="INFO"
+#         )
+
 def select_field(driver, data, elementlocator, selector):
     try:
         data = str(data).strip().lower()
@@ -717,6 +777,110 @@ def select_field(driver, data, elementlocator, selector):
             severity="INFO"
         )
 
+def select_empty_field(driver, data, elementlocator, selector):
+    try:
+        # ----------------------------
+        # Normalize input data
+        # ----------------------------
+        if data is None or str(data).strip().lower() in ["", "none", "null"]:
+            data = ""
+        else:
+            data = str(data).strip().lower()
+
+        selector_map = selector_mapping(selector)
+        element = find_elem(driver, selector_map, elementlocator)
+
+        # Scroll into view
+        driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});",
+            element
+        )
+
+        dropdown = Select(element)
+
+        # Handle multi-select
+        if dropdown.is_multiple:
+            dropdown.deselect_all()
+
+        # ----------------------------
+        # STEP 1: Handle EMPTY case
+        # ----------------------------
+        if data == "":
+            try:
+                dropdown.select_by_value("0")
+            except Exception:
+                # fallback using JS
+                for option in dropdown.options:
+                    if option.get_attribute("value") == "0":
+                        driver.execute_script("arguments[0].selected = true;", option)
+                        break
+
+            # Trigger events
+            driver.execute_script("""
+                arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+                arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+            """, element)
+            return
+
+        # ----------------------------
+        # STEP 2: Normal matching
+        # ----------------------------
+        matched = False
+
+        for option in dropdown.options:
+            text = option.text.strip().lower()
+            value = option.get_attribute("value")
+
+            # Handle % conversion (e.g., 50 → 50%)
+            normalized_data = data
+            if data.isdigit() and "%" in text:
+                normalized_data = f"{data}%"
+
+            if (
+                text == data or
+                text == normalized_data or
+                value == data
+            ):
+                try:
+                    dropdown.select_by_visible_text(option.text)
+                except Exception as click_err:
+                    print(f"[select_empty_field] Retry after popup: {click_err}")
+                    close_validation_popup(driver)
+                    driver.execute_script(
+                        "arguments[0].value = arguments[1];",
+                        element,
+                        value
+                    )
+
+                matched = True
+                break
+
+        # ----------------------------
+        # STEP 3: Fallback
+        # ----------------------------
+        if not matched:
+            try:
+                dropdown.select_by_value("0")
+                print(f"[select_empty_field] Fallback default selected for: {data}")
+            except Exception:
+                print(f"[select_empty_field] No match and no default for: {data}")
+
+        # ----------------------------
+        # STEP 4: Trigger events
+        # ----------------------------
+        driver.execute_script("""
+            arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+            arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+        """, element)
+
+    except Exception as e:
+        logger.log(
+            module="select_empty_field",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"[select_empty_field] Error selecting option: {e}",
+            severity="INFO"
+        )
 
 def find_elem(driver, selector, elementlocator):
     elementlocator = elementlocator.strip()

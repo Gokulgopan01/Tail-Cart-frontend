@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 from config import env
 load_dotenv()
 from condtions.all_portal_conditions import generate_condition_data
-from utils.helper import adj_click, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_listing_history, rrr_fill_repair_details, rrr_select_hoa_amenities, rrr_select_amenities, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status, tfs_statuschange, select_radio_button, select_drop_button
+from utils.helper import adj_click, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_listing_history, rrr_fill_repair_details, rrr_select_hoa_amenities, rrr_select_amenities, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status, tfs_statuschange, select_radio_button, select_drop_button, select_empty_field
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.glogger import GLogger
 
@@ -546,6 +546,7 @@ class rrreview:
             "rrr_amenities": rrr_select_amenities,
             "select_radio": select_radio_button,
             "select_drop_button": select_drop_button,
+            "select_empty_field": select_empty_field,
         }
 
         # --------------------------
@@ -803,7 +804,7 @@ class rrreview:
                             try:
                                 value = extract_value_from_expr(key_expr)
 
-                                if field_type != "button_click" and value in [None, ""]:
+                                if field_type not in ["button_click", "select_empty_field"] and value in [None, ""]:
                                     continue
                                 
                                 action_func = field_actions.get(field_type)

@@ -886,7 +886,7 @@
           ]
         },
         {
-          "filedtype": "select_data",
+          "filedtype": "select_empty_field",
           "values": [
             [
               "sub_data['PercentageBasementFinished']",
@@ -1216,7 +1216,7 @@
           ]
         },
         {
-          "filedtype": "select_data",
+          "filedtype": "select_empty_field",
           "values": [
             [
               "sold1['PercentageBasementFinished']",
@@ -1566,7 +1566,7 @@
           ]
         },
         {
-          "filedtype": "select_data",
+          "filedtype": "select_empty_field",
           "values": [
             [
               "sold2['PercentageBasementFinished']",
@@ -1916,7 +1916,7 @@
           ]
         },
         {
-          "filedtype": "select_data",
+          "filedtype": "select_empty_field",
           "values": [
             [
               "sold3['PercentageBasementFinished']",
@@ -2116,6 +2116,16 @@
           ]
         },
         {
+          "filedtype": "select_data",
+          "values": [
+            [
+              "list1['PropertyType']",
+              "//*[@id='rrrListing1_ddlPropertyType']",
+              "xpath"
+            ]
+          ]
+        },
+        {
           "filedtype": "Textbox",
           "values": [
             [
@@ -2236,7 +2246,7 @@
           ]
         },
         {
-          "filedtype": "select_data",
+          "filedtype": "select_empty_field",
           "values": [
             [
               "list1['PercentageBasementFinished']",
@@ -2446,6 +2456,16 @@
           ]
         },
         {
+          "filedtype": "select_data",
+          "values": [
+            [
+              "list2['PropertyType']",
+              "//*[@id='rrrListing2_ddlPropertyType']",
+              "xpath"
+            ]
+          ]
+        },
+        {
           "filedtype": "Textbox",
           "values": [
             [
@@ -2566,7 +2586,7 @@
           ]
         },
         {
-          "filedtype": "select_data",
+          "filedtype": "select_empty_field",
           "values": [
             [
               "list2['PercentageBasementFinished']",
@@ -2766,6 +2786,16 @@
           ]
         },
         {
+          "filedtype": "select_data",
+          "values": [
+            [
+              "list3['PropertyType']",
+              "//*[@id='rrrListing3_ddlPropertyType']",
+              "xpath"
+            ]
+          ]
+        },
+        {
           "filedtype": "Textbox",
           "values": [
             [
@@ -2886,7 +2916,7 @@
           ]
         },
         {
-          "filedtype": "select_data",
+          "filedtype": "select_empty_field",
           "values": [
             [
               "list3['PercentageBasementFinished']",
