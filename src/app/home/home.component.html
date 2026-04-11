@@ -2,16 +2,16 @@
 <section class="hero-wrapper">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <div class="hero-tag fade-in" data-aos="fade-down">The Future of Pet Security</div>
+    <div class="hero-tag fade-in">The Future of Pet Security</div>
     <div class="hero-bottom-group">
-      <h1 class="hero-title fade-in" data-aos="fade-up">
+      <h1 class="hero-title fade-up">
         Total Pet Safety.<br>
         <span class="highlight">Smart. Secure. Seamless.</span>
       </h1>
-      <p class="hero-desc fade-in" data-aos="fade-up" data-aos-delay="200">
+      <p class="hero-desc fade-up" style="animation-delay: 0.1s">
         The only ecosystem your pet ever needs. From precision tracking to AI-powered health insights, all in one place.
       </p>
-      <div class="hero-actions fade-in" data-aos="fade-up" data-aos-delay="400">
+      <div class="hero-actions fade-up" style="animation-delay: 0.2s">
         <button class="btn-primary-luxury" (click)="navigateToShop()">SHOP COLLECTION
           <span class="arrow">→</span>
         </button>
@@ -24,7 +24,7 @@
 </section>
 
 <!-- Offer Banner Section (Carousel) -->
-<section class="offer-banner-section" data-aos="fade-up">
+<section class="offer-banner-section">
   <!-- Banner Header Row -->
   <div class="offer-section-header">
     <h2 class="offer-section-title">Special Offers</h2>
@@ -49,7 +49,7 @@
 </section>
 
 <!-- Categories Section -->
-<section class="categories-section" data-aos="fade-up">
+<section class="categories-section">
   <div class="section-container">
     <div class="category-header">
       <h2 class="category-title">Categories</h2>
@@ -57,7 +57,7 @@
     </div>
     <div class="category-grid-photos">
       <!-- Sticker-style cards for Dog & Cat -->
-      <div *ngFor="let cat of categories" class="category-photo-item" [class.active]="selectedCategory === cat.name"
+      <div *ngFor="let cat of categories" class="category-photo-item wiggle-hover" [class.active]="selectedCategory === cat.name"
         [class.sticker-card]="cat.cardColor" [style.background]="cat.cardColor || ''"
         (click)="selectCategory(cat.name)">
         <div class="category-photo-wrapper">
@@ -73,10 +73,10 @@
 </section>
 
 <!-- Recommended for You Section (Curated Essentials) -->
-<section class="recommended-section" data-aos="fade-up">
+<section class="recommended-section">
   <div class="section-container">
     <div class="section-header-row">
-      <h2 class="section-title-alt">New In</h2>
+      <h2 class="section-title-alt">New Arrivals</h2>
       <a routerLink="/shop" class="browse-all-link">Explore Now &rsaquo;</a>
     </div>
     <div class="recommended-grid-premium">
@@ -141,115 +141,196 @@
 <!-- How It Works (Video Section) -->
 <section class="process-section">
   <div class="process-layout">
-    <div class="video-mockup-frame fade-in" data-aos="fade-right">
-      <video #featureVideo class="feature-video" [muted]="isDetailedVideoMuted" playsinline preload="auto" loop muted
-        autoplay>
+    <div class="section-intro-left">
+      <span class="section-tag-gold">Seamless Recovery</span>
+      <h2 class="section-title-fun">How It Works</h2>
+    </div>
+
+    <div class="video-mockup-frame">
+      <video #featureVideo class="feature-video-luxury" [muted]="isDetailedVideoMuted" playsinline preload="auto" loop
+        muted autoplay>
         <source src="assets/videos/pet_scan.mp4" type="video/mp4">
       </video>
     </div>
 
-    <div class="process-steps">
-      <div class="section-intro">
-        <span class="section-tag">Seamless Recovery</span>
-        <h2 class="section-title">How It Works</h2>
+    <div class="step-item">
+      <div class="step-number-fun">1</div>
+      <div class="step-info-fun">
+        <h3>Secure & Attach</h3>
+        <p>Attach the premium smart tag to your pet's collar. It's waterproof, lightweight, and durable.</p>
       </div>
+    </div>
 
-      <div class="step-item fade-in" data-aos="fade-up" data-aos-delay="100">
-        <div class="step-number">1</div>
-        <div class="step-info">
-          <h3>Secure & Attach</h3>
-          <p>Attach the premium smart tag to your pet's collar. It's waterproof, lightweight, and durable.</p>
-        </div>
+    <div class="step-item">
+      <div class="step-number-fun">2</div>
+      <div class="step-info-fun">
+        <h3>Instant Scan</h3>
+        <p>If your pet gets lost, any smartphone can scan the tag without needing an app to view your contact info.
+        </p>
       </div>
+    </div>
 
-      <div class="step-item fade-in" data-aos="fade-up" data-aos-delay="200">
-        <div class="step-number">2</div>
-        <div class="step-info">
-          <h3>Instant Scan</h3>
-          <p>If your pet gets lost, any smartphone can scan the tag without needing an app to view your contact info.
-          </p>
-        </div>
-      </div>
-
-      <div class="step-item fade-in" data-aos="fade-up" data-aos-delay="300">
-        <div class="step-number">3</div>
-        <div class="step-info">
-          <h3>Safe Reunion</h3>
-          <p>Receive immediate alerts with the finder's location and reunite with your furry friend in minutes.</p>
-        </div>
+    <div class="step-item">
+      <div class="step-number-fun">3</div>
+      <div class="step-info-fun">
+        <h3>Safe Reunion</h3>
+        <p>Receive immediate alerts with the finder's location and reunite with your furry friend in minutes.</p>
       </div>
     </div>
   </div>
+
 </section>
 
 <!-- FAQ Section -->
-<section class="faq-section">
-  <div class="section-intro fade-in">
-    <span class="section-tag">Common Inquiries</span>
-    <h2 class="section-title">Pet Parent FAQs</h2>
-  </div>
+<section class="faq-section-refined fade-up">
+  <div class="faq-inner-container">
+    <div class="section-intro-left fade-in">
+      <span class="section-tag-gold">Common Inquiries</span>
+      <h2 class="section-title-fun">Pet Parent FAQs</h2>
+    </div>
 
-  <div class="faq-container">
-    <div *ngFor="let item of [0,1,2,3]; let i = index" class="faq-item fade-in" [class.active]="faqStates[i]">
-      <button class="faq-trigger" (click)="toggleFaq(i)">
-        <span *ngIf="i === 0">How does the QR pet tag work?</span>
-        <span *ngIf="i === 1">Is my pet's data secure?</span>
-        <span *ngIf="i === 2">Do I need a battery for the tag?</span>
-        <span *ngIf="i === 3">Can I update my details later?</span>
-        <span class="faq-plus">+</span>
-      </button>
-      <div class="faq-answer">
-        <p *ngIf="i === 0">Each tag carries a unique encrypted QR code. When scanned, it opens a secure pet profile
-          showing your contact details instantly.</p>
-        <p *ngIf="i === 1">Absolutely. Your data is encrypted and you have full control over what information is
-          displayed publicly during a scan.</p>
-        <p *ngIf="i === 2">No batteries required. Our tags use passive QR technology, ensuring they never run out of
-          power when you need them most.</p>
-        <p *ngIf="i === 3">Yes, you can edit your pet's information, owner details, and medical records anytime through
-          your dashboard.</p>
+    <div class="faq-grid-luxury">
+      <div *ngFor="let item of [0,1,2,3]; let i = index" class="faq-item-fun" [class.active]="faqStates[i]">
+        <button class="faq-trigger-fun" (click)="toggleFaq(i)">
+          <span *ngIf="i === 0">How does the QR pet tag work?</span>
+          <span *ngIf="i === 1">Is my pet's data secure?</span>
+          <span *ngIf="i === 2">Do I need a battery for the tag?</span>
+          <span *ngIf="i === 3">Can I update my details later?</span>
+          <div class="faq-icon-wrapper">
+            <span class="faq-plus">{{ faqStates[i] ? '−' : '+' }}</span>
+          </div>
+        </button>
+        <div class="faq-answer-fun" [class.show]="faqStates[i]">
+          <p *ngIf="i === 0">Each tag carries a unique encrypted QR code. When scanned, it opens a secure pet profile
+            showing your contact details instantly.</p>
+          <p *ngIf="i === 1">Absolutely. Your data is encrypted and you have full control over what information is
+            displayed publicly during a scan.</p>
+          <p *ngIf="i === 2">No batteries required. Our tags use passive QR technology, ensuring they never run out of
+            power when you need them most.</p>
+          <p *ngIf="i === 3">Yes, you can edit your pet's information, owner details, and medical records anytime
+            through
+            your dashboard.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Minimal Luxury Footer -->
-<footer class="minimal-footer">
-  <div class="footer-main">
-    <div class="brand-sphere">
-      <a href="/" class="footer-logo">TAIL<span>CART</span></a>
-      <p class="footer-desc">
-        Pioneering the future of pet care with world-class technology and sophisticated design. Keeping your companions
-        safe, anywhere.
-      </p>
+<!-- Premium Luxury Footer -->
+<footer class="premium-luxury-footer fade-up">
+  <div class="footer-background-overlay"></div>
+  <div class="footer-wave"></div>
+
+  <div class="footer-container relative">
+    <!-- Top Section -->
+    <div class="footer-top-premium">
+      <div class="footer-brand-premium fade-in">
+        <div class="logo-container">
+          <div class="logo-icon-premium">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:28px;height:28px;">
+              <path
+                d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+            </svg>
+          </div>
+          <div class="logo-text">
+            <h2 class="logo-title-premium">TailCart</h2>
+            <p class="logo-subtitle-premium">Premium Pet Care Solutions</p>
+          </div>
+        </div>
+        <p class="brand-tagline-premium">Keeping your furry friends safe, healthy, and happy with cutting-edge
+          technology.</p>
+
+        <div class="social-links-premium">
+          <a href="#" class="social-link" aria-label="Instagram">
+            <div class="social-icon"><i class="fab fa-instagram"></i></div>
+          </a>
+          <a href="#" class="social-link" aria-label="Facebook">
+            <div class="social-icon"><i class="fab fa-facebook-f"></i></div>
+          </a>
+          <a href="#" class="social-link" aria-label="Twitter">
+            <div class="social-icon"><i class="fab fa-twitter"></i></div>
+          </a>
+          <a href="#" class="social-link" aria-label="YouTube">
+            <div class="social-icon"><i class="fab fa-youtube"></i></div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-links-premium fade-up">
+        <div class="links-grid-premium">
+          <div class="link-column">
+            <h3 class="column-title-premium">Products</h3>
+            <ul class="link-list">
+              <li><a (click)="navigateToShop()" class="footer-link">TailTags</a></li>
+              <li><a (click)="navigateToDocuments()" class="footer-link">TailVault</a></li>
+              <li><a (click)="navigateToAlerts()" class="footer-link">TailScheduler</a></li>
+              <li><a (click)="navigateToDoctor()" class="footer-link">TailCare</a></li>
+            </ul>
+          </div>
+
+          <div class="link-column">
+            <h3 class="column-title-premium">Company</h3>
+            <ul class="link-list">
+              <li><a (click)="navigateToAbout()" class="footer-link">About Us</a></li>
+              <li><a (click)="navigateToAbout()" class="footer-link">Our Story</a></li>
+              <li><a (click)="navigateToAbout()" class="footer-link">Careers</a></li>
+              <li><a (click)="navigateToAbout()" class="footer-link">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="link-column">
+            <h3 class="column-title-premium">Support</h3>
+            <ul class="link-list">
+              <li><a (click)="navigateToAbout()" class="footer-link">Help Center</a></li>
+              <li><a (click)="navigateToAbout()" class="footer-link">FAQs</a></li>
+              <li><a (click)="navigateToAbout()" class="footer-link">Shipping</a></li>
+              <li><a (click)="navigateToAbout()" class="footer-link">Returns</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="footer-links">
-      <h4>Company</h4>
-      <ul>
-        <li><a (click)="navigateToAbout()">Our Story</a></li>
-        <li><a (click)="navigateToShop()">Collection</a></li>
-        <li><a (click)="navigateToAbout()">Contact Us</a></li>
-      </ul>
+
+    <!-- Newsletter -->
+    <div class="footer-middle-premium fade-up">
+      <div class="newsletter-section">
+        <div class="newsletter-content">
+          <h3 class="newsletter-title-premium">Stay Updated</h3>
+          <p class="newsletter-text-premium">Get exclusive offers, pet care tips, and product updates delivered to
+            your inbox.</p>
+        </div>
+        <div class="newsletter-form-premium">
+          <input type="email" placeholder="Your email address" class="newsletter-input-premium">
+          <button class="newsletter-button-premium">SUBSCRIBE</button>
+        </div>
+      </div>
     </div>
-    <div class="footer-links">
-      <h4>Support</h4>
-      <ul>
-        <li><a (click)="navigateToAbout()">Help Center</a></li>
-        <li><a (click)="navigateToAbout()">Shipping Policy</a></li>
-        <li><a (click)="navigateToAbout()">Privacy</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <div class="copyright">© 2026 TailCart. Luxury Pet Care Solutions.</div>
-    <div class="socials">
-      <i class="fab fa-instagram"></i>
-      <i class="fab fa-twitter"></i>
-      <i class="fab fa-facebook"></i>
+
+    <!-- Bottom Section -->
+    <div class="footer-bottom-premium fade-up">
+      <div class="payment-methods-premium">
+        <i class="fab fa-cc-visa payment-icon-premium"></i>
+        <i class="fab fa-cc-mastercard payment-icon-premium"></i>
+        <i class="fab fa-cc-amex payment-icon-premium"></i>
+        <i class="fab fa-cc-paypal payment-icon-premium"></i>
+      </div>
+
+      <div class="copyright-premium">
+        <p>© 2026 TailCart. All rights reserved.</p>
+        <div class="legal-links-premium">
+          <a (click)="navigateToAbout()" class="legal-link">Privacy Policy</a>
+          <a (click)="navigateToAbout()" class="legal-link">Terms of Service</a>
+        </div>
+      </div>
     </div>
   </div>
 </footer>
 
 <!-- Scroll to Top Button -->
 <button class="scroll-top-btn" (click)="scrollToTop()" [class.visible]="isScrolled">
-  <i class="fas fa-chevron-up"></i>
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:24px;height:24px;">
+    <path d="M12 19V5m0 0l-7 7m7-7l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" />
+  </svg>
 </button>

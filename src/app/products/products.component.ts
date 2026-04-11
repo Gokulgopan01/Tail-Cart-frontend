@@ -73,7 +73,8 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   // Quick View State
   showQuickView = false;
   selectedProductForQuickView: Product | null = null;
-  currentQuickImageIndex = 0;
+  activeQvTab: 'about' | 'reviews' | 'closet' = 'about';
+  primaryQvImage: string | null = null;
 
   private productsApi = 'http://127.0.0.1:8000/api/manager/products/';
 
@@ -180,27 +181,29 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   openQuickView(product: Product, event: Event) {
     event.stopPropagation();
     this.selectedProductForQuickView = product;
-    this.currentQuickImageIndex = 0;
+    this.primaryQvImage = product.thumbnail_image; // default main image
+    this.activeQvTab = 'about'; // reset tab
     this.showQuickView = true;
     document.body.style.overflow = 'hidden'; // Lock scroll
+    document.body.classList.add('qv-modal-open'); // Hook for global CSS to hide navbar
   }
 
   closeQuickView() {
     this.showQuickView = false;
     this.selectedProductForQuickView = null;
+    this.primaryQvImage = null;
     document.body.style.overflow = ''; // Unlock scroll
+    document.body.classList.remove('qv-modal-open');
   }
 
-  nextQuickImage() {
-    if (this.selectedProductForQuickView) {
-      this.currentQuickImageIndex = (this.currentQuickImageIndex + 1) % 2;
+  setQvMainImage(imgUrl: string | undefined) {
+    if (imgUrl) {
+      this.primaryQvImage = imgUrl;
     }
   }
 
-  prevQuickImage() {
-    if (this.selectedProductForQuickView) {
-      this.currentQuickImageIndex = this.currentQuickImageIndex === 0 ? 1 : 0;
-    }
+  setQvTab(tab: 'about' | 'reviews' | 'closet') {
+    this.activeQvTab = tab;
   }
 
   ngAfterViewInit() {

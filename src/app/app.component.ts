@@ -9,7 +9,7 @@ import { NavbarComponent } from './navbar/navbar.component';
   template: `
     <app-navbar></app-navbar>
     
-    <main class="main-content page-content-wrapper">
+    <main class="main-content page-content-wrapper page-transition-wrapper">
       <router-outlet></router-outlet>
     </main>
       `,

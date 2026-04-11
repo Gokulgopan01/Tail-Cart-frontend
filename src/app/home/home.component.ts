@@ -173,7 +173,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initializeVideo();
-    this.observeFadeElements();
   }
 
   ngOnDestroy(): void {
@@ -239,39 +238,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private observeFadeElements(): void {
-    const fadeElements = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, { threshold: 0.1 });
-    fadeElements.forEach(el => observer.observe(el));
-  }
-
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
     this.checkScroll();
-    this.handleFadeOnScroll();
   }
 
   private checkScroll(): void {
     const scrollPosition = window.scrollY;
     this.isScrolled = scrollPosition > 300;
 
-    // Hide button when near footer
-    const footer = document.querySelector('.minimal-footer');
+    // Hide button when near footer for clean look
+    const footer = document.querySelector('.premium-luxury-footer');
     if (footer) {
       const footerRect = footer.getBoundingClientRect();
       if (footerRect.top < window.innerHeight) this.isScrolled = false;
     }
-  }
-
-  private handleFadeOnScroll(): void {
-    const elements = document.querySelectorAll('.fade-in');
-    elements.forEach((el) => {
-      if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('visible');
-    });
   }
 
   scrollToTop(): void {

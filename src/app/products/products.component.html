@@ -26,27 +26,52 @@
   </div>
 
   <div class="container main-content modern-shop">
-    <!-- Categories -->
-    <div class="shop-categories-wrapper">
-      <h3 class="categories-title">Categories</h3>
-      <div class="categories-flex">
-        <div class="category-item" [class.active]="selectedMaterial === 'ALL'" (click)="setMaterial('ALL')">
-          <div class="cat-circle">
-            <i class="fa fa-th-large"></i>
+    <!-- Top Categories Section -->
+    <div class="top-categories-section">
+      <h2 class="section-title-centered">Top Categories</h2>
+      <div class="top-categories-grid">
+        <!-- Dog -->
+        <div class="top-cat-card dog" (click)="setMaterial('Wood')">
+          <div class="top-cat-halo">
+            <img src="assets/images/cat_dog.png" alt="Dog">
           </div>
-          <span>All</span>
+          <div class="top-cat-body">
+            <h3>Dog</h3>
+            <span>6 Items</span>
+          </div>
         </div>
-        <div class="category-item" [class.active]="selectedMaterial === 'Wood'" (click)="setMaterial('Wood')">
-          <div class="cat-circle"><img src="assets/images/cat_dog.png" alt="Dogs"></div>
-          <span>Dogs</span>
+
+        <!-- Cat -->
+        <div class="top-cat-card cat" (click)="setMaterial('Metal')">
+          <div class="top-cat-halo">
+            <img src="assets/images/cat_cat.png" alt="Cat">
+          </div>
+          <div class="top-cat-body">
+            <h3>Cat</h3>
+            <span>11 Items</span>
+          </div>
         </div>
-        <div class="category-item" [class.active]="selectedMaterial === 'Metal'" (click)="setMaterial('Metal')">
-          <div class="cat-circle"><img src="assets/images/cat_cat.png" alt="Cats"></div>
-          <span>Cats</span>
+
+        <!-- Fish -->
+        <div class="top-cat-card fish" (click)="setMaterial('Steel')">
+          <div class="top-cat-halo">
+            <img src="assets/images/cat_other.png" alt="Fish">
+          </div>
+          <div class="top-cat-body">
+            <h3>Fish</h3>
+            <span>7 Items</span>
+          </div>
         </div>
-        <div class="category-item" [class.active]="selectedMaterial === 'Fiber'" (click)="setMaterial('Fiber')">
-          <div class="cat-circle"><img src="assets/images/cat_bird.png" alt="Birds"></div>
-          <span>Birds</span>
+
+        <!-- Bird -->
+        <div class="top-cat-card bird" (click)="setMaterial('Fiber')">
+          <div class="top-cat-halo">
+            <img src="assets/images/cat_bird.png" alt="Bird">
+          </div>
+          <div class="top-cat-body">
+            <h3>Bird</h3>
+            <span>6 Items</span>
+          </div>
         </div>
       </div>
     </div>
@@ -133,93 +158,130 @@
   </div>
 </div>
 
-<!-- QUICK VIEW MODAL (IMAGE 2 STYLE) -->
+<!-- QUICK VIEW MODAL -->
 <div class="qv-modal-overlay" *ngIf="showQuickView" (click)="closeQuickView()">
   <div class="qv-modal-card" (click)="$event.stopPropagation()">
-    <button class="qv-close" (click)="closeQuickView()">
-      <i class="fas fa-arrow-left"></i>
-    </button>
 
-    <!-- Image Slider Section -->
-    <div class="qv-image-slider">
-      <div class="qv-slide-track" [style.transform]="'translateX(' + (-currentQuickImageIndex * 100) + '%)'">
-        <div class="qv-slide">
-          <img [src]="selectedProductForQuickView?.thumbnail_image" [alt]="selectedProductForQuickView?.product_name">
-        </div>
-        <div class="qv-slide">
-          <img [src]="selectedProductForQuickView?.second_image_1" [alt]="selectedProductForQuickView?.product_name">
-        </div>
-      </div>
-      <!-- Slider Indicators -->
-      <div class="qv-indicators">
-        <span class="dot" [class.active]="currentQuickImageIndex === 0" (click)="currentQuickImageIndex = 0"></span>
-        <span class="dot" [class.active]="currentQuickImageIndex === 1" (click)="currentQuickImageIndex = 1"></span>
-      </div>
-      <!-- Slider Nav -->
-      <button class="qv-nav-btn prev" (click)="prevQuickImage()"><i class="fas fa-chevron-left"></i></button>
-      <button class="qv-nav-btn next" (click)="nextQuickImage()"><i class="fas fa-chevron-right"></i></button>
-    </div>
-
-    <!-- Details Section -->
-    <div class="qv-details-scroll">
-      <div class="qv-body">
-        <div class="qv-shop-brand">TailCart Luxury</div>
-        <h2 class="qv-item-title">{{ selectedProductForQuickView?.product_name }}</h2>
-
-        <div class="qv-price-info">
-          <span class="qv-sell-price">₹{{ selectedProductForQuickView?.selling_price }}</span>
-          <span class="qv-mrp-label">MRP</span>
-          <span class="qv-orig-price">₹{{ selectedProductForQuickView?.original_price }}</span>
-          <span class="qv-discount-pill">{{ selectedProductForQuickView?.discount_percentage }}% OFF</span>
-        </div>
-        <p class="qv-tax-note">Price inclusive of all taxes.</p>
-
-        <!-- Offer Highlight Box -->
-        <div class="qv-offer-box">
-          <div class="qv-offer-header">
-            <span class="dot-green"></span>
-            <span class="offer-title">Offer Price ₹{{ selectedProductForQuickView?.selling_price }}</span>
-          </div>
-          <p class="qv-offer-desc">High quality luxury accessory for your pet with laser engraving option.</p>
-          <div class="qv-coupon-code">
-            <div class="code-info">
-              <p class="code-label">Use Code</p>
-              <p class="code-val">LUXURYPET</p>
-            </div>
-            <span class="code-tc">T&C</span>
-          </div>
-        </div>
-
-        <!-- Color Section -->
-        <div class="qv-property-row">
-          <h4 class="qv-prop-title">Color</h4>
-          <p class="qv-prop-val">{{ selectedProductForQuickView?.colours?.join(', ') || 'Default' }}</p>
-          <div class="qv-color-swatches">
-            <div class="color-circle" *ngFor="let color of selectedProductForQuickView?.colours"
-              [style.backgroundColor]="color.toLowerCase()" [title]="color">
-            </div>
-          </div>
-        </div>
-
-        <!-- Description Section -->
-        <div class="qv-desc-section">
-          <h4 class="qv-prop-title">Product Description</h4>
-          <p class="qv-full-desc">{{ selectedProductForQuickView?.product_long_description }}</p>
-          <p class="qv-spec-desc"><strong>Specifications:</strong> {{
-            selectedProductForQuickView?.product_other_specifications }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Action Footer -->
-    <div class="qv-footer">
-      <div class="qv-footer-left">
-        <button class="qv-icon-btn"><i class="fas fa-share-alt"></i></button>
-        <button class="qv-icon-btn"><i class="far fa-heart"></i></button>
-      </div>
-      <button class="qv-add-to-bag" (click)="addToCart(selectedProductForQuickView!)">
-        <i class="fas fa-shopping-bag"></i> Add To Bag
+    <!-- Top Nav -->
+    <div class="qv-top-nav">
+      <button class="qv-back-btn" (click)="closeQuickView()">
+        <i class="fas fa-arrow-left"></i> Product Details
+      </button>
+      <button class="qv-share-btn">
+        <i class="fas fa-share-nodes"></i>
       </button>
     </div>
+
+    <!-- Main Content Scroll Area -->
+    <div class="qv-main-scroll">
+
+      <!-- Image Gallery section -->
+      <div class="qv-gallery-section">
+        <div class="qv-main-image-wrapper">
+          <img [src]="primaryQvImage" [alt]="selectedProductForQuickView?.product_name" class="qv-main-image">
+        </div>
+
+        <!-- Thumbnails -->
+        <div class="qv-thumbnails">
+          <div class="qv-thumbnail" [class.active]="primaryQvImage === selectedProductForQuickView?.thumbnail_image"
+            (click)="setQvMainImage(selectedProductForQuickView?.thumbnail_image)">
+            <img [src]="selectedProductForQuickView?.thumbnail_image" alt="Thumbnail 1">
+          </div>
+          <div class="qv-thumbnail" *ngIf="selectedProductForQuickView?.second_image_1"
+            [class.active]="primaryQvImage === selectedProductForQuickView?.second_image_1"
+            (click)="setQvMainImage(selectedProductForQuickView?.second_image_1)">
+            <img [src]="selectedProductForQuickView?.second_image_1" alt="Thumbnail 2">
+          </div>
+        </div>
+      </div>
+
+      <!-- Header Info -->
+      <div class="qv-header-info">
+        <div class="qv-badge-row">
+          <span class="qv-badge-bestseller"
+            *ngIf="selectedProductForQuickView?.deals?.toLowerCase() === 'bestseller' || true">BESTSELLER</span>
+          <div class="qv-rating">
+            <i class="fas fa-star qv-star-icon"></i>
+            <span class="qv-rating-val">{{ selectedProductForQuickView?.reviews_stars || '4.7' }}</span>
+            <span class="qv-rating-count">(128 reviews)</span>
+          </div>
+        </div>
+
+        <h2 class="qv-product-title">{{ selectedProductForQuickView?.product_name }}</h2>
+        <p class="qv-collection">Collection: The Heritage Atelier</p>
+      </div>
+
+      <!-- Elevated Price Card -->
+      <div class="qv-price-card">
+        <div class="qv-price-row">
+          <span class="qv-current-price">{{ selectedProductForQuickView?.selling_price }}</span>
+          <span class="qv-old-price">{{ selectedProductForQuickView?.original_price }}</span>
+          <span class="qv-discount-pill" *ngIf="selectedProductForQuickView?.discount_percentage">{{
+            selectedProductForQuickView?.discount_percentage }}% OFF</span>
+        </div>
+        <p class="qv-premium-offer">LIMITED PREMIUM OFFER</p>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="qv-features-grid">
+        <div class="qv-feature-col">
+          <span class="qv-feature-label">MATERIAL</span>
+          <div class="qv-material-box">
+            <i class="fas fa-grip-lines-vertical qv-material-icon"></i>
+            <span class="qv-material-text">High-Grade<br>{{ selectedProductForQuickView?.product_material || 'Fiber'
+              }}</span>
+          </div>
+        </div>
+
+        <div class="qv-feature-col">
+          <span class="qv-feature-label">SPECIFICATIONS</span>
+          <ul class="qv-spec-list">
+            <li><i class="far fa-check-circle qv-check"></i> Laser engraving</li>
+            <li><i class="far fa-check-circle qv-check"></i> Rust resistant</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Color Selection -->
+      <div class="qv-shade-section" *ngIf="selectedProductForQuickView?.colours?.length">
+        <span class="qv-feature-label">SELECT SHADE</span>
+        <div class="qv-shade-selector">
+          <div *ngFor="let color of selectedProductForQuickView?.colours; let i = index" class="qv-shade-swatch"
+            [style.backgroundColor]="color.toLowerCase()" [class.active]="i === 0">
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabbed Area -->
+      <div class="qv-tabs-container">
+        <div class="qv-tabs-header">
+          <button class="qv-tab-btn" [class.active]="activeQvTab === 'about'" (click)="setQvTab('about')">ABOUT</button>
+          <button class="qv-tab-btn" [class.active]="activeQvTab === 'reviews'"
+            (click)="setQvTab('reviews')">REVIEWS</button>
+          <button class="qv-tab-btn" [class.active]="activeQvTab === 'closet'"
+            (click)="setQvTab('closet')">CLOSET</button>
+        </div>
+
+        <div class="qv-tab-content" *ngIf="activeQvTab === 'about'">
+          <h3 class="qv-content-title">The Art of Durability</h3>
+          <p class="qv-content-text">
+            {{ selectedProductForQuickView?.product_long_description || 'Crafted from aerospace-grade translucent fiber,
+            our Round Tag redefined pet accessories. Each piece undergoes a 12-step finish.' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Empty space to clear the end of text -->
+      <div style="height: 15px;"></div>
+    </div> <!-- end qv-main-scroll -->
+
+    <!-- Fixed Bottom Action Bar -->
+    <div class="qv-bottom-bar">
+      <button class="qv-btn-outline" (click)="addToCart(selectedProductForQuickView!)">ADD TO CART</button>
+      <button class="qv-btn-solid" (click)="addToCart(selectedProductForQuickView!)">
+        BUY NOW <i class="fas fa-shopping-cart"></i>
+      </button>
+    </div>
+
   </div>
 </div>
