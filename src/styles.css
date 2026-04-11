@@ -23,7 +23,7 @@
 
   /* TEXT */
   --text-primary: #0D1F1C;
-  --text-secondary: #5F6F6B;
+  --text-secondary: #ffffff;
   --text-light: #8FA39E;
 
   /* BORDER & UI */
@@ -39,6 +39,20 @@
   --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
+
+  /* GRADIENTS */
+  --gradient-primary: linear-gradient(135deg, #0F3D3E, #1F6F70);
+  --gradient-accent: linear-gradient(135deg, #D4AF37, #F2D57E);
+  --gradient-soft: linear-gradient(135deg, #E6F4F1, #F7FAF9);
+  --gradient-warm: linear-gradient(135deg, #FF7A59, #FFB199);
+  --gradient-violet: linear-gradient(135deg, #6D5DF6, #A78BFA);
+
+  /*Category*/
+  --dog-bg: #FFF3E8;
+  --cat-bg: #F0F7FF;
+  --fish-bg: #E8FBF5;
+  --bird-bg: #FFF0F5;
+  --other-bg: #F5F5F5;
 }
 
 * {

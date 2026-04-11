@@ -1,4 +1,5 @@
-<nav class="luxury-navbar" [class.scrolled]="isScrolled" [class.hidden]="isPastHalfScreen" [class.nav-hidden]="isScrollingDown" *ngIf="!hideTopNav">
+<nav class="luxury-navbar" [class.scrolled]="isScrolled" [class.hidden]="isPastHalfScreen"
+  [class.nav-hidden]="isScrollingDown" *ngIf="!hideTopNav">
   <div class="nav-floating-body">
     <div class="nav-container container">
       <!-- Left: Menu Toggle -->
@@ -105,17 +106,19 @@
 
   <a class="bottom-nav-link" routerLink="/home" routerLinkActive="active">
     <div class="bottom-nav-icon home-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
         <polyline points="9 22 9 12 15 12 15 22"></polyline>
       </svg>
     </div>
     <span>HOME</span>
   </a>
-  
+
   <a class="bottom-nav-link" routerLink="/shop" routerLinkActive="active">
     <div class="bottom-nav-icon shop-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <path d="M16 10a4 4 0 0 1-8 0"></path>
@@ -123,19 +126,21 @@
     </div>
     <span>SHOP</span>
   </a>
-  
+
   <a class="bottom-nav-link" routerLink="/document" routerLinkActive="active">
     <div class="bottom-nav-icon vault-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
       </svg>
     </div>
     <span>VAULT</span>
   </a>
-  
+
   <a class="bottom-nav-link" routerLink="/profile" routerLinkActive="active">
     <div class="bottom-nav-icon profile-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
