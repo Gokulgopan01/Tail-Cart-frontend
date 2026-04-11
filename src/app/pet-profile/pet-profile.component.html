@@ -1,10 +1,14 @@
 <div class="pet-profile-page" *ngIf="!isLoading && pet" @fadeUp>
   <!-- 1. Navigation Top Bar -->
   <nav class="profile-nav">
-    <button class="btn-back" routerLink="/profile"><i class="fas fa-chevron-left"></i></button>
+    <button class="btn-back-text" routerLink="/profile">
+      <i class="fas fa-chevron-left"></i>
+      <span>My Profile</span>
+    </button>
     <div class="nav-toggle">
-       <button class="toggle-btn active">Pet Profile</button>
-       <button class="toggle-btn" [routerLink]="['/pet-public']" [queryParams]="{user_id: userId, pet_id: pet.pet_id}">Public Profile</button>
+      <button class="toggle-btn active">Pet Profile</button>
+      <button class="toggle-btn" [routerLink]="['/pet-public']"
+        [queryParams]="{user_id: userId, pet_id: pet.pet_id}">Public Profile</button>
     </div>
     <div style="width: 40px;"></div> <!-- Spacer -->
   </nav>
@@ -18,7 +22,7 @@
           <span class="status-label">STATUS</span>
           <div class="status-indicator" [class.lost]="pet.is_lost">
             <span class="dot"></span>
-            {{ pet.is_lost ? 'Reported Lost' : 'Available' }}
+            {{ pet.is_lost ? 'Reported Lost' : 'Safe' }}
           </div>
         </div>
       </div>
@@ -68,7 +72,9 @@
     <section class="bio-section white-card">
       <h2 class="section-heading">About Me</h2>
       <p class="bio-text">
-        {{ pet.about || pet.pet_name + ' is the quintessential companion—calm, observant, and deeply affectionate. Despite its small stature, it possesses a dignified personality typical of the ' + pet.breed + ' heritage. Thrives in peaceful environments.' }}
+        {{ pet.about || pet.pet_name + ' is the quintessential companion—calm, observant, and deeply affectionate.
+        Despite its small stature, it possesses a dignified personality typical of the ' + pet.breed + ' heritage.
+        Thrives in peaceful environments.' }}
       </p>
     </section>
   </main>
