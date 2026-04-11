@@ -1,21 +1,23 @@
-<div class="documents-locker">
-  <!-- Premium curved header -->
-  <header class="header-section premium-header">
-    <img src="assets/doc_banner.png" alt="Tail VAULT Banner" class="doc-banner-img">
+<div class="documents-locker" (click)="closeMenu()">
+  <!-- Premium curved header with Search Bar -->
+  <header class="header-section premium-header doc-mobile-header">
+    <img src="assets/doc_banner.png" alt="Tail VAULT Banner" class="doc-banner-img"
+      style="opacity: 0.15; filter: grayscale(1);">
     <div class="doc-banner-overlay"></div>
     <div class="doc-banner-label">TAIL VAULT</div>
 
-    <div class="container header-container">
-      <div class="documents-header-wrapper">
-        <div class="tabs-container premium-tabs">
-          <button class="tab-btn" [class.active]="activeTab === 'documents'" (click)="activeTab = 'documents'">
-            <i class="fas fa-folder"></i>
-            <span>Documents <span class="tab-badge-inline">{{ documents.length }}</span></span>
-          </button>
-
-          <button class="tab-btn" [class.active]="activeTab === 'remainders'" (click)="activeTab = 'remainders'">
-            <i class="fas fa-bell"></i>
-            <span>Reminders <span class="tab-badge-inline">{{ remainders.length }}</span></span>
+    <div class="container header-container"
+      style="display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 2rem; position: relative; z-index: 2;">
+      <div class="search-pill-container" style="max-width: 100%; margin-top: 2rem;">
+        <div class="search-pill-modern"
+          style="background: white; border-radius: 50px; display: flex; align-items: center; padding: 6px 6px 6px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          <i class="fas fa-search magnifier-icon" style="color: #94a3b8; font-size: 1.1rem; margin-right: 12px;"></i>
+          <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="filterDocuments()" placeholder="Search products"
+            class="pill-input"
+            style="flex: 1; border: none; outline: none; background: transparent; font-size: 1rem; color: #333;">
+          <button class="filter-btn"
+            style="background: #003c30; color: white; border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+            <i class="fas fa-sliders-h"></i>
           </button>
         </div>
       </div>
@@ -23,236 +25,232 @@
     <div class="header-curve"></div>
   </header>
 
-  <!-- Smart High-Priority Remainder Banner -->
-  <div *ngIf="overdueCount > 0 || upcomingCount > 0" class="priority-banner">
-    <div class="container">
-      <div class="banner-flex">
-        <div class="banner-info">
-          <div class="banner-icon pulse">
-            <i class="fas fa-exclamation-circle"></i>
-          </div>
-          <div class="banner-text">
-            <h4 *ngIf="overdueCount > 0">Overdue Reminders!</h4>
-            <h4 *ngIf="overdueCount === 0 && upcomingCount > 0">Upcoming Reminders
-            </h4>
-            <p>
-              <span *ngIf="overdueCount > 0">{{ overdueCount }} items need immediate
-                attention.</span>
-              <span *ngIf="upcomingCount > 0"> {{ upcomingCount }} reminders due today
-                or
-                tomorrow.</span>
-            </p>
-          </div>
-        </div>
-        <button class="banner-btn" (click)="activeTab = 'remainders'">
-          Review Now <i class="fas fa-chevron-right"></i>
-        </button>
+  <!-- Title -->
+  <div class="container">
+    <h3 class="page-main-title">Manage your file</h3>
+  </div>
+
+  <!-- Storage Banner Component -->
+  <div class="container storage-promo-container">
+    <div class="storage-banner">
+      <div class="storage-text-side">
+        <h4 class="storage-title">Unlimited Storage<br>$30/year</h4>
+        <button class="upgrade-btn">Upgrade</button>
+      </div>
+      <div class="storage-img-side">
+        <img src="assets/images/cloud_storage.png" alt="Cloud Storage">
       </div>
     </div>
   </div>
 
-  <main class="main-content container">
+  <!-- Segmented iOS-like Tabs -->
+  <div class="container segments-container">
+    <div class="segmented-control">
+      <button class="seg-tab" [class.active]="activeTab === 'documents'" (click)="activeTab = 'documents'">
+        Documents
+      </button>
+      <button class="seg-tab" [class.active]="activeTab === 'remainders'" (click)="activeTab = 'remainders'">
+        Reminders
+      </button>
+    </div>
+  </div>
+
+  <main class="main-content container compact-main">
     <!-- Documents Tab -->
     <section *ngIf="activeTab === 'documents'" class="tab-pane fade-in">
-      <div class="toolbar-section">
-        <div class="toolbar-left filters-container">
-          <div class="search-wrapper">
-            <i class="fas fa-search"></i>
-            <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="filterDocuments()"
-              placeholder="Search by document name..." class="modern-input">
-          </div>
-          <div class="custom-select-wrapper tb-select">
-            <select class="modern-select" [(ngModel)]="selectedType" (change)="filterDocuments()">
-              <option value="">All Categories</option>
-              <option value="Pet Vaccination Record">Vaccination records</option>
-              <option value="Pet Medical Record">Medical reports</option>
-              <option value="Pet Prescription">Vet prescriptions</option>
-              <option value="Veterinary Document">Insurance documents</option>
-              <option value="Adoption papers">Adoption papers</option>
-              <option value="Training certificates">Training certificates</option>
-              <option value="Other Pet Document">Others</option>
-            </select>
-            <i class="fas fa-chevron-down select-icon"></i>
-          </div>
-          <div class="custom-select-wrapper tb-select">
-            <select class="modern-select" [(ngModel)]="selectedPet" (change)="filterDocuments()">
-              <option value="">All Pets</option>
-              <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
-            </select>
-            <i class="fas fa-chevron-down select-icon"></i>
-          </div>
-          <div class="custom-select-wrapper tb-select">
-            <select class="modern-select" [(ngModel)]="dateFilter" (change)="filterDocuments()">
-              <option value="all">Any Time</option>
-              <option value="recent">Uploaded Recently</option>
-            </select>
-            <i class="fas fa-chevron-down select-icon"></i>
-          </div>
+
+      <!-- Horizontal Filter Pills -->
+      <div class="pill-filters-row">
+        <button class="circle-add-btn" (click)="openUploadModal()"><i class="fas fa-plus"></i></button>
+
+        <div class="pill-dropdown-wrapper">
+          <select class="pill-select" [(ngModel)]="selectedType" (change)="filterDocuments()">
+            <option value="">Categories</option>
+            <option value="Pet Vaccination Record">Vaccinations</option>
+            <option value="Pet Medical Record">Medical</option>
+            <option value="Pet Prescription">Prescriptions</option>
+            <option value="Veterinary Document">Insurance</option>
+            <option value="Other Pet Document">Others</option>
+          </select>
+          <i class="fas fa-chevron-down select-icon"></i>
         </div>
 
-        <div class="toolbar-right">
-          <button class="btn-primary" (click)="openUploadModal()">
-            <i class="fas fa-plus"></i> Add Document
-          </button>
+        <div class="pill-dropdown-wrapper">
+          <select class="pill-select" [(ngModel)]="selectedPet" (change)="filterDocuments()">
+            <option value="">Pets</option>
+            <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
+          </select>
+          <i class="fas fa-chevron-down select-icon"></i>
+        </div>
+
+        <div class="pill-dropdown-wrapper">
+          <select class="pill-select" [(ngModel)]="dateFilter" (change)="filterDocuments()">
+            <option value="all">Uploaded Time</option>
+            <option value="recent">Recent</option>
+          </select>
+          <i class="fas fa-chevron-down select-icon"></i>
         </div>
       </div>
 
-      <div class="docs-display new-list-mode">
-        <div class="list-headers" *ngIf="filteredDocuments.length > 0">
-          <span class="lh-light">Light</span>
-          <span class="lh-remainder">Remainder</span>
-          <span class="lh-szecin">Szecin</span>
+      <!-- Stats Grid -->
+      <div class="stats-grid-container">
+        <div class="stat-card">
+          <div class="stat-icon-wrapper pic-bg">
+            <i class="fas fa-image"></i>
+          </div>
+          <h4 class="stat-name">Picture</h4>
+          <p class="stat-count">{{ pictureCount }} items</p>
         </div>
+        <div class="stat-card">
+          <div class="stat-icon-wrapper doc-bg">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <h4 class="stat-name">File</h4>
+          <p class="stat-count">{{ fileCount }} items</p>
+        </div>
+      </div>
+
+      <!-- Recent Files -->
+      <div class="recent-header-row">
+        <h4>Recent Files</h4>
+        <a href="javascript:void(0)" class="view-all-link">View all</a>
+      </div>
+
+      <div class="recent-files-list">
         <ng-container *ngIf="filteredDocuments.length > 0; else noDocs">
-          <div *ngFor="let doc of filteredDocuments" class="premium-row-card" [class.expired]="isDocumentExpired(doc)">
-            <div class="card-left" (click)="previewDocument(doc)" title="View Document">
-              <div class="custom-pdf-icon">
-                <span class="pdf-label">PDF</span>
-              </div>
-              <div class="doc-info">
-                <h3 class="doc-title">{{ doc.document_title }}</h3>
-                <p class="doc-subtitle">{{ doc.file_name?.substring(0, 10) || '1PP' }} {{
-                  calculateFileSize(doc.document_file) }} • {{ doc.upload_date | date:'dd MMM yyyy' }}</p>
-              </div>
+          <div *ngFor="let doc of filteredDocuments" class="file-row-card">
+
+            <div class="file-icon-box folder-bg" (click)="previewDocument(doc)">
+              <i class="fas fa-folder"></i>
             </div>
-            <div class="card-right">
-              <button class="doc-action doc-download" (click)="downloadDocument(doc)" title="Download">
-                <i class="fas fa-arrow-down"></i>
+
+            <div class="file-info-col" (click)="previewDocument(doc)">
+              <h4 class="file-name">{{ doc.document_title }}</h4>
+              <p class="file-meta">{{ doc.upload_date | date:'MMM dd, yyyy' }} • {{ doc.file_size || '1.2 GB' }}</p>
+            </div>
+
+            <div class="file-actions-col">
+              <button class="dots-btn" (click)="toggleMenu(doc.document_id, $event)">
+                <i class="fas fa-ellipsis-v"></i>
               </button>
-              <button class="doc-action doc-remainder" (click)="setRemainderForDocument(doc)" title="Set Reminder">
-                <i class="far fa-bell"></i>
-              </button>
-              <span class="doc-separator"></span>
-              <button class="doc-action doc-delete" (click)="deleteDocument(doc.document_id)" title="Delete">
-                <i class="fas fa-clipboard-check"></i>
-              </button>
+
+              <div class="horizontal-card-overlay slide-in-right" *ngIf="openMenuId === doc.document_id"
+                (click)="$event.stopPropagation()">
+                <button class="overlay-btn view" (click)="previewDocument(doc); closeMenu()"><i
+                    class="fas fa-eye"></i></button>
+                <button class="overlay-btn download" (click)="downloadDocument(doc); closeMenu()"><i
+                    class="fas fa-download"></i></button>
+                <button class="overlay-btn reminder" (click)="setRemainderForDocument(doc); closeMenu()"><i
+                    class="far fa-bell"></i></button>
+                <button class="overlay-btn trash" (click)="deleteDocument(doc.document_id); closeMenu()"><i
+                    class="fas fa-trash"></i></button>
+                <button class="overlay-btn close-overlay" (click)="closeMenu()"><i class="fas fa-times"></i></button>
+              </div>
             </div>
           </div>
         </ng-container>
       </div>
+
     </section>
 
     <!-- Remainders Tab -->
-    <section *ngIf="activeTab === 'remainders'" class="tab-pane fade-in remainders-layout">
-      <!-- Sidebar / Filters -->
-      <aside class="remainders-sidebar">
-        <h2 class="sidebar-title">Filters</h2>
+    <section *ngIf="activeTab === 'remainders'" class="tab-pane fade-in remainders-mobile-layout"
+      style="background: #fff; min-height: 80vh;">
 
-        <div class="filters-horizontal-row">
-          <div class="filter-group">
-            <label class="filter-label">PETS</label>
-            <div class="custom-select-wrapper has-left-icon">
-              <i class="fas fa-paw input-icon-left"></i>
-              <select class="modern-select" [(ngModel)]="selectedPet" (change)="filterRemainders()">
-                <option value="">All Pets</option>
-                <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
-              </select>
-              <i class="fas fa-chevron-down select-icon"></i>
-            </div>
-          </div>
+      <!-- Horizontal Filter Pills -->
+      <div class="pill-filters-row">
+        <button class="circle-add-btn" (click)="openCreateRemainderModal()"><i class="fas fa-plus"></i></button>
 
-          <div class="filter-group">
-            <label class="filter-label">STATUS</label>
-            <div class="custom-select-wrapper has-left-icon">
-              <i class="far fa-clock input-icon-left"></i>
-              <select class="modern-select" [(ngModel)]="selectedStatus" (change)="filterRemainders()">
-                <option value="">All Statuses</option>
-                <option value="upcoming">Upcoming</option>
-                <option value="overdue">Overdue</option>
-                <option value="completed">Completed</option>
-              </select>
-              <i class="fas fa-chevron-down select-icon"></i>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Main Content -->
-      <div class="remainders-main">
-        <div class="rem-header-row unified-header">
-          <h2 class="main-title">Reminders</h2>
-          <button class="btn-teal-full" (click)="openCreateRemainderModal()">Create New Reminder</button>
+        <div class="pill-dropdown-wrapper">
+          <select class="pill-select" [(ngModel)]="selectedPet" (change)="filterRemainders()">
+            <option value="">Pets</option>
+            <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
+          </select>
+          <i class="fas fa-chevron-down select-icon"></i>
         </div>
 
-        <div class="rem-toolbar">
-          <div class="view-toggles">
-            <div class="view-select">List View <i class="fas fa-caret-down"></i></div>
-            <div class="view-switch-wrapper">
-              <span>Calendar View</span>
-              <label class="switch small-switch">
-                <input type="checkbox" [checked]="remainderViewMode === 'calendar'"
-                  (change)="remainderViewMode = (remainderViewMode === 'calendar' ? 'list' : 'calendar')">
-                <span class="slider round"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="rem-list-container" *ngIf="remainderViewMode === 'list'">
-          <div class="rem-list-headers">
-            <span class="pet-col-header">Pet Name</span>
-            <span class="title-col-header">Category</span>
-            <span class="time-col-header">Date / Time</span>
-            <span class="notes-col-header">Notes</span>
-            <span class="actions-col-header text-right">Actions</span>
-          </div>
-
-          <div class="rem-cards-wrapper" *ngIf="filteredRemainders.length > 0; else noRemainders">
-            <div class="rem-row-card" *ngFor="let rem of filteredRemainders"
-              [ngClass]="(rem.statusInfo?.type || 'overdue') + '-bg'">
-              <div class="rem-col pet-col">
-                <div class="rem-pet-info">
-                  <span class="rem-pet-name">{{ getPetName(rem.pet) }}</span>
-                  <span class="rem-status-text" [ngClass]="(rem.statusInfo?.type || 'overdue') + '-text'">{{
-                    rem.statusInfo?.text || 'Overdue' }}</span>
-                </div>
-              </div>
-              <div class="rem-col icon-col">
-                <i class="fas fa-exclamation-circle text-red" *ngIf="rem.statusInfo?.type === 'overdue'"></i>
-                <i class="fas fa-clock text-orange" *ngIf="rem.statusInfo?.type === 'upcoming'"></i>
-                <i class="fas fa-calendar-alt text-scheduled" *ngIf="rem.statusInfo?.type === 'scheduled'"></i>
-                <i class="fas fa-check-circle text-green" *ngIf="rem.statusInfo?.type === 'completed'"></i>
-              </div>
-              <div class="rem-col title-col">
-                <span class="rem-card-title">{{ rem.title }}</span>
-                <span class="rem-card-subtype">{{ rem.alert_type }} • {{ rem.alert_subtype }}</span>
-              </div>
-              <div class="rem-col time-col">
-                <span>{{ rem.remainder_date | date:'dd MMM yyyy' }}</span>
-                <span class="time-sub">{{ rem.reminder_time }}</span>
-                <span class="completed-time" *ngIf="rem.statusInfo?.type === 'completed' && rem.completed_at">
-                  Done: {{ rem.completed_at | date:'shortTime' }}
-                </span>
-              </div>
-              <div class="rem-col notes-col">
-                <span class="rem-notes-text">{{ rem.notes || 'No notes' }}</span>
-              </div>
-              <div class="rem-col actions-col text-right">
-                <div class="card-action-btns">
-                  <button *ngIf="rem.statusInfo?.type !== 'completed'" class="card-action-btn complete"
-                    (click)="markAsCompleted(rem)" title="Mark as Completed">
-                    <i class="fas fa-check"></i>
-                  </button>
-                  <button class="card-action-btn edit" (click)="editRemainder(rem)" title="Edit">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="card-action-btn delete" (click)="deleteRemainder(rem.alert_id)" title="Delete">
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="rem-calendar-container" *ngIf="remainderViewMode === 'calendar'">
-          <div class="empty-state">
-            <i class="far fa-calendar-alt"></i>
-            <h3>Calendar View</h3>
-            <p>Coming soon...</p>
-          </div>
+        <div class="pill-dropdown-wrapper">
+          <select class="pill-select" [(ngModel)]="selectedStatus" (change)="filterRemainders()">
+            <option value="">Status</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="overdue">Overdue</option>
+            <option value="completed">Completed</option>
+          </select>
+          <i class="fas fa-chevron-down select-icon"></i>
         </div>
       </div>
+
+      <!-- Stats Grid (Upcoming vs Overdue) -->
+      <div class="stats-grid-container">
+        <div class="stat-card">
+          <div class="stat-icon-wrapper upcoming-bg">
+            <i class="fas fa-clock"></i>
+          </div>
+          <h4 class="stat-name">Upcoming</h4>
+          <p class="stat-count">{{ upcomingCount }} items</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon-wrapper overdue-bg">
+            <i class="fas fa-exclamation-circle"></i>
+          </div>
+          <h4 class="stat-name">Overdue</h4>
+          <p class="stat-count">{{ overdueCount }} items</p>
+        </div>
+      </div>
+
+      <!-- Reminders List -->
+      <div class="recent-header-row">
+        <h4>All Reminders</h4>
+      </div>
+
+      <div class="recent-files-list">
+        <ng-container *ngIf="filteredRemainders.length > 0; else noRemainders">
+          <div *ngFor="let rem of filteredRemainders" class="file-row-card reminder-item-card">
+
+            <!-- Status Icon Box -->
+            <div class="file-icon-box status-bg" [ngClass]="rem.statusInfo?.type + '-icon-bg'">
+              <i class="fas" [ngClass]="{
+                'fa-exclamation-circle': rem.statusInfo?.type === 'overdue',
+                'fa-clock': rem.statusInfo?.type === 'upcoming',
+                'fa-calendar-alt': rem.statusInfo?.type === 'scheduled',
+                'fa-check-circle': rem.statusInfo?.type === 'completed'
+              }"></i>
+            </div>
+
+            <div class="file-info-col" (click)="editRemainder(rem)">
+              <div class="title-row" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <h4 class="file-name">{{ rem.title }}</h4>
+                <span class="pet-tag"
+                  style="background: #f3e8ff; color: #a855f7; font-size: 0.65rem; padding: 2px 8px; border-radius: 10px; font-weight: 700;">
+                  {{ getPetName(rem.pet) }}
+                </span>
+              </div>
+              <p class="file-meta" style="margin-top: 4px; font-weight: 500;">{{ rem.remainder_date | date:'MMM dd,
+                yyyy' }} • {{ rem.reminder_time }}</p>
+              <p class="rem-notes" *ngIf="rem.notes"
+                style="font-size: 0.75rem; color: #94a3b8; margin-top: 5px; line-height: 1.3;">{{ rem.notes }}</p>
+            </div>
+
+            <div class="file-actions-col">
+              <button class="dots-btn" (click)="toggleMenu(rem.alert_id, $event)">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+
+              <div class="horizontal-card-overlay slide-in-right" *ngIf="openMenuId === rem.alert_id"
+                (click)="$event.stopPropagation()">
+                <button *ngIf="rem.statusInfo?.type !== 'completed'" class="overlay-btn view"
+                  (click)="markAsCompleted(rem); closeMenu()" title="Complete"><i class="fas fa-check"></i></button>
+                <button class="overlay-btn download" (click)="editRemainder(rem); closeMenu()" title="Edit"><i
+                    class="fas fa-edit"></i></button>
+                <button class="overlay-btn trash" (click)="deleteRemainder(rem.alert_id); closeMenu()" title="Delete"><i
+                    class="fas fa-trash"></i></button>
+                <button class="overlay-btn close-overlay" (click)="closeMenu()"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
     </section>
 
     <!-- Empty States -->

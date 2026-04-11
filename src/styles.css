@@ -716,3 +716,14 @@ body.qv-modal-open .mobile-bottom-nav,
 body.qv-modal-open .luxury-navbar {
   display: none !important;
 }
+
+body.qv-modal-open {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+  /* Prevent background from reacting to touch drags on iOS */
+  touch-action: none; 
+}
+
+body.qv-modal-open .qv-main-scroll {
+  touch-action: pan-y !important; /* Re-enable for the modal contents */
+}

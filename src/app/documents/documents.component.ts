@@ -61,6 +61,9 @@ export class DocumentsComponent implements OnInit {
   overdueCount: number = 0;
   upcomingCount: number = 0;
 
+  // Row Item Dropdown State
+  openMenuId: number | null = null;
+
   // UI State
   activeTab: 'documents' | 'remainders' = 'documents';
   docsViewMode: 'grid' | 'list' = 'grid';
@@ -242,6 +245,37 @@ export class DocumentsComponent implements OnInit {
   updateBannerCounts(): void {
     this.overdueCount = this.remainders.filter(r => r.statusInfo?.type === 'overdue').length;
     this.upcomingCount = this.remainders.filter(r => r.statusInfo?.type === 'upcoming').length;
+  }
+
+  // --- Dynamic Counters ---
+  get pictureCount(): number {
+    return this.documents.filter(doc => {
+      if (!doc.document_file) return false;
+      const lower = doc.document_file.toLowerCase();
+      return lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.match(/\.(png|jpe?g)(?:\?|$)/);
+    }).length;
+  }
+
+  get fileCount(): number {
+    return this.documents.filter(doc => {
+      if (!doc.document_file) return false;
+      const lower = doc.document_file.toLowerCase();
+      // Assume anything not matching picture logic is a file, or strictly PDFs/Docs. Count everything that isn't a picture:
+      return !(lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.match(/\.(png|jpe?g)(?:\?|$)/));
+    }).length;
+  }
+
+  toggleMenu(documentId: number, event: Event): void {
+    event.stopPropagation();
+    if (this.openMenuId === documentId) {
+      this.openMenuId = null;
+    } else {
+      this.openMenuId = documentId;
+    }
+  }
+
+  closeMenu(): void {
+    this.openMenuId = null;
   }
 
   // Filtering
