@@ -136,7 +136,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
       renderer: 'svg',
       loop: true,
       autoplay: true,
-      path: 'assets/Login_banner.json',
+      path: 'assets/Lottie/Login_banner.json',
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice'
       }
@@ -150,7 +150,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        path: 'assets/Welcome.json'
+        path: 'assets/Lottie/Welcome.json'
       });
     }
   }
@@ -218,7 +218,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
 
               setTimeout(() => {
                 this.router.navigate(['/home']);
-              }, 3000);
+              }, 2000);
 
             } else {
               this.stopLoader();

@@ -22,10 +22,9 @@
         <!-- Headings, Forms, Social etc. -->
         <!-- [KEEPING ALL EXISTING CONTENT FROM Line 20 to Line 183] -->
         <div class="auth-headings">
-          <h2 *ngIf="!forgotMode()">{{ isLoginMode() ? 'Welcome Back.' : 'Join TailCart.' }}</h2>
-          <p *ngIf="!forgotMode()">{{ isLoginMode() ? 'Enter your details to access your luxury account.' : 'Create an
-            account for personalized
-            pet services.' }}</p>
+          <h2 *ngIf="!forgotMode()">{{ isLoginMode() ? 'Welcome Back!' : 'Join the Family' }}</h2>
+          <p *ngIf="!forgotMode()">{{ isLoginMode() ? 'Log in to access your premium pet portal.' : 'Start your journey
+            to luxury pet care today.' }}</p>
 
           <h2 *ngIf="forgotMode()">{{ forgotStep() === 1 ? 'Reset Password' : 'Enter OTP' }}</h2>
           <p *ngIf="forgotMode()">{{ forgotStep() === 1 ? 'Enter your registered email to receive an OTP.' : 'Enter the
@@ -153,9 +152,11 @@
               <div class="loader-ring" *ngIf="isLoading()"></div>
             </button>
 
-            <a href="javascript:void(0)" (click)="forgotMode.set(false)" class="back-to-login">
-              <i class="fas fa-arrow-left"></i> Back to Login
-            </a>
+            <div class="forgot-step-footer">
+              <a href="javascript:void(0)" (click)="forgotMode.set(false)" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Login
+              </a>
+            </div>
           </div>
 
           <!-- Step 2: OTP & New Password -->
@@ -179,9 +180,11 @@
               <div class="loader-ring" *ngIf="isLoading()"></div>
             </button>
 
-            <a href="javascript:void(0)" (click)="forgotStep.set(1)" class="back-to-login">
-              <i class="fas fa-arrow-left"></i> Use different email
-            </a>
+            <div class="forgot-step-footer">
+              <a href="javascript:void(0)" (click)="forgotStep.set(1)" class="back-link">
+                <i class="fas fa-arrow-left"></i> Use different email
+              </a>
+            </div>
           </div>
         </div>
       </div>

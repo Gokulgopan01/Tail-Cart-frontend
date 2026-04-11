@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import { Component, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import lottie, { AnimationItem } from 'lottie-web';
@@ -32,7 +33,7 @@ interface ApiResponse {
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, MatSnackBarModule, RouterLink],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
@@ -41,6 +42,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   filteredProducts: Product[] = [];
   nextPageUrl: string | null = null;
   isLoading = false;
+  @ViewChild('quickViewScrollContainer') quickViewScrollContainer!: ElementRef;
 
 
 
@@ -69,6 +71,9 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   showFilters = false;
   maxPrice = 15000;
   materialOptions = ['ALL', 'Wood', 'Metal', 'Steel', 'Fiber', 'Plastic'];
+  selectedColor = 'ALL';
+  availableColors: string[] = [];
+  cartCount = 0;
 
   // Quick View State
   showQuickView = false;
@@ -82,6 +87,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.fetchProducts();
+    this.fetchCartCount();
   }
 
   fetchProducts(url: string = this.productsApi) {
@@ -102,6 +108,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.nextPageUrl = res.next;
+        this.extractUniqueColors();
         this.applyFilters();
         this.isLoading = false;
       },
@@ -119,6 +126,16 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     return Math.round(((orig - sell) / orig) * 100);
   }
 
+  extractUniqueColors() {
+    const colorSet = new Set<string>();
+    this.products.forEach(p => {
+      if (p.colours && Array.isArray(p.colours)) {
+        p.colours.forEach(c => colorSet.add(c));
+      }
+    });
+    this.availableColors = Array.from(colorSet);
+  }
+
   applyFilters() {
     let temp = [...this.products];
 
@@ -131,6 +148,11 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     // Material filter
     if (this.selectedMaterial !== 'ALL') {
       temp = temp.filter(p => p.product_material === this.selectedMaterial);
+    }
+
+    // Color filter
+    if (this.selectedColor !== 'ALL') {
+      temp = temp.filter(p => p.colours && p.colours.includes(this.selectedColor));
     }
 
     // Price range filter
@@ -163,11 +185,22 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleFilters() {
     this.showFilters = !this.showFilters;
+    if (this.showFilters) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }
+
+  setColor(color: string) {
+    this.selectedColor = color;
+    this.applyFilters();
   }
 
   clearFilters() {
     this.searchQuery = '';
     this.selectedMaterial = 'ALL';
+    this.selectedColor = 'ALL';
     this.maxPrice = 15000;
     this.sortOption = 'newest';
     this.applyFilters();
@@ -186,6 +219,13 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showQuickView = true;
     document.body.style.overflow = 'hidden'; // Lock scroll
     document.body.classList.add('qv-modal-open'); // Hook for global CSS to hide navbar
+
+    // Reset scroll position to top
+    setTimeout(() => {
+      if (this.quickViewScrollContainer) {
+        this.quickViewScrollContainer.nativeElement.scrollTop = 0;
+      }
+    }, 100);
   }
 
   closeQuickView() {
@@ -244,6 +284,26 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       error: (err) => {
         this.showSnackbar('Failed to add item to cart', 'error');
+      }
+    });
+  }
+
+  fetchCartCount() {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) return;
+
+    // Attempting to fetch cart items for this user
+    this.http.get<any>(`http://127.0.0.1:8000/api/user/cart/?owner=${userId}`).subscribe({
+      next: (res) => {
+        // Handle both Array response or Paginated response
+        if (Array.isArray(res)) {
+          this.cartCount = res.length;
+        } else if (res && typeof res.count === 'number') {
+          this.cartCount = res.count;
+        }
+      },
+      error: () => {
+        console.warn('Could not fetch cart count');
       }
     });
   }

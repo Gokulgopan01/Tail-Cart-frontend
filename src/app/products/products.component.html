@@ -3,13 +3,16 @@
   <!-- Joyful Hero Section - Full Width Edge-to-Edge -->
   <div class="shop-hero-container">
     <div class="shop-hero-bg">
-      <img src="assets/images/catdog_friends-HomeCover.jpg" alt="Happy Pet" class="joyful-pet-img">
+      <img src="assets/images/catdog_friends-HomeCover.png" alt="Happy Pet" class="joyful-pet-img">
     </div>
 
     <div class="shop-hero-content">
-      <div class="welcome-text-group">
-        <span class="welcome-sub">WELCOME BACK</span>
-        <h1 class="welcome-main">Hi User</h1>
+      <!-- Floating Header Actions -->
+      <div class="hero-top-actions">
+        <button class="floating-cart-btn" routerLink="/cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+        </button>
       </div>
 
       <div class="search-pill-container">
@@ -132,11 +135,6 @@
             ₹{{ product.original_price }}
           </span>
         </div>
-
-        <!-- Free Delivery Minimalist Tag -->
-        <div class="free-delivery-tag">
-          <i class="fas fa-truck"></i> FREE DELIVERY
-        </div>
       </div>
     </div>
   </div>
@@ -158,6 +156,73 @@
   </div>
 </div>
 
+<!-- FILTER MODAL -->
+<div class="filter-modal-overlay" *ngIf="showFilters" (click)="toggleFilters()">
+  <div class="filter-modal-card" (click)="$event.stopPropagation()">
+    <div class="filter-modal-header">
+      <button class="back-filter-btn" (click)="toggleFilters()">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <h3 class="filter-title">Filter</h3>
+      <button class="reset-filter-btn" (click)="clearFilters()">Reset</button>
+    </div>
+
+    <div class="filter-modal-body">
+      <!-- Sort Section (Mobile Optimized) -->
+      <div class="filter-section">
+        <span class="filter-label">Sort By</span>
+        <div class="sort-pills">
+          <button class="sort-pill" [class.active]="sortOption === 'newest'"
+            (click)="sortOption = 'newest'; applyFilters()">Newest</button>
+          <button class="sort-pill" [class.active]="sortOption === 'priceLow'"
+            (click)="sortOption = 'priceLow'; applyFilters()">Price: Low-High</button>
+          <button class="sort-pill" [class.active]="sortOption === 'priceHigh'"
+            (click)="sortOption = 'priceHigh'; applyFilters()">Price: High-Low</button>
+          <button class="sort-pill" [class.active]="sortOption === 'name'"
+            (click)="sortOption = 'name'; applyFilters()">Name A-Z</button>
+        </div>
+      </div>
+
+      <!-- Material Section -->
+      <div class="filter-section">
+        <span class="filter-label">Material</span>
+        <div class="material-chips-grid">
+          <button *ngFor="let mat of materialOptions" class="material-chip" [class.active]="selectedMaterial === mat"
+            (click)="setMaterial(mat)">
+            {{ mat }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Color Section -->
+      <div class="filter-section" *ngIf="availableColors.length > 0">
+        <span class="filter-label">Colors</span>
+        <div class="color-swatches-grid">
+          <button class="color-swatch-pill all" [class.active]="selectedColor === 'ALL'"
+            (click)="setColor('ALL')">ALL</button>
+          <div *ngFor="let col of availableColors" class="color-swatch-item" [style.backgroundColor]="col" [title]="col"
+            [class.active]="selectedColor === col" (click)="setColor(col)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Price Section -->
+      <div class="filter-section">
+        <span class="filter-label">Max Price: ₹{{ maxPrice }}</span>
+        <div class="price-range-wrapper">
+          <input type="range" min="0" max="15000" step="500" [(ngModel)]="maxPrice" (input)="applyFilters()"
+            class="modern-range">
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-modal-footer">
+      <button class="btn-clear" (click)="clearFilters()">Reset All</button>
+      <button class="btn-apply" (click)="toggleFilters()">Show Results</button>
+    </div>
+  </div>
+</div>
+
 <!-- QUICK VIEW MODAL -->
 <div class="qv-modal-overlay" *ngIf="showQuickView" (click)="closeQuickView()">
   <div class="qv-modal-card" (click)="$event.stopPropagation()">
@@ -173,7 +238,7 @@
     </div>
 
     <!-- Main Content Scroll Area -->
-    <div class="qv-main-scroll">
+    <div class="qv-main-scroll" #quickViewScrollContainer>
 
       <!-- Image Gallery section -->
       <div class="qv-gallery-section">
@@ -258,8 +323,6 @@
           <button class="qv-tab-btn" [class.active]="activeQvTab === 'about'" (click)="setQvTab('about')">ABOUT</button>
           <button class="qv-tab-btn" [class.active]="activeQvTab === 'reviews'"
             (click)="setQvTab('reviews')">REVIEWS</button>
-          <button class="qv-tab-btn" [class.active]="activeQvTab === 'closet'"
-            (click)="setQvTab('closet')">CLOSET</button>
         </div>
 
         <div class="qv-tab-content" *ngIf="activeQvTab === 'about'">

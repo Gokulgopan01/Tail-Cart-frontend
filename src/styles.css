@@ -1,14 +1,44 @@
 :root {
-  --primary-dark-green: #003c30;
-  --accent-gold: #D4AF37;
-  --accent-gold-dark: #a57f2e;
-  --white: #ffffff;
-  --text-dark: #001f18;
-  --text-muted: #7a8c85;
-  --bg-light: #f9fbfb;
-  --border-gold: rgba(201, 161, 74, 0.2);
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  /* PRIMARY BRAND */
+  --primary: #0F3D3E;
+  /* Deep teal (trust + premium) */
+  --primary-light: #1F6F70;
+  --primary-soft: #E6F4F1;
+
+  /* ACCENT (Premium Gold) */
+  --accent: #D4AF37;
+  --accent-soft: #F6E7B5;
+  --accent-hover: #B8962E;
+
+  /* SECONDARY (Playful Pet Tone) */
+  --secondary: #FF7A59;
+  /* Friendly coral */
+  --secondary-soft: #FFE5DE;
+
+  /* BACKGROUND SYSTEM */
+  --bg-main: #F7FAF9;
+  /* overall background */
+  --bg-card: #FFFFFF;
+  --bg-muted: #EEF3F2;
+
+  /* TEXT */
+  --text-primary: #0D1F1C;
+  --text-secondary: #5F6F6B;
+  --text-light: #8FA39E;
+
+  /* BORDER & UI */
+  --border-light: #E3ECEA;
+  --border-focus: #D4AF37;
+
+  /* SUCCESS / STATUS */
+  --success: #2ECC71;
+  --warning: #F39C12;
+  --danger: #E74C3C;
+
+  /* SHADOWS */
+  --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
 * {
@@ -721,9 +751,10 @@ body.qv-modal-open {
   overflow: hidden !important;
   overscroll-behavior: none !important;
   /* Prevent background from reacting to touch drags on iOS */
-  touch-action: none; 
+  touch-action: none;
 }
 
 body.qv-modal-open .qv-main-scroll {
-  touch-action: pan-y !important; /* Re-enable for the modal contents */
+  touch-action: pan-y !important;
+  /* Re-enable for the modal contents */
 }
