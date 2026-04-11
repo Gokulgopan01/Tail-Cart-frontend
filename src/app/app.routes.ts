@@ -11,6 +11,7 @@ import { AboutComponent } from './about/about.component';
 import { CartComponent } from './cart/cart.component';
 import { adminGuard } from './guards/admin.guard';
 import { PetPublicComponent } from './pet-public/pet-public.component';
+import { PetProfileComponent } from './pet-profile/pet-profile.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { MyOrdersComponent } from './my-orders/my-orders.component';
 
@@ -21,6 +22,7 @@ export const routes: Routes = [
 
   { path: 'home', component: HomeComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'pet-profile/:petId', component: PetProfileComponent },
   { path: 'shop', component: ProductsComponent },
   { path: 'doctor-ai', component: DoctorComponent },
   { path: 'contact', component: ContactComponent },

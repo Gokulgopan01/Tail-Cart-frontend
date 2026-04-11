@@ -1,0 +1,81 @@
+<div class="pet-profile-page" *ngIf="!isLoading && pet" @fadeUp>
+  <!-- 1. Navigation Top Bar -->
+  <nav class="profile-nav">
+    <button class="btn-back" routerLink="/profile"><i class="fas fa-chevron-left"></i></button>
+    <div class="nav-toggle">
+       <button class="toggle-btn active">Pet Profile</button>
+       <button class="toggle-btn" [routerLink]="['/pet-public']" [queryParams]="{user_id: userId, pet_id: pet.pet_id}">Public Profile</button>
+    </div>
+    <div style="width: 40px;"></div> <!-- Spacer -->
+  </nav>
+
+  <main class="pet-content-scroll">
+    <!-- 2. Hero Image Section -->
+    <div class="pet-hero-container">
+      <div class="photo-card">
+        <img [src]="getPetPhoto()" [alt]="pet.pet_name" class="hero-pet-image">
+        <div class="status-overlay">
+          <span class="status-label">STATUS</span>
+          <div class="status-indicator" [class.lost]="pet.is_lost">
+            <span class="dot"></span>
+            {{ pet.is_lost ? 'Reported Lost' : 'Available' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Identity Section -->
+    <section class="identity-section">
+      <span class="subtitle">THE NEW ARRIVAL</span>
+      <h1 class="pet-main-name">{{ pet.pet_name }}</h1>
+
+      <div class="identity-tags">
+        <div class="tag breed-tag">
+          <i class="fas fa-paw"></i>
+          {{ pet.breed || pet.species }}
+        </div>
+        <div class="tag age-tag">
+          <i class="fas fa-clock"></i>
+          {{ pet.age }} Year{{ pet.age !== 1 ? 's' : '' }} Old
+        </div>
+        <div class="tag gender-tag">
+          <i class="fas fa-mars"></i>
+          Male <!-- Mocked as per image -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Owner Management Actions -->
+    <section class="management-actions">
+      <h3 class="section-title">MANAGEMENT</h3>
+      <div class="action-grid">
+        <button class="action-card" (click)="toggleLostStatus()" [class.warning]="!pet.is_lost">
+          <i class="fas" [ngClass]="pet.is_lost ? 'fa-home' : 'fa-bullhorn'"></i>
+          <span>{{ pet.is_lost ? 'Mark as Safe' : 'Report Lost' }}</span>
+        </button>
+        <button class="action-card" (click)="editPet()">
+          <i class="fas fa-pen"></i>
+          <span>Edit Details</span>
+        </button>
+        <button class="action-card danger" (click)="deletePet()">
+          <i class="fas fa-trash-alt"></i>
+          <span>Remove Pet</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 5. About Me Section -->
+    <section class="bio-section white-card">
+      <h2 class="section-heading">About Me</h2>
+      <p class="bio-text">
+        {{ pet.about || pet.pet_name + ' is the quintessential companion—calm, observant, and deeply affectionate. Despite its small stature, it possesses a dignified personality typical of the ' + pet.breed + ' heritage. Thrives in peaceful environments.' }}
+      </p>
+    </section>
+  </main>
+</div>
+
+<!-- Loading State -->
+<div class="loading-state" *ngIf="isLoading">
+  <div class="spinner"></div>
+  <p>Loading {{ pet?.pet_name || 'Companion' }} Profile...</p>
+</div>

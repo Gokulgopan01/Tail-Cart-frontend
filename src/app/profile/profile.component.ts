@@ -141,20 +141,24 @@ export class ProfileComponent implements OnInit {
     }
     this.loadProfile();
 
-    // Check for tab query parameter
+    // Check for editPet query parameter
     this.route.queryParams.subscribe(params => {
-      if (params['tab'] === 'pets') {
-        this.switchTab('pets');
+      if (params['editPet']) {
+        const petId = Number(params['editPet']);
+        // We need to wait for profile to load before editing
+        const checkInterval = setInterval(() => {
+          if (!this.isLoading && this.pets.length > 0) {
+            const pet = this.pets.find(p => p.pet_id === petId);
+            if (pet) {
+              this.editPet(pet);
+            }
+            clearInterval(checkInterval);
+          }
+        }, 100);
       }
     });
   }
 
-  switchTab(tab: 'owner' | 'pets'): void {
-    this.activeTab = tab;
-    if (tab === 'pets') {
-      this.loadPets();
-    }
-  }
 
   loadProfile(): void {
     this.isLoading = true;
@@ -177,12 +181,9 @@ export class ProfileComponent implements OnInit {
           this.pets = response.pets || [];
           this.allpets = response.pets || [];
 
-          // Initialize pet avatars if not already set
-          response.pets?.forEach(pet => {
-            if (pet.pet_id && !this.petAvatars.has(pet.pet_id)) {
-              this.petAvatars.set(pet.pet_id, this.getDefaultPetAvatar(pet.species));
-            }
-          });
+          if (this.pets.length === 0) {
+            this.loadPets(); // Fallback if pets didn't come in profile response
+          }
         } else {
           this.isEditMode = true;
           this.hasProfile = false;
