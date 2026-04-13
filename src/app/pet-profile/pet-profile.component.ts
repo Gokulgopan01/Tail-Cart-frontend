@@ -26,6 +26,7 @@ interface Pet {
   about?: string | null;
   alerts?: Alert[];
   owner?: number;
+  gender?: string | null;
 }
 
 @Component({
@@ -56,7 +57,7 @@ export class PetProfileComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.userId = localStorage.getItem('user_id');
@@ -153,8 +154,8 @@ export class PetProfileComponent implements OnInit {
 
   getPetPhoto(): string {
     if (this.pet?.pet_photo) {
-      return this.pet.pet_photo.startsWith('http') 
-        ? this.pet.pet_photo 
+      return this.pet.pet_photo.startsWith('http')
+        ? this.pet.pet_photo
         : `http://127.0.0.1:8000${this.pet.pet_photo}`;
     }
     return 'assets/icons/pet1.svg';

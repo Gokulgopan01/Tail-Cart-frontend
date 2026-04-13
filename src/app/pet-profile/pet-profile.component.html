@@ -41,7 +41,7 @@
           <i class="far fa-calendar-alt"></i> {{ pet.age }} Year{{ pet.age !== 1 ? 's' : '' }} Old
         </div>
         <div class="info-pill">
-          <i class="fas fa-mars"></i> Male <!-- Mocked as per image -->
+          <i class="fas fa-mars"></i> {{ pet.gender }}
         </div>
       </div>
     </section>
@@ -69,9 +69,7 @@
     <section class="bio-section white-card">
       <h2 class="section-heading">About Me</h2>
       <p class="bio-text">
-        {{ pet.about || pet.pet_name + ' is the quintessential companion—calm, observant, and deeply affectionate.
-        Despite its small stature, it possesses a dignified personality typical of the ' + pet.breed + ' heritage.
-        Thrives in peaceful environments.' }}
+        {{ pet.about || pet.pet_name }}
       </p>
     </section>
   </main>

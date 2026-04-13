@@ -4,6 +4,44 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+interface PetAlert {
+    id: number;
+    sender_name: string;
+    phone: string;
+    location: string;
+    message: string;
+    created_at: string;
+    resolved?: boolean;
+}
+
+interface Pet {
+    pet_id: number | null;
+    pet_name: string;
+    species: string;
+    breed: string;
+    age: number;
+    owner: number | null;
+    is_lost: boolean;
+    alerts: PetAlert[];
+    pet_photo: string | null;
+    about: string | null;
+    gender: string | null;
+}
+
+interface OwnerProfile {
+    owner_name: string;
+    owner_address: string;
+    owner_phone: string;
+    owner_email: string;
+    owner_city: string;
+    owner_state: string;
+    owner_photo: string | null;
+    emergency_contact_name: string;
+    emergency_contact_phone: string;
+    created_at: string;
+    pets: Pet[];
+}
+
 @Component({
     selector: 'app-pet-public',
     standalone: true,
@@ -15,8 +53,8 @@ export class PetPublicComponent implements OnInit {
     userId: string | null = null;
     petId: string | null = null;
     uuid: string | null = null;
-    profileData: any = null;
-    selectedPet: any = null;
+    profileData: OwnerProfile | null = null;
+    selectedPet: Pet | null = null;
     loading: boolean = true;
     error: string | null = null;
 
@@ -25,25 +63,24 @@ export class PetPublicComponent implements OnInit {
     isSubmitting: boolean = false;
     finderName: string = '';
     finderPhone: string = '';
+    finderMessage: string = '';
 
-    // Customization variables (can be fetched from API later)
+    // Customization variables
     themeColor: string = '#D4AF37'; // Default Gold
     fontFamily: string = "'Montserrat', sans-serif";
 
     private profileApi = 'http://127.0.0.1:8000/api/user/profile/';
     private publicPetApi = 'http://127.0.0.1:8000/api/public/pet/';
-    private alertsApi = 'http://127.0.0.1:8000/api/alerts/'; // External Alert API
+    private alertsApi = 'http://127.0.0.1:8000/api/alerts/create/';
 
     constructor(private route: ActivatedRoute, private http: HttpClient) { }
 
     ngOnInit(): void {
-        // Check for path param 'uuid'
         this.uuid = this.route.snapshot.paramMap.get('uuid');
 
         if (this.uuid) {
             this.fetchPublicPet(this.uuid);
         } else {
-            // Fallback to query params mode
             this.route.queryParams.subscribe(params => {
                 this.userId = params['user_id'];
                 this.petId = params['pet_id'];
@@ -58,25 +95,42 @@ export class PetPublicComponent implements OnInit {
     }
 
     fetchPublicPet(uuid: string): void {
-        this.http.get(`${this.publicPetApi}${uuid}`).subscribe({
+        this.http.get<any>(`${this.publicPetApi}${uuid}`).subscribe({
             next: (data: any) => {
-                // Map the flat data to the expected structure
+                // The public pet endpoint may return a flat structure
+                // Map it to our full OwnerProfile shape
                 this.profileData = {
-                    owner_name: data.owner_name,
-                    owner_phone: data.owner_phone,
-                    owner_address: data.owner_address,
-                    owner_city: data.owner_city,
-                    owner_state: data.owner_state,
-                    owner_photo: data.owner_photo || '/media/owners/default.jpg' // Fallback
+                    owner_name: data.owner_name || '',
+                    owner_address: data.owner_address || '',
+                    owner_phone: data.owner_phone || '',
+                    owner_email: data.owner_email || '',
+                    owner_city: data.owner_city || '',
+                    owner_state: data.owner_state || '',
+                    owner_photo: data.owner_photo || null,
+                    emergency_contact_name: data.emergency_contact_name || '',
+                    emergency_contact_phone: data.emergency_contact_phone || '',
+                    created_at: data.created_at || '',
+                    pets: data.pets || []
                 };
-                this.selectedPet = {
-                    pet_name: data.pet_name,
-                    species: data.species,
-                    breed: data.breed,
-                    age: data.age,
-                    pet_photo: data.pet_photo,
-                    is_lost: data.is_lost
-                };
+
+                // If pets array is present, pick the right one; else build from flat fields
+                if (data.pets && data.pets.length > 0) {
+                    this.selectedPet = data.pets[0];
+                } else {
+                    this.selectedPet = {
+                        pet_id: data.pet_id || null,
+                        pet_name: data.pet_name || '',
+                        species: data.species || '',
+                        breed: data.breed || '',
+                        age: data.age || 0,
+                        owner: null,
+                        is_lost: data.is_lost || false,
+                        alerts: data.alerts || [],
+                        pet_photo: data.pet_photo || null,
+                        about: data.about || null,
+                        gender: data.gender || null
+                    };
+                }
                 this.loading = false;
             },
             error: (err) => {
@@ -89,14 +143,13 @@ export class PetPublicComponent implements OnInit {
 
     fetchProfile(): void {
         const token = localStorage.getItem('access_token');
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${token}`
-        });
-        this.http.get(`${this.profileApi}?user_id=${this.userId}`, { headers }).subscribe({
-            next: (data: any) => {
+        const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+
+        this.http.get<OwnerProfile>(`${this.profileApi}?user_id=${this.userId}`, { headers }).subscribe({
+            next: (data: OwnerProfile) => {
                 this.profileData = data;
                 if (data.pets && data.pets.length > 0) {
-                    this.selectedPet = data.pets.find((p: any) => p.pet_id.toString() === this.petId);
+                    this.selectedPet = data.pets.find((p: Pet) => p.pet_id?.toString() === this.petId) || null;
                     if (!this.selectedPet) {
                         this.error = 'Pet not found in this profile.';
                     }
@@ -113,7 +166,29 @@ export class PetPublicComponent implements OnInit {
         });
     }
 
+    getOwnerPhoto(): string {
+        if (this.profileData?.owner_photo) {
+            return this.profileData.owner_photo.startsWith('http')
+                ? this.profileData.owner_photo
+                : `http://127.0.0.1:8000${this.profileData.owner_photo}`;
+        }
+        return '';
+    }
+
+    getPetPhoto(): string {
+        if (this.selectedPet?.pet_photo) {
+            return this.selectedPet.pet_photo.startsWith('http')
+                ? this.selectedPet.pet_photo
+                : `http://127.0.0.1:8000${this.selectedPet.pet_photo}`;
+        }
+        return 'assets/icons/pet1.svg';
+    }
+
     callOwner(phone: string): void {
+        window.location.href = `tel:${phone}`;
+    }
+
+    callEmergency(phone: string): void {
         window.location.href = `tel:${phone}`;
     }
 
@@ -125,6 +200,7 @@ export class PetPublicComponent implements OnInit {
         this.isLocationModalOpen = false;
         this.finderName = '';
         this.finderPhone = '';
+        this.finderMessage = '';
     }
 
     submitLocationShare(): void {
@@ -137,13 +213,13 @@ export class PetPublicComponent implements OnInit {
             this.isSubmitting = true;
             navigator.geolocation.getCurrentPosition(
                 (position) => {
+                    const mapsUrl = `https://www.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}`;
                     const payload = {
-                        pet_id: this.petId,
+                        pet_id: this.selectedPet?.pet_id || Number(this.petId),
                         sender_name: this.finderName,
                         phone: this.finderPhone,
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        timestamp: new Date().toISOString()
+                        message: this.finderMessage,
+                        location: mapsUrl, // Sending the live location link as requested
                     };
 
                     this.http.post(this.alertsApi, payload).subscribe({
@@ -154,18 +230,19 @@ export class PetPublicComponent implements OnInit {
                         },
                         error: (err) => {
                             console.error('API Error:', err);
-                            // Fallback to WhatsApp if API fails
-                            const mapsUrl = `https://www.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}`;
-                            window.open(`https://wa.me/${this.profileData.owner_phone}?text=I found ${this.selectedPet.pet_name}! My name is ${this.finderName}. My location: ${mapsUrl}`, '_blank');
+                            const waMessage = `I found ${this.selectedPet?.pet_name}! My name is ${this.finderName}. ${this.finderMessage ? 'Message: ' + this.finderMessage : ''} My location: ${mapsUrl}`;
+                            window.open(`https://wa.me/${this.profileData?.owner_phone}?text=${encodeURIComponent(waMessage)}`, '_blank');
                             this.isSubmitting = false;
                             this.closeLocationModal();
                         }
                     });
                 },
                 (error) => {
-                    alert('Could not get your location. Please ensure GPS is enabled.');
+                    console.error('Geolocation error:', error);
+                    alert('Could not get your location. Please ensure GPS is enabled and permissions are granted.');
                     this.isSubmitting = false;
-                }
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
             );
         } else {
             alert('Geolocation is not supported by this browser.');

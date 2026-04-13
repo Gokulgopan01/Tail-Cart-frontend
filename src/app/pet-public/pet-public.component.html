@@ -11,60 +11,202 @@
         <p>{{ error }}</p>
     </div>
 
-    <!-- Main Profile -->
-    <div *ngIf="!loading && !error && selectedPet" class="profile-layout slide-up">
+    <!-- Main Content Wrapper -->
+    <div *ngIf="!loading && !error && selectedPet">
 
-        <!-- Back Button -->
-        <div class="header-actions">
-            <a *ngIf="!uuid" routerLink="/profile" [queryParams]="{tab: 'pets'}" class="btn-back">
-                <i class="fas fa-chevron-left"></i>
-                <span>Back to Dashboard</span>
-            </a>
-            <a *ngIf="uuid" routerLink="/home" class="btn-back">
-                <i class="fas fa-home"></i>
-                <span>Go to Home</span>
-            </a>
-        </div>
+        <!-- Animated Main Layout -->
+        <div class="profile-layout slide-up">
+            <!-- Back Button -->
+            <div class="header-actions">
+                <a *ngIf="!uuid" routerLink="/profile" [queryParams]="{tab: 'pets'}" class="btn-back">
+                    <i class="fas fa-chevron-left"></i>
+                    <span>Back to Dashboard</span>
+                </a>
+                <a *ngIf="uuid" routerLink="/home" class="btn-back">
+                    <i class="fas fa-home"></i>
+                    <span>Go to Home</span>
+                </a>
+            </div>
 
-        <!-- Hero Section (Pet Photo) -->
-        <header class="hero-section">
-            <div class="pet-photo-wrapper">
-                <img [src]="'http://127.0.0.1:8000' + selectedPet.pet_photo" [alt]="selectedPet.pet_name"
-                    class="pet-photo">
-                <div *ngIf="selectedPet.is_lost" class="lost-badge">
-                    <span class="pulse"></span> IS LOST
+            <!-- Hero Section (Pet Photo) -->
+            <header class="hero-section">
+                <div class="pet-photo-wrapper">
+                    <img [src]="'http://127.0.0.1:8000' + selectedPet.pet_photo" [alt]="selectedPet.pet_name"
+                        class="pet-photo">
+                    <div *ngIf="selectedPet.is_lost" class="lost-badge">
+                        <span class="pulse"></span> IS LOST
+                    </div>
+                </div>
+                <div class="hero-content">
+                    <h1 class="pet-name">{{ selectedPet.pet_name }}</h1>
+                    <p class="pet-meta">{{ selectedPet.species }} • {{ selectedPet.breed }}</p>
+                    <!-- Identity Pills -->
+                    <div class="identity-pills">
+                        <div class="identity-pill">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>{{ selectedPet.age }} Year{{ selectedPet.age !== 1 ? 's' : '' }}</span>
+                        </div>
+                        <div class="identity-pill" *ngIf="selectedPet.gender">
+                            <i class="fas" [ngClass]="selectedPet.gender === 'Male' ? 'fa-mars' : 'fa-venus'"></i>
+                            <span>{{ selectedPet.gender }}</span>
+                        </div>
+                        <div class="identity-pill" *ngIf="selectedPet.is_lost">
+                            <span class="status-dot lost"></span>
+                            <span>Lost</span>
+                        </div>
+                        <div class="identity-pill safe" *ngIf="!selectedPet.is_lost">
+                            <span class="status-dot safe"></span>
+                            <span>Safe</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Alert Banner for Lost Pets -->
+            <div *ngIf="selectedPet.is_lost" class="alert-banner">
+                <div class="alert-icon">📣</div>
+                <div class="alert-text">
+                    <strong>EMERGENCY:</strong> This pet is reported lost. Please help us rescue them!
                 </div>
             </div>
-            <div class="hero-content">
-                <h1 class="pet-name">{{ selectedPet.pet_name }}</h1>
-                <p class="pet-meta">{{ selectedPet.species }} • {{ selectedPet.breed }} • {{
-                    selectedPet.age }} Years Old</p>
-            </div>
-        </header>
 
-        <!-- Alert Banner for Lost Pets -->
-        <div *ngIf="selectedPet.is_lost" class="alert-banner">
-            <div class="alert-icon">📣</div>
-            <div class="alert-text">
-                <strong>EMERGENCY:</strong> This pet is reported lost. Please help us rescue them!
+            <!-- Quick Actions -->
+            <div class="action-grid card">
+                <button (click)="callOwner(profileData?.owner_phone || '')" class="btn-action primary">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Call Owner</span>
+                </button>
+                <button (click)="openLocationModal()" class="btn-action secondary">
+                    <i class="fas fa-location-arrow"></i>
+                    <span>Share Location</span>
+                </button>
             </div>
+
+            <!-- Details Section -->
+            <main class="details-section">
+                <!-- About Card -->
+                <div class="card about-card" *ngIf="selectedPet.about">
+                    <div class="card-title-row">
+                        <i class="fas fa-heart"></i>
+                        <h3>About {{ selectedPet.pet_name }}</h3>
+                    </div>
+                    <p class="about-text">{{ selectedPet.about }}</p>
+                </div>
+
+                <!-- Pet Details Card -->
+                <div class="card pet-details-card">
+                    <div class="card-title-row">
+                        <i class="fas fa-paw"></i>
+                        <h3>Pet Details</h3>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Species</span>
+                            <span class="detail-value">{{ selectedPet.species }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Breed</span>
+                            <span class="detail-value">{{ selectedPet.breed }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Age</span>
+                            <span class="detail-value">{{ selectedPet.age }} Year{{ selectedPet.age !== 1 ? 's' : ''
+                                }}</span>
+                        </div>
+                        <div class="detail-item" *ngIf="selectedPet.gender">
+                            <span class="detail-label">Gender</span>
+                            <span class="detail-value">{{ selectedPet.gender }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status</span>
+                            <span class="detail-value" [class.status-lost]="selectedPet.is_lost"
+                                [class.status-safe]="!selectedPet.is_lost">
+                                {{ selectedPet.is_lost ? '🔴 Lost' : '🟢 Safe' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Owner Info Card -->
+                <div class="card owner-card">
+                    <div class="card-title-row">
+                        <i class="fas fa-user-shield"></i>
+                        <h3>Owner & Guardian</h3>
+                    </div>
+                    <div class="card-header">
+                        <img *ngIf="profileData?.owner_photo" [src]="'http://127.0.0.1:8000' + profileData?.owner_photo"
+                            [alt]="profileData?.owner_name" class="owner-mini-photo">
+                        <div *ngIf="!profileData?.owner_photo" class="owner-mini-photo-fallback">
+                            {{ profileData?.owner_name?.charAt(0) }}
+                        </div>
+                        <div>
+                            <h3 class="owner-name-heading">{{ profileData?.owner_name }}</h3>
+                            <span class="label">Pet Parent</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-row">
+                            <i class="fas fa-map-pin"></i>
+                            <p>{{ profileData?.owner_address }}, {{ profileData?.owner_city }}, {{
+                                profileData?.owner_state }}</p>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-phone-alt"></i>
+                            <p>{{ profileData?.owner_phone }}</p>
+                        </div>
+                        <div class="info-row" *ngIf="profileData?.owner_email">
+                            <i class="fas fa-envelope"></i>
+                            <p>{{ profileData?.owner_email }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency Contact Card -->
+                <div class="card emergency-card"
+                    *ngIf="profileData?.emergency_contact_name || profileData?.emergency_contact_phone">
+                    <div class="card-title-row emergency">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Emergency Contact</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-row" *ngIf="profileData?.emergency_contact_name">
+                            <i class="fas fa-user"></i>
+                            <p>{{ profileData?.emergency_contact_name }}</p>
+                        </div>
+                        <div class="info-row" *ngIf="profileData?.emergency_contact_phone">
+                            <i class="fas fa-phone-alt"></i>
+                            <div class="emergency-phone-row">
+                                <p>{{ profileData?.emergency_contact_phone }}</p>
+                                <button class="btn-call-emergency"
+                                    (click)="callEmergency(profileData!.emergency_contact_phone)">
+                                    <i class="fas fa-phone-alt"></i> Call
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Default About Message (fallback if no about text) -->
+                <div class="card message-card" *ngIf="!selectedPet.about">
+                    <div class="card-title-row">
+                        <i class="fas fa-info-circle"></i>
+                        <h3>About {{ selectedPet.pet_name }}</h3>
+                    </div>
+                    <p>I am a friendly {{ selectedPet.breed }}. My family is waiting for me to come home. If you found
+                        me,
+                        please use the contact buttons above to let my family know I am safe!</p>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="profile-footer">
+                <p>Powered by <strong>TailCart</strong> Smart QR Systems</p>
+            </footer>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="action-grid card">
-            <button (click)="callOwner(profileData.owner_phone)" class="btn-action primary">
-                <i class="fas fa-phone-alt"></i>
-                <span>Call Owner</span>
-            </button>
-            <button (click)="openLocationModal()" class="btn-action secondary">
-                <i class="fas fa-location-arrow"></i>
-                <span>Share Location</span>
-            </button>
-        </div>
-
-        <!-- Location Modal -->
+        <!-- Location Modal (Sibling to the animated layout for true fixed positioning) -->
         <div class="modal-overlay" *ngIf="isLocationModalOpen" (click)="closeLocationModal()">
-            <div class="location-modal slide-up" (click)="$event.stopPropagation()">
+            <div class="location-modal" (click)="$event.stopPropagation()">
                 <div class="modal-header">
                     <h3>Help {{ selectedPet.pet_name }} get home!</h3>
                     <p>Please enter your details so the owner can contact you.</p>
@@ -79,6 +221,12 @@
                         <label>Phone Number (Optional)</label>
                         <input type="text" [(ngModel)]="finderPhone" placeholder="Enter your phone" class="modal-input">
                     </div>
+                    <div class="form-group">
+                        <label>Message / Sighting Description</label>
+                        <textarea [(ngModel)]="finderMessage"
+                            placeholder="Where did you see the pet? Any details about their health or behavior?"
+                            class="modal-input" rows="3"></textarea>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
@@ -92,46 +240,5 @@
                 </div>
             </div>
         </div>
-
-        <!-- Details Section -->
-        <main class="details-section">
-            <!-- Owner Info Card -->
-            <div class="card owner-card">
-                <div class="card-header">
-                    <img *ngIf="profileData.owner_photo" [src]="'http://127.0.0.1:8000' + profileData.owner_photo"
-                        [alt]="profileData.owner_name" class="owner-mini-photo">
-                    <div *ngIf="!profileData.owner_photo" class="owner-mini-photo-fallback">
-                        {{ profileData.owner_name.charAt(0) }}
-                    </div>
-                    <div>
-                        <h3>{{ profileData.owner_name }}</h3>
-                        <span class="label">Owner & Guardian</span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="info-row">
-                        <i class="fas fa-map-pin"></i>
-                        <p>{{ profileData.owner_address }}, {{ profileData.owner_city }}, {{ profileData.owner_state }}
-                        </p>
-                    </div>
-                    <div class="info-row">
-                        <i class="fas fa-phone-alt"></i>
-                        <p>{{ profileData.owner_phone }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- About Message -->
-            <div class="card message-card">
-                <h3>About {{ selectedPet.pet_name }}</h3>
-                <p>I am a friendly {{ selectedPet.breed }}. My family is waiting for me to come home. If you found me,
-                    please use the contact buttons above to let my family know I am safe!</p>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="profile-footer">
-            <p>Powered by <strong>TailCart</strong> Smart QR Systems</p>
-        </footer>
     </div>
 </div>

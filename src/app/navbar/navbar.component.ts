@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit {
   isPastHalfScreen = false;
   hideTopNav = false;
   hideBottomNav = false;
-  
+
   lastScrollTop = 0;
   isScrollingDown = false;
   activeIndex = 0;
@@ -28,8 +28,9 @@ export class NavbarComponent implements OnInit {
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       const url = event.urlAfterRedirects;
-      this.hideTopNav = url.includes('/profile') || url.includes('/checkout') || url.includes('/shop');
-      this.hideBottomNav = url.includes('/checkout');
+      const isPetPublic = url.includes('/pet-public') || url.startsWith('/pet/') || /\/pet\//.test(url);
+      this.hideTopNav = url.includes('/profile') || url.includes('/checkout') || url.includes('/shop') || isPetPublic;
+      this.hideBottomNav = url.includes('/checkout') || isPetPublic;
       this.updateActiveIndex(url);
     });
   }
@@ -56,10 +57,10 @@ export class NavbarComponent implements OnInit {
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const st = window.scrollY;
-    
+
     this.isScrolled = st > 50;
     this.isPastHalfScreen = st > (window.innerHeight / 2);
-    
+
     // Determine scroll direction for hiding navbar
     if (st > this.lastScrollTop && st > 80) {
       // Downscroll code
