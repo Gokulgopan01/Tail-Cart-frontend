@@ -21,7 +21,7 @@
     <!-- 2. Identity & Contact Card -->
     <section class="profile-section-card">
       <h2 class="section-title-muted">IDENTITY & CONTACT</h2>
-      
+
       <div class="contact-list">
         <div class="contact-item">
           <div class="contact-icon purple"><i class="fas fa-phone-alt"></i></div>
@@ -63,31 +63,41 @@
       </div>
     </section>
 
-    <!-- 4. Pets Section -->
+    <!-- Section Divider -->
+    <div class="section-divider"></div>
+
+    <!-- 4. Pets Section Header -->
+    <div class="section-header-modern">
+      <h2 class="section-title-muted no-margin">YOUR PETS</h2>
+      <button class="btn-add-pet-circle" (click)="startAddPet()">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
+    <!-- 4. Pets Section Content -->
     <section class="pets-section" *ngIf="pets.length > 0; else emptyPets">
       <div class="pet-card-modern" *ngFor="let pet of pets">
         <div class="pet-photo-wrapper">
           <img [src]="getPetPhotoUrl(pet)" [alt]="pet.pet_name" class="pet-img-large">
-          <div class="pet-tags-floating">
-            <span class="pet-tag-pill breed">{{ pet.breed || pet.species }}</span>
-            <span class="pet-tag-pill age">{{ pet.age }} YEAR{{ pet.age !== 1 ? 'S' : '' }}</span>
+          <div class="pet-badge-tl">{{ pet.age }} YEAR{{ pet.age !== 1 ? 'S' : '' }}</div>
+          <div class="pet-badge-br" [class.lost]="pet.is_lost">
+            <span class="dot"></span> {{ pet.is_lost ? 'REPORTED LOST' : 'HEALTHY & SAFE' }}
           </div>
-          <div class="pet-actions-overlay">
+          <div class="pet-actions-top-right">
             <button class="mini-action-btn" (click)="editPet(pet, $event)"><i class="fas fa-edit"></i></button>
-            <button class="mini-action-btn danger" (click)="deletePet(pet, $event)"><i class="fas fa-trash"></i></button>
+            <button class="mini-action-btn danger" (click)="deletePet(pet, $event)"><i
+                class="fas fa-trash"></i></button>
           </div>
         </div>
-        
+
         <div class="pet-info-footer">
-          <div class="pet-identity">
-            <h3 class="pet-display-name">{{ pet.pet_name }}</h3>
-            <div class="pet-status-row">
-              <i class="fas" [ngClass]="pet.species === 'Dog' ? 'fa-paw' : 'fa-cat'"></i>
-              <span>{{ pet.species }} • {{ pet.is_lost ? 'Reported Lost' : 'Healthy & Safe' }}</span>
-            </div>
+          <h3 class="pet-display-name">{{ pet.pet_name }}</h3>
+          <div class="pet-status-row">
+            <i class="fas" [ngClass]="pet.species === 'Dog' ? 'fa-paw' : 'fa-cat'"></i>
+            <span>{{ pet.species }} • {{ pet.breed || 'Unknown Breed' }}</span>
           </div>
-          <button class="btn-view-pet" [routerLink]="['/pet-profile', pet.pet_id]">
-            View Pet Profile
+          <button class="btn-view-pet-full" [routerLink]="['/pet-profile', pet.pet_id]">
+            View Pet Profile <i class="fas fa-arrow-right"></i>
           </button>
         </div>
       </div>
@@ -103,11 +113,6 @@
       </div>
     </ng-template>
 
-    <div class="add-pet-fab-wrapper">
-      <button class="btn-add-pet-global" (click)="startAddPet()">
-        <i class="fas fa-plus"></i> Add New Companion
-      </button>
-    </div>
   </main>
 
   <!-- Modals (Modernized logic) -->
@@ -120,7 +125,7 @@
       <form (ngSubmit)="onSubmit()" #profileForm="ngForm" class="modal-form-modern">
         <div class="photo-upload-section">
           <div class="photo-preview-box">
-             <img [src]="ownerPhotoPreview || getOwnerPhotoUrl()" class="preview-img">
+            <img [src]="ownerPhotoPreview || getOwnerPhotoUrl()" class="preview-img">
           </div>
           <label class="btn-photo-select">
             <input type="file" (change)="onOwnerPhotoSelected($event)" hidden>
@@ -175,7 +180,7 @@
       <form (ngSubmit)="savePet()" #petForm="ngForm" class="modal-form-modern">
         <div class="photo-upload-section">
           <div class="photo-preview-box">
-             <img [src]="petPhotoPreview || getPetPhotoUrl(currentPet)" class="preview-img">
+            <img [src]="petPhotoPreview || getPetPhotoUrl(currentPet)" class="preview-img">
           </div>
           <label class="btn-photo-select">
             <input type="file" (change)="onPetPhotoSelected($event)" hidden>
@@ -210,10 +215,10 @@
         <div class="modal-footer-modern">
           <button type="button" class="btn-cancel" (click)="cancelPetForm()">Discard</button>
           <button type="submit" class="btn-save-modern" [disabled]="petForm.invalid || loadingPets">
-             {{ loadingPets ? 'Syncing...' : 'Save Pet' }}
+            {{ loadingPets ? 'Syncing...' : 'Save Pet' }}
           </button>
         </div>
       </form>
     </div>
   </div>
-</div>
+</div>

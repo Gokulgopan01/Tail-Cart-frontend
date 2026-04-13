@@ -122,6 +122,46 @@
   margin: 0 0 20px 0;
 }
 
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border-light);
+  margin: 10px 0 30px 0;
+  opacity: 0.6;
+}
+
+.no-margin {
+  margin: 0 !important;
+}
+
+.section-header-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 4px;
+}
+
+.btn-add-pet-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #6D5DF6;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(109, 93, 246, 0.3);
+  transition: transform 0.2s;
+}
+
+.btn-add-pet-circle:active {
+  transform: scale(0.9);
+}
+
 /* 3. Contact List */
 .contact-list {
   display: flex;
@@ -214,19 +254,20 @@
 
 /* 5. Pet Card Modern */
 .pet-card-modern {
-  background: var(--bg-card);
-  border-radius: 30px;
+  background: #f8f9ff; /* Light bluish/purple tint from image */
+  border-radius: 24px;   /* Adjusted to match image */
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Soft shadow */
+  margin-bottom: 24px;
 }
 
 .pet-photo-wrapper {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;   /* Taller aspect ratio */
   position: relative;
   overflow: hidden;
-  background: #111;
+  background: #000;      /* Dark background for portrait style */
+  border-radius: 24px 24px 0 0;
 }
 
 .pet-img-large {
@@ -236,37 +277,65 @@
   transition: transform 0.3s;
 }
 
-.pet-tags-floating {
+.pet-badge-tl {
   position: absolute;
-  top: 15px;
-  left: 15px;
-  display: flex;
-  gap: 8px;
+  top: 16px;
+  left: 16px;
+  background: #5b65ff; /* Match image blue/purple */
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.pet-tag-pill {
-  padding: 6px 12px;
-  background: white;
-  border-radius: 50px;
-  font-size: 0.6rem;
+.pet-badge-br {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: #0a6b43; /* Green */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.7rem;
   font-weight: 800;
-  color: #6D5DF6;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.pet-actions-overlay {
+.pet-badge-br.lost {
+  background: #e74c3c;
+}
+
+.pet-badge-br .dot {
+  width: 6px;
+  height: 6px;
+  background: #2ecc71;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #2ecc71;
+}
+
+.pet-badge-br.lost .dot {
+  background: #fff;
+  box-shadow: none;
+}
+
+.pet-actions-top-right {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 16px;
+  right: 16px;
   display: flex;
-  flex-direction: column;
   gap: 8px;
   opacity: 0;
   transition: opacity 0.3s;
 }
 
-.pet-card-modern:hover .pet-actions-overlay {
+.pet-card-modern:hover .pet-actions-top-right {
   opacity: 1;
 }
 
@@ -288,52 +357,56 @@
 }
 
 .pet-info-footer {
-  padding: 20px 24px 24px;
+  padding: 20px;
+  text-align: left;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .pet-display-name {
-  font-size: 1.6rem;
-  font-weight: 900;
-  margin: 0 0 6px 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #333;
+  margin: 0;
 }
 
 .pet-status-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: #666;
   font-weight: 600;
+  margin-bottom: 12px;
 }
 
-.btn-view-pet {
-  background: transparent;
-  border: 1px solid var(--border-strong);
-  color: #6D5DF6;
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 0.85rem;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-/* 6. FAB / Add Pet Button */
-.add-pet-fab-wrapper {
-  position: fixed;
-  bottom: 25px;
-  left: 0;
+.btn-view-pet-full {
   width: 100%;
-  padding: 0 20px;
-  z-index: 100;
+  background: #5b65ff;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 16px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.2s, background 0.3s;
 }
+
+.btn-view-pet-full:active {
+  transform: scale(0.98);
+}
+
+/* 6. Inline Add Pet Button (Old FAB section replaced by header) */
 
 .btn-add-pet-global {
   width: 100%;
-  background: var(--primary);
+  background: #5b65ff;
   color: white;
   border: none;
   padding: 18px;
@@ -344,7 +417,13 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  box-shadow: 0 10px 30px rgba(15, 61, 62, 0.4);
+  box-shadow: 0 10px 30px rgba(91, 101, 255, 0.4);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-add-pet-global:active {
+  transform: scale(0.98);
 }
 
 /* 7. Modal Overlay Modern */

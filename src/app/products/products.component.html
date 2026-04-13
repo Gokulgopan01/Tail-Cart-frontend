@@ -317,6 +317,26 @@
         </div>
       </div>
 
+      <!-- Selection & Quantity Grid -->
+      <div class="qv-selection-grid">
+        <div class="qv-selection-item">
+          <span class="qv-feature-label">SELECT PET</span>
+          <select [(ngModel)]="selectedPetId" class="qv-select" [class.error]="petSelectError">
+            <option value="">None</option>
+            <option *ngFor="let pet of userPets" [value]="pet.pet_id">{{ pet.pet_name }}</option>
+          </select>
+        </div>
+
+        <div class="qv-selection-item">
+          <span class="qv-feature-label">QUANTITY</span>
+          <div class="qv-qty-controls">
+            <button class="qty-btn" (click)="decrementQuantity()">-</button>
+            <span class="qty-val">{{ quantity }}</span>
+            <button class="qty-btn" (click)="incrementQuantity()">+</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Tabbed Area -->
       <div class="qv-tabs-container">
         <div class="qv-tabs-header">
@@ -341,7 +361,7 @@
     <!-- Fixed Bottom Action Bar -->
     <div class="qv-bottom-bar">
       <button class="qv-btn-outline" (click)="addToCart(selectedProductForQuickView!)">ADD TO CART</button>
-      <button class="qv-btn-solid" (click)="addToCart(selectedProductForQuickView!)">
+      <button class="qv-btn-solid" (click)="buyNow()">
         BUY NOW <i class="fas fa-shopping-cart"></i>
       </button>
     </div>

@@ -31,7 +31,7 @@ export class PetPublicComponent implements OnInit {
     fontFamily: string = "'Montserrat', sans-serif";
 
     private profileApi = 'http://127.0.0.1:8000/api/user/profile/';
-    private publicPetApi = 'http://127.0.0.1:8000/api/public/pet/qr/';
+    private publicPetApi = 'http://127.0.0.1:8000/api/public/pet/';
     private alertsApi = 'http://127.0.0.1:8000/api/alerts/'; // External Alert API
 
     constructor(private route: ActivatedRoute, private http: HttpClient) { }

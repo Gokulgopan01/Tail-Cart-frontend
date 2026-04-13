@@ -2237,3 +2237,108 @@
     transform: translateY(0);
   }
 }
+
+/* Custom CSS for Dropdown and Buttons */
+.qv-selection-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding: 0 5px;
+}
+
+.qv-selection-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.qv-select {
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #043e3f;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.qv-select:focus {
+  border-color: #5b65ff;
+  box-shadow: 0 0 0 3px rgba(91, 101, 255, 0.2);
+}
+
+.qv-select.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.qv-qty-controls {
+  display: flex;
+  align-items: center;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  height: 46px;
+  width: 120px;
+}
+
+.qty-btn {
+  background: transparent;
+  border: none;
+  color: #043e3f;
+  font-size: 1.2rem;
+  width: 40px;
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-btn:hover {
+  background-color: #e2e8f0;
+  color: #5b65ff;
+}
+
+.qty-btn:first-child {
+  border-radius: 12px 0 0 12px;
+}
+
+.qty-btn:last-child {
+  border-radius: 0 12px 12px 0;
+}
+
+.qty-val {
+  flex: 1;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #1e293b;
+}
+
+/* Hover effects for Add to Cart / Buy Now */
+.qv-btn-outline {
+  transition: transform 0.2s, background-color 0.2s, color 0.2s;
+}
+.qv-btn-outline:hover {
+  background-color: #f1f5f9;
+  transform: translateY(-2px);
+}
+
+.qv-btn-solid {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.qv-btn-solid:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}

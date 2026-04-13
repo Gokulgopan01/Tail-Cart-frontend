@@ -8,60 +8,51 @@
   font-family: 'Outfit', sans-serif;
   color: var(--text-primary);
   padding-bottom: 50px;
+  padding-top: 100px;
 }
 
-/* 1. Navigation Top Bar */
-.profile-nav {
+/* 1. Navigation Pill Bar */
+.nav-pill-wrapper {
   padding: 15px 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   position: sticky;
-  top: 0;
+  top: 85px;
   background: var(--bg-main);
   z-index: 100;
 }
 
-.btn-back {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  color: var(--text-primary);
+.nav-pill-container {
+  background: #edeef0;
+  padding: 6px;
+  border-radius: 50px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
+  gap: 4px;
+  width: 100%;
+  max-width: 400px;
+  justify-content: space-between;
 }
 
-.nav-toggle {
-  background: var(--bg-muted);
-  padding: 5px;
-  border-radius: 100px;
-  display: flex;
-  gap: 5px;
-}
-
-.toggle-btn {
-  padding: 10px 20px;
-  border-radius: 100px;
+.nav-pill-btn {
+  flex: 1;
+  padding: 12px 10px;
+  border-radius: 40px;
   border: none;
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #2D3E40;
   background: transparent;
-  color: var(--text-light);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  line-height: 1.3;
+  text-align: center;
 }
 
-.toggle-btn.active {
-  background: var(--bg-card);
-  color: #6D5DF6;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+.nav-pill-btn.active {
+  background: white;
+  color: #043e3f;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 /* 2. Hero Image Section */
@@ -72,118 +63,108 @@
 .photo-card {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 60px; /* High curvature as per image */
+  aspect-ratio: 4 / 5;
+  border-radius: 40px;
   overflow: hidden;
   box-shadow: var(--shadow-md);
-  background: #fff;
+  background: white;
+  display: block;
 }
 
 .hero-pet-image {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.status-overlay {
+.status-pill {
   position: absolute;
-  bottom: 25px;
-  right: -10px; /* Slight overflow for dynamic look */
+  top: 20px;
+  left: 20px;
   background: white;
-  padding: 20px 35px 20px 25px;
-  border-radius: 35px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.status-label {
-  font-size: 0.65rem;
-  font-weight: 800;
-  color: #1F6F70;
-  letter-spacing: 1px;
-}
-
-.status-indicator {
+  color: #2D3E40;
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 900;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #1a1a1a;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  letter-spacing: 0.5px;
 }
 
-.status-indicator .dot {
-  width: 10px;
-  height: 10px;
-  background: #2ECC71;
+.status-pill.lost {
+  color: #e74c3c;
+}
+
+.status-pill .dot {
+  width: 8px;
+  height: 8px;
+  background: #2ecc71;
   border-radius: 50%;
-  box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+  box-shadow: 0 0 5px #2ecc71;
 }
 
-.status-indicator.lost {
-  color: var(--danger);
-}
-
-.status-indicator.lost .dot {
-  background: var(--danger);
+.status-pill.lost .dot {
+  background: #e74c3c;
+  box-shadow: 0 0 5px #e74c3c;
 }
 
 /* 3. Identity Section */
-.identity-section {
-  padding: 0 24px 30px;
-}
-
-.subtitle {
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #1F6F70;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  display: block;
-  margin-bottom: 8px;
+.identity-section-modern {
+  padding: 10px 24px 30px;
 }
 
 .pet-main-name {
-  font-size: 3.2rem;
-  font-weight: 950;
+  font-size: 3rem;
+  font-weight: 900;
   margin: 0;
-  color: #2D3E40;
-  letter-spacing: -2px;
-  line-height: 1;
-  margin-bottom: 25px;
+  color: #043e3f; /* Dark forest green from the screenshot */
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: 8px;
 }
 
-.identity-tags {
+.verified-companion {
+  font-size: 0.95rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.verified-icon {
+  color: #5b65ff; /* Verified blue/purple badge */
+  font-size: 1.1rem;
+}
+
+.identity-pills {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
 }
 
-.tag {
-  padding: 12px 22px;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 0.9rem;
+.info-pill {
+  background-color: #e6e6ea;
+  color: #043e3f;
+  padding: 12px 18px;
+  border-radius: 30px;
+  font-weight: 800;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.breed-tag {
-  background-color: #0F3D3E;
-  color: white;
-}
-
-.age-tag {
-  background-color: #F1F5F5;
-  color: #1a1a1a;
-}
-
-.gender-tag {
-  background-color: #F1F5F5;
-  color: #1a1a1a;
+.info-pill i {
+  font-size: 1rem;
+  color: #043e3f;
 }
 
 /* 4. Management Section */
@@ -286,20 +267,25 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 400px) {
   .profile-nav {
     padding: 10px 12px;
   }
+
   .toggle-btn {
     padding: 8px 12px;
     font-size: 0.75rem;
   }
+
   .pet-main-name {
     font-size: 2.6rem;
   }
+
   .tag {
     padding: 10px 16px;
     font-size: 0.8rem;

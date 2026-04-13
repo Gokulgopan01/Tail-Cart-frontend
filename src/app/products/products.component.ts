@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { RouterLink } from '@angular/router';
-import { Component, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { RouterLink, Router } from '@angular/router';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import lottie, { AnimationItem } from 'lottie-web';
 
@@ -21,6 +21,11 @@ interface Product {
   in_stock: boolean;
   deals: string;
   discount_percentage?: number;
+}
+
+interface Pet {
+  pet_id: string | number;
+  pet_name: string;
 }
 
 interface ApiResponse {
@@ -81,13 +86,41 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   activeQvTab: 'about' | 'reviews' | 'closet' = 'about';
   primaryQvImage: string | null = null;
 
-  private productsApi = 'http://127.0.0.1:8000/api/manager/products/';
+  // Selection State
+  userPets: Pet[] = [];
+  selectedPetId: string = '';
+  petSelectError: boolean = false;
+  quantity: number = 1;
 
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
+  private productsApi = 'http://127.0.0.1:8000/api/manager/products/';
+  private profileApi = 'http://127.0.0.1:8000/api/user/profile/';
+
+  constructor(private http: HttpClient, private snackBar: MatSnackBar, private router: Router) { }
 
   ngOnInit() {
     this.fetchProducts();
     this.fetchCartCount();
+    this.fetchUserPets();
+  }
+
+  fetchUserPets() {
+    const userId = localStorage.getItem('user_id');
+    const token = localStorage.getItem('access_token');
+    if (!userId || !token) return;
+
+    this.http.get<any>(`${this.profileApi}?user_id=${userId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe({
+      next: (res) => {
+        if (res && res.pets) {
+          this.userPets = res.pets;
+          if (this.userPets.length > 0) {
+            this.selectedPetId = this.userPets[0].pet_id.toString();
+          }
+        }
+      },
+      error: (err) => console.error('Failed to load user pets', err)
+    });
   }
 
   fetchProducts(url: string = this.productsApi) {
@@ -216,6 +249,10 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedProductForQuickView = product;
     this.primaryQvImage = product.thumbnail_image; // default main image
     this.activeQvTab = 'about'; // reset tab
+    this.quantity = 1; // reset quantity
+    this.selectedPetId = ''; // default "None"
+    this.petSelectError = false;
+
     this.showQuickView = true;
     document.body.style.overflow = 'hidden'; // Lock scroll
     document.body.classList.add('qv-modal-open'); // Hook for global CSS to hide navbar
@@ -246,6 +283,16 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.activeQvTab = tab;
   }
 
+  incrementQuantity() {
+    this.quantity++;
+  }
+
+  decrementQuantity() {
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
+  }
+
   ngAfterViewInit() {
     // Banner lottie removed, empty state initializes when needed via ViewChild setter
   }
@@ -269,11 +316,19 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    if (!this.selectedPetId) {
+      this.petSelectError = true;
+      this.showSnackbar('Please select a pet for this product', 'error');
+      return;
+    }
+
+    this.petSelectError = false;
+
     const formData = new FormData();
     formData.append('owner', userId);
-    formData.append('pet', '1');
+    formData.append('pet', this.selectedPetId);
     formData.append('product', product.id.toString());
-    formData.append('quantity', '1');
+    formData.append('quantity', this.quantity.toString());
 
     const token = localStorage.getItem('access_token');
     const headers: any = token ? { Authorization: `Bearer ${token}` } : {};
@@ -306,5 +361,10 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
         console.warn('Could not fetch cart count');
       }
     });
+  }
+
+  buyNow(): void {
+    this.closeQuickView();
+    this.router.navigate(['/cart']);
   }
 }
