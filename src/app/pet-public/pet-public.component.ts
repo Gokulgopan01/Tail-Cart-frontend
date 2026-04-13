@@ -23,8 +23,8 @@ export class PetPublicComponent implements OnInit {
     // Modal & Form State
     isLocationModalOpen: boolean = false;
     isSubmitting: boolean = false;
-    sender_name: string = '';
-    phone: string = '';
+    finderName: string = '';
+    finderPhone: string = '';
 
     // Customization variables (can be fetched from API later)
     themeColor: string = '#D4AF37'; // Default Gold
@@ -123,12 +123,12 @@ export class PetPublicComponent implements OnInit {
 
     closeLocationModal(): void {
         this.isLocationModalOpen = false;
-        this.sender_name = '';
-        this.phone = '';
+        this.finderName = '';
+        this.finderPhone = '';
     }
 
     submitLocationShare(): void {
-        if (!this.sender_name) {
+        if (!this.finderName) {
             alert('Please enter your name.');
             return;
         }
@@ -139,8 +139,8 @@ export class PetPublicComponent implements OnInit {
                 (position) => {
                     const payload = {
                         pet_id: this.petId,
-                        sender_name: this.sender_name,
-                        phone: this.phone,
+                        sender_name: this.finderName,
+                        phone: this.finderPhone,
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
                         timestamp: new Date().toISOString()
@@ -156,7 +156,7 @@ export class PetPublicComponent implements OnInit {
                             console.error('API Error:', err);
                             // Fallback to WhatsApp if API fails
                             const mapsUrl = `https://www.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}`;
-                            window.open(`https://wa.me/${this.profileData.owner_phone}?text=I found ${this.selectedPet.pet_name}! My name is ${this.sender_name}. My location: ${mapsUrl}`, '_blank');
+                            window.open(`https://wa.me/${this.profileData.owner_phone}?text=I found ${this.selectedPet.pet_name}! My name is ${this.finderName}. My location: ${mapsUrl}`, '_blank');
                             this.isSubmitting = false;
                             this.closeLocationModal();
                         }
