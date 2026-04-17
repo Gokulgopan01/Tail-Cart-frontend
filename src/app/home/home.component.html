@@ -57,9 +57,9 @@
     </div>
     <div class="category-grid-photos">
       <!-- Sticker-style cards for Dog & Cat -->
-      <div *ngFor="let cat of categories" class="category-photo-item wiggle-hover" [class.active]="selectedCategory === cat.name"
-        [class.sticker-card]="cat.cardColor" [style.background]="cat.cardColor || ''"
-        (click)="selectCategory(cat.name)">
+      <div *ngFor="let cat of categories" class="category-photo-item wiggle-hover"
+        [class.active]="selectedCategory === cat.name" [class.sticker-card]="cat.cardColor"
+        [style.background]="cat.cardColor || ''" (click)="selectCategory(cat.name)">
         <div class="category-photo-wrapper">
           <!-- Icon-only for categories without image -->
           <i *ngIf="cat.icon && !cat.img" [class]="cat.icon" class="cat-icon"></i>
@@ -148,7 +148,7 @@
 
     <div class="video-mockup-frame">
       <video #featureVideo class="feature-video-luxury" [muted]="isDetailedVideoMuted" playsinline preload="auto" loop
-        muted autoplay>
+        muted autoplay controls>
         <source src="assets/videos/pet_scan.mp4" type="video/mp4">
       </video>
     </div>

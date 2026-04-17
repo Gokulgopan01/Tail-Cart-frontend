@@ -7,12 +7,20 @@
     </div>
 
     <div class="shop-hero-content">
-      <!-- Floating Header Actions -->
-      <div class="hero-top-actions">
-        <button class="floating-cart-btn" routerLink="/cart">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
-        </button>
+      <!-- Breadcrumbs & Top Actions -->
+      <div class="hero-top-row">
+        <nav class="shop-breadcrumbs">
+          <a routerLink="/home" class="bc-link">Home</a>
+          <span class="bc-sep">/</span>
+          <span class="bc-current">Shop</span>
+        </nav>
+
+        <div class="hero-top-actions">
+          <button class="minimal-cart-btn" routerLink="/cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count-dot" *ngIf="cartCount > 0">{{ cartCount }}</span>
+          </button>
+        </div>
       </div>
 
       <div class="search-pill-container">
@@ -230,10 +238,11 @@
     <!-- Top Nav -->
     <div class="qv-top-nav">
       <button class="qv-back-btn" (click)="closeQuickView()">
-        <i class="fas fa-arrow-left"></i> Product Details
+        <i class="fas fa-arrow-left"></i>
       </button>
+      <h3 class="qv-nav-title">Product Details</h3>
       <button class="qv-share-btn">
-        <i class="fas fa-share-nodes"></i>
+        <i class="fas fa-share-alt"></i>
       </button>
     </div>
 
@@ -262,18 +271,21 @@
 
       <!-- Header Info -->
       <div class="qv-header-info">
-        <div class="qv-badge-row">
-          <span class="qv-badge-bestseller"
-            *ngIf="selectedProductForQuickView?.deals?.toLowerCase() === 'bestseller' || true">BESTSELLER</span>
-          <div class="qv-rating">
-            <i class="fas fa-star qv-star-icon"></i>
-            <span class="qv-rating-val">{{ selectedProductForQuickView?.reviews_stars || '4.7' }}</span>
-            <span class="qv-rating-count">(128 reviews)</span>
-          </div>
+        <p class="qv-collection">THE HERITAGE ATELIER</p>
+        <div class="qv-title-row">
+          <h2 class="qv-product-title">{{ selectedProductForQuickView?.product_name }}</h2>
+          <button class="qv-wishlist-btn">
+            <i class="far fa-heart"></i>
+          </button>
         </div>
 
-        <h2 class="qv-product-title">{{ selectedProductForQuickView?.product_name }}</h2>
-        <p class="qv-collection">Collection: The Heritage Atelier</p>
+        <div class="qv-rating-row">
+          <div class="qv-rating-badge">
+            <i class="fas fa-star"></i>
+            <span>{{ selectedProductForQuickView?.reviews_stars || '4.7' }}</span>
+          </div>
+          <span class="qv-rating-count">({{ selectedProductForQuickView?.review_count || 0 }} reviews)</span>
+        </div>
       </div>
 
       <!-- Elevated Price Card -->
@@ -284,25 +296,31 @@
           <span class="qv-discount-pill" *ngIf="selectedProductForQuickView?.discount_percentage">{{
             selectedProductForQuickView?.discount_percentage }}% OFF</span>
         </div>
+        <div class="qv-price-divider"></div>
         <p class="qv-premium-offer">LIMITED PREMIUM OFFER</p>
       </div>
 
       <!-- Features Grid -->
       <div class="qv-features-grid">
-        <div class="qv-feature-col">
-          <span class="qv-feature-label">MATERIAL</span>
-          <div class="qv-material-box">
-            <i class="fas fa-grip-lines-vertical qv-material-icon"></i>
-            <span class="qv-material-text">High-Grade<br>{{ selectedProductForQuickView?.product_material || 'Fiber'
-              }}</span>
+        <div class="qv-feature-card">
+          <div class="qv-feature-header">
+            <i class="fas fa-gem"></i>
+            <span>MATERIAL</span>
           </div>
+          <p class="qv-feature-desc">
+            Premium optical-grade acrylic, hand-polished for crystal clarity and durability.
+          </p>
         </div>
 
-        <div class="qv-feature-col">
-          <span class="qv-feature-label">SPECIFICATIONS</span>
+        <div class="qv-feature-card">
+          <div class="qv-feature-header">
+            <i class="fas fa-th-large"></i>
+            <span>SPECIFICATIONS</span>
+          </div>
           <ul class="qv-spec-list">
-            <li><i class="far fa-check-circle qv-check"></i> Laser engraving</li>
-            <li><i class="far fa-check-circle qv-check"></i> Rust resistant</li>
+            <li>• Diameter: 30mm</li>
+            <li>• Weight: 4 grams</li>
+            <li>• Water resistant</li>
           </ul>
         </div>
       </div>
@@ -352,6 +370,27 @@
             our Round Tag redefined pet accessories. Each piece undergoes a 12-step finish.' }}
           </p>
         </div>
+
+        <div class="qv-tab-content" *ngIf="activeQvTab === 'reviews'">
+          <h3 class="qv-content-title">Customer Reviews</h3>
+          <div class="reviews-list" *ngIf="selectedProductForQuickView?.reviews?.length; else noReviews">
+            <div class="review-item" *ngFor="let review of selectedProductForQuickView?.reviews">
+              <div class="review-header">
+                <span class="review-author">{{ review.username }}</span>
+                <div class="review-rating">
+                  <i class="fas fa-star qv-star-icon"></i>
+                  <span>{{ review.rating }}</span>
+                </div>
+              </div>
+              <p class="review-comment">{{ review.comment }}</p>
+              <span class="review-date">{{ review.created_at | date:'mediumDate' }}</span>
+            </div>
+          </div>
+          <ng-template #noReviews>
+            <p class="qv-content-text" style="color: var(--text-light); text-align: center; padding: 20px 0;">No reviews
+              yet for this product.</p>
+          </ng-template>
+        </div>
       </div>
 
       <!-- Empty space to clear the end of text -->
@@ -362,7 +401,7 @@
     <div class="qv-bottom-bar">
       <button class="qv-btn-outline" (click)="addToCart(selectedProductForQuickView!)">ADD TO CART</button>
       <button class="qv-btn-solid" (click)="buyNow()">
-        BUY NOW <i class="fas fa-shopping-cart"></i>
+        <i class="fas fa-shopping-cart"></i> BUY NOW
       </button>
     </div>
 

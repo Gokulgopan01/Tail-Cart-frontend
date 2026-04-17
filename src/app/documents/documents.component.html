@@ -12,13 +12,10 @@
         <div class="search-pill-modern"
           style="background: white; border-radius: 50px; display: flex; align-items: center; padding: 6px 6px 6px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
           <i class="fas fa-search magnifier-icon" style="color: #94a3b8; font-size: 1.1rem; margin-right: 12px;"></i>
-          <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="filterDocuments()" placeholder="Search products"
-            class="pill-input"
+          <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="filterDocuments()"
+            placeholder="Search Documents" class="pill-input"
             style="flex: 1; border: none; outline: none; background: transparent; font-size: 1rem; color: #333;">
-          <button class="filter-btn"
-            style="background: #003c30; color: white; border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
-            <i class="fas fa-sliders-h"></i>
-          </button>
+
         </div>
       </div>
     </div>

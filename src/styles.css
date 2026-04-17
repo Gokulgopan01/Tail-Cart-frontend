@@ -33,6 +33,7 @@
   --text-primary: #0D1F1C;
   --text-secondary: #5F6F6B;
   --text-light: #8FA39E;
+  --text-white: #fff;
 
   /* =========================
      BORDER & UI
@@ -787,7 +788,8 @@ body.qv-modal-open {
   touch-action: none;
 }
 
-body.qv-modal-open .qv-main-scroll {
+body.qv-modal-open .qv-main-scroll,
+body.qv-modal-open .filter-modal-body {
   touch-action: pan-y !important;
   /* Re-enable for the modal contents */
 }

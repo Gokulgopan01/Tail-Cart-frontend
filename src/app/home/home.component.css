@@ -781,6 +781,7 @@
   background: linear-gradient(135deg, #1F6F70, #2ECC71) !important;
   box-shadow: 0 8px 15px rgba(46, 204, 113, 0.3);
 }
+
 .active-slide .btn-eco-action {
   transform: translateY(0);
   opacity: 1;
@@ -1075,6 +1076,8 @@
 
   .feature-video-luxury {
     border-radius: 20px;
+    min-height: 300px;
+    object-fit: cover;
   }
 
   .step-item {
@@ -1198,7 +1201,7 @@
   display: flex;
   justify-content: center;
   gap: 12px;
-  padding: 1.5rem 0 2rem;
+  padding: 0.5rem 0 0.5rem;
   z-index: 10;
   width: 100%;
 }
@@ -1304,13 +1307,13 @@
 }
 
 .category-photo-item {
+  width: 110px;
+  height: 110px;
+  border-radius: 20px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
-  cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-  min-width: 130px;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .category-photo-item.active .category-photo-wrapper {
@@ -1458,6 +1461,7 @@
 /* ── Recommended Section ── */
 .recommended-section {
   padding: 1.5rem 1rem;
+  margin: 0 auto;
   background-color: var(--bg-main);
 }
 
@@ -1466,12 +1470,15 @@
   justify-content: space-between;
   align-items: center;
   max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.5rem 0.25rem 0.75rem;
 }
 
 .section-title-alt {
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--text-primary);
+  margin: 0;
 }
 
 .recommended-grid-premium {
@@ -1493,7 +1500,8 @@
   position: relative;
   overflow: visible;
   /* Allow content to overflow if needed, like the arrow button */
-  border: none;
+  border-radius: 16px;
+  overflow: hidden;
   /* No card border */
 }
 
@@ -1508,14 +1516,16 @@
   background: transparent;
   /* Totally transparent to remove box feel */
   position: relative;
+  border-radius: 16px;
   overflow: hidden;
 }
 
 .card-img-luxury {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  padding: 1rem;
+  object-fit: cover;
+  padding: 0;
+  border-radius: 16px;
   transition: transform 0.5s ease;
 }
 
@@ -1644,6 +1654,7 @@
     font-size: 1.6rem !important;
     letter-spacing: -0.5px !important;
     line-height: 1.2 !important;
+    align-items: left !important;
   }
 
   .section-tag {
@@ -1715,7 +1726,7 @@
 
   /* Backbone Section Tweak */
   .offer-banner-section {
-    padding: 1rem 1rem 2rem;
+    padding: 1rem 1rem 0.5rem;
   }
 
   .banner-carousel-wrapper {
@@ -1731,13 +1742,13 @@
     object-fit: contain;
   }
 
-  .banner-indicators {
+  /* .banner-indicators {
     bottom: 0.8rem;
-  }
+  } */
 
   /* Photo Categories Mobile */
   .categories-section {
-    padding: 0.8rem 1rem !important;
+    padding: 0 1rem 0.5rem !important;
   }
 
   .category-title {
@@ -1795,8 +1806,13 @@
   }
 
   .category-photo-item {
-    min-width: 80px;
-    gap: 0.8rem;
+    width: 110px;
+    height: 110px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
   }
 
   .category-photo-wrapper {
@@ -1892,6 +1908,7 @@
     margin-top: 0.4rem !important;
     font-size: 0.85rem !important;
   }
+
   /* Scroll Top Button Position */
   .scroll-top-btn {
     bottom: 110px !important;

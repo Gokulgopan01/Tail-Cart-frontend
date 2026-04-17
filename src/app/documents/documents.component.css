@@ -2227,7 +2227,7 @@ input:checked+.slider:before {
 
 .seg-tab.active {
   background: var(--gradient-primary);
-  color: var(--text-secondary);
+  color: var(--text-white);
   box-shadow: var(--shadow-md);
 }
 

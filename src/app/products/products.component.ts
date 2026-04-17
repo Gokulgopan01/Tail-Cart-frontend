@@ -21,6 +21,16 @@ interface Product {
   in_stock: boolean;
   deals: string;
   discount_percentage?: number;
+  reviews?: Review[];
+  review_count?: number;
+}
+
+interface Review {
+  id: number;
+  username: string;
+  rating: string;
+  comment: string;
+  created_at: string;
 }
 
 interface Pet {
@@ -220,8 +230,10 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showFilters = !this.showFilters;
     if (this.showFilters) {
       document.body.style.overflow = 'hidden';
+      document.body.classList.add('qv-modal-open');
     } else {
       document.body.style.overflow = '';
+      document.body.classList.remove('qv-modal-open');
     }
   }
 
@@ -246,6 +258,10 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   // Quick View Methods
   openQuickView(product: Product, event: Event) {
     event.stopPropagation();
+
+    // Scroll window to top first to fix the modal positioning issue
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
     this.selectedProductForQuickView = product;
     this.primaryQvImage = product.thumbnail_image; // default main image
     this.activeQvTab = 'about'; // reset tab
@@ -254,10 +270,14 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.petSelectError = false;
 
     this.showQuickView = true;
-    document.body.style.overflow = 'hidden'; // Lock scroll
-    document.body.classList.add('qv-modal-open'); // Hook for global CSS to hide navbar
 
-    // Reset scroll position to top
+    // Delay locking scroll to allow smooth scroll to top to finish
+    setTimeout(() => {
+      document.body.style.overflow = 'hidden'; // Lock scroll
+      document.body.classList.add('qv-modal-open'); // Hook for global CSS to hide navbar
+    }, 500);
+
+    // Reset scroll position to top of modal
     setTimeout(() => {
       if (this.quickViewScrollContainer) {
         this.quickViewScrollContainer.nativeElement.scrollTop = 0;
