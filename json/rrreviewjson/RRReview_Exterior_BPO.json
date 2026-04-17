@@ -102,7 +102,7 @@
           "filedtype": "select_radio",
           "values": [
             [
-              "sub_data['FullBath']",
+              "sub_data['CheckBath']",
               "//*[@id='RB_BathCount_A']",
               "//*[@id='LB_BathCount_Display_Value']",
               "//*[@id='RB_BathCount_D']",
@@ -210,7 +210,7 @@
           "filedtype": "select_drop_button",
           "values": [
             [
-              "sub_data['FullBath']",
+              "sub_data['CheckBath']",
               "//*[@id='DDL_BathCount_SoD']",
               "//*[@id='LB_BathCount_Display_Value']",
               "//*[@id='TB_BathCount_Detail']",
@@ -366,7 +366,7 @@
           "filedtype": "select_data",
           "values": [
             [
-              "sub_data['Location']",
+              "sub_data['PopulationDensity']",
               "//*[@id='ddlLocationType']",
               "xpath"
             ]
