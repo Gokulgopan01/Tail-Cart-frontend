@@ -3,13 +3,13 @@ import os
 import re
 import time
 import traceback
-from venv import logger
 import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 import logging
 from selenium.webdriver.chrome.service import Service
 import logging
@@ -37,17 +37,15 @@ def params_check():
             arg3 = args.get('arg3', [None])[0]
             print(f"Args : {arg1}")   
             return arg1,arg2,arg3
-            #return "SmartEntry","2560","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjksImVtYWlsIjoic2lkc21AZ21haWwuY29tIiwicm9sZSI6MywiaWF0IjoxNzY4MzcwMDc1LCJleHAiOjE3Njg0NTY0NzV9.GlzV5kBkj5rIlL8q-XvuHme_wQNgWjrFmC1IGn1-Yog"
+            #return "SmartEntry","3604","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzM3MzkyMzB9.gofoCzJHG-DmjL-j861Sw6XbqGDucs0QUbZMccnAyV4"
     else:
           #return None,None  
           # Returns auto for manualy opening Autologin  
 
         return "AutoLogin",None,None
-        # return "SmartEntry","3301","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjYyLCJlbWFpbCI6InJhdGhpX3JAZWNlc2lzZ3JvdXBzLmNvbSIsInJvbGUiOjIsImlhdCI6MTc3MTQzMzU0Nn0.NicvPKeETxUQSJ3Aly4DI9iNmWbHCTdhFLRl0d58Noc"
-   
+        #return "SmartEntry","3854","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
 
 process_type, hybrid_orderid, hybrid_token = params_check()
-
 
 
 # def initialize_driver(self):
@@ -577,10 +575,6 @@ def radio_btn_click(driver, btn_value, element_identifier, element_type):
     # Try matching by 'value' attribute
     for elem in elements:
         elem_value = re.sub(r"\s+", " ", (elem.get_attribute("value") or "").strip().lower())
-        if not elem_value:
-            raw_value = (elem.text or "").strip()
-            elem_value = re.sub(r"\s+", " ", raw_value.lower())
-
         if elem_value == btn_value_normalized:
             try:
                 # Scroll into view first
@@ -670,6 +664,66 @@ def data_filling_text(driver, data, elementlocator, selector):
         )
 
 
+# def select_field(driver, data, elementlocator, selector):
+#     try:
+#         if data is None:
+#             data = ""
+#         else:
+#             data = str(data).strip().lower()
+#         selector_map = selector_mapping(selector)
+#         element = find_elem(driver, selector_map, elementlocator)
+        
+#         # Scroll to element to ensure it's in view
+#         driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});", element)
+        
+#         dropdown = Select(element)
+
+#         # If multi-select, deselect all before picking
+#         if dropdown.is_multiple:
+#             dropdown.deselect_all()
+        
+#         # Loop through options and match by lowercase text (including empty string for blank options)
+#         matched = False
+#         for option in dropdown.options:
+#             if option.text.strip().lower() == data:
+#                 try:
+#                     if option.text.strip() in ["","null"]:
+#                         # select_by_visible_text("") fails in Selenium for blank options
+#                         # Directly JS-click the option element to select it
+#                         driver.execute_script("arguments[0].selected = true;", option)
+#                     else:
+#                         dropdown.select_by_visible_text(option.text)
+#                 except Exception as click_err:
+#                     print(f"[select_field] Selection intercepted, clearing overlays: {click_err}")
+#                     close_validation_popup(driver)
+#                     driver.execute_script("arguments[0].selected = true;", option)
+                
+#                 matched = True
+#                 break
+        
+#         if matched:
+#             # Trigger events to ensure portal Reacts
+#             driver.execute_script("""
+#                 arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+#                 arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+#             """, element)
+#         else:
+#             logger.log(
+#                 module="select_field",
+#                 order_id=hybrid_orderid,
+#                 action_type="Condition-check",
+#                 remarks=f"[select_field] No matching option found for: {data}",
+#                 severity="INFO"
+#             )
+#     except Exception as e:
+#         logger.log(
+#             module="select_field",
+#             order_id=hybrid_orderid,
+#             action_type="Exception",
+#             remarks=f"[select_field] Error selecting option: {e}",
+#             severity="INFO"
+#         )
+
 def select_field(driver, data, elementlocator, selector):
     try:
         data = str(data).strip().lower()
@@ -723,6 +777,110 @@ def select_field(driver, data, elementlocator, selector):
             severity="INFO"
         )
 
+def select_empty_field(driver, data, elementlocator, selector):
+    try:
+        # ----------------------------
+        # Normalize input data
+        # ----------------------------
+        if data is None or str(data).strip().lower() in ["", "none", "null"]:
+            data = ""
+        else:
+            data = str(data).strip().lower()
+
+        selector_map = selector_mapping(selector)
+        element = find_elem(driver, selector_map, elementlocator)
+
+        # Scroll into view
+        driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center', inline: 'nearest'});",
+            element
+        )
+
+        dropdown = Select(element)
+
+        # Handle multi-select
+        if dropdown.is_multiple:
+            dropdown.deselect_all()
+
+        # ----------------------------
+        # STEP 1: Handle EMPTY case
+        # ----------------------------
+        if data == "":
+            try:
+                dropdown.select_by_value("0")
+            except Exception:
+                # fallback using JS
+                for option in dropdown.options:
+                    if option.get_attribute("value") == "0":
+                        driver.execute_script("arguments[0].selected = true;", option)
+                        break
+
+            # Trigger events
+            driver.execute_script("""
+                arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+                arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+            """, element)
+            return
+
+        # ----------------------------
+        # STEP 2: Normal matching
+        # ----------------------------
+        matched = False
+
+        for option in dropdown.options:
+            text = option.text.strip().lower()
+            value = option.get_attribute("value")
+
+            # Handle % conversion (e.g., 50 → 50%)
+            normalized_data = data
+            if data.isdigit() and "%" in text:
+                normalized_data = f"{data}%"
+
+            if (
+                text == data or
+                text == normalized_data or
+                value == data
+            ):
+                try:
+                    dropdown.select_by_visible_text(option.text)
+                except Exception as click_err:
+                    print(f"[select_empty_field] Retry after popup: {click_err}")
+                    close_validation_popup(driver)
+                    driver.execute_script(
+                        "arguments[0].value = arguments[1];",
+                        element,
+                        value
+                    )
+
+                matched = True
+                break
+
+        # ----------------------------
+        # STEP 3: Fallback
+        # ----------------------------
+        if not matched:
+            try:
+                dropdown.select_by_value("0")
+                print(f"[select_empty_field] Fallback default selected for: {data}")
+            except Exception:
+                print(f"[select_empty_field] No match and no default for: {data}")
+
+        # ----------------------------
+        # STEP 4: Trigger events
+        # ----------------------------
+        driver.execute_script("""
+            arguments[0].dispatchEvent(new Event('input', { bubbles: true }));
+            arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
+        """, element)
+
+    except Exception as e:
+        logger.log(
+            module="select_empty_field",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"[select_empty_field] Error selecting option: {e}",
+            severity="INFO"
+        )
 
 def find_elem(driver, selector, elementlocator):
     elementlocator = elementlocator.strip()
@@ -1058,7 +1216,7 @@ def rrr_fill_repair_details(driver, repair_list):
         "structural": ("txtExteriorStructural", "txtExteriorStructuralLow"),
         "landscaping": ("txtExteriorLandscaping", "txtExteriorLandscapingLow"),
         "outbuildings": ("txtExteriorOutbuildings", "txtExteriorOutbuildingsLow"),
-        "debrisremoval": ("txtExteriorDebris_Removal", "txtExteriorDebris_RemovalLow"),
+        "CleaningTrashRemoval": ("txtExteriorDebris_Removal", "txtExteriorDebris_RemovalLow"),
         "utility": ("txtExteriorUtility", "txtExteriorUtilityLow"),
         "other": ("txtExteriorOther", "txtExteriorOtherLow"),
     }
@@ -1101,7 +1259,357 @@ def rrr_fill_repair_details(driver, repair_list):
                 elem.send_keys(str(cost_value))
         except:
             pass
+def rrr_fill_listing_history(driver, history_list, add_link_id, mode="id"):
+    """
+    Specialized helper for RRR Prior Listing History popups.
+    Iterates through the history list, fills the modal fields, and clicks 'Save'.
+    Handles the first record differently as 'Yes' radio might have already opened it.
+    """
+    if not history_list or not isinstance(history_list, list):
+        print("--- [DEBUG] No prior history list to process.")
+        return True
 
+    # Check if 'Yes' (value 1) is actually selected before proceeding
+    try:
+        # ID is based on the radio button control 'rbl_ListingHistoryExists'
+        yes_radio = driver.find_element(By.ID, "rbl_ListingHistoryExists_1")
+        if not yes_radio.is_selected():
+            print("--- [DEBUG] 'Yes' option Not selected for Prior Listing History. Skipping additional fill/clear logic.")
+            return True
+    except Exception as e:
+        print(f"--- [DEBUG] Warning: Could not find/check 'Yes' radio status: {e}")
+        # Proceed anyway as a fallback if we can't find the radio button
+        pass
+
+    # STEP 0: CLEAR existing records first (Fresh refill concept)
+    try:
+        # Loop until all 'Delete' links are gone
+        while True:
+            # We look for links with text 'Delete' and relaction='DELETE'
+            delete_links = driver.find_elements(By.XPATH, "//a[contains(text(), 'Delete') and @relaction='DELETE']")
+            if not delete_links:
+                break # No more records to delete
+            
+            print(f"--- [DEBUG] Found {len(delete_links)} existing history record(s) to clear. Deleting first one...")
+            
+            # Click the first delete link found
+            target_link = delete_links[0]
+            # Use JS click as it's more stable for these small links
+            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", target_link)
+            driver.execute_script("arguments[0].click();", target_link)
+            
+            # Wait for and handle the confirmation alert
+            try:
+                alert_wait = WebDriverWait(driver, 5)
+                alert = alert_wait.until(EC.alert_is_present())
+                alert.accept()
+                print("--- [DEBUG] Delete alert accepted.")
+            except:
+                # No alert or something went wrong?
+                pass
+                
+            time.sleep(3) # Allow record to delete and table to refresh
+    except Exception as e:
+        print(f"--- [DEBUG] Error during Prior History clearing phase: {e}")
+
+    # Process new records as before...
+
+    for index, history in enumerate(history_list):
+        if not history or not any(history.values()):
+            continue
+            
+        print(f"--- [DEBUG] Processing Prior History entry {index + 1}...")
+
+        # 1. Open the popup
+        try:
+            wait = WebDriverWait(driver, 10)
+            popup_open = False
+            
+            # Check if popup is already open (Status dropdown is visible and displayed)
+            try:
+                status_elem = driver.find_element(By.ID, "ddl_slh_ListingStatus")
+                if status_elem.is_displayed():
+                    popup_open = True
+                    print(f"--- [DEBUG] Popup for entry {index + 1} is already open.")
+            except:
+                pass
+
+            if not popup_open:
+                if index == 0:
+                    # For the first record, clicking 'Yes' (if already yes) might re-trigger the popup
+                    # or we use the 'Add New Record' link if the radio doesn't work.
+                    print(f"--- [DEBUG] First record popup not open. Attempting 'Yes' radio click...")
+                    try:
+                        yes_radio = driver.find_element(By.ID, "rbl_ListingHistoryExists_1")
+                        driver.execute_script("arguments[0].click();", yes_radio)
+                        time.sleep(3)
+                        # Check again
+                        status_elem = driver.find_element(By.ID, "ddl_slh_ListingStatus")
+                        if status_elem.is_displayed():
+                            popup_open = True
+                    except:
+                        pass
+                
+                if not popup_open:
+                    # Click Add New Record link
+                    print(f"--- [DEBUG] Clicking '{add_link_id}' to open popup for record {index + 1}...")
+                    selector = By.ID if mode == "id" else By.XPATH
+                    add_link = wait.until(EC.element_to_be_clickable((selector, add_link_id)))
+                    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", add_link)
+                    driver.execute_script("arguments[0].click();", add_link)
+                    
+                    # Wait for popup elements to be visible
+                    wait.until(EC.visibility_of_element_located((By.ID, "ddl_slh_ListingStatus")))
+                    time.sleep(2) # Extra stabilization
+        except Exception as e:
+            print(f"--- [DEBUG] Error opening popup for record {index + 1}: {e}")
+            continue
+
+        # 2. Define field mappings (ID in popup : Key in backend data)
+        mappings = {
+            "ddl_slh_ListingStatus": "PriorStatus",
+            "txt_slh_ListingStartDate": "PriorOriginalListDate",
+            "txt_slh_SoldDate": "EndDate",
+            "txt_slh_ListEndPrice": "EndPrice",
+            "txt_slh_ListStartPrice": "PriorOriginalListPrice",
+            "txt_slh_AgentName": "AgentName",
+            "txt_slh_Agency": "Agency",
+            "ddl_slh_SaleType": "SaleType",
+            "txt_slh_Concessions": "Concessions",
+            "ddl_slh_Financing": "Financing"
+        }
+
+        # 3. Fill the fields
+        for elem_id, key in mappings.items():
+            val = history.get(key)
+            if val is None or val == "":
+                continue
+            
+            try:
+                elem = driver.find_element(By.ID, elem_id)
+                tag = elem.tag_name.lower()
+                if tag == "select":
+                    select_field(driver, val, elem_id, "id")
+                else:
+                    data_filling_text(driver, val, elem_id, "id")
+            except Exception as e:
+                print(f"--- [DEBUG] Error filling {elem_id} with {val}: {e}")
+
+        # 4. Click Save
+        try:
+            # Re-wait for save button to be sure
+            save_btn = WebDriverWait(driver, 5).until(
+                EC.element_to_be_clickable((By.ID, "saveButtonForNewLH"))
+            )
+            driver.execute_script("arguments[0].click();", save_btn)
+            time.sleep(2) # Wait for popup to close
+        except Exception as e:
+            print(f"--- [DEBUG] Error clicking Save in Prior History popup: {e}")
+
+    return True
+
+
+def rrr_select_hoa_amenities(driver, amenities_str, id_prefix, mode="id"):
+    """
+    Specialized helper for RRR HOA Amenities checkboxes.
+    Maps text values to index-based IDs with a robust JS click and label fallback.
+    CLEARS all checkboxes first, then selects only the ones from backend data.
+    """
+    if not amenities_str:
+        return True
+
+    print(f"--- [DEBUG] HOA Amenities processing started for: '{amenities_str}' using prefix '{id_prefix}'")
+
+    # Portal index mapping (Order from HTML: Water, Cable, Trash, Maintenance, Security, Mowing, Snow Removal, Recreational Facilities)
+    rrr_hoa_map = {
+        "Water": "0",
+        "Cable": "1",
+        "Trash": "2",
+        "Maintenance": "3",
+        "Security": "4",
+        "Mowing": "5",
+        "Snow Removal": "6",
+        "Recreational Facilities": "7"
+    }
+    
+    # Create a lower-case version of the map for easier matching
+    lookup_map = {k.lower(): v for k, v in rrr_hoa_map.items()}
+
+    # Process input: handle string "water, trash" or list
+    if isinstance(amenities_str, str):
+        selected_items = [item.strip().lower() for item in amenities_str.split(",") if item.strip()]
+    elif isinstance(amenities_str, list):
+        selected_items = [str(item).strip().lower() for item in amenities_str]
+    else:
+        selected_items = []
+
+    # Stabilization sleep
+    time.sleep(2)
+
+    # STEP 1: Uncheck ALL checkboxes first (clean slate)
+    print(f"--- [DEBUG] [HOA] Clearing all checkboxes first...")
+    for index in rrr_hoa_map.values():
+        checkbox_id = f"{id_prefix}_{index}"
+        try:
+            checkbox = driver.find_element(By.ID, checkbox_id)
+            if checkbox.is_selected():
+                driver.execute_script("arguments[0].click();", checkbox)
+                print(f"--- [DEBUG] [HOA] Unchecked checkbox ID: {checkbox_id}")
+        except Exception as e:
+            # Checkbox might not exist, skip
+            pass
+
+    # STEP 2: Select only the checkboxes from backend data
+    success = True
+    for item in selected_items:
+        found = False
+        # 1. Attempt ID-based selection (Robust JS click + Scrolling)
+        # item is already lowercased, check against lookup_map
+        if item in lookup_map:
+            index = lookup_map[item]
+            checkbox_id = f"{id_prefix}_{index}"
+            try:
+                wait = WebDriverWait(driver, 5)
+                checkbox = wait.until(EC.presence_of_element_located((By.ID, checkbox_id)))
+                
+                # Scroll and Click via JS
+                driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", checkbox)
+                time.sleep(0.5)
+                
+                if not checkbox.is_selected():
+                    driver.execute_script("arguments[0].click();", checkbox)
+                    print(f"--- [DEBUG] [ID Path] Selected '{item}' via JS ID: {checkbox_id}")
+                else:
+                    print(f"--- [DEBUG] [ID Path] '{item}' was already selected.")
+                found = True
+            except Exception as e:
+                print(f"--- [DEBUG] [ID Path] Failed for {item} ({checkbox_id}): {e}")
+
+        # 2. Attempt Label-based matching (robust fallback)
+        if not found:
+            print(f"--- [DEBUG] [Label Fallback] Trying label match for '{item}'...")
+            try:
+                labels = driver.find_elements(By.TAG_NAME, "label")
+                for label in labels:
+                    if item.lower() in label.text.lower():
+                        label_for = label.get_attribute("for")
+                        if label_for:
+                            checkbox = driver.find_element(By.ID, label_for)
+                            if not checkbox.is_selected():
+                                driver.execute_script("arguments[0].click();", checkbox)
+                            print(f"--- [DEBUG] [Label Path] Selected '{item}' via label match: '{label.text}' (ID: {label_for})")
+                            found = True
+                            break
+            except Exception as e:
+                print(f"--- [DEBUG] [Label Path] Failed for {item}: {e}")
+        if not found:
+            print(f"--- [DEBUG] WARNING: Could not find checkbox for HOA Amenity: '{item}'")
+            # success = False 
+    
+    return True
+
+
+def rrr_select_amenities(driver, values, locator, selector="xpath"):
+    """
+    Robust helper for RRReview amenities (Subject and Comps).
+    Handles both ListBox (select) and CheckBoxList (table of checkboxes with labels).
+    """
+    if not values:
+        return True
+    
+    # Ensure values is a list
+    if isinstance(values, str):
+        selected_items = [v.strip().lower() for v in values.split(",") if v.strip()]
+    elif isinstance(values, list):
+        selected_items = [str(v).strip().lower() for v in values]
+    else:
+        selected_items = []
+        
+    if not selected_items:
+        return True
+
+    try:
+        element = find_elem(driver, selector, locator)
+        tag_name = element.tag_name.lower()
+        
+        if tag_name == "select":
+            # Multi-select ListBox
+            dropdown = Select(element)
+            if dropdown.is_multiple:
+                dropdown.deselect_all()
+            
+            for item in selected_items:
+                found = False
+                for option in dropdown.options:
+                    if item in option.text.lower():
+                        dropdown.select_by_visible_text(option.text)
+                        found = True
+                        print(f"--- [DEBUG] Selected ListBox option: '{option.text}'")
+                if not found:
+                    print(f"--- [DEBUG] Could not find ListBox option for: '{item}'")
+        else:
+            # CheckBoxList - search for labels inside/near the element
+            
+            # STEP 1: Clear existing selections first (Clean Slate)
+            try:
+                existing_checkboxes = element.find_elements(By.TAG_NAME, "input")
+                for cb in existing_checkboxes:
+                    if cb.get_attribute("type") == "checkbox" and cb.is_selected():
+                        driver.execute_script("arguments[0].click();", cb)
+                print(f"--- [DEBUG] Cleared existing checkboxes in container: {locator}")
+            except Exception as e:
+                print(f"--- [DEBUG] Notice: Container clear skipped or failed: {e}")
+
+            # STEP 2: Select the ones from backend data
+            for item in selected_items:
+                found = False
+                try:
+                    # Search specifically within the container for better performance and accuracy
+                    labels = element.find_elements(By.TAG_NAME, "label")
+                    for label in labels:
+                        # CRITICAL: Remove spaces from both sides for flexible matching
+                        # Backend: "Guest House" | Portal HTML: "GuestHouse"
+                        # Without this normalization, the match FAILS and form becomes invalid
+                        item_normalized = item.replace(" ", "")
+                        label_normalized = label.text.lower().replace(" ", "")
+                        if item_normalized in label_normalized:
+                            label_for = label.get_attribute("for")
+                            if label_for:
+                                checkbox = driver.find_element(By.ID, label_for)
+                                if not checkbox.is_selected():
+                                    driver.execute_script("arguments[0].click();", checkbox)
+                                print(f"--- [DEBUG] Selected Checkbox via label: '{label.text}' (ID: {label_for})")
+                                found = True
+                                break
+                    
+                    if not found:
+                        # Fallback: search all labels on page if element search failed
+                        all_labels = driver.find_elements(By.TAG_NAME, "label")
+                        for label in all_labels:
+                            if item in label.text.lower():
+                                label_for = label.get_attribute("for")
+                                if label_for:
+                                    # locator might be an xpath like //*[@id='rrrSale1_lbAmenities']
+                                    base_id = locator.replace("//*[@id='", "").replace("']", "")
+                                    prefix = base_id.split("_")[0]
+                                    if prefix in label_for:
+                                        checkbox = driver.find_element(By.ID, label_for)
+                                        if not checkbox.is_selected():
+                                            driver.execute_script("arguments[0].click();", checkbox)
+                                        print(f"--- [DEBUG] Selected Checkbox via global label fallback: '{label.text}' (ID: {label_for})")
+                                        found = True
+                                        break
+                except Exception as e:
+                    print(f"--- [DEBUG] Error matching label for '{item}': {e}")
+                
+                if not found:
+                    print(f"--- [DEBUG] Could not find checkbox/label for amenity: '{item}'")
+
+    except Exception as e:
+        print(f"--- [DEBUG] Error in rrr_select_amenities: {e}")
+        return False
+        
+    return True
 
 
 def save_form(driver):
@@ -1620,18 +2128,19 @@ def tfs_statuschange(tfs_order_id, bpo_statusid, tfs_status, tfs_status_reason):
     bpo_statusid = str(bpo_statusid).strip()
     tfs_status = str(tfs_status).strip()
     tfs_status_reason = str(tfs_status_reason).strip()
+    EmpId="11023"
    
     try:
         tfs_status_data = {
             "strSessionID": "",
-            "ProcParameters": ["type", "sTFStatusData", "stfsOrderId"],
-            "ProcInputData": [1, f"{tfs_status}~{tfs_status_reason}~", tfs_order_id]
+            "ProcParameters": ["type", "sTFStatusData", "stfsOrderId", "sEmpId"],
+            "ProcInputData": [1, f"{tfs_status}~{tfs_status_reason}~", tfs_order_id, EmpId]
         }
 
         bpo_status_data = {
             "strSessionID": "",
-            "ProcInputData": [f"{bpo_statusid}~Na~Na~", tfs_order_id],
-            "ProcParameters": ["sAutoBPOdata", "sOrderId"]
+            "ProcInputData": [f"{bpo_statusid}~Na~Na~", tfs_order_id, EmpId],
+            "ProcParameters": ["sAutoBPOdata", "sOrderId", "sEmpId"]
         }
         
         tfs_statuschange_url = env.tfs_statuschange_url
@@ -1690,89 +2199,100 @@ def update_portal_login_confirmation_status(order_id):
            
         )
         return False
-    
 
-#Propinspect _________________________________________________________________
-from selenium.common.exceptions import UnexpectedAlertPresentException,StaleElementReferenceException
-
-def lsi_next_click(driver, timeout=10, retries=3):
-    '''Function to click on next page with retries and JS click fallback'''
-
+def select_radio_button(driver, btn_value, element_identifier, span_xpath, disagree_xpath, element_type):
+    selector_map = selector_mapping(element_type)
     try:
-        element = WebDriverWait(driver, timeout).until( EC.element_to_be_clickable((By.XPATH, "/html/body/nav/div/ul/ul/li[3]/span/button[3]/span")) )
-        element.click()
-        return True
+        elements = WebDriverWait(driver, 10).until(EC.visibility_of_all_elements_located((selector_map, span_xpath)))
+        element_agree = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, element_identifier)))
+        element_disagree = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, disagree_xpath)))
+        
+        for element in elements:
+            if element.text == btn_value:
+                driver.execute_script("arguments[0].click();", element_agree)
+                logger.log(
+                    module="select_radio_button",
+                    order_id=hybrid_orderid,
+                    action_type="Condition-check",
+                    remarks=f"Agree selected: {btn_value}",
+                    severity="INFO"
+                )
+                return
+        
+        # Click disagree if the value is not found
+        driver.execute_script("arguments[0].click();", element_disagree)
+        logger.log(
+            module="select_radio_button",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Disagree selected: {btn_value}",
+            severity="INFO"
+        )
+        
+    except NoSuchElementException as e:
+        logger.log(
+            module="select_radio_button",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Element not found: {e}",
+            severity="INFO"
+        )
+    except ElementClickInterceptedException as e:
+        logger.log(
+            module="select_radio_button",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"Element click intercepted: {e}",
+            severity="INFO"
+        )
+    except Exception as e:
+        logger.log(
+            module="select_radio_button",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"An error occurred: {e}",
+            severity="INFO"
+        )
+
+def select_drop_button(driver, btn_value, element_identifier, span_xpath, dropdown_xpath, element_type):
+    selector_map = selector_mapping(element_type)
+    try:
+        elements = driver.find_elements(selector_map, span_xpath)
+        dropdown_element = driver.find_element(By.XPATH, element_identifier)
+        
+        for element in elements:
+            if element.text != btn_value:
+                select = Select(dropdown_element)
+                select.select_by_visible_text('Tax Records')
+                
+                input_element = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.XPATH, dropdown_xpath))
+                )
+                input_element.clear()
+                input_element.send_keys("Verified From Tax")
+                return
+
+        # If btn_value is not found, you might want to handle it
+        logger.log(
+            module="select_drop_button",
+            order_id=hybrid_orderid,
+            action_type="Condition-check",
+            remarks=f"Value not found in dropdown: {btn_value}",
+            severity="INFO"
+        )
 
     except Exception as e:
-        # Retry mechanism in case of failure, using JavaScript click if necessary
-        for attempt in range(retries):
-            try:
-                # Use JS to click if the normal click fails
-                driver.execute_script("arguments[0].click();", element)
-                return True
-            except Exception as js_error:
-                logger.log( module="simple_click_field", order_id=hybrid_orderid, action_type="Exception", remarks=f"simple_click_field exception {js_error}",severity="INFO"  )
-
-                if attempt == retries - 1:
-                    logger.log( module="simple_click_field", order_id=hybrid_orderid, action_type="Exception", remarks=f"simple_click_field all retries exceeded , exception {js_error}",severity="INFO"  )
-                    return False
-                
-#Propinspect
-def checkbox_tick_field_lsi(driver, locator, locator_type, retries=2):
-    '''Function to tick the checkbox with recheck & retry for lsi'''
-
-    try:
-        selector_map = selector_mapping(locator_type)
-
-        for attempt in range(retries):
-            checkbox = WebDriverWait(driver, 20).until( EC.element_to_be_clickable((selector_map, locator)) )
-            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", checkbox)
-            if not checkbox.is_selected(): checkbox.click()
-
-            # Recheck if it is selected ('x' for lsi)
-            state = checkbox.get_attribute("value")
-            if state == 'X': logging.info(f"Checkbox clicked: {locator}"); return
-            else: pass
-
-        logger.log( module="checkbox_tick_field_lsi", order_id=hybrid_orderid, action_type="Exception", remarks=f"Could not select checkbox {locator} after {retries} retries",severity="INFO"  )
-
-    except Exception as e: 
-        logger.log( module="checkbox_tick_field_lsi", order_id=hybrid_orderid, action_type="Exception", remarks=f"Error interacting with checkbox {locator}: {e}",severity="INFO"  )
+        logger.log(
+            module="select_drop_button",
+            order_id=hybrid_orderid,
+            action_type="Exception",
+            remarks=f"An error occurred: {e}",
+            severity="INFO"
+        )
 
 
-#propinspect
-def input_dropdown_field(driver, expected_value, click_input_xpath, ul_xpath, retries=2):
-    '''Function to click input field and select options'''
-
-    for attempt in range(1, retries + 1):
-        try:
-            input_elem = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, click_input_xpath)))
-            input_elem.click()
-            time.sleep(0.5) 
-
-            ul_elem = WebDriverWait(driver, 15).until( EC.presence_of_element_located((By.XPATH, ul_xpath)) )
-            li_items = ul_elem.find_elements(By.TAG_NAME, 'li')
-            for li in li_items:
-
-                li_text = li.text.strip().lower()
-                if li_text == expected_value.strip().lower():
-
-                    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", li)
-                    li.click()
-                    logger.log( module="input_dropdown_field_lsi",  order_id=hybrid_orderid,  action_type="Condition-check", remarks=f"Selected '{expected_value}' from dropdown.",  severity="INFO" )
-                    return
-                
-            logger.log( module="input_dropdown_field_lsi",  order_id=hybrid_orderid,  action_type="Condition-check", remarks=f"Value '{expected_value}' not found in dropdown options.",  severity="INFO" )
-            continue
-
-        except Exception as e:
-            logger.log( module="input_dropdown_field_lsi",  order_id=hybrid_orderid,  action_type="Exception", remarks= f"[Attempt {attempt}] Dropdown error for '{expected_value}': {type(e).__name__} - {e}",  severity="INFO" )
-            time.sleep(1)
-
-    logger.log( module="input_dropdown_field_lsi",  order_id=hybrid_orderid,  action_type="Exception", remarks=f"Exception in filling {expected_value} ",  severity="INFO" )
-
-
-#propinspect
+#propinspect utilities
+from selenium.common.exceptions import UnexpectedAlertPresentException,StaleElementReferenceException
 
 def scrape_and_fill(driver, elementlocator, scrape_path, selector, retries=3):
 
@@ -1792,60 +2312,6 @@ def scrape_and_fill(driver, elementlocator, scrape_path, selector, retries=3):
 
     return False
 
-
-
-#propinspect
-def checkbox_tick_field(driver, locator, locator_type, retries=2):
-    '''Function to tick the checkbox with recheck & retry'''
-
-    try:
-        selector_map = selector_mapping(locator_type)
-        for attempt in range(retries):
-            elem = WebDriverWait(driver, 10).until( EC.element_to_be_clickable((selector_map, locator)))
-            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", elem )
-
-            if not elem.is_selected():
-                driver.execute_script("arguments[0].click();", elem)
-
-            # Recheck if it is selected
-            input_id = elem.get_attribute("for")
-            if input_id: input_elem = driver.find_element(By.ID, input_id)
-
-            elif elem.tag_name == "input": input_elem = elem
-            
-            else: return
-
-            if input_elem: 
-                logger.log( module="checkbox_tick_field",  order_id=hybrid_orderid,  action_type="Check_condition", remarks=f"Clicked the element {locator}",  severity="INFO" )
-                return
-            else: pass
-
-        logger.log( module="checkbox_tick_field",  order_id=hybrid_orderid,  action_type="Check_condition", remarks=f"Could not select checkbox {locator} after {retries} retries",  severity="INFO" )
-        return
-    
-    except Exception as e: 
-        logger.log( module="checkbox_tick_field",  order_id=hybrid_orderid,  action_type="Check_condition", remarks=f"Error interacting with checkbox {locator}: {e}",  severity="INFO" )
-        return
-
-
-#Propinspect
-def set_datepicker_date(driver, element, text):
-    '''Function to set the datepciker of Vue'''
-    from selenium.webdriver.common.keys import Keys
-
-    try:
-        element.clear()
-        for char in text:
-            element.send_keys(char)
-            time.sleep(0.05)  
-        element.send_keys(Keys.TAB)
-        logger.log( module="set_datepicker_date", order_id=hybrid_orderid, action_type="Condition", remarks=f"Picked date : {text}",severity="INFO"  )
-
-    except Exception as err: 
-        logger.log( module="set_datepicker_date", order_id=hybrid_orderid, action_type="EXCEPTION", remarks=f"Exception in filling datepciker pic date: {err}",severity="INFO"  )
-
-
-#propinspect
 def click_element(driver, elementlocator, selector):
     '''Function to click on next page'''
 
@@ -1882,8 +2348,7 @@ def select_checkboxes_list(driver, api_values, locator, mode):
     except Exception as e:
         logger.log(module="select_checkboxes_list", order_id=hybrid_orderid, action_type="Check_condition",  remarks=f"Error interacting with list of checkbox {locator}: {e}", severity="INFO" )
         return
-
-
+    
 #propinspect
 def fill_repairs_list(driver, repairs, repair_xpath, mode):
     '''Fill list of repairs available in data'''
@@ -1955,4 +2420,3 @@ def safe_type(driver, locator, text):
         el.dispatchEvent(new Event('input', { bubbles: true }));
         el.dispatchEvent(new Event('change', { bubbles: true }));
     """, element, text)
-
