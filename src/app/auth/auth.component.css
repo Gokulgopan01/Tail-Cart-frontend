@@ -1,3 +1,16 @@
+.auth-toggle-pill {
+  display: flex;
+
+  background: var(--bg-muted);
+  backdrop-filter: var(--surface-blur);
+
+  border-radius: 50px;
+  padding: 6px;
+  margin-bottom: 40px;
+
+  border: 1px solid var(--surface-border);
+}
+
 .auth-page {
   display: block;
   min-height: 100vh;
@@ -18,7 +31,10 @@
 .auth-lottie-container {
   flex: 1;
   position: relative;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+
+  /* upgraded: works for both themes */
+  background: var(--gradient-primary);
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,12 +47,73 @@
   position: absolute;
   width: 1000px;
   height: 1000px;
-  background: radial-gradient(circle, var(--accent-hover) 0%, transparent 70%);
+
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+
   bottom: -400px;
   left: -200px;
-  opacity: 0.15;
-  filter: blur(100px);
+
+  opacity: 0.12;
+  filter: blur(120px);
   z-index: 1;
+}
+
+.auth-lottie-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(circle at 70% 30%, rgba(0, 229, 255, 0.15), transparent 60%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.theme-toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  /* looks better than left */
+
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.1);
+  /* glass effect */
+  backdrop-filter: blur(12px);
+
+  border: 1px solid var(--surface-border);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  z-index: 10;
+  /* above lottie */
+
+  transition: all 0.3s ease;
+}
+
+/* icon */
+.theme-toggle-btn i {
+  font-size: 18px;
+  color: var(--text-white);
+}
+
+/* hover */
+.theme-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: var(--glow-primary);
+}
+
+.light .theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.dark .theme-toggle-btn {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .banner-lottie {
@@ -44,6 +121,7 @@
   top: 0;
   left: 0;
   width: 100%;
+  pointer-events: none;
   height: 100%;
   z-index: 5;
 }
@@ -51,26 +129,68 @@
 /* Form Right Side */
 .auth-form-container {
   flex: 0 0 520px;
-  background: var(--bg-card);
+
+  /* upgraded to token system */
+  background: var(--surface-bg);
+  backdrop-filter: var(--surface-blur);
+
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
-  box-shadow: var(--shadow-lg);
+
+  box-shadow: var(--shadow-elevated);
+
   position: relative;
   z-index: 20;
+
+  border-left: 1px solid var(--surface-border);
 }
 
 .auth-box {
   width: 100%;
   max-width: 400px;
-  background: var(--bg-card);
+
+  background: var(--surface-bg);
+  backdrop-filter: var(--surface-blur);
+
   padding: 45px 40px;
-  border-radius: 40px; /* High-end playful rounding */
-  box-shadow: var(--shadow-md);
+  border-radius: 32px;
+
+  box-shadow: var(--shadow-elevated);
+
   animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-  border: 1px solid var(--border-light);
+
+  border: 1px solid var(--surface-border);
+}
+
+.auth-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+
+  background: linear-gradient(120deg,
+      transparent,
+      rgba(0, 229, 255, 0.5),
+      transparent);
+
+  opacity: 0;
+  /* hidden in light */
+  transition: opacity 0.3s ease;
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* activate glow automatically in dark */
+.dark .auth-box::before {
+  opacity: 1;
 }
 
 @keyframes fadeUp {
@@ -78,41 +198,57 @@
     opacity: 0;
     transform: translateY(40px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Toggle Pill */
-.auth-toggle-pill {
-  display: flex;
-  background: var(--bg-muted);
-  border-radius: 50px;
-  padding: 6px;
-  margin-bottom: 40px;
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+
+
+/* Toggle Button */
 .toggle-btn {
   flex: 1;
   background: transparent;
   border: none;
   padding: 14px 0;
+
   font-size: 15px;
   font-weight: 700;
+
   color: var(--text-light);
+
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  transition: all 0.35s ease;
 }
 
 .toggle-btn.active {
-  color: #fff;
-  background: var(--primary);
-  box-shadow: 0 6px 20px rgba(15, 61, 62, 0.3);
+  color: var(--text-white);
+  background: var(--gradient-primary);
+
+  box-shadow: var(--glow-primary);
 }
 
-/* Headings */
+/* subtle hover */
+.toggle-btn:hover {
+  color: var(--text-primary);
+}
+
 .auth-headings {
   margin-bottom: 35px;
 }
@@ -123,6 +259,9 @@
   color: var(--text-primary);
   margin: 0 0 10px;
   letter-spacing: -1px;
+
+  /* subtle futuristic glow (auto works in dark) */
+  text-shadow: var(--glow-soft);
 }
 
 .auth-headings p {
@@ -131,56 +270,73 @@
   line-height: 1.6;
 }
 
-/* Floating Input Groups */
 .input-float-group {
   position: relative;
   margin-bottom: 25px;
 }
 
+/* INPUT FIELD */
 .input-float-group input {
   width: 100%;
+
   background: var(--bg-muted);
-  border: 2px solid transparent;
-  border-radius: 20px;
+  backdrop-filter: var(--surface-blur);
+
+  border: 1px solid var(--surface-border);
+  border-radius: 18px;
+
   padding: 18px 20px 18px 52px;
   font-size: 16px;
+
   color: var(--text-primary);
   font-weight: 600;
-  transition: all 0.3s ease;
+
+  transition: all 0.25s ease;
   outline: none;
   box-sizing: border-box;
 }
 
 .input-float-group input:hover {
-  background: var(--bg-card);
-  border-color: var(--border-light);
+  background: var(--surface-bg);
+  border-color: var(--border-strong);
 }
 
+/* FOCUS (important futuristic effect) */
 .input-float-group input:focus {
-  background: var(--bg-card);
+  background: var(--surface-bg);
   border-color: var(--primary);
-  box-shadow: 0 0 0 5px var(--primary-soft);
+
+  box-shadow: var(--focus-ring), var(--glow-primary);
 }
 
+/* LABEL */
 .input-float-group label {
   position: absolute;
   left: 52px;
   top: 50%;
   transform: translateY(-50%);
+
   font-size: 16px;
   color: var(--text-light);
+
   pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s ease;
 }
 
 .input-float-group input:focus~label,
 .input-float-group input:not(:placeholder-shown)~label {
-  top: -2px;
-  font-size: 13px;
+  top: -6px;
+  font-size: 12px;
+
   color: var(--primary);
-  font-weight: 800;
-  background: var(--bg-card);
-  padding: 0 6px;
+  font-weight: 700;
+
+  background: var(--surface-bg);
+  padding: 2px 8px;
+  border-radius: 6px;
+
+  /* slight glow in dark */
+  box-shadow: var(--glow-soft);
 }
 
 .input-icon {
@@ -188,14 +344,17 @@
   left: 20px;
   top: 50%;
   transform: translateY(-50%);
+
   color: var(--text-light);
   font-size: 18px;
-  transition: all 0.3s;
+
+  transition: all 0.25s ease;
 }
 
+/* ICON ACTIVE (focus interaction) */
 .input-float-group input:focus~.input-icon {
   color: var(--primary);
-  transform: translateY(-50%) scale(1.15);
+  text-shadow: var(--glow-primary);
 }
 
 .toggle-password {
@@ -203,14 +362,23 @@
   right: 18px;
   top: 50%;
   transform: translateY(-50%);
+
   background: none;
   border: none;
+
   color: var(--text-light);
   cursor: pointer;
   padding: 5px;
+
+  transition: all 0.25s ease;
 }
 
-/* Form Options */
+/* subtle interaction */
+.toggle-password:hover {
+  color: var(--primary);
+  text-shadow: var(--glow-primary);
+}
+
 .form-options {
   display: flex;
   justify-content: space-between;
@@ -218,6 +386,9 @@
   margin-bottom: 30px;
 }
 
+/* =========================
+   MODERN CHECKBOX
+   ========================= */
 .modern-checkbox {
   display: flex;
   align-items: center;
@@ -231,66 +402,117 @@
   height: 0;
 }
 
+/* checkbox box */
 .checkmark {
   width: 22px;
   height: 22px;
+
   background: var(--bg-muted);
-  border: 2px solid var(--border-light);
-  border-radius: 8px;
+  backdrop-filter: var(--surface-blur);
+
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
-  transition: all 0.2s;
+
+  transition: all 0.25s ease;
 }
 
-.modern-checkbox input:checked~.checkmark {
-  background: var(--primary);
+/* hover */
+.modern-checkbox:hover .checkmark {
   border-color: var(--primary);
 }
 
+/* checked */
+.modern-checkbox input:checked~.checkmark {
+  background: var(--gradient-primary);
+  border-color: var(--primary);
+
+  box-shadow: var(--glow-primary);
+}
+
+/* icon inside */
 .checkmark i {
   color: #fff;
   font-size: 10px;
   opacity: 0;
+  transition: 0.2s ease;
 }
 
 .modern-checkbox input:checked~.checkmark i {
   opacity: 1;
 }
 
+
+/* =========================
+   FORGOT PASSWORD LINK
+   ========================= */
 .forgot-link {
-  font-size: 15px;
+  font-size: 14px;
   color: var(--accent);
-  font-weight: 800;
+  font-weight: 700;
   text-decoration: none;
+
+  transition: all 0.25s ease;
 }
 
-/* Submit Button */
+/* subtle futuristic hover */
+.forgot-link:hover {
+  color: var(--primary);
+  text-shadow: var(--glow-soft);
+}
+
 .modern-submit-btn {
   width: 100%;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  color: #fff;
+
+  background: var(--gradient-primary);
+  color: var(--text-white);
+
   border: none;
-  padding: 18px;
   border-radius: 22px;
-  font-size: 17px;
-  font-weight: 800;
+
+  padding: 18px;
+  font-size: 16px;
+  font-weight: 700;
+
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 10px 30px rgba(15, 61, 62, 0.3);
+
   display: flex;
   justify-content: center;
   align-items: center;
   height: 62px;
+
+  /* IMPORTANT: use token */
+  box-shadow: var(--shadow-elevated);
+
+  transition: all 0.3s ease;
+}
+
+/* hover (this gives futuristic energy) */
+.modern-submit-btn:hover {
+  transform: translateY(-2px) scale(1.01);
+
+  box-shadow: var(--glow-primary), var(--shadow-elevated);
+}
+
+/* active press */
+.modern-submit-btn:active {
+  transform: scale(0.98);
 }
 
 .modern-submit-btn:hover:not(:disabled) {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 15px 40px rgba(15, 61, 62, 0.4);
+  transform: translateY(-4px) scale(1.02);
+
+  /* use tokens instead of hardcoded shadow */
+  box-shadow: var(--glow-primary), var(--shadow-elevated);
 }
 
-/* Social Grid */
+/* =========================
+   SOCIAL DIVIDER
+   ========================= */
 .social-divider {
   display: flex;
   align-items: center;
@@ -298,17 +520,21 @@
   margin: 35px 0 25px;
 }
 
-.social-divider::before, .social-divider::after {
+.social-divider::before,
+.social-divider::after {
   content: '';
   flex: 1;
-  border-bottom: 2px solid var(--bg-muted);
+
+  border-bottom: 1px solid var(--surface-border);
+  opacity: 0.6;
 }
 
 .social-divider span {
   padding: 0 20px;
   color: var(--text-light);
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .social-grid {
@@ -318,129 +544,238 @@
 
 .social-btn {
   flex: 1;
+
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: var(--bg-card);
-  border: 2px solid var(--border-light);
-  padding: 15px;
-  border-radius: 20px;
-  font-weight: 700;
+
+  background: var(--surface-bg);
+  backdrop-filter: var(--surface-blur);
+
+  border: 1px solid var(--surface-border);
+  border-radius: 18px;
+
+  padding: 14px;
+  font-weight: 600;
   color: var(--text-primary);
+
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.25s ease;
 }
 
+
 .social-btn img {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 }
 
 .social-btn i {
-  font-size: 20px;
+  font-size: 18px;
 }
 
+/* hover → subtle futuristic lift */
 .social-btn:hover {
-  background: var(--bg-muted);
-  border-color: var(--primary-light);
   transform: translateY(-3px);
+
+  border-color: var(--primary);
+  box-shadow: var(--glow-soft);
 }
 
-/* Footer Section Customizations */
+
 .premium-luxury-footer {
-  background: var(--primary);
-  color: #fff;
+  background: var(--gradient-primary);
+  color: var(--text-white);
+
   padding: 100px 0 50px;
   position: relative;
   overflow: hidden;
 }
 
-.newsletter-button-premium {
-  background: var(--accent);
-  color: var(--primary);
-  font-weight: 800;
-  border-radius: 50px;
-  padding: 14px 28px;
-  border: none;
-  cursor: pointer;
+/* subtle glow layer (dark mode shows nicely) */
+.premium-luxury-footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(circle at 30% 20%, rgba(0, 229, 255, 0.15), transparent 50%);
+  pointer-events: none;
 }
 
-/* Alerts */
+.newsletter-button-premium {
+  background: var(--gradient-accent);
+  color: var(--text-primary);
+
+  font-weight: 700;
+  border-radius: 50px;
+  padding: 14px 28px;
+
+  border: none;
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.newsletter-button-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glow-primary);
+}
+
 .modern-alert {
   padding: 16px 20px;
-  border-radius: 20px;
+  border-radius: 18px;
   margin-bottom: 30px;
+
   display: flex;
   align-items: center;
   gap: 12px;
-  font-weight: 700;
-  font-size: 0.95rem;
+
+  font-weight: 600;
+  font-size: 0.9rem;
+
   position: relative;
-  border: none;
+
+  /* upgraded */
+  background: var(--surface-bg);
+  backdrop-filter: var(--surface-blur);
+
+  border: 1px solid var(--surface-border);
+
   animation: slideDown 0.4s ease-out;
 }
 
+
+
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+/* =========================
+   ALERT VARIANTS
+   ========================= */
 .error-alert {
-  background: var(--secondary-soft);
+  background: var(--surface-bg);
+  backdrop-filter: var(--surface-blur);
+
   color: var(--danger);
-  border-left: 6px solid var(--danger);
+
+  border: 1px solid var(--danger);
+  border-left: 4px solid var(--danger);
+
+  box-shadow: 0 0 12px rgba(231, 76, 60, 0.15);
 }
 
 .success-alert {
-  background: var(--primary-soft);
+  background: var(--surface-bg);
+  backdrop-filter: var(--surface-blur);
+
   color: var(--success);
-  border-left: 6px solid var(--success);
+
+  border: 1px solid var(--success);
+  border-left: 4px solid var(--success);
+
+  box-shadow: 0 0 12px rgba(46, 204, 113, 0.15);
 }
 
 .modern-alert span {
   flex: 1;
 }
 
+
+/* =========================
+   CLOSE BUTTON
+   ========================= */
 .btn-close {
   background: transparent !important;
   border: none !important;
-  padding: 8px;
+
+  padding: 6px;
+
   color: currentColor;
   cursor: pointer;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   opacity: 0.6;
-  font-size: 1.1rem;
-  transition: opacity 0.2s;
+  font-size: 1rem;
+
+  transition: all 0.2s ease;
+
   appearance: none !important;
   -webkit-appearance: none;
 }
 
+/* subtle glow on hover */
 .btn-close:hover {
   opacity: 1;
+  transform: scale(1.1);
+  text-shadow: var(--glow-soft);
 }
 
+
+/* =========================
+   VALIDATION MESSAGE
+   ========================= */
 .validation-msg {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+
   color: var(--danger);
-  font-weight: 700;
+  font-weight: 600;
+
   margin-top: 6px;
-  padding-left: 12px;
+  padding-left: 10px;
+
   animation: fadeIn 0.3s ease;
+
+  /* subtle emphasis */
+  letter-spacing: 0.3px;
 }
 
-/* Success Overlay */
+
+/* =========================
+   SUCCESS OVERLAY
+   ========================= */
 .success-backdrop {
   background: var(--bg-main) !important;
-  backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(25px) !important;
+
+  /* futuristic ambient glow */
+  position: relative;
 }
 
+.success-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(circle at center,
+      rgba(0, 229, 255, 0.15),
+      transparent 60%);
+
+  pointer-events: none;
+}
+
+
+/* =========================
+   SUCCESS TITLE
+   ========================= */
 .success-title {
   color: var(--primary) !important;
-  font-weight: 900 !important;
+  font-weight: 800 !important;
+
+  /* glow only visible in dark */
+  text-shadow: var(--glow-primary);
 }
 
 /* Responsive */
@@ -448,9 +783,11 @@
   .auth-main-wrapper {
     flex-direction: column;
   }
+
   .auth-lottie-container {
     flex: 0 0 280px;
   }
+
   .auth-form-container {
     flex: 1;
     width: 100%;
@@ -458,6 +795,7 @@
     border-radius: 50px 50px 0 0;
     padding: 30px 20px;
   }
+
   .auth-box {
     box-shadow: none;
     padding: 35px 25px;
@@ -509,13 +847,34 @@
 
 /* Paw Icons Decor (via pseudo-elements) */
 .auth-box::before {
-  content: '🐾';
+  content: '';
   position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 24px;
-  opacity: 0.1;
-  transform: rotate(15deg);
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+
+  background: linear-gradient(120deg,
+      transparent,
+      rgba(0, 229, 255, 0.5),
+      transparent);
+
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  pointer-events: none;
+  /* 🔥 ADD THIS */
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.auth-lottie-container::before,
+.auth-lottie-container::after,
+.banner-lottie {
+  pointer-events: none;
 }
 
 .auth-box::after {
@@ -523,7 +882,5 @@
   position: absolute;
   bottom: 20px;
   left: 20px;
-  font-size: 24px;
   opacity: 0.1;
-  transform: rotate(-15deg);
 }

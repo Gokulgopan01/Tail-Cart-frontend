@@ -48,6 +48,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
   successMessage = signal('');
   showPassword = false;
   isScrolled = signal(false);
+  isDarkMode = signal(false);
 
   showSuccessAnimation = signal(false);
   forgotMode = signal(false);
@@ -85,7 +86,12 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
       this.rememberMe = true;
     }
 
-    // Add scroll listener for footer scroll-top button
+    const savedTheme = localStorage.getItem('auth_theme');
+    const isDark = savedTheme === 'dark';
+
+    this.isDarkMode.set(isDark);
+    document.body.classList.toggle('dark', isDark);
+
     window.addEventListener('scroll', this.checkScroll.bind(this));
   }
 
@@ -164,6 +170,15 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
   private stopLoader(): void {
     this.animation?.stop();
     this.isLoading.set(false);
+  }
+
+  toggleTheme(): void {
+    const isDark = !this.isDarkMode();
+
+    this.isDarkMode.set(isDark);
+    localStorage.setItem('auth_theme', isDark ? 'dark' : 'light');
+
+    document.body.classList.toggle('dark', isDark);
   }
 
   onSwitchMode(): void {

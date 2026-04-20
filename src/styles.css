@@ -1,78 +1,143 @@
+/* =========================
+   LIGHT THEME (DEFAULT)
+   ========================= */
 :root {
-  /* =========================
-     PRIMARY BRAND
-     ========================= */
+  /* PRIMARY BRAND */
   --primary: #0F3D3E;
   --primary-light: #1F6F70;
   --primary-soft: #E6F4F1;
 
-  /* =========================
-     ACCENT (GOLD)
-     ========================= */
+  /* ACCENT */
   --accent: #D4AF37;
   --accent-soft: #F6E7B5;
   --accent-hover: #B8962E;
 
-  /* =========================
-     SECONDARY (CORAL)
-     ========================= */
+  /* SECONDARY */
   --secondary: #FF7A59;
   --secondary-soft: #FFE5DE;
 
-  /* =========================
-     BACKGROUND SYSTEM
-     ========================= */
+  /* BACKGROUND */
   --bg-main: #F7FAF9;
   --bg-card: #FFFFFF;
   --bg-muted: #EEF3F2;
   --bg-glass: rgba(255, 255, 255, 0.6);
 
-  /* =========================
-     TEXT
-     ========================= */
+  /* TEXT */
   --text-primary: #0D1F1C;
   --text-secondary: #5F6F6B;
   --text-light: #8FA39E;
-  --text-white: #fff;
+  --text-white: #ffffff;
 
-  /* =========================
-     BORDER & UI
-     ========================= */
+  /* BORDER */
   --border-light: #E3ECEA;
   --border-strong: #C9D6D2;
   --border-focus: #D4AF37;
 
-  /* =========================
-     STATUS
-     ========================= */
+  /* STATUS */
   --success: #2ECC71;
   --warning: #F39C12;
   --danger: #E74C3C;
 
-  /* =========================
-     SHADOWS
-     ========================= */
+  /* SHADOWS */
   --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
 
-  /* =========================
-     GRADIENTS
-     ========================= */
+  /* GRADIENTS */
   --gradient-primary: linear-gradient(135deg, #0F3D3E, #1F6F70);
   --gradient-accent: linear-gradient(135deg, #D4AF37, #F2D57E);
   --gradient-soft: linear-gradient(135deg, #E6F4F1, #F7FAF9);
   --gradient-warm: linear-gradient(135deg, #FF7A59, #FFB199);
   --gradient-violet: linear-gradient(135deg, #6D5DF6, #A78BFA);
 
-  /* =========================
-     CATEGORY COLORS
-     ========================= */
+  /* CATEGORY */
   --dog-bg: #FFF3E8;
   --cat-bg: #F0F7FF;
   --fish-bg: #E8FBF5;
   --bird-bg: #FFF0F5;
   --other-bg: #F5F5F5;
+
+  /* ===== UI BEHAVIOR TOKENS (IMPORTANT) ===== */
+  --surface-bg: var(--bg-card);
+  --surface-border: var(--border-light);
+  --surface-blur: none;
+
+  --glow-primary: none;
+  --glow-soft: none;
+
+  --shadow-elevated: var(--shadow-md);
+
+  --focus-ring: 0 0 0 2px rgba(15, 61, 62, 0.15);
+}
+
+
+/* =========================
+   DARK THEME (FUTURISTIC)
+   ========================= */
+.dark {
+  /* CORE COLORS */
+  --primary: #00E5FF;
+  --primary-light: #00B8D4;
+
+  --accent: #7CFFCB;
+  --accent-soft: rgba(124, 255, 203, 0.15);
+  --accent-hover: #5FFFD2;
+
+  --secondary: #FF7A59;
+  --secondary-soft: rgba(255, 122, 89, 0.15);
+
+  /* BACKGROUND */
+  --bg-main: #0B0F14;
+  --bg-card: rgba(18, 24, 33, 0.65);
+  --bg-muted: rgba(255, 255, 255, 0.03);
+  --bg-glass: rgba(255, 255, 255, 0.05);
+
+  /* TEXT */
+  --text-primary: #E6F1FF;
+  --text-secondary: #8A9BB5;
+  --text-light: #6F8199;
+  --text-white: #ffffff;
+
+  /* BORDER */
+  --border-light: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --border-focus: #00E5FF;
+
+  /* SHADOWS (DEEP + GLOW) */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.8);
+
+  /* GRADIENTS */
+  --gradient-primary: linear-gradient(135deg, #00E5FF, #00B8D4);
+  --gradient-accent: linear-gradient(135deg, #7CFFCB, #00E5FF);
+
+  /* CATEGORY (slightly muted for dark) */
+  --dog-bg: rgba(255, 243, 232, 0.08);
+  --cat-bg: rgba(240, 247, 255, 0.08);
+  --fish-bg: rgba(232, 251, 245, 0.08);
+  --bird-bg: rgba(255, 240, 245, 0.08);
+  --other-bg: rgba(245, 245, 245, 0.05);
+
+  /* ===== FUTURISTIC BEHAVIOR ===== */
+  --surface-bg: rgba(18, 24, 33, 0.65);
+  --surface-border: rgba(0, 229, 255, 0.15);
+  --surface-blur: blur(20px);
+
+  --glow-primary: 0 0 20px rgba(0, 229, 255, 0.5);
+  --glow-soft: 0 0 40px rgba(0, 229, 255, 0.2);
+
+  --shadow-elevated:
+    0 10px 40px rgba(0, 0, 0, 0.7),
+    inset 0 0 20px rgba(0, 229, 255, 0.05);
+
+  --focus-ring: 0 0 12px rgba(0, 229, 255, 0.6);
+
+  /* BACKGROUND EFFECT */
+  --bg-main:
+    radial-gradient(circle at 15% 25%, rgba(0, 229, 255, 0.12), transparent 40%),
+    radial-gradient(circle at 85% 75%, rgba(0, 184, 212, 0.10), transparent 40%),
+    #0B0F14;
 }
 
 * {

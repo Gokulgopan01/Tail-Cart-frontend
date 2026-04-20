@@ -29,8 +29,8 @@ export class NavbarComponent implements OnInit {
     ).subscribe((event: any) => {
       const url = event.urlAfterRedirects;
       const isPetPublic = url.includes('/pet-public') || url.startsWith('/pet/') || /\/pet\//.test(url);
-      this.hideTopNav = url.includes('/profile') || url.includes('/checkout') || url.includes('/shop') || isPetPublic;
-      this.hideBottomNav = url.includes('/checkout') || isPetPublic;
+      this.hideTopNav = url.includes('/profile') || url.includes('/auth') || url.includes('/checkout') || url.includes('/shop') || isPetPublic;
+      this.hideBottomNav = url.includes('/auth') || url.includes('/checkout') || isPetPublic;
       this.updateActiveIndex(url);
     });
   }
