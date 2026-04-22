@@ -43,7 +43,7 @@ def params_check():
           # Returns auto for manualy opening Autologin  
 
         return "AutoLogin",None,None
-        #return "SmartEntry","3854","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
+        # return "SmartEntry","4198","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
 
 process_type, hybrid_orderid, hybrid_token = params_check()
 
@@ -574,7 +574,8 @@ def radio_btn_click(driver, btn_value, element_identifier, element_type):
 
     # Try matching by 'value' attribute
     for elem in elements:
-        elem_value = re.sub(r"\s+", " ", (elem.get_attribute("value") or "").strip().lower())
+        # elem_value = re.sub(r"\s+", " ", (elem.get_attribute("value") or "").strip().lower())
+        elem_value = re.sub(r"\s+", " ", ( elem.get_attribute("value") or elem.text or "").strip().lower())
         if elem_value == btn_value_normalized:
             try:
                 # Scroll into view first
@@ -1814,13 +1815,15 @@ def fetch_upload_data(self, order_id: int):
     rental_folder = content.get("rental", "")
     signature_folder=content.get("signature","")
     item_id = content.get("itemId")
+    subject_image_path = content.get("subject_image_path","")
 
     return {
         "documents": documents,
         "comparables_folder": comparables_folder,
         "rental_folder": rental_folder,
         "signature_folder":signature_folder,
-        "item_id": item_id
+        "item_id": item_id,
+        "image_path": subject_image_path
     }
 
 def list_files_from_server(folder: str):

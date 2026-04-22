@@ -49,7 +49,7 @@ class Proteck:
         """Login to a portal"""
 
         try:
-            self.driver =  setup_driver(self)
+            setup_driver(self)
             self.driver.get(self.portal_url)
             WebDriverWait(self.driver, 20).until(  EC.visibility_of_element_located((By.XPATH, "//*[@id='UserNameOrEmail']")))
 
@@ -154,7 +154,7 @@ class Proteck:
             for order_from_api in orders_from_api:
                 order_id=order_from_api.get("order_id","")
 
-            target_orderid, tfs_orderid = get_order_address_from_assigned_order(order_id, hybrid_token)
+            target_orderid, tfs_orderid,is_qc = get_order_address_from_assigned_order(order_id, hybrid_token)
 
             #Form Types
             INP_form_types = ["PCR eValuation Exterior With Checklist","Property Condition Report Standalone","Property Condition Report","AVM and PCR"]
@@ -312,20 +312,20 @@ class Proteck:
                 return
             
             comparables_folder = uplaod_data.get("comparables_folder")
-            tax_record = uplaod_data.get("comparables_folder")
+            tax_record = uplaod_data.get("documents")
             mls_record = uplaod_data.get("comparables_folder")
-            # subject_photos = uplaod_data.get("comparables_folder")
-            subject_photos = r"Z:\BPO\soft\PropVision_Photos\Keystone Holding\1625035\Verified"
+            image_path = uplaod_data.get("image_path")
+            # subject_photos = r"Z:\BPO\soft\PropVision_Photos\Keystone Holding\1625035\Verified"
 
 
             #checking photos
-            if not isinstance(subject_photos, str) and subject_photos.strip():
+            if not isinstance(image_path, str) and image_path.strip():
                 logger.log( module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid,action_type="Condition-check", remarks=f"Subject photo folder is missing or invalid for order {order_id}: {comparables_folder!r}",severity="INFO" )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                 return
             
             #upload photos
-            upload_photos, err = self.upload_photos_to_order(subject_photos)
+            upload_photos, err = self.upload_photos_to_order(image_path)
             if not upload_photos:
                 logger.log( module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check",  remarks=f"issue in uplaoding photos", severity="INFO")
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
