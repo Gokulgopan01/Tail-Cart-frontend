@@ -16,7 +16,7 @@ from selenium.common.exceptions import (StaleElementReferenceException, TimeoutE
 
 from utils.helper import (load_form_config_and_data, handle_login_status, setup_driver, update_portal_login_confirmation_status,
 data_filling_text,javascript_excecuter_filling,scrape_and_fill,params_check,update_order_status,get_order_address_from_assigned_order, 
-fetch_upload_data, get_nested, click_element, select_field,select_checkboxes_list,radio_btn_click, fill_repairs_list) 
+fetch_upload_data, get_nested, click_element, select_field,select_checkboxes_list,radio_btn_click, fill_repairs_list,update_pic_status) 
 
 
 # Load environment variables from the .env file
@@ -294,15 +294,10 @@ class Proteck:
 
             if "entry_data" in merged_json and merged_json["entry_data"]:
                 merged_json["entry_data"][0]["condition_data"] = condition_data
-                
             logger.log( module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid,action_type="Condition-check", remarks=f"merged_json: {merged_json}", severity="INFO" )
 
             #Form filling
             form_fill, error = self.fill_form_multi( merged_json, form_config)
-            if not form_fill:
-                logger.log( module="Proteck-proteck_formopen_fill",order_id=hybrid_orderid,action_type="ERROR",remarks=f"Error while filling the form: {error}",severity="INFO" )
-                update_order_status(order_id, "In Progress", "Entry", "Failed")
-                return 
             
             #fetch uploading data, document, photo
             uplaod_data = fetch_upload_data(self, order_id)
@@ -313,40 +308,38 @@ class Proteck:
             
             comparables_folder = uplaod_data.get("comparables_folder")
             tax_record = uplaod_data.get("documents")
-            mls_record = uplaod_data.get("comparables_folder")
+            mls_record = uplaod_data.get("documents")
+            documents = uplaod_data.get("documents", [])
             image_path = uplaod_data.get("image_path")
-            # subject_photos = r"Z:\BPO\soft\PropVision_Photos\Keystone Holding\1625035\Verified"
-
+            
+            #checking tax and mls
+            if documents:
+                upload_documents, err = self.upload_tax_mls(merged_json,documents)
 
             #checking photos
             if not isinstance(image_path, str) and image_path.strip():
                 logger.log( module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid,action_type="Condition-check", remarks=f"Subject photo folder is missing or invalid for order {order_id}: {comparables_folder!r}",severity="INFO" )
-                update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
+
+                if form_fill:
+                    update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
+                else:
+                    update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                 return
             
             #upload photos
             upload_photos, err = self.upload_photos_to_order(image_path)
-            if not upload_photos:
-                logger.log( module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check",  remarks=f"issue in uplaoding photos", severity="INFO")
-                update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-                return
             
-            #checking tax and mls
-            if not tax_record and not mls_record:
-                logger.log( module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid,action_type="Condition-check", remarks=f"Tax and mls records are missing {tax_record}: {mls_record}",severity="INFO" )
-                update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-                return
-            
-            #Upload tax and mls
-            upload_documents, err = self.upload_tax_mls(merged_json)
-            if not upload_documents:
-                logger.log( module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check",  remarks=f"issue in uplaoding documents: {err}", severity="INFO")
-                update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-                return
-            
-            if form_fill and upload_photos and upload_documents :
+            #Total inspection order completed
+            if form_fill and upload_photos:
                 logger.log(  module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check", remarks="All form filling and upload functions completed successfully.", severity="INFO" )
-                update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
+                update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
+                update_pic_status(hybrid_orderid,"Uploaded",hybrid_token)
+                return
+            
+            #if only entry completed
+            if form_fill:
+                logger.log(  module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check", remarks="All form filling and upload functions completed successfully.", severity="INFO" )
+                update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 return
             
             else:
@@ -602,20 +595,26 @@ class Proteck:
             return False, err
 
 
-    def upload_tax_mls(self,merged_json):
+    def upload_tax_mls(self,merged_json,documents):
         '''Upload tax and mls if available'''
         
         try:
+            tax_document = None
+            mls_document = None
+
+            for doc in documents:
+                doc_type = doc.get("type", "").strip().upper()
+
+                if doc_type == "TAX": tax_document = doc.get("path")
+                elif doc_type == "MLS": mls_document = doc.get("path")
+
+            if not tax_document and not mls_document:
+                logger.log(module="Proteck-upload_tax_mls", order_id=hybrid_orderid, action_type="Condition_Check", remarks=f"Tax and mls docuement not provided: {tax_document}", severity="INFO")
+                return True,None  
+
             entry_data = merged_json.get('entry_data', [])
             entry = entry_data[0]
             sub_data = entry.get('sub_data', None) 
-
-            tax_document = sub_data.get('primaryAttachmentPath')
-            mls_document = sub_data.get('supportingAttachmentPath')
-
-            if not tax_document:
-                logger.log(module="Proteck-upload_tax_mls", order_id=hybrid_orderid, action_type="Condition_Check", remarks=f"Tax docuement not provided: {tax_document}", severity="INFO")
-                return True,None   #return true coz document not uploaded in frontend
             
             click_element(self.driver, "//a[@class='case-talk']", By.XPATH)
 

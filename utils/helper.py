@@ -1753,6 +1753,52 @@ def update_order_status(assigned_order_id, status, stage, order_event_status,tok
         )
         return None
 
+
+def update_pic_status(order_id,status,token):
+    '''Update pic status'''
+
+    pic_status_url = env.pic_status_update
+    params = {
+        "order_id": order_id,
+        "pic_status": status
+    }
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.put(pic_status_url, params=params, headers=headers)
+
+        if response.status_code == 200:
+            print("SUCCESS", response.status_code)
+        else:
+            print(f"FAILURE {response.status_code}: {response.text}")
+
+        logger.log(
+            module="update_pic_status",
+            order_id=order_id,
+            action_type="Condition-check",
+            remarks=f"{status} pic status PUT response: {response.status_code} - {response.text}",
+            severity="INFO"
+        )
+
+        return response
+
+    except Exception as e:
+        print(f"Exception in update_pic_status: {e}")
+
+        logger.log(
+            module="update_pic_status",
+            order_id=order_id,
+            action_type="Exception",
+            remarks=f"Error while updating pic status via PUT: {e}",
+            severity="INFO"
+        )
+
+        return None
+
 def update_client_account_status(client_account_id):
     
     url = f'{env.ACCOUNT_INACTIVE}{client_account_id}'

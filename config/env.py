@@ -21,6 +21,7 @@ REMOTE_VERSION_URL = "http://192.168.2.51:8000/hybrid/api/v1/autologin/autologin
 PORTAL_LOGIN_CONFIRMATION="http://192.168.2.51:8000/hybrid/api/v1/autologin/update-autologin-check?order_id="
 tfs_statuschange_url = "http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateTFSstatusEntry"
 bpo_statuschange_url = "http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateAutoEntry"
+pic_status_update = "http://192.168.2.51:8000/hybrid/api/v1/status_update/pic-status"
 
 RABBIT_URL = "amqp://glogger:123@192.168.2.41/"
 QUEUE_NAME = "autologin-tool"
