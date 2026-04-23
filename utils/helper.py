@@ -43,7 +43,7 @@ def params_check():
           # Returns auto for manualy opening Autologin  
 
         return "AutoLogin",None,None
-        # return "SmartEntry","4198","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
+        # return "SmartEntry","4229","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
 
 process_type, hybrid_orderid, hybrid_token = params_check()
 
@@ -2398,6 +2398,7 @@ def select_checkboxes_list(driver, api_values, locator, mode):
         logger.log(module="select_checkboxes_list", order_id=hybrid_orderid, action_type="Check_condition",  remarks=f"Error interacting with list of checkbox {locator}: {e}", severity="INFO" )
         return
     
+
 #propinspect
 def fill_repairs_list(driver, repairs, repair_xpath, mode):
     '''Fill list of repairs available in data'''
@@ -2406,17 +2407,21 @@ def fill_repairs_list(driver, repairs, repair_xpath, mode):
         wait = WebDriverWait(driver, 15)
 
         #clear existing repairs if available
-        try:
-            delete_buttons = wait.until( EC.presence_of_all_elements_located( (By.CSS_SELECTOR, f"{repair_xpath} tbody tr [data-repair-attribute='delete'] .remove-row")))
-
-            for btn in delete_buttons:
+        delete_buttons = driver.find_elements( By.CSS_SELECTOR, f"{repair_xpath} tbody tr [data-repair-attribute='delete'] .remove-row" )
+        for btn in delete_buttons:
+            try:
+                # Find a single delete button fresh each time
+                btn = WebDriverWait(driver, 5).until(EC.element_to_be_clickable( (By.CSS_SELECTOR, f"{repair_xpath} tbody tr [data-repair-attribute='delete'] .remove-row")))
                 driver.execute_script("arguments[0].click();", btn)
-                time.sleep(0.5)  # small wait for row removal animation/ajax
 
-            wait.until(lambda d: len(d.find_elements(By.CSS_SELECTOR, f"{repair_xpath} tbody tr")) == 0)
+                # Wait until this row is gone
+                WebDriverWait(driver, 5).until(EC.staleness_of(btn))
+            
+            except UnexpectedAlertPresentException:
+                pass
 
-        except TimeoutException:
-            pass
+            except TimeoutException:
+                break  
         
         #Fill repair items
         for index, repair in enumerate(repairs):

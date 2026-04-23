@@ -656,6 +656,8 @@ class Proteck:
             
             # save_btn = WebDriverWait(self.driver, 20).until( EC.presence_of_element_located((By.XPATH, '//*[@id="_addMessage__form__insert"]')))
             # self.driver.execute_script("arguments[0].click();", save_btn)
+            self.driver.switch_to.window(parent)
+            
             logger.log( module="Proteck-upload_tax_mls",order_id=hybrid_orderid, action_type="Condition_Check", remarks=f"Uploaded files Successfully", severity="INFO" )
 
             if attach_file:
