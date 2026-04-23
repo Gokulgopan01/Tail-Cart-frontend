@@ -1,0 +1,99 @@
+{
+    "page":[
+        {
+          "Controls":[
+            {
+                "FieldType":"input_field",
+                "values": [
+                    ["sub_data['InspectionDate']","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[3]/div[2]/div/div/div/div/div/div[1]/input","xpath"]
+                ]
+            },
+            {
+                "FieldType":"js_execute",
+                "values": [
+                    ["sub_data['LotSqft']","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[4]/div/div/div[1]/div/input","xpath"],
+                    ["sub_data['ZoningClassification']","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[4]/div/div/div[2]/div/input","xpath"]
+                ]
+            },
+            
+            {
+                "FieldType":"checkbox",
+                "values":[
+                    ["propertyviewable","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[2]/div[1]/div[1]/div/div/div/label[1]","xpath"],
+                    ["propertyviewable","No","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[2]/div[1]/div[1]/div/div/div/label[2]","xpath"],
+
+                    ["SaleSignVisible","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[2]/div[1]/div[2]/div[1]/div/div/label[1]","xpath"],
+                    ["SaleSignVisible","No","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[2]/div[1]/div[2]/div[1]/div/div/label[2]","xpath"],
+
+                    ["hasWindowBars","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[2]/div[1]/div[3]/div[1]/div/div/label[1]","xpath"],
+                    ["hasWindowBars","No","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[2]/div[1]/div[3]/div[1]/div/div/label[2]","xpath"],
+
+                    ["constructionInProgress","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[2]/div[1]/div[4]/div[1]/div/div/label[1]","xpath"],
+                    ["constructionInProgress","No","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[2]/div[1]/div[4]/div[1]/div/div/label[2]","xpath"],
+
+                    ["safetyConcerns","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[2]/div[1]/div[5]/div[1]/div/div/label[1]","xpath"],
+                    ["safetyConcerns","No","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[2]/div[1]/div[5]/div[1]/div/div/label[2]","xpath"],
+
+                    ["Condition","Below average","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[3]/div/div/div/div/div[1]","xpath"],
+                    ["Condition","Average or Above Average","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[1]/div[3]/div/div/div/div/div[2]","xpath"]
+                ]
+            },
+            {
+                "FieldType":"input_field",
+                "values":[
+                    ["sub_data['belowAvgdescription']","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[5]/div[2]/div/div/textarea","xpath"]
+                ]
+            },
+            {
+                "FieldType":"checkbox",
+                "values":[
+                    ["adverseView","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[2]/div/div[1]/div[1]/div/div/div[1]","xpath"],
+                    ["adverseView","No","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[2]/div/div[1]/div[1]/div/div/div[2]","xpath"],
+
+                    ["adverseNoise","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[2]/div/div[2]/div[1]/div/div/div[1]","xpath"],
+                    ["adverseNoise","No","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[2]/div/div[2]/div[1]/div/div/div[2]","xpath"],
+                    
+                    ["adverseOdor","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[2]/div/div[3]/div[1]/div/div/div[1]","xpath"],
+                    ["adverseOdor","No","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[2]/div/div[3]/div[1]/div/div/div[2]","xpath"]
+                ]
+            },
+            {
+                "FieldType":"simple_click",
+                "values":[
+                    ["externalFactors","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div/div/button","xpath"]
+                ]
+            },
+            {
+                "FieldType":"checkbox",
+                "values":[
+                    ["hasCommercialIndustrial","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[1]/div/div/input","xpath"],
+                    ["hasHighDensityResidential","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[3]/div/div/input","xpath"],
+                    ["hasRailroad","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[5]/div/div/input","xpath"],
+                    ["hasAirport","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[7]/div/div/input","xpath"],
+                    ["hasHighTensionWires","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[4]/div/div/input","xpath"],
+                    ["hasHighTraffic","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div/div/input","xpath"],
+                    ["hasOtherExternalFactors","Yes","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[6]/div/div/input","xpath"]
+                ]
+            },
+            {
+                "FieldType":"input_field",
+                "values":[
+                    ["sub_data['ifCommercialIndustrialDesc']","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[1]/div/div/div/div/textarea","xpath"],
+                    ["sub_data['ifHighDensResDesc']","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[3]/div/div/div/div/textarea","xpath"],
+                    ["sub_data['ifRailroadTracksDesc']","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[5]/div/div/div/div/textarea","xpath"],
+                    ["sub_data['ifAirportFlightPathDesc']","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[7]/div/div/div/div/textarea","xpath"],
+                    ["sub_data['ifWiresDesc']","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[4]/div/div/div/div/textarea","xpath"],
+                    ["sub_data['ifFreeHighWayDesc']","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[2]/div/div/div/div/textarea","xpath"],
+                    ["sub_data['ifNegExtFactorsDesc']","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[2]/div/div[6]/div/div/div/div/textarea","xpath"]
+                ]
+            },
+            {
+                "FieldType":"simple_click",
+                "values":[
+                    ["externalFactors","/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div/div[2]/form/div[6]/div[1]/div[3]/div[2]/div/div/div[3]/button","xpath"]
+                ]
+            }
+          ]
+        }
+    ]
+}

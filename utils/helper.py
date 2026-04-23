@@ -42,8 +42,8 @@ def params_check():
           #return None,None  
           # Returns auto for manualy opening Autologin  
 
-        # return "AutoLogin",None,None
-        return "SmartEntry","4229","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
+        return "AutoLogin",None,None
+        # return "SmartEntry","4238","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
 
 process_type, hybrid_orderid, hybrid_token = params_check()
 
@@ -2475,3 +2475,52 @@ def safe_type(driver, locator, text):
         el.dispatchEvent(new Event('input', { bubbles: true }));
         el.dispatchEvent(new Event('change', { bubbles: true }));
     """, element, text)
+
+
+def set_datepicker_date(driver, element, text):
+    '''Function to set the datepciker of Vue'''
+    from selenium.webdriver.common.keys import Keys
+
+    try:
+        element.clear()
+        for char in text:
+            element.send_keys(char)
+            time.sleep(0.05)  
+        element.send_keys(Keys.TAB)
+        logger.log( module="set_datepicker_date", order_id=hybrid_orderid, action_type="Condition", remarks=f"Picked date : {text}",severity="INFO"  )
+
+    except Exception as err: 
+        logger.log( module="set_datepicker_date", order_id=hybrid_orderid, action_type="EXCEPTION", remarks=f"Exception in filling datepciker pic date: {err}",severity="INFO"  )
+
+
+def checkbox_tick_field(driver, locator, locator_type, retries=2):
+    '''Function to tick the checkbox with recheck & retry'''
+
+    try:
+        selector_map = selector_mapping(locator_type)
+        for attempt in range(retries):
+            elem = WebDriverWait(driver, 10).until( EC.element_to_be_clickable((selector_map, locator)))
+            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", elem )
+
+            if not elem.is_selected():
+                driver.execute_script("arguments[0].click();", elem)
+
+            # Recheck if it is selected
+            input_id = elem.get_attribute("for")
+            if input_id: input_elem = driver.find_element(By.ID, input_id)
+
+            elif elem.tag_name == "input": input_elem = elem
+            
+            else: return
+
+            if input_elem: 
+                logger.log( module="checkbox_tick_field",  order_id=hybrid_orderid,  action_type="Check_condition", remarks=f"Clicked the element {locator}",  severity="INFO" )
+                return
+            else: pass
+
+        logger.log( module="checkbox_tick_field",  order_id=hybrid_orderid,  action_type="Check_condition", remarks=f"Could not select checkbox {locator} after {retries} retries",  severity="INFO" )
+        return
+    
+    except Exception as e: 
+        logger.log( module="checkbox_tick_field",  order_id=hybrid_orderid,  action_type="Check_condition", remarks=f"Error interacting with checkbox {locator}: {e}",  severity="INFO" )
+        return
