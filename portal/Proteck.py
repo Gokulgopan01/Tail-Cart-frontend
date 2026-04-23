@@ -154,7 +154,7 @@ class Proteck:
             for order_from_api in orders_from_api:
                 order_id=order_from_api.get("order_id","")
 
-            target_orderid, tfs_orderid,is_qc = get_order_address_from_assigned_order(order_id, hybrid_token)
+            target_orderid, tfs_orderid, is_qc, master_order_id = get_order_address_from_assigned_order(order_id, hybrid_token)
 
             #Form Types
             INP_form_types = ["PCR eValuation Exterior With Checklist","Property Condition Report Standalone","Property Condition Report","AVM and PCR"]

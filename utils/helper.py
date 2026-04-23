@@ -42,8 +42,8 @@ def params_check():
           #return None,None  
           # Returns auto for manualy opening Autologin  
 
-        return "AutoLogin",None,None
-        # return "SmartEntry","4229","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
+        # return "AutoLogin",None,None
+        return "SmartEntry","4229","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
 
 process_type, hybrid_orderid, hybrid_token = params_check()
 
@@ -259,8 +259,9 @@ def get_order_address_from_assigned_order(order_id, token):
                 portal_order_id = order_data.get("portal_order_id", "Address Not Found")
                 tfs_orderid = order_data.get("tfs_orderid", "TFS ID Not Found")
                 is_qc = order_data.get("is_qc", "no qc varialble")
+                master_order_id = order_data.get("master_order_id", "no order id")
                 print("API")
-                return portal_order_id, tfs_orderid, is_qc
+                return portal_order_id, tfs_orderid, is_qc, master_order_id
                 
             else:
                 logger.log(
