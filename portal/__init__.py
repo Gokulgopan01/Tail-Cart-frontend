@@ -5,7 +5,7 @@ from .rrreview import rrreview
 from .RedBell import RedBell
 from .AVM import AVM
 from .Proteck import Proteck
-from .LSI import LSI
+from .Servicelink import Servicelink
 from .RealtyPilot import RealtyPilot
 from .AMO import AMO
 from .ClearCapital import ClearCapital
@@ -25,7 +25,7 @@ from .ClassValuationNew import ClassValuationNew
 from .SingleSource import SingleSource
 
 __all__ = [
-    'Ascribe', 'ca', 'xome', 'rrreview', 'RedBell', 'AVM', 'Proteck', 'LSI', 
+    'Ascribe', 'ca', 'xome', 'rrreview', 'RedBell', 'AVM', 'Proteck', 'Servicelink', 
     'RealtyPilot', 'AMO', 'ClearCapital', 'AppliedValuation', 'EstreetNew', 
     'BidOnHomes', 'GroundWorks', 'InspectionPort', 'ValuationConnect', 
     'SWBC', 'Solidify', 'SolidifyAppraiser', 'ClassValuation', 'Omnia', 

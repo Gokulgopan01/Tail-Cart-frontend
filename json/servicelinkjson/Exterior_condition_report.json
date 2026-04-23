@@ -1,0 +1,194 @@
+{
+    "page":[
+        {
+            "Controls":[
+                
+                {
+                    "FieldType":"date_input",
+                    "values":[
+                        ["sub_data['InspectionDate']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[9]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"input_field",
+                    "values":[
+                        ["sub_data['ApnNumber']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[15]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"input_field",
+                    "values":[
+                        ["sub_data['DevelopmentName']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[17]", "xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"input_dropdown",
+                    "values":[
+                        ["sub_data['propertyUse']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[19]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['PropertyType']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[16]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['HousingType']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[18]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['subjectLocation']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[20]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['subjNeighCond']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[21]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['Condition']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[22]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"]
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[
+                        ["propertyviewable","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[23]","xpath"],
+                        ["propertyviewable","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[24]","xpath"],
+
+                        ["gatedCommunity","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[25]","xpath"],
+                        ["gatedCommunity","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[26]","xpath"],
+
+                        ["garbageOnProperty","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[33]","xpath"],
+                        ["garbageOnProperty","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[34]","xpath"],
+                        
+                        ["garageCondition","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[30]","xpath"],
+                        ["garageCondition","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[31]","xpath"],
+                        ["garageCondition","N/A","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[32]","xpath"],
+
+                        ["deferredMaintenance","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[37]","xpath"],
+                        ["deferredMaintenance","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[38]","xpath"],
+
+                        ["SaleSignVisible","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[40]","xpath"],
+                        ["SaleSignVisible","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[41]","xpath"],
+
+                        ["bankOwned","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[42]","xpath"],
+                        ["bankOwned","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[43]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"input_field",
+                    "values":[
+                        ["sub_data['propertiesSaleOnStreet']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[27]", "xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"input_dropdown",
+                    "values":[
+                        ["sub_data['OccupancyStatus']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[28]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['exteriorCondition']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[29]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['qualityOfInterior']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[36]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['garageType']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[35]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['interiorCondition']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[39]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['conformsToNeighborhood']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[44]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['conditionComparisonNeighborhood']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[45]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"]
+                    ]
+                    
+                },
+                {
+                    "FieldType":"input_field",
+                    "values":[
+                        ["sub_data['notConformingNeighborhoodComments']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/textarea[1]", "xpath"],
+                        ["sub_data['inferiorNeighborhoodComments']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/textarea[2]", "xpath"]
+                        
+                    ]
+                },
+                
+                {
+                    "FieldType":"button_click",
+                    "values":[ 
+                        ["Next_page","/html/body/nav/div/ul/ul/li[3]/span/button[3]/span","xpath"] 
+                    ]
+                } ,
+                {
+                    "FieldType":"checkbox",
+                    "values":[
+                        ["overheadPowerlines","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[12]","xpath"],
+                        ["overheadPowerlines","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[13]","xpath"],
+
+                        ["commercialIndustrialUses","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[14]","xpath"],
+                        ["commercialIndustrialUses","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[15]","xpath"],
+
+                        ["boardedUpHomes","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[16]","xpath"],
+                        ["boardedUpHomes","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[17]","xpath"],
+
+                        ["railroadTracks","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[18]","xpath"],
+                        ["railroadTracks","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[19]","xpath"],
+
+                        ["freewayHighway","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[20]","xpath"],
+                        ["freewayHighway","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[21]","xpath"],
+
+                        ["airportFlightPath","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[22]","xpath"],
+                        ["airportFlightPath","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[23]","xpath"],
+
+                        ["wasteManagementFacility","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[24]","xpath"],
+                        ["wasteManagementFacility","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[25]","xpath"] 
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[
+                        ["constructionInProgress","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[26]","xpath"],
+                        ["constructionInProgress","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[27]","xpath"],
+
+                        ["obviousDamageToTheHome","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[28]","xpath"],
+                        ["obviousDamageToTheHome","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[29]","xpath"],
+
+                        ["brokenDoorsOrWindows","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[30]","xpath"],
+                        ["brokenDoorsOrWindows","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[31]","xpath"],
+
+                        ["roofDamage","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[33]","xpath"],
+                        ["roofDamage","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[34]","xpath"],
+
+                        ["sidingDamagedOrMissing","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[36]","xpath"],
+                        ["sidingDamagedOrMissing","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[37]","xpath"],
+
+                        ["structuralDamage","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[38]","xpath"],
+                        ["structuralDamage","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[39]","xpath"],
+
+                        ["safetyConcerns","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[40]","xpath"],
+                        ["safetyConcerns","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[41]","xpath"],
+                        
+                        ["subjectAppearOccupied","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[42]","xpath"],
+                        ["subjectAppearOccupied","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[43]","xpath"],
+
+                        ["subjectAppearHabitable","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[45]","xpath"],
+                        ["subjectAppearHabitable","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[46]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"input_dropdown",
+                    "values":[
+                        ["sub_data['evidenceOfFloodWaterDamage']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[32]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['evidenceOfFireDamage']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[35]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"],
+                        ["sub_data['propertyMaintenance']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[44]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"]
+                    ]
+                },
+                {
+                    "FieldType":"input_field",
+                    "values":[
+                        ["sub_data['subjectObservationComment']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/textarea", "xpath"]
+                    ]
+                },
+            
+                {
+                    "FieldType":"input_field",
+                    "values":[
+                        ["sub_data['Company_Name']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[48]", "xpath"],
+                        ["sub_data['Sub_Client']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[50]", "xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"scrape_fill",
+                    "values":[
+                        ["/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[51]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[52]", "xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"date_input",
+                    "values":[
+                       ["sub_data['InspectionDate']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[53]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[
+                        ["agent_financial_interest","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[56]","xpath"]
+                    ]
+                }
+            ]
+        }
+    ]
+}

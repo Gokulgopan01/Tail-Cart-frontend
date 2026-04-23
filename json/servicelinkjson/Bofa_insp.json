@@ -1,0 +1,179 @@
+{
+    "page":[
+        {
+            "Controls":[
+                {
+                    "FieldType":"input_field",
+                    "values":[ 
+                        ["sub_data['LotAcrs']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[15]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"input_dropdown",
+                    "values":[ 
+                        ["sub_data['ZoningClassification']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[18]","/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"]
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[
+                        ["constructionInProgress", "Yes", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[13]", "xpath"],
+                        ["constructionInProgress", "No", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[14]", "xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[
+                        ["SaleSignVisible","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[16]","xpath"],
+                        ["SaleSignVisible","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[17]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[
+                        ["hasSecurityBars","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[19]","xpath"],
+                        ["hasSecurityBars","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[20]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[
+                        ["safetyConcerns","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[21]","xpath"],
+                        ["safetyConcerns","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[22]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[
+                        ["propertyviewable","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[23]","xpath"],
+                        ["propertyviewable","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[24]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[ 
+                        ["Condition","Average or above average","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[25]","xpath"],
+                        ["Condition","Below average","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[26]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[ 
+                        ["adverseView","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[28]","xpath"],
+                        ["adverseView","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[29]","xpath"],
+                        ["adverseNoise","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[30]","xpath"],
+                        ["adverseNoise","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[31]","xpath"],
+                        ["adverseOdor","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[32]","xpath"],
+                        ["adverseOdor","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[33]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[ 
+                        ["commercialIndustrialUses","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[34]","xpath"],
+                        ["commercialIndustrialUses","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[35]","xpath"]
+                        
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[ 
+                        ["HighDensityResidential","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[37]","xpath"],
+                        ["HighDensityResidential","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[38]","xpath"]
+                        
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[ 
+                        ["railroadTracks","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[40]","xpath"],
+                        ["railroadTracks","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[41]","xpath"]
+                        
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[ 
+                        ["airportFlightPath","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[43]","xpath"],
+                        ["airportFlightPath","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[44]","xpath"]
+                        
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[ 
+                        ["freewayHighway","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[46]","xpath"],
+                        ["freewayHighway","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[47]","xpath"]
+                        
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[ 
+                        ["overheadPowerlines","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[49]","xpath"],
+                        ["overheadPowerlines","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[50]","xpath"]
+                       
+                    ]
+                },
+                {
+                    "FieldType":"checkbox",
+                    "values":[ 
+                        ["NegativeExtFactors","Yes","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[52]","xpath"],
+                        ["NegativeExtFactors","No","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[53]","xpath"]
+                        
+                    ]
+                },
+                {
+                    "FieldType":"input_field",
+                    "values":[ 
+                       ["sub_data['belowAvgdescription']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[27]","xpath"],
+                       ["sub_data['ifCommercialIndustrialDesc']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[36]","xpath"],
+                       ["sub_data['ifHighDensResDesc']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[39]","xpath"],
+                       ["sub_data['ifRailroadTracksDesc']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[42]","xpath"],
+                       ["sub_data['ifAirportFlightPathDesc']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[45]","xpath"],
+                       ["sub_data['ifFreeHighWayDesc']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[48]","xpath"],
+                       ["sub_data['ifWiresDesc']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[51]","xpath"],
+                       ["sub_data['ifNegExtFactorsDesc']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[54]","xpath"]
+                    ]
+                },
+                {
+                    "FieldType":"button_click",
+                    "values":[ 
+                        ["Next_page","/html/body/nav/div/ul/ul/li[3]/span/button[3]/span","xpath"] 
+                    ]
+                } ,
+                {
+                    "FieldType":"input_field",
+                    "values":[
+                        ["sub_data['Sub_Client']","/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[4]","xpath"],
+                        ["sub_data['Company_Name']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[6]", "xpath"],                        
+                        ["sub_data['Company_Street']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[7]", "xpath"],
+                        ["sub_data['City']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[8]", "xpath"]
+                    ]
+                },
+
+                {
+                "FieldType":"input_dropdown",
+                "values":[ 
+                    ["sub_data['State']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[9]", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/ul"]
+                ]
+                },
+                {
+                    "FieldType":"input_field",
+                    "values":[
+                        ["sub_data['Zipcode']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[10]", "xpath"]
+                        
+                    ]
+                },
+                {
+                    "FieldType":"date_input",
+                    "values":[
+                        ["sub_data['InspectionDate']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[5]", "xpath"],
+                        ["sub_data['InspectionDate']", "/html/body/div[72]/div/div[3]/div[1]/form/article/div/input[11]", "xpath"]
+                    ]
+                }
+                        
+            ]
+        }
+    ]
+}

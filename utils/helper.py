@@ -43,7 +43,7 @@ def params_check():
           # Returns auto for manualy opening Autologin  
 
         return "AutoLogin",None,None
-        # return "SmartEntry","4238","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
+        # return "SmartEntry","4244","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjI2LCJlbWFpbCI6Im5hbmRodV9rcmlzaG5hQGVjZXNpc2dyb3Vwcy5jb20iLCJyb2xlIjoyLCJpYXQiOjE3NzU1NDIxMjJ9.MCW6M9dcUrRrdtN-KBXGmRsR-qnuLVhss3UxcWtkRLQ"
 
 process_type, hybrid_orderid, hybrid_token = params_check()
 
@@ -2524,3 +2524,78 @@ def checkbox_tick_field(driver, locator, locator_type, retries=2):
     except Exception as e: 
         logger.log( module="checkbox_tick_field",  order_id=hybrid_orderid,  action_type="Check_condition", remarks=f"Error interacting with checkbox {locator}: {e}",  severity="INFO" )
         return
+
+#propinspect 
+def lsi_next_click(driver, timeout=10, retries=3):
+    '''Function to click on next page with retries and JS click fallback'''
+
+    try:
+        element = WebDriverWait(driver, timeout).until( EC.element_to_be_clickable((By.XPATH, "/html/body/nav/div/ul/ul/li[3]/span/button[3]/span")) )
+        element.click()
+        return True
+
+    except Exception as e:
+        # Retry mechanism in case of failure, using JavaScript click if necessary
+        for attempt in range(retries):
+            try:
+                # Use JS to click if the normal click fails
+                driver.execute_script("arguments[0].click();", element)
+                return True
+            except Exception as js_error:
+                logger.log( module="simple_click_field", order_id=hybrid_orderid, action_type="Exception", remarks=f"simple_click_field exception {js_error}",severity="INFO"  )
+
+                if attempt == retries - 1:
+                    logger.log( module="simple_click_field", order_id=hybrid_orderid, action_type="Exception", remarks=f"simple_click_field all retries exceeded , exception {js_error}",severity="INFO"  )
+                    return False
+                
+def checkbox_tick_field_lsi(driver, locator, locator_type, retries=2):
+    '''Function to tick the checkbox with recheck & retry for lsi'''
+
+    try:
+        selector_map = selector_mapping(locator_type)
+
+        for attempt in range(retries):
+            checkbox = WebDriverWait(driver, 20).until( EC.element_to_be_clickable((selector_map, locator)) )
+            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", checkbox)
+            if not checkbox.is_selected(): checkbox.click()
+
+            # Recheck if it is selected ('x' for lsi)
+            state = checkbox.get_attribute("value")
+            if state == 'X': logging.info(f"Checkbox clicked: {locator}"); return
+            else: pass
+
+        logger.log( module="checkbox_tick_field_lsi", order_id=hybrid_orderid, action_type="Exception", remarks=f"Could not select checkbox {locator} after {retries} retries",severity="INFO"  )
+
+    except Exception as e: 
+        logger.log( module="checkbox_tick_field_lsi", order_id=hybrid_orderid, action_type="Exception", remarks=f"Error interacting with checkbox {locator}: {e}",severity="INFO"  )
+
+
+def input_dropdown_field(driver, expected_value, click_input_xpath, ul_xpath, retries=2):
+    '''Function to click input field and select options'''
+
+    for attempt in range(1, retries + 1):
+        try:
+            input_elem = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, click_input_xpath)))
+            input_elem.click()
+            time.sleep(0.5) 
+
+            ul_elem = WebDriverWait(driver, 15).until( EC.presence_of_element_located((By.XPATH, ul_xpath)) )
+            li_items = ul_elem.find_elements(By.TAG_NAME, 'li')
+            for li in li_items:
+
+                li_text = li.text.strip().lower()
+                if li_text == expected_value.strip().lower():
+
+                    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", li)
+                    li.click()
+                    logger.log( module="input_dropdown_field_lsi",  order_id=hybrid_orderid,  action_type="Condition-check", remarks=f"Selected '{expected_value}' from dropdown.",  severity="INFO" )
+                    return
+                
+            logger.log( module="input_dropdown_field_lsi",  order_id=hybrid_orderid,  action_type="Condition-check", remarks=f"Value '{expected_value}' not found in dropdown options.",  severity="INFO" )
+            continue
+
+        except Exception as e:
+            logger.log( module="input_dropdown_field_lsi",  order_id=hybrid_orderid,  action_type="Exception", remarks= f"[Attempt {attempt}] Dropdown error for '{expected_value}': {type(e).__name__} - {e}",  severity="INFO" )
+            time.sleep(1)
+
+    logger.log( module="input_dropdown_field_lsi",  order_id=hybrid_orderid,  action_type="Exception", remarks=f"Exception in filling {expected_value} ",  severity="INFO" )
