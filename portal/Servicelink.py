@@ -22,7 +22,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.helper import (get_order_address_from_assigned_order, handle_login_status, lsi_next_click,checkbox_tick_field_lsi,
 params_check, setup_driver, update_order_status, get_nested, data_filling_text, javascript_excecuter_filling, input_dropdown_field,
-scrape_and_fill,fetch_upload_data, update_portal_login_confirmation_status, load_form_config_and_data,tfs_statuschange)
+scrape_and_fill,fetch_upload_data, update_portal_login_confirmation_status, load_form_config_and_data,update_pic_status)
 
 # Load variables from .env file
 load_dotenv()
@@ -227,7 +227,7 @@ class Servicelink:
             for order_from_api in orders_from_api:
                 order_id=order_from_api.get("order_id","")
 
-            target_orderid, tfs_orderid = get_order_address_from_assigned_order(order_id, hybrid_token)
+            target_orderid, tfs_orderid,is_qc, master_order_id = get_order_address_from_assigned_order(order_id, hybrid_token)
 
             #check for order ids from hybrid
             if not target_orderid or not tfs_orderid:
@@ -248,7 +248,7 @@ class Servicelink:
                     update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                     return
 
-                self.lsi_formopen_fill(portal_order, session, merged_json, order_details, order_id, tfs_orderid)
+                self.lsi_formopen_fill(portal_order, session, merged_json, order_details, order_id, tfs_orderid,master_order_id)
 
             else :
                 logger.log( module="LSI-lsi_formopen",order_id=hybrid_orderid, action_type="Condition_check", remarks=f"No exact address match found, message: {status}", severity="INFO" )
@@ -450,7 +450,7 @@ class Servicelink:
             print(f"Exception on handling alert box to open form : {er}"); return False
 
 
-    def lsi_formopen_fill(self, order, session, merged_json, order_details, order_id, tfs_orderid):
+    def lsi_formopen_fill(self, order, session, merged_json, order_details, order_id, tfs_orderid, master_order_id):
         '''LSI form processing main'''
 
         try:
@@ -476,10 +476,6 @@ class Servicelink:
 
             #Form filling
             form_fill, error = self.fill_form_multi( merged_json, form_config)
-            if not form_fill:
-                logger.log( module="LSI-lsi_formopen_fill",order_id=hybrid_orderid,action_type="ERROR",remarks=f"Error while filling the form: {error}",severity="INFO" )
-                update_order_status(order_id, "In Progress", "Entry", "Failed")
-                return
 
             time.sleep(0.5)
             is_from_filled = True
@@ -489,7 +485,11 @@ class Servicelink:
             uploaded, error_msg = self.upload_pic_and_sig()
             if not uploaded:
                 logger.log( module="LSI-lsi_formopen_fill",order_id=hybrid_orderid,action_type="ERROR",remarks=f"Error while Uploading pics : {error_msg}",severity="INFO" )
-                return
+
+                if form_fill:
+                    update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
+                else:
+                    update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             
             time.sleep(0.5)
             is_pic_uploaded = True
@@ -500,13 +500,13 @@ class Servicelink:
 
             if is_uploaded and is_from_filled and is_pic_uploaded:
                 print("Order Completed Successfully")
-                tfs_statuschange(tfs_orderid, "26", "3", "14")
-                update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
+                update_pic_status(master_order_id,"Uploaded",hybrid_token)
+                update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 return
             
             elif is_from_filled:
                 print("Form filling only completed")
-                update_order_status(hybrid_orderid, "In Progress", "Entry", "Completed",hybrid_token)
+                update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 return
             
             else:
@@ -528,23 +528,19 @@ class Servicelink:
             logger.log( module="LSI-upload_pic_and_sig", order_id=hybrid_orderid,action_type="Pic_Upload",remarks=f"No upload data found for order {self.order_id}",severity="INFO")
             return False, "Upload Data is None"
         
-        # signature_path = data.get("siganture_folder")
-        # photos_url = data.get("photo_flder")
-
-        signature_path = r'Z:\BPO\NGL Employees Documents\Propinspect\Final\keystone\KSH_ Patrick McEneely.JPG'
-        photos_url = r'Z:\BPO\soft\PropVision_Photos\Keystone Holding\1628927\Verified' # need to update
+        signature_path = data.get("siganture_folder")
+        photos_path = data.get("image_path")
         
         if not isinstance(signature_path, str) or not signature_path.strip():
             logger.log(module="LSI-upload_pic_and_sig", order_id=hybrid_orderid, action_type="Pic_Upload", remarks=f"Invalid or missing signature path : {signature_path}", severity="ERROR")
             # return False, "Invalid signature path"
 
-        if not isinstance(photos_url, str) or not photos_url.strip():
+        if not isinstance(photos_path, str) or not photos_path.strip():
             logger.log(module="LSI-upload_pic_and_sig", order_id=hybrid_orderid, action_type="Pic_Upload", remarks=f"Invalid or missing photo URL : {photos_url}", severity="ERROR")
             return False, "Invalid photo URL"
 
         #upload photos 
-
-        upload_result, error = self.upload_photos_to_order(signature_path, photos_url)
+        upload_result, error = self.upload_photos_to_order(signature_path, photos_path)
         if upload_result:
             return True, error
         else:

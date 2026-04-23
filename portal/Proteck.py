@@ -182,7 +182,7 @@ class Proteck:
                     update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                     return
                 
-                self.proteck_formopen_fill(portal_order, session, merged_json, order_details, order_id, tfs_orderid)
+                self.proteck_formopen_fill(portal_order, session, merged_json, order_details, order_id, tfs_orderid, master_order_id)
                 return
 
             else :
@@ -265,7 +265,7 @@ class Proteck:
             return False, er
 
 
-    def proteck_formopen_fill(self, portal_order, session, merged_json, order_details, order_id, tfs_orderid):
+    def proteck_formopen_fill(self, portal_order, session, merged_json, order_details, order_id, tfs_orderid, master_order_id):
         '''Proteck form processing controller'''
 
         try:
@@ -333,7 +333,7 @@ class Proteck:
             if form_fill and upload_photos:
                 logger.log(  module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check", remarks="All form filling and upload functions completed successfully.", severity="INFO" )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
-                update_pic_status(hybrid_orderid,"Uploaded",hybrid_token)
+                update_pic_status(master_order_id,"Uploaded",hybrid_token)
                 return
             
             #if only entry completed

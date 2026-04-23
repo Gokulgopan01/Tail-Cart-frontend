@@ -179,7 +179,7 @@ class InspectionPort:
                     update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
                     return
 
-                self.inspectionport_formopen_fill(portal_order, session, merged_json, order_details, order_id, tfs_orderid)
+                self.inspectionport_formopen_fill(portal_order, session, merged_json, order_details, order_id, tfs_orderid, master_order_id)
 
             else :
                 logger.log( module="Inspectionport-inspectionport_formopen",order_id=hybrid_orderid, action_type="Condition_check", remarks=f"No exact address match found, message: {status}", severity="INFO" )
@@ -275,7 +275,7 @@ class InspectionPort:
             return True 
         
 
-    def inspectionport_formopen_fill(self, order, session, merged_json, order_details, order_id, tfs_orderid):
+    def inspectionport_formopen_fill(self, order, session, merged_json, order_details, order_id, tfs_orderid, master_order_id):
         '''Inspection port form processing controller'''
 
         try:
@@ -325,7 +325,7 @@ class InspectionPort:
             if is_from_filled and is_pic_uploaded:
                 print("Order Completed Successfully")
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
-                update_pic_status(hybrid_orderid,"Uploaded",hybrid_token)
+                update_pic_status(master_order_id,"Uploaded",hybrid_token)
                 return
             
             #Only Entry Completed
