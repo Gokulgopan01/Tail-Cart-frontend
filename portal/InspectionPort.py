@@ -323,20 +323,20 @@ class InspectionPort:
 
             #All process completed
             if is_from_filled and is_pic_uploaded:
-                print("Order Completed Successfully")
+                logger.log( module="Inspectionport-inspectionport_formopen_fill",order_id=hybrid_orderid,action_type="Completed",remarks=f"Completed all process",severity="INFO" )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 update_pic_status(master_order_id,"Uploaded",hybrid_token)
                 return
             
             #Only Entry Completed
             elif is_from_filled :
-                print("Entry Completed Successfully")
+                logger.log( module="Inspectionport-inspectionport_formopen_fill",order_id=hybrid_orderid,action_type="Completed",remarks=f"Completed only entry process",severity="INFO" )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 return
             
             #Issue in process
             else:
-                print("Isue in uploading")
+                logger.log( module="Inspectionport-inspectionport_formopen_fill",order_id=hybrid_orderid,action_type="Completed",remarks=f"issue in uploading",severity="INFO" )
                 update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
                 return
 

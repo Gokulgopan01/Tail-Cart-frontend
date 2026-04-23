@@ -499,18 +499,18 @@ class Servicelink:
             is_uploaded, error_ms = self.upload_map()
 
             if is_uploaded and is_from_filled and is_pic_uploaded:
-                print("Order Completed Successfully")
+                logger.log( module="LSI-lsi_formopen_fill",order_id=hybrid_orderid,action_type="Exception",remarks=f"Order Completed Successfully",severity="INFO" )
                 update_pic_status(master_order_id,"Uploaded",hybrid_token)
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 return
             
             elif is_from_filled:
-                print("Form filling only completed")
+                logger.log( module="LSI-lsi_formopen_fill",order_id=hybrid_orderid,action_type="Exception",remarks=f"Form filling only completed",severity="INFO" )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 return
             
             else:
-                print("Isue in uploading")
+                logger.log( module="LSI-lsi_formopen_fill",order_id=hybrid_orderid,action_type="Exception",remarks=f"Isue in uploading",severity="INFO" )
                 update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
                 return
         
@@ -536,7 +536,7 @@ class Servicelink:
             # return False, "Invalid signature path"
 
         if not isinstance(photos_path, str) or not photos_path.strip():
-            logger.log(module="LSI-upload_pic_and_sig", order_id=hybrid_orderid, action_type="Pic_Upload", remarks=f"Invalid or missing photo URL : {photos_url}", severity="ERROR")
+            logger.log(module="LSI-upload_pic_and_sig", order_id=hybrid_orderid, action_type="Pic_Upload", remarks=f"Invalid or missing photo URL : {photos_path}", severity="ERROR")
             return False, "Invalid photo URL"
 
         #upload photos 

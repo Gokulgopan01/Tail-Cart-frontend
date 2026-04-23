@@ -338,7 +338,7 @@ class Proteck:
             
             #if only entry completed
             if form_fill:
-                logger.log(  module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check", remarks="All form filling and upload functions completed successfully.", severity="INFO" )
+                logger.log(  module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check", remarks="only form filling completed successfully.", severity="INFO" )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 return
             
