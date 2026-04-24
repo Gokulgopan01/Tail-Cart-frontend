@@ -455,7 +455,7 @@ class Servicelink:
 
         try:
             #loading configs and data to fill
-            is_from_filled = False
+            is_form_filled = False
             is_pic_uploaded = False
             researchpad_data_retrival_url = env.RESEARCHPAD_DATA_URL
             
@@ -475,10 +475,9 @@ class Servicelink:
             logger.log( module="LSI-lsi_formopen_fill", order_id=hybrid_orderid,action_type="Condition-check", remarks=f"merged_json: {merged_json}", severity="INFO" )
 
             #Form filling
-            form_fill, error = self.fill_form_multi( merged_json, form_config)
+            is_form_filled, error = self.fill_form_multi( merged_json, form_config)
 
             time.sleep(0.5)
-            is_from_filled = True
             logger.log( module="LSI-lsi_formopen_fill",order_id=hybrid_orderid,action_type="Completed",remarks=f"Completed entry form filling",severity="INFO" )
 
             #Upload signature and photos 
@@ -486,7 +485,7 @@ class Servicelink:
             if not uploaded:
                 logger.log( module="LSI-lsi_formopen_fill",order_id=hybrid_orderid,action_type="ERROR",remarks=f"Error while Uploading pics : {error_msg}",severity="INFO" )
 
-                if form_fill:
+                if is_form_filled:
                     update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 else:
                     update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
@@ -496,15 +495,15 @@ class Servicelink:
             logger.log( module="LSI-lsi_formopen_fill",order_id=hybrid_orderid,action_type="Completed",remarks=f"Completed Picture Uploading",severity="INFO" )
 
             #Upload map 
-            is_uploaded, error_ms = self.upload_map()
+            is_map_uploaded, error_ms = self.upload_map()
 
-            if is_uploaded and is_from_filled and is_pic_uploaded:
+            if is_map_uploaded and is_form_filled and is_pic_uploaded:
                 logger.log( module="LSI-lsi_formopen_fill",order_id=hybrid_orderid,action_type="Exception",remarks=f"Order Completed Successfully",severity="INFO" )
                 update_pic_status(master_order_id,"Uploaded",hybrid_token)
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 return
             
-            elif is_from_filled:
+            elif is_form_filled and not is_pic_uploaded:
                 logger.log( module="LSI-lsi_formopen_fill",order_id=hybrid_orderid,action_type="Exception",remarks=f"Form filling only completed",severity="INFO" )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 return
@@ -584,7 +583,7 @@ class Servicelink:
                                         logger.log( module="upload_photos_to_order", order_id=hybrid_orderid,action_type="FAILED",remarks=f"Failed to upload {image_name} to {portal_description}: {e}",severity="INFO")
                     
             SIGNATURE_DESC = { "signature": "agent preparer signature"}
-            PAGE1_DESC = {"SUBJECT(FRONT VIEW)": "subject (front view) photo", "SUBJECT(ANGLED)": "Subject (Angled) Photo", "ADDRESS VERIFICATION": "address verification photo"}
+            PAGE1_DESC = {"SUBJECT(FRONT VIEW)": "subject (front view) photo", "SUBJECT ANGLED (RIGHT)": "Subject (Angled) Photo" ,"SUBJECT(ANGLED)": "Subject (Angled) Photo", "ADDRESS VERIFICATION": "address verification photo"}
             PAGE2_DESC = {"STREET VIEW(LEFT)": "Street View (Left) Photo", "STREET VIEW(RIGHT)": "Street View (Right) Photo", "STREET VIEW(ACROSS STREET)": "Street View (Across Street) Photo"}
             signature_infos = [{ "name": "signature", "path": signature_path}]
             photo_infos = self.build_photo_infos(photo_path)
