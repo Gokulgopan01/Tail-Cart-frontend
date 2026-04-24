@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 from portal import (
-    Ascribe, ca, xome, rrreview, RedBell, AVM, Proteck, LSI, RealtyPilot, 
+    Ascribe, ca, xome, rrreview, RedBell, AVM, Proteck, Servicelink, RealtyPilot, 
     AMO, ClearCapital, AppliedValuation, EstreetNew, BidOnHomes, 
     GroundWorks, InspectionPort, ValuationConnect, SWBC, Solidify, 
     SolidifyAppraiser, ClassValuation, Omnia, Valligent, 
