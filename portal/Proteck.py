@@ -299,7 +299,7 @@ class Proteck:
             #Form filling
             form_fill, error = self.fill_form_multi( merged_json, form_config)
             
-            #fetch uploading data, document, photo
+            #fetch uploading  document, photo
             uplaod_data = fetch_upload_data(self, order_id)
             if not uplaod_data:
                 logger.log( module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check",  remarks=f"No upload data found for order {order_id}", severity="INFO")
@@ -329,23 +329,30 @@ class Proteck:
             #upload photos
             upload_photos, err = self.upload_photos_to_order(image_path)
             
-            #Total inspection order completed
+            #If form is filled and upload completed
             if form_fill and upload_photos:
                 logger.log(  module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check", remarks="All form filling and upload functions completed successfully.", severity="INFO" )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
                 update_pic_status(master_order_id,"Uploaded",hybrid_token)
                 return
             
-            #if only entry completed
-            if form_fill:
+            #if Upload completed , mark status
+            elif form_fill and not upload_photos:
                 logger.log(  module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check", remarks="only form filling completed successfully.", severity="INFO" )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
+                return
+            
+            #if Upload completed , mark status
+            elif upload_photos and not form_fill:
+                logger.log(  module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check", remarks="only pic uploading is completed.", severity="INFO" )
+                update_pic_status(master_order_id,"Uploaded",hybrid_token)
+                update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
                 return
             
             else:
                 logger.log( module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid, action_type="Condition-check", remarks=f"One or more functions failed: form_fill={form_fill}, upload_photos={upload_photos}, upload_documents={upload_documents}", severity="INFO")
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
-
+                return
             
         except Exception as error:
             logger.log( module="Proteck-proteck_formopen_fill",order_id=hybrid_orderid,action_type="Exception",remarks=f"Exception in form filling main: {error}",severity="INFO" )
@@ -652,10 +659,10 @@ class Proteck:
                 click_element(self.driver, "/html/body/form/div[3]/div/table/tbody/tr/td/div/fieldset/p/input[2]", By.XPATH)
                 description2 = self.driver.find_element(By.XPATH,"//*[@id='_title_2']")
                 description2.send_keys(sub_data.get("description2"))
-                attach_file = self.upload_file(mls_document,"//*[@id='_file_2']")
+                attach_file2 = self.upload_file(mls_document,"//*[@id='_file_2']")
             
-            # save_btn = WebDriverWait(self.driver, 20).until( EC.presence_of_element_located((By.XPATH, '//*[@id="_addMessage__form__insert"]')))
-            # self.driver.execute_script("arguments[0].click();", save_btn)
+            save_btn = WebDriverWait(self.driver, 20).until( EC.presence_of_element_located((By.XPATH, '//*[@id="_addMessage__form__insert"]')))
+            self.driver.execute_script("arguments[0].click();", save_btn)
             self.driver.switch_to.window(parent)
             
             logger.log( module="Proteck-upload_tax_mls",order_id=hybrid_orderid, action_type="Condition_Check", remarks=f"Uploaded files Successfully", severity="INFO" )

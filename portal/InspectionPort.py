@@ -329,9 +329,15 @@ class InspectionPort:
                 return
             
             #Only Entry Completed
-            elif is_from_filled :
+            elif is_from_filled and not is_pic_uploaded:
                 logger.log( module="Inspectionport-inspectionport_formopen_fill",order_id=hybrid_orderid,action_type="Completed",remarks=f"Completed only entry process",severity="INFO" )
                 update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
+                return
+            
+            elif is_pic_uploaded and not is_from_filled:
+                logger.log( module="Inspectionport-inspectionport_formopen_fill",order_id=hybrid_orderid,action_type="Completed",remarks=f"Completed only pic uplaoiding process",severity="INFO" )
+                update_pic_status(master_order_id,"Uploaded",hybrid_token)
+                update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
                 return
             
             #Issue in process
@@ -342,6 +348,7 @@ class InspectionPort:
 
         except Exception as error:
             logger.log( module="Inspectionport-inspectionport_formopen_fill",order_id=hybrid_orderid,action_type="Exception",remarks=f"Exception in form filling main: {error}",severity="INFO" )
+            update_order_status(order_id, "In Progress", "Entry", "Failed",hybrid_token)
             return
         
 
