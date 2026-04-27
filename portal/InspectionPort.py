@@ -503,11 +503,10 @@ class InspectionPort:
             logger.log( module="Inspectionport-upload_pic_and_sig", order_id=hybrid_orderid,action_type="Pic_Upload",remarks=f"No upload data found for order {self.order_id}",severity="INFO")
             return False, "Upload Data is None"
         
-        # photos_url = data.get("photo_flder")
-        photos_url = r'Z:\BPO\soft\PropVision_Photos\Keystone Holding\1602008\Verified' # need to update
+        photos_path = data.get("image_path")
 
-        if isinstance(photos_url, str) and photos_url.strip():
-            upload_result, error = self.upload_photos_to_order( photos_url)
+        if isinstance(photos_path, str) and photos_path.strip():
+            upload_result, error = self.upload_photos_to_order( photos_path)
             if not upload_result: return False, error
 
             time.sleep(1)
@@ -517,7 +516,7 @@ class InspectionPort:
             else: return False, "Issue in signature Upload"
 
         else:
-            logger.log(module="Inspectionport-upload_pic_and_sig",order_id=hybrid_orderid,  action_type="Pic_Upload",remarks=f"Signature path is invalid or None {self.order_id}: {photos_url}", severity="INFO" )
+            logger.log(module="Inspectionport-upload_pic_and_sig",order_id=hybrid_orderid,  action_type="Pic_Upload",remarks=f"photos_path is invalid or None :{photos_path}", severity="INFO" )
             return False, "upload paths not in desired format"
 
         

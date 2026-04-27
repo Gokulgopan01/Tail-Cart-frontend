@@ -317,7 +317,7 @@ class Proteck:
                 upload_documents, err = self.upload_tax_mls(merged_json,documents)
 
             #checking photos
-            if not isinstance(image_path, str) and image_path.strip():
+            if not image_path or not isinstance(image_path, str) or not image_path.strip():
                 logger.log( module="Proteck-proteck_formopen_fill", order_id=hybrid_orderid,action_type="Condition-check", remarks=f"Subject photo folder is missing or invalid for order {order_id}: {comparables_folder!r}",severity="INFO" )
 
                 if form_fill:
@@ -661,8 +661,8 @@ class Proteck:
                 description2.send_keys(sub_data.get("description2"))
                 attach_file2 = self.upload_file(mls_document,"//*[@id='_file_2']")
             
-            save_btn = WebDriverWait(self.driver, 20).until( EC.presence_of_element_located((By.XPATH, '//*[@id="_addMessage__form__insert"]')))
-            self.driver.execute_script("arguments[0].click();", save_btn)
+            # save_btn = WebDriverWait(self.driver, 20).until( EC.presence_of_element_located((By.XPATH, '//*[@id="_addMessage__form__insert"]')))
+            # self.driver.execute_script("arguments[0].click();", save_btn)
             self.driver.switch_to.window(parent)
             
             logger.log( module="Proteck-upload_tax_mls",order_id=hybrid_orderid, action_type="Condition_Check", remarks=f"Uploaded files Successfully", severity="INFO" )

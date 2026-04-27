@@ -521,28 +521,34 @@ class Servicelink:
     def upload_pic_and_sig(self):
         '''Fetch and Upload main'''
 
-        #get phot and signature url from api
-        data = fetch_upload_data(self, hybrid_orderid)
-        if not data:
-            logger.log( module="LSI-upload_pic_and_sig", order_id=hybrid_orderid,action_type="Pic_Upload",remarks=f"No upload data found for order {self.order_id}",severity="INFO")
-            return False, "Upload Data is None"
-        
-        signature_path = data.get("siganture_folder")
-        photos_path = data.get("image_path")
-        
-        if not isinstance(signature_path, str) or not signature_path.strip():
-            logger.log(module="LSI-upload_pic_and_sig", order_id=hybrid_orderid, action_type="Pic_Upload", remarks=f"Invalid or missing signature path : {signature_path}", severity="ERROR")
-            # return False, "Invalid signature path"
+        try:
 
-        if not isinstance(photos_path, str) or not photos_path.strip():
-            logger.log(module="LSI-upload_pic_and_sig", order_id=hybrid_orderid, action_type="Pic_Upload", remarks=f"Invalid or missing photo URL : {photos_path}", severity="ERROR")
-            return False, "Invalid photo URL"
+            #get phot and signature url from api
+            data = fetch_upload_data(self, hybrid_orderid)
+            if not data:
+                logger.log( module="LSI-upload_pic_and_sig", order_id=hybrid_orderid,action_type="Pic_Upload",remarks=f"No upload data found for order {self.order_id}",severity="INFO")
+                return False, "Upload Data is None"
+            
+            signature_path = data.get("siganture_folder")
+            photos_path = data.get("image_path")
+            
+            if not signature_path or not isinstance(signature_path, str) or not signature_path.strip():
+                logger.log(module="LSI-upload_pic_and_sig", order_id=hybrid_orderid, action_type="Pic_Upload", remarks=f"Invalid or missing signature path : {signature_path}", severity="ERROR")
+                # return False, "Invalid signature path"
 
-        #upload photos 
-        upload_result, error = self.upload_photos_to_order(signature_path, photos_path)
-        if upload_result:
-            return True, error
-        else:
+            if not photos_path or not isinstance(photos_path, str) or not photos_path.strip():
+                logger.log(module="LSI-upload_pic_and_sig", order_id=hybrid_orderid, action_type="Pic_Upload", remarks=f"Invalid or missing photo URL : {photos_path}", severity="ERROR")
+                return False, "Invalid photo URL"
+
+            #upload photos 
+            upload_result, error = self.upload_photos_to_order(signature_path, photos_path)
+            if upload_result:
+                return True, error
+            else:
+                return False, error
+            
+        except Exception as err:
+            logger.log( module="upload_pic_and_sig",order_id=hybrid_orderid,action_type="Exception",remarks=f"Exception in Uploading pic and signature: {err}",severity="INFO" )
             return False, error
         
 
