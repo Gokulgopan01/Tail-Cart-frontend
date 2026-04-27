@@ -101,7 +101,7 @@
                 {
                     "FieldType":"checkbox_list",
                         "values":[
-                            ["sub_data['causeOfDamage']","//label[normalize-space()='CAUSE OF DAMAGE']   /following::table[1]   //div[@class='form-focus-row']","xpath"]
+                            ["sub_data['causeOfDamage']","//label[@id='causeOfDamage']/following-sibling::table//div[contains(@class,'form-focus-row')]","xpath"]
                         ]
                 },
                 {
