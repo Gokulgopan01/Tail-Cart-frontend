@@ -487,8 +487,10 @@ class Servicelink:
 
                 if is_form_filled:
                     update_order_status(hybrid_orderid, "In Progress", "Entry", "Filled",hybrid_token)
+                    return
                 else:
                     update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
+                    return
             
             time.sleep(0.5)
             is_pic_uploaded = True
