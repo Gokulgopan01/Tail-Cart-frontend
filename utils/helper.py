@@ -2379,6 +2379,7 @@ def select_checkboxes_list(driver, api_values, locator, mode):
     """ select checboxes from list."""
 
     try:
+        time.sleep(0.2)
         api_values = {v.strip().upper() for v in api_values}
 
         damage_options = WebDriverWait(driver, 10).until( EC.presence_of_all_elements_located((By.XPATH, locator)) )
@@ -2390,6 +2391,7 @@ def select_checkboxes_list(driver, api_values, locator, mode):
             label = label.strip().upper()
 
             if label in api_values:
+                time.sleep(0.2)
                 checkbox = option.find_element( By.XPATH, ".//input[@type='checkbox']" )
                 driver.execute_script( "arguments[0].scrollIntoView({block:'center'});", checkbox )
                 driver.execute_script(""" if (!arguments[0].checked) { arguments[0].click(); } """, checkbox)
