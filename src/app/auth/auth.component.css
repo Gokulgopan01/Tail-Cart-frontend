@@ -1,13 +1,126 @@
+/* ============================================
+   PET-FRIENDLY AUTHENTICATION CSS
+   Warm, Trustworthy, and Adorable Aesthetic
+   ============================================ */
+
+/* =========================
+   ROOT VARIABLES - LOGO THEME COLORS
+   ========================= */
+:root {
+  /* PRIMARY BRAND - Warm Orange (Playful & Energetic, like a friendly pet) */
+  --primary: #E86A2C;
+  --primary-light: #F48C54;
+  --primary-soft: #FFF0E8;
+
+  /* SECONDARY BRAND - Sage Green (Trustworthy, calm, pet-safe) */
+  --secondary: #5BA675;
+  --secondary-light: #7EC19A;
+  --secondary-soft: #EFF5F0;
+
+  /* ACCENT - Golden Yellow (Friendly highlights, like a warm sun) */
+  --accent: #F2B84D;
+  --accent-soft: #FFF2DF;
+  --accent-hover: #E09E30;
+
+  /* NEUTRAL BACKGROUNDS - Warm & Inviting */
+  --bg-main: #FFFCF8;
+  --bg-card: #FFFFFF;
+  --bg-muted: #F7F2EB;
+  --bg-glass: rgba(255, 252, 248, 0.85);
+
+  /* TEXT COLORS - Soft & Readable like pet fur tones */
+  --text-primary: #3A2C24;
+  --text-secondary: #7A6A5C;
+  --text-light: #B8A99B;
+  --text-white: #FFFFFF;
+
+  /* BORDERS - Subtle & Natural */
+  --border-light: #EBE2D8;
+  --border-strong: #DCCCB8;
+  --border-focus: #E86A2C;
+
+  /* STATUS COLORS */
+  --success: #6BAF7A;
+  --warning: #F4A950;
+  --danger: #E07A5F;
+
+  /* SHADOWS - Soft, warm glow */
+  --shadow-sm: 0 6px 14px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 12px 24px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04);
+
+  /* GRADIENTS - Warm & Friendly */
+  --gradient-primary: linear-gradient(135deg, #E86A2C, #F48C54);
+  --gradient-secondary: linear-gradient(135deg, #5BA675, #7EC19A);
+  --gradient-accent: linear-gradient(135deg, #F2B84D, #F7D27A);
+  --gradient-soft: linear-gradient(135deg, #FFF0E8, #FFFCF8);
+  --gradient-warm: linear-gradient(135deg, #F48C54, #F7B07A);
+
+  /* UI TOKENS */
+  --surface-bg: var(--bg-card);
+  --surface-border: var(--border-light);
+  --surface-blur: none;
+
+  /* GLOW EFFECTS - Subtle & Pet-Friendly */
+  --glow-primary: 0 0 12px rgba(232, 106, 44, 0.25);
+  --glow-soft: 0 0 8px rgba(242, 184, 77, 0.2);
+  --glow-success: 0 0 12px rgba(91, 166, 117, 0.25);
+
+  --shadow-elevated: var(--shadow-md);
+  --focus-ring: 0 0 0 3px rgba(232, 106, 44, 0.3);
+}
+
+/* =========================
+   DARK THEME - Cozy Night Mode
+   ========================= */
+.dark {
+  --primary: #F48C54;
+  --primary-light: #F7A078;
+  --primary-soft: #3A2C24;
+
+  --secondary: #7EC19A;
+  --secondary-light: #9AD4B2;
+  --secondary-soft: #2A3A30;
+
+  --accent: #F7D27A;
+  --accent-soft: #4A3A20;
+  --accent-hover: #E5BA50;
+
+  --bg-main: #1E1A16;
+  --bg-card: #2C2620;
+  --bg-muted: #3A322A;
+  --bg-glass: rgba(44, 38, 32, 0.85);
+
+  --text-primary: #F5EDE4;
+  --text-secondary: #CBBBA8;
+  --text-light: #9B8A78;
+  --text-white: #FFFFFF;
+
+  --border-light: #4A3E34;
+  --border-strong: #6B5A48;
+  --border-focus: #F48C54;
+
+  --gradient-primary: linear-gradient(135deg, #E86A2C, #F48C54);
+  --gradient-secondary: linear-gradient(135deg, #5BA675, #7EC19A);
+  --gradient-accent: linear-gradient(135deg, #F2B84D, #F7D27A);
+
+  --glow-primary: 0 0 16px rgba(244, 140, 84, 0.3);
+  --glow-soft: 0 0 10px rgba(247, 210, 122, 0.25);
+
+  --surface-bg: var(--bg-card);
+  --surface-border: var(--border-light);
+}
+
+/* =========================
+   GLOBAL & LAYOUT STYLES
+   ========================= */
 .auth-toggle-pill {
   display: flex;
-
   background: var(--bg-muted);
   backdrop-filter: var(--surface-blur);
-
   border-radius: 50px;
   padding: 6px;
   margin-bottom: 40px;
-
   border: 1px solid var(--surface-border);
 }
 
@@ -27,33 +140,37 @@
   width: 100%;
 }
 
-/* Lottie Banner Left Side */
+/* =========================
+   LEFT BANNER - LOTTIE CONTAINER
+   ========================= */
 .auth-lottie-container {
   flex: 1;
   position: relative;
-
-  /* upgraded: works for both themes */
   background: var(--gradient-primary);
-
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border: none;
+  outline: none;
 }
 
-/* Subtle organic glow over the banner */
+/* Also ensure no border on any pseudo-elements */
+.auth-lottie-container::before,
+.auth-lottie-container::after {
+  border: none;
+}
+
+/* Warm organic glow */
 .auth-lottie-container::before {
   content: '';
   position: absolute;
   width: 1000px;
   height: 1000px;
-
   background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-
   bottom: -400px;
   left: -200px;
-
-  opacity: 0.12;
+  opacity: 0.15;
   filter: blur(120px);
   z-index: 1;
 }
@@ -62,58 +179,59 @@
   content: '';
   position: absolute;
   inset: 0;
-
-  background: radial-gradient(circle at 70% 30%, rgba(0, 229, 255, 0.15), transparent 60%);
+  background: radial-gradient(circle at 70% 30%, rgba(242, 184, 77, 0.15), transparent 60%);
   opacity: 0.6;
   pointer-events: none;
 }
 
+/* Pet paw pattern overlay */
+.auth-lottie-container .paw-pattern {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 64px;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* =========================
+   THEME TOGGLE BUTTON
+   ========================= */
 .theme-toggle-btn {
   position: absolute;
   top: 20px;
   right: 20px;
-  /* looks better than left */
-
   width: 48px;
   height: 48px;
   border-radius: 50%;
-
-  background: rgba(255, 255, 255, 0.1);
-  /* glass effect */
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(12px);
-
   border: 1px solid var(--surface-border);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   cursor: pointer;
-
   z-index: 10;
-  /* above lottie */
-
   transition: all 0.3s ease;
 }
 
-/* icon */
 .theme-toggle-btn i {
   font-size: 18px;
-  color: var(--text-white);
+  color: var(--accent);
 }
 
-/* hover */
 .theme-toggle-btn:hover {
   transform: scale(1.1);
   box-shadow: var(--glow-primary);
 }
 
 .light .theme-toggle-btn {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(232, 106, 44, 0.1);
 }
 
 .dark .theme-toggle-btn {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(247, 210, 122, 0.15);
 }
 
 .banner-lottie {
@@ -126,43 +244,56 @@
   z-index: 5;
 }
 
-/* Form Right Side */
+/* =========================
+   RIGHT FORM CONTAINER
+   ========================= */
 .auth-form-container {
   flex: 0 0 520px;
-
-  /* upgraded to token system */
   background: var(--surface-bg);
   backdrop-filter: var(--surface-blur);
-
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
-
   box-shadow: var(--shadow-elevated);
-
   position: relative;
   z-index: 20;
-
   border-left: 1px solid var(--surface-border);
 }
 
+/* Cute pet icons background */
+.auth-form-container::before {
+  content: '🐶🐱🐾';
+  position: absolute;
+  bottom: 15px;
+  right: 25px;
+  font-size: 48px;
+  opacity: 0.06;
+  pointer-events: none;
+  white-space: pre;
+  z-index: 0;
+}
+
+/* =========================
+   AUTH BOX
+   ========================= */
 .auth-box {
   width: 100%;
   max-width: 400px;
-
   background: var(--surface-bg);
   backdrop-filter: var(--surface-blur);
-
   padding: 45px 40px;
   border-radius: 32px;
-
   box-shadow: var(--shadow-elevated);
-
   animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-
   border: 1px solid var(--surface-border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-box:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), var(--glow-soft);
 }
 
 .auth-box::before {
@@ -171,37 +302,49 @@
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-
-  background: linear-gradient(120deg,
-      transparent,
-      rgba(0, 229, 255, 0.5),
-      transparent);
-
+  background: linear-gradient(120deg, transparent, rgba(242, 184, 77, 0.5), transparent);
   opacity: 0;
-  /* hidden in light */
   transition: opacity 0.3s ease;
-
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
 
-/* activate glow automatically in dark */
 .dark .auth-box::before {
   opacity: 1;
 }
 
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
+/* Paw icon decoration */
+.auth-box::after {
+  content: '🐾';
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  opacity: 0.1;
+  font-size: 24px;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.auth-box:hover::after {
+  animation: pawWiggle 0.5s ease-in-out;
+  opacity: 0.25;
+}
+
+@keyframes pawWiggle {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  25% {
+    transform: rotate(-5deg);
+  }
+
+  75% {
+    transform: rotate(5deg);
   }
 }
 
@@ -217,38 +360,35 @@
   }
 }
 
-
-
-/* Toggle Button */
+/* =========================
+   TOGGLE BUTTONS
+   ========================= */
 .toggle-btn {
   flex: 1;
   background: transparent;
   border: none;
   padding: 14px 0;
-
   font-size: 15px;
   font-weight: 700;
-
   color: var(--text-light);
-
   border-radius: 50px;
   cursor: pointer;
-
   transition: all 0.35s ease;
 }
 
 .toggle-btn.active {
   color: var(--text-white);
   background: var(--gradient-primary);
-
   box-shadow: var(--glow-primary);
 }
 
-/* subtle hover */
 .toggle-btn:hover {
   color: var(--text-primary);
 }
 
+/* =========================
+   HEADINGS
+   ========================= */
 .auth-headings {
   margin-bottom: 35px;
 }
@@ -259,8 +399,6 @@
   color: var(--text-primary);
   margin: 0 0 10px;
   letter-spacing: -1px;
-
-  /* subtle futuristic glow (auto works in dark) */
   text-shadow: var(--glow-soft);
 }
 
@@ -270,30 +408,33 @@
   line-height: 1.6;
 }
 
+/* =========================
+   FORM INPUTS
+   ========================= */
 .input-float-group {
   position: relative;
   margin-bottom: 25px;
 }
 
-/* INPUT FIELD */
 .input-float-group input {
   width: 100%;
-
   background: var(--bg-muted);
   backdrop-filter: var(--surface-blur);
-
   border: 1px solid var(--surface-border);
   border-radius: 18px;
-
   padding: 18px 20px 18px 52px;
   font-size: 16px;
-
   color: var(--text-primary);
   font-weight: 600;
-
   transition: all 0.25s ease;
   outline: none;
   box-sizing: border-box;
+}
+
+.input-float-group input::placeholder {
+  color: var(--text-light);
+  opacity: 0.7;
+  font-weight: normal;
 }
 
 .input-float-group input:hover {
@@ -301,24 +442,19 @@
   border-color: var(--border-strong);
 }
 
-/* FOCUS (important futuristic effect) */
 .input-float-group input:focus {
   background: var(--surface-bg);
   border-color: var(--primary);
-
   box-shadow: var(--focus-ring), var(--glow-primary);
 }
 
-/* LABEL */
 .input-float-group label {
   position: absolute;
   left: 52px;
   top: 50%;
   transform: translateY(-50%);
-
   font-size: 16px;
   color: var(--text-light);
-
   pointer-events: none;
   transition: all 0.25s ease;
 }
@@ -327,15 +463,11 @@
 .input-float-group input:not(:placeholder-shown)~label {
   top: -6px;
   font-size: 12px;
-
   color: var(--primary);
   font-weight: 700;
-
   background: var(--surface-bg);
   padding: 2px 8px;
   border-radius: 6px;
-
-  /* slight glow in dark */
   box-shadow: var(--glow-soft);
 }
 
@@ -344,14 +476,15 @@
   left: 20px;
   top: 50%;
   transform: translateY(-50%);
-
   color: var(--text-light);
   font-size: 18px;
-
   transition: all 0.25s ease;
 }
 
-/* ICON ACTIVE (focus interaction) */
+.input-float-group:hover .input-icon {
+  transform: translateY(-50%) scale(1.05);
+}
+
 .input-float-group input:focus~.input-icon {
   color: var(--primary);
   text-shadow: var(--glow-primary);
@@ -362,23 +495,22 @@
   right: 18px;
   top: 50%;
   transform: translateY(-50%);
-
   background: none;
   border: none;
-
   color: var(--text-light);
   cursor: pointer;
   padding: 5px;
-
   transition: all 0.25s ease;
 }
 
-/* subtle interaction */
 .toggle-password:hover {
   color: var(--primary);
   text-shadow: var(--glow-primary);
 }
 
+/* =========================
+   FORM OPTIONS
+   ========================= */
 .form-options {
   display: flex;
   justify-content: space-between;
@@ -386,9 +518,6 @@
   margin-bottom: 30px;
 }
 
-/* =========================
-   MODERN CHECKBOX
-   ========================= */
 .modern-checkbox {
   display: flex;
   align-items: center;
@@ -402,39 +531,30 @@
   height: 0;
 }
 
-/* checkbox box */
 .checkmark {
   width: 22px;
   height: 22px;
-
   background: var(--bg-muted);
   backdrop-filter: var(--surface-blur);
-
   border: 1px solid var(--surface-border);
   border-radius: 6px;
-
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
-
   transition: all 0.25s ease;
 }
 
-/* hover */
 .modern-checkbox:hover .checkmark {
   border-color: var(--primary);
 }
 
-/* checked */
 .modern-checkbox input:checked~.checkmark {
   background: var(--gradient-primary);
   border-color: var(--primary);
-
   box-shadow: var(--glow-primary);
 }
 
-/* icon inside */
 .checkmark i {
   color: #fff;
   font-size: 10px;
@@ -446,72 +566,56 @@
   opacity: 1;
 }
 
-
-/* =========================
-   FORGOT PASSWORD LINK
-   ========================= */
 .forgot-link {
   font-size: 14px;
   color: var(--accent);
   font-weight: 700;
   text-decoration: none;
-
   transition: all 0.25s ease;
 }
 
-/* subtle futuristic hover */
 .forgot-link:hover {
   color: var(--primary);
   text-shadow: var(--glow-soft);
 }
 
+/* =========================
+   SUBMIT BUTTON
+   ========================= */
 .modern-submit-btn {
   width: 100%;
-
   background: var(--gradient-primary);
   color: var(--text-white);
-
   border: none;
   border-radius: 22px;
-
   padding: 18px;
   font-size: 16px;
   font-weight: 700;
-
   cursor: pointer;
-
   display: flex;
   justify-content: center;
   align-items: center;
   height: 62px;
-
-  /* IMPORTANT: use token */
   box-shadow: var(--shadow-elevated);
-
   transition: all 0.3s ease;
 }
 
-/* hover (this gives futuristic energy) */
 .modern-submit-btn:hover {
   transform: translateY(-2px) scale(1.01);
-
   box-shadow: var(--glow-primary), var(--shadow-elevated);
 }
 
-/* active press */
 .modern-submit-btn:active {
   transform: scale(0.98);
 }
 
 .modern-submit-btn:hover:not(:disabled) {
   transform: translateY(-4px) scale(1.02);
-
-  /* use tokens instead of hardcoded shadow */
   box-shadow: var(--glow-primary), var(--shadow-elevated);
 }
 
 /* =========================
-   SOCIAL DIVIDER
+   SOCIAL SECTION
    ========================= */
 .social-divider {
   display: flex;
@@ -524,7 +628,6 @@
 .social-divider::after {
   content: '';
   flex: 1;
-
   border-bottom: 1px solid var(--surface-border);
   opacity: 0.6;
 }
@@ -540,30 +643,27 @@
 .social-grid {
   display: flex;
   gap: 15px;
+  justify-content: center;
+  align-items: center;
 }
 
 .social-btn {
-  flex: 1;
-
+  flex: 0 1 auto;
+  min-width: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-
   background: var(--surface-bg);
   backdrop-filter: var(--surface-blur);
-
   border: 1px solid var(--surface-border);
   border-radius: 18px;
-
-  padding: 14px;
+  padding: 14px 20px;
   font-weight: 600;
   color: var(--text-primary);
-
   cursor: pointer;
   transition: all 0.25s ease;
 }
-
 
 .social-btn img {
   width: 20px;
@@ -575,45 +675,39 @@
   font-size: 18px;
 }
 
-/* hover → subtle futuristic lift */
 .social-btn:hover {
   transform: translateY(-3px);
-
   border-color: var(--primary);
   box-shadow: var(--glow-soft);
 }
 
-
+/* =========================
+   FOOTER
+   ========================= */
 .premium-luxury-footer {
   background: var(--gradient-primary);
   color: var(--text-white);
-
   padding: 100px 0 50px;
   position: relative;
   overflow: hidden;
 }
 
-/* subtle glow layer (dark mode shows nicely) */
 .premium-luxury-footer::before {
   content: '';
   position: absolute;
   inset: 0;
-
-  background: radial-gradient(circle at 30% 20%, rgba(0, 229, 255, 0.15), transparent 50%);
+  background: radial-gradient(circle at 30% 20%, rgba(242, 184, 77, 0.15), transparent 50%);
   pointer-events: none;
 }
 
 .newsletter-button-premium {
   background: var(--gradient-accent);
   color: var(--text-primary);
-
   font-weight: 700;
   border-radius: 50px;
   padding: 14px 28px;
-
   border: none;
   cursor: pointer;
-
   transition: all 0.25s ease;
 }
 
@@ -622,30 +716,24 @@
   box-shadow: var(--glow-primary);
 }
 
+/* =========================
+   ALERTS
+   ========================= */
 .modern-alert {
   padding: 16px 20px;
   border-radius: 18px;
   margin-bottom: 30px;
-
   display: flex;
   align-items: center;
   gap: 12px;
-
   font-weight: 600;
   font-size: 0.9rem;
-
   position: relative;
-
-  /* upgraded */
   background: var(--surface-bg);
   backdrop-filter: var(--surface-blur);
-
   border: 1px solid var(--surface-border);
-
   animation: slideDown 0.4s ease-out;
 }
-
-
 
 @keyframes slideDown {
   from {
@@ -659,89 +747,62 @@
   }
 }
 
-/* =========================
-   ALERT VARIANTS
-   ========================= */
 .error-alert {
   background: var(--surface-bg);
   backdrop-filter: var(--surface-blur);
-
   color: var(--danger);
-
   border: 1px solid var(--danger);
   border-left: 4px solid var(--danger);
-
-  box-shadow: 0 0 12px rgba(231, 76, 60, 0.15);
+  box-shadow: 0 0 12px rgba(224, 122, 95, 0.15);
 }
 
 .success-alert {
   background: var(--surface-bg);
   backdrop-filter: var(--surface-blur);
-
   color: var(--success);
-
   border: 1px solid var(--success);
   border-left: 4px solid var(--success);
-
-  box-shadow: 0 0 12px rgba(46, 204, 113, 0.15);
+  box-shadow: 0 0 12px rgba(107, 175, 122, 0.15);
 }
 
 .modern-alert span {
   flex: 1;
 }
 
-
-/* =========================
-   CLOSE BUTTON
-   ========================= */
 .btn-close {
   background: transparent !important;
   border: none !important;
-
   padding: 6px;
-
   color: currentColor;
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   opacity: 0.6;
   font-size: 1rem;
-
   transition: all 0.2s ease;
-
   appearance: none !important;
   -webkit-appearance: none;
 }
 
-/* subtle glow on hover */
 .btn-close:hover {
   opacity: 1;
   transform: scale(1.1);
   text-shadow: var(--glow-soft);
 }
 
-
 /* =========================
-   VALIDATION MESSAGE
+   VALIDATION MESSAGES
    ========================= */
 .validation-msg {
   font-size: 0.8rem;
-
   color: var(--danger);
   font-weight: 600;
-
   margin-top: 6px;
   padding-left: 10px;
-
   animation: fadeIn 0.3s ease;
-
-  /* subtle emphasis */
   letter-spacing: 0.3px;
 }
-
 
 /* =========================
    SUCCESS OVERLAY
@@ -749,8 +810,6 @@
 .success-backdrop {
   background: var(--bg-main) !important;
   backdrop-filter: blur(25px) !important;
-
-  /* futuristic ambient glow */
   position: relative;
 }
 
@@ -758,27 +817,44 @@
   content: '';
   position: absolute;
   inset: 0;
-
-  background: radial-gradient(circle at center,
-      rgba(0, 229, 255, 0.15),
-      transparent 60%);
-
+  background: radial-gradient(circle at center, rgba(232, 106, 44, 0.12), transparent 60%);
   pointer-events: none;
 }
 
-
-/* =========================
-   SUCCESS TITLE
-   ========================= */
 .success-title {
   color: var(--primary) !important;
   font-weight: 800 !important;
-
-  /* glow only visible in dark */
   text-shadow: var(--glow-primary);
 }
 
-/* Responsive */
+/* =========================
+   FORGOT PASSWORD FLOW
+   ========================= */
+.forgot-step-footer {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent-hover);
+  transform: translateX(-4px);
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
 @media (max-width: 768px) {
   .auth-main-wrapper {
     flex-direction: column;
@@ -786,6 +862,12 @@
 
   .auth-lottie-container {
     flex: 0 0 280px;
+  }
+
+  .auth-lottie-container .paw-pattern {
+    font-size: 40px;
+    bottom: 10px;
+    right: 10px;
   }
 
   .auth-form-container {
@@ -796,9 +878,22 @@
     padding: 30px 20px;
   }
 
+  .auth-form-container::before {
+    font-size: 32px;
+    bottom: 10px;
+    right: 15px;
+    opacity: 0.05;
+  }
+
   .auth-box {
     box-shadow: none;
     padding: 35px 25px;
+  }
+
+  .auth-box::after {
+    font-size: 20px;
+    bottom: 15px;
+    left: 15px;
   }
 
   .validation-msg {
@@ -822,65 +917,18 @@
   }
 }
 
-/* Forgot Flow Navigation */
-.forgot-step-footer {
-  margin-top: 25px;
-  display: flex;
-  justify-content: center;
+/* =========================
+   UTILITY CLASSES
+   ========================= */
+.pet-icon-sm {
+  font-size: 16px;
+  margin-right: 8px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--accent);
-  text-decoration: none;
-  transition: all 0.2s;
-}
-
-.back-link:hover {
-  color: var(--accent-hover);
-  transform: translateX(-4px);
-}
-
-/* Paw Icons Decor (via pseudo-elements) */
-.auth-box::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-
-  background: linear-gradient(120deg,
-      transparent,
-      rgba(0, 229, 255, 0.5),
-      transparent);
-
-  opacity: 0;
-  transition: opacity 0.3s ease;
-
-  pointer-events: none;
-  /* 🔥 ADD THIS */
-
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
-
-.auth-lottie-container::before,
-.auth-lottie-container::after,
-.banner-lottie {
-  pointer-events: none;
-}
-
-.auth-box::after {
-  content: '🐾';
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  opacity: 0.1;
+.pet-icon-md {
+  font-size: 20px;
+  margin-right: 10px;
+  vertical-align: middle;
 }

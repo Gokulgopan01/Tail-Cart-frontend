@@ -2,72 +2,78 @@
    LIGHT THEME (DEFAULT)
    ========================= */
 :root {
-  /* PRIMARY BRAND */
-  --primary: #0F3D3E;
-  --primary-light: #1F6F70;
-  --primary-soft: #E6F4F1;
+  /* BRAND COLORS - Inspired by the friendly mascot logo */
+  --primary: #E86A2C;
+  /* Warm orange - playful & energetic */
+  --primary-light: #F48C54;
+  /* Lighter orange for gradients */
+  --primary-soft: #FFF0E8;
+  /* Soft peach background */
 
-  /* ACCENT */
-  --accent: #D4AF37;
-  --accent-soft: #F6E7B5;
-  --accent-hover: #B8962E;
+  /* SECONDARY BRAND - Pet-safe calming green */
+  --secondary: #5BA675;
+  /* Gentle sage green - trustworthy */
+  --secondary-light: #7EC19A;
+  --secondary-soft: #EFF5F0;
 
-  /* SECONDARY */
-  --secondary: #FF7A59;
-  --secondary-soft: #FFE5DE;
+  /* ACCENT - Golden highlights (from logo details) */
+  --accent: #F2B84D;
+  /* Sunny gold - friendly call to action */
+  --accent-soft: #FFF2DF;
+  --accent-hover: #E09E30;
 
-  /* BACKGROUND */
-  --bg-main: #F7FAF9;
+  /* PET-FRIENDLY NEUTRAL TONES */
+  --bg-main: #FFFCF8;
+  /* Warm white base */
   --bg-card: #FFFFFF;
-  --bg-muted: #EEF3F2;
-  --bg-glass: rgba(255, 255, 255, 0.6);
+  --bg-muted: #F7F2EB;
+  /* Slightly warm gray-beige */
+  --bg-glass: rgba(255, 252, 248, 0.85);
 
-  /* TEXT */
-  --text-primary: #0D1F1C;
-  --text-secondary: #5F6F6B;
-  --text-light: #8FA39E;
-  --text-white: #ffffff;
+  /* TEXT COLORS - Soft & readable */
+  --text-primary: #3A2C24;
+  /* Warm dark brown (like pet fur) */
+  --text-secondary: #7A6A5C;
+  /* Muted warm gray */
+  --text-light: #B8A99B;
+  /* Light warm beige */
+  --text-white: #FFFFFF;
 
-  /* BORDER */
-  --border-light: #E3ECEA;
-  --border-strong: #C9D6D2;
-  --border-focus: #D4AF37;
+  /* BORDER - Subtle & natural */
+  --border-light: #EBE2D8;
+  --border-strong: #DCCCB8;
+  --border-focus: #E86A2C;
 
   /* STATUS */
-  --success: #2ECC71;
-  --warning: #F39C12;
-  --danger: #E74C3C;
+  --success: #6BAF7A;
+  --warning: #F4A950;
+  --danger: #E07A5F;
 
-  /* SHADOWS */
-  --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
+  /* SHADOWS - Soft & natural */
+  --shadow-sm: 0 6px 14px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 12px 24px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04);
 
-  /* GRADIENTS */
-  --gradient-primary: linear-gradient(135deg, #0F3D3E, #1F6F70);
-  --gradient-accent: linear-gradient(135deg, #D4AF37, #F2D57E);
-  --gradient-soft: linear-gradient(135deg, #E6F4F1, #F7FAF9);
-  --gradient-warm: linear-gradient(135deg, #FF7A59, #FFB199);
-  --gradient-violet: linear-gradient(135deg, #6D5DF6, #A78BFA);
+  /* GRADIENTS - Warm & inviting */
+  --gradient-primary: linear-gradient(135deg, #E86A2C, #F48C54);
+  --gradient-secondary: linear-gradient(135deg, #5BA675, #7EC19A);
+  --gradient-accent: linear-gradient(135deg, #F2B84D, #F7D27A);
+  --gradient-soft: linear-gradient(135deg, #FFF0E8, #FFFCF8);
+  --gradient-warm: linear-gradient(135deg, #F48C54, #F7B07A);
+  --gradient-violet: linear-gradient(135deg, #E86A2C, #F2B84D);
 
-  /* CATEGORY */
-  --dog-bg: #FFF3E8;
-  --cat-bg: #F0F7FF;
-  --fish-bg: #E8FBF5;
-  --bird-bg: #FFF0F5;
-  --other-bg: #F5F5F5;
-
-  /* ===== UI BEHAVIOR TOKENS (IMPORTANT) ===== */
+  /* ===== UI TOKENS - Optimized for Pet Theme ===== */
   --surface-bg: var(--bg-card);
   --surface-border: var(--border-light);
   --surface-blur: none;
 
-  --glow-primary: none;
-  --glow-soft: none;
+  /* Soft glow for interactive elements (subtle, pet-friendly) */
+  --glow-primary: 0 0 12px rgba(232, 106, 44, 0.25);
+  --glow-soft: 0 0 8px rgba(242, 184, 77, 0.2);
+  --glow-success: 0 0 12px rgba(91, 166, 117, 0.25);
 
   --shadow-elevated: var(--shadow-md);
-
-  --focus-ring: 0 0 0 2px rgba(15, 61, 62, 0.15);
+  --focus-ring: 0 0 0 3px rgba(232, 106, 44, 0.3);
 }
 
 
