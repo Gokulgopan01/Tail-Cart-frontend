@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 from config import env
 load_dotenv()
 from condtions.all_portal_conditions import generate_condition_data
-from utils.helper import adj_click, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_listing_history, rrr_fill_repair_details, rrr_select_hoa_amenities, rrr_select_amenities, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status, tfs_statuschange, select_radio_button, select_drop_button, select_empty_field
+from utils.helper import adj_click, data_filling_text, extract_data_sections, fetch_upload_data, get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, rrr_fill_listing_history, rrr_fill_repair_details, rrr_select_hoa_amenities, rrr_select_amenities, save_form, save_form_adj, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status, tfs_statuschange, select_radio_button, select_drop_button, select_empty_field, address_matcher
 from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.glogger import GLogger
 
@@ -124,6 +124,7 @@ class rrreview:
     def rrreview_formopen(self):
         try:
             orders_from_api = HybridBPOApi.get_entry_order(hybrid_orderid)
+            # print("orders_from_api: ",orders_from_api)
             if not orders_from_api:  
                 logger.log(
                     module="rrreview-rrreview_formopen",
@@ -143,7 +144,7 @@ class rrreview:
                 proxy = order_from_api.get("proxy", None)  # Optional proxy
                 session=order_from_api.get("session",None)
                 order_id=order_from_api.get("order_id","")
-                order_details_from_api, tfs_orderid, is_qc, master_order_id=get_order_address_from_assigned_order(order_id,hybrid_token)
+                portal_order_id_api, tfs_orderid, is_qc, master_order_id, source_address = get_order_address_from_assigned_order(order_id, hybrid_token)
             
             # --- Step 2: Parse ALL Active Orders in RRR portal ---
             print("Looking for Active Orders...")
@@ -162,7 +163,8 @@ class rrreview:
                 )
             )
 
-            # Dictionary to store order_id -> form_type
+            # --- Step 3: Filter & Match Orders ---
+            discovery_list = []
             portal_order_data = {}
 
             for row in order_rows:
@@ -175,11 +177,23 @@ class rrreview:
                     form_type_el = row.find_element(By.XPATH, ".//ion-col[2]//ion-label")
                     form_type = form_type_el.get_attribute('textContent').strip().upper()
 
-                    print(f"Discovered Order: {portalorder_id} - {form_type}")
+                    # Column 3: Address Extraction 
+                    try:
+                        address_el = row.find_element(By.XPATH, ".//ion-col[3]//ion-label")
+                        portal_address = address_el.get_attribute('textContent').strip()
+                    except:
+                        portal_address = ""
 
-                    # Only store valid numeric order IDs
+                    print(f"Discovered Order: {portalorder_id} - {form_type} - {portal_address}")
+
                     if portalorder_id.isdigit():
                         portal_order_data[portalorder_id] = form_type
+                        discovery_list.append({
+                            "id": portalorder_id,
+                            "type": form_type,
+                            "address": portal_address
+                        })
+
                 except Exception as e:
                     logger.log(
                         module="rrreview-rrreview_formopen",
@@ -190,26 +204,51 @@ class rrreview:
                     )
                     continue
 
-            logger.log(
-                module="rrreview-rrreview_formopen",
-                order_id=hybrid_orderid,
-                action_type="Info",
-                remarks=f"Portal scan complete. Found {len(portal_order_data)} orders.",
-                severity="INFO"
-            )
             print(f"Total Active Orders: {len(portal_order_data)}")
 
-            # Extract HybridBPO order IDs for matching
-            hybrid_order_id = [str(o.get("portal_orderid", "")).strip() for o in orders_from_api if o.get("portal_orderid")]
+            # Extract Target ID and Target Address for matching
+            hybrid_order_ids = [str(o.get("portal_orderid", "")).strip() for o in orders_from_api if o.get("portal_orderid")]
+            
+            # 1. Primary Match: Mathematical Match by ID
+            matched_order = [oid for oid in portal_order_data.keys() if oid in hybrid_order_ids]
 
-            # Find common order IDs
-            matched_order = [oid for oid in portal_order_data.keys() if oid in hybrid_order_id]
-            print(f"Matched Orders for Processing:{matched_order}")
+            # 2. Fallback Match:Match by Address 
+            if not matched_order and source_address and source_address != "Address Not Found":
+                print("No ID match found. Attempting Address Fallback matching...")
+                
+                
+                portal_addresses = [d.get('address', "") for d in discovery_list]
+                
+                if any(portal_addresses): # Check if there is at least one non-empty address
+                    
+                    # Call the Normalization/Matching API helper
+                    match_response = address_matcher(source_address, portal_addresses)
+                    
+                    if match_response.get("matched"):
+                        best_match = match_response.get("best_match")
+                        idx = best_match.get("portal_index")
+                        score = best_match.get("score")
+                        
+                        # Validate the index and get the matched Order ID
+                        if idx is not None and idx < len(discovery_list):
+                            matched_item = discovery_list[idx]
+                            matched_order = [matched_item['id']]
+                            
+                            print(f"Fallback Index Match Successful: Row {idx} matched (Score: {score})")
+                            logger.log(
+                                module="rrreview-rrreview_formopen",
+                                order_id=hybrid_orderid,
+                                action_type="Info",
+                                remarks=f"Fallback index match: {source_address} -> {matched_item['address']} (score: {score})",
+                                severity="INFO"
+                            )
+
+            print(f"Matched Orders for Processing: {matched_order}")
             logger.log(
                 module="rrreview-rrreview_formopen",
                 order_id=hybrid_orderid,
                 action_type="Info",
-                remarks=f"Matching Complete. {len(matched_order)} orders pending automated processing.",
+                remarks=f"Matching Complete. {len(matched_order)} orders identified for processing.",
                 severity="INFO"
             )
 
@@ -1466,4 +1505,3 @@ class rrreview:
         except Exception as e:
             logger.log(module="rrreview-select_file_types", order_id=hybrid_orderid, action_type="Error", remarks=f"Critical error in select_file_types_in_portal: {e}", severity="ERROR")
             return False
-

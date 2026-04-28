@@ -21,7 +21,7 @@ from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.glogger import GLogger
 from utils.helper import (clean_address, data_filling_text, extract_data_sections, fetch_upload_data, fill_repair_details, get_nested, get_order_address_from_assigned_order, 
 handle_login_status, javascript_excecuter_filling, load_form_config_and_data, params_check, radio_btn_click, resource_path, save_form, save_form_adj,select_checkboxes_from_list,
-select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status, tfs_statuschange)
+select_field, setup_driver, single_checkbox, update_client_account_status, update_order_status, update_portal_login_confirmation_status, tfs_statuschange, address_matcher)
 
 from config import env
 logger = GLogger()
@@ -272,7 +272,7 @@ class RedBell:
             proxy = order_from_api.get("proxy", None)  # Optional proxy
             sessions=order_from_api.get("session",None)
             order_id=order_from_api.get("order_id","")
-            order_details_from_api,tfs_orderid,is_qc, master_order_id =get_order_address_from_assigned_order(order_id,hybrid_token)
+            order_details_from_api, tfs_orderid, is_qc,master_order_id, source_address = get_order_address_from_assigned_order(order_id, hybrid_token)
             print("order_details_from_api:", order_details_from_api)
             logger.log(
                     module="Redbell-redbell_formopen",
@@ -305,7 +305,7 @@ class RedBell:
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
             return
 
-        matched, order, status = self.find_matching_order(orders, target_genorderid, form_types, order_id,tfs_orderid)
+        matched, order, status = self.find_matching_order(orders, target_genorderid, form_types, order_id,tfs_orderid, source_address)
 
         if matched and status == "matched":
             order_url = f"https://valuationops.homegenius.com/VendorPortal/EditReport?ItemId={order['ItemId']}&EntityType=Vendor"
@@ -332,7 +332,7 @@ class RedBell:
                 )
             update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
 
-    def find_matching_order(self, orders, target_genorderid, form_types, order_id,tfs_orderid):
+    def find_matching_order(self, orders, target_genorderid, form_types, order_id,tfs_orderid, source_address):
         address_found = False
         address_list = []
 
@@ -402,6 +402,30 @@ class RedBell:
                     severity="INFO"
                     )
                 address_list.append(order_genid)
+        
+        # --- Fallback: Match by Address ---
+        if source_address and source_address != "Address Not Found":
+            print("No ID match found. Attempting Fallback Address matching...")
+            portal_addresses = [o.get('PropAddress', "").strip() for o in orders]
+            
+            if any(portal_addresses):
+                match_response = address_matcher(source_address, portal_addresses)
+                if match_response.get("matched"):
+                    best_match = match_response.get("best_match")
+                    idx = best_match.get("portal_index")
+                    
+                    if idx is not None and idx < len(orders):
+                        matched_order = orders[idx]
+                        print(f"Fallback Index Match Successful: Row {idx} matched (Score: {best_match.get('score')})")
+                        print(f"Matched Orders for Processing: ['{matched_order.get('OrderGenId')}']")
+                        
+                        # Verify product type for safety
+                        if matched_order.get('ProductDesc') in form_types:
+                             return True, matched_order, "matched"
+                        else:
+                             print(f"Address matched but Form Type {matched_order.get('ProductDesc')} is not allowed.")
+                             return False, None, "form_not_matched"
+
         update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         return False, None, "address_not_found"
         
@@ -1696,4 +1720,3 @@ def redbell_formopen_fill(self, order, session=None, merged_json=None, order_det
                 )
         update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed",hybrid_token)
         return
-

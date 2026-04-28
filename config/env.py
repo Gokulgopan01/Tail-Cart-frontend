@@ -22,6 +22,7 @@ PORTAL_LOGIN_CONFIRMATION="http://192.168.2.51:8000/hybrid/api/v1/autologin/upda
 tfs_statuschange_url = "http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateTFSstatusEntry"
 bpo_statuschange_url = "http://tfs-sandbox.ecesistech.com/autobpo_test/Home/ProcUpdateAutoEntry"
 pic_status_update = "http://192.168.2.51:8000/hybrid/api/v1/status_update/pic-status"
+ADDRESS_MATCHING_URL = "http://192.168.2.51:8090/match"
 
 RABBIT_URL = "amqp://glogger:123@192.168.2.41/"
 QUEUE_NAME = "autologin-tool"
@@ -45,6 +46,8 @@ QUEUE_NAME = "autologin-tool"
 # PORTAL_LOGIN_CONFIRMATION="https://api.hybridbpo.ecesistech.com/hybrid/api/v1/autologin/update-autologin-check?order_id="
 # tfs_statuschange_url = "https://bpotrackers.com/bvupcqp/home/ProcUpdateTFSstatusEntry"
 # bpo_statuschange_url = "https://bpotrackers.com/bvupcqp/Home/ProcUpdateAutoEntry"
+# ADDRESS_MATCHING_URL = "http://192.168.2.51:8090/match"
+
 
 # RABBIT_URL = "amqp://guest:guest@api.hybridbpo-msgbroker.ecesistech.com:5672/"
 # QUEUE_NAME = "autologin-tool"

@@ -2601,3 +2601,31 @@ def input_dropdown_field(driver, expected_value, click_input_xpath, ul_xpath, re
             time.sleep(1)
 
     logger.log( module="input_dropdown_field_lsi",  order_id=hybrid_orderid,  action_type="Exception", remarks=f"Exception in filling {expected_value} ",  severity="INFO" )
+
+
+
+def address_matcher(source_address, portal_addresses):
+    """
+    Calls the address matching API to find the best match between a source address 
+    and a list of portal addresses.
+    """
+    url = env.ADDRESS_MATCHING_URL 
+    payload = {
+        "source_address": source_address,
+        "portal_addresses": portal_addresses
+    }
+    
+    print(f"\n--- [DEBUG ADDRESS MATCH] ---")
+    print(f"Source: {source_address}")
+    print(f"Portal Addresses: {portal_addresses}")
+    
+    try:
+        response = requests.post(url, json=payload, timeout=10)
+        print(f"Response ({response.status_code}): {response.text}")
+        
+        if response.status_code == 200:
+            return response.json()
+        return {"matched": False, "best_match": None}
+    except Exception as e:
+        print(f"Address Match API Error: {e}")
+        return {"matched": False, "best_match": None}

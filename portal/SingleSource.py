@@ -19,7 +19,7 @@ from integrations.hybrid_bpo_api import HybridBPOApi
 from utils.helper import (SS_fill_repair_details, adj_click, close_validation_popup, data_filling_text, extract_data_sections, fetch_upload_data, 
 get_cookie_from_api, get_nested, get_order_address_from_assigned_order, handle_login_status, javascript_excecuter_filling, load_form_config_and_data, 
 params_check, radio_btn_click, select_checkboxes_from_list, select_field, setup_driver, single_checkbox, single_source_save_form, update_client_account_status, 
-update_order_status, update_portal_login_confirmation_status,tfs_statuschange)
+update_order_status, update_portal_login_confirmation_status,tfs_statuschange, address_matcher)
 
 load_dotenv()
 from utils.glogger import GLogger
@@ -271,13 +271,13 @@ class SingleSource:
                 proxy = order_from_api.get("proxy", None)  # Optional proxy
                 sessions=order_from_api.get("session",None)
                 order_id=order_from_api.get("order_id","")
-                order_details_from_api, tfs_orderid, is_qc, master_order_id=get_order_address_from_assigned_order(order_id,hybrid_token)
+                order_details_from_api, tfs_orderid, is_qc, master_order_id, source_address = get_order_address_from_assigned_order(order_id, hybrid_token)
                 
                 logger.log(
                     module="SingleSource-singleSource_formopen",
                     order_id=hybrid_orderid,
                     action_type="Condition-check",
-                    remarks=f"order_details_from_api: {order_details_from_api}",
+                    remarks=f"order_details_from_api: {order_details_from_api}, source_address: {source_address}",
                     severity="INFO"
                 )
 
@@ -356,11 +356,9 @@ class SingleSource:
                             module="SingleSource-singleSource_formopen",
                             order_id=hybrid_orderid,
                             action_type="Condition-check",
-                            remarks="Order Number is empty or 'none', failing early.",
-                            severity="WARNING"
+                            remarks="Order Number is empty - skipping primary search to attempt address fallback.",
+                            severity="INFO"
                         )
-                        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
-                        return
                 except Exception as e:
                     logger.log(
                         module="SingleSource-singleSource_formopen",
@@ -398,8 +396,9 @@ class SingleSource:
 
                         if len(row_data) > 2:
                             portal_orderid = str(target_genorderid).strip() if target_genorderid and str(target_genorderid).strip().lower() != "none" else ""
+                            # Index 1 is Order ID, Index 2 is Product
                             portal_orderid_portal = str(row_data[1]).strip() if len(row_data) > 1 and str(row_data[1]).strip().lower() != "none" else ""
-                            portal_formtype = row_data[2]
+                            portal_formtype = row_data[2] if len(row_data) > 2 else ""
 
                             if portal_orderid and portal_orderid_portal and portal_formtype in form_type and (portal_orderid in portal_orderid_portal or portal_orderid_portal in portal_orderid):
 
@@ -450,7 +449,7 @@ class SingleSource:
                                     severity="INFO"
                                 )
                                 if not portal_orderid or portal_orderid not in portal_orderid_portal:
-                                    orderidnotfound += 1
+                                    pass 
                                 else:
                                     newform += 1
                         else:
@@ -462,24 +461,117 @@ class SingleSource:
                                 severity="INFO"
                             )
 
-                    if not orderidnotfound:
-                        logger.log(
-                            module="SingleSource-singleSource_formopen",
-                            order_id=hybrid_orderid,
-                            action_type="Condition-check",
-                            remarks=f"portal_orderid_portal not found {portal_orderid_portal if 'portal_orderid_portal' in locals() else ''}",
-                            severity="INFO"
-                        )
-                        update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
-                    else:
-                        logger.log(
-                            module="SingleSource-singleSource_formopen",
-                            order_id=hybrid_orderid,
-                            action_type="Condition-check",
-                            remarks="Address completed",
-                            severity="INFO"
-                        )
-                        return
+                # --- Fallback: Match by Address ---
+                if not orderidnotfound and source_address and source_address != "Address Not Found":
+                    logger.log(
+                        module="SingleSource-singleSource_formopen",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks="No ID match found. Attempting Address Fallback matching...",
+                        severity="INFO"
+                    )
+                    
+                    # 1. Clear search to see all orders
+                    try:
+                        search_input = self.driver.find_element(By.ID, "search_value")
+                        if search_input.get_attribute('value'):
+                            search_input.clear()
+                            self.driver.find_element(By.XPATH, "//a[contains(@href, 'javascript:search()')]").click()
+                            time.sleep(5)
+                            # Dynamic wait for rows to appear
+                            for attempt in range(5):
+                                time.sleep(2)
+                                table = self.driver.find_element(By.XPATH, '//*[@id="Form1"]/table/tbody/tr/td/table[3]')
+                                rows = table.find_elements(By.TAG_NAME, 'tr')
+                                if len(rows) > 1:
+                                    break
+                    except Exception as e:
+                        print(f"Warning: Could not clear search for fallback: {e}")
+
+                    discovery_list = []
+                    for i, r in enumerate(rows):
+                        try:
+                            
+                            r_text = r.text.strip()
+                            if not r_text:
+                                print(f"DEBUG: Row {i} is completely empty. Skipping.")
+                                continue
+
+                            c = r.find_elements(By.TAG_NAME, 'td')
+                            
+                            if len(c) > 2:
+                                
+                                addr = ""
+                                for idx in [2, 3, 4, 5]:
+                                    if idx < len(c):
+                                        txt = c[idx].text.strip()
+                                        # If it has a number and doesn't contain 'BPO', it's likely our address
+                                        if any(char.isdigit() for char in txt) and not any(p in txt for p in ["BPO", "Evaluation", "Exterior", "Resolute"]):
+                                            addr = txt
+                                            break
+                                
+                                if not addr and len(c) > 2:
+                                    addr = c[2].text.strip()
+
+                                discovery_list.append({
+                                    "id": c[1].text.strip() if len(c) > 1 else "",
+                                    "type": c[2].text.strip() if len(c) > 2 else "",
+                                    "address": addr,
+                                    "element": c[-1].find_element(By.TAG_NAME, 'a')
+                                })
+                        except Exception:
+                            continue
+                    
+                    portal_addresses = [d['address'] for d in discovery_list if d['address']]
+                    
+                    if portal_addresses:
+                        match_response = address_matcher(source_address, portal_addresses)
+                        if match_response.get("matched"):
+                            best_match = match_response.get("best_match")
+                            idx = best_match.get("portal_index")
+                            
+                            if idx is not None and idx < len(discovery_list):
+                                matched_item = discovery_list[idx]
+                                print(f"Fallback Index Match Successful:matched (Score: {best_match.get('score')})")
+                                print(f"Matched Orders for Processing: ['{matched_item['id']}']")
+                                
+                                if matched_item['type'] in form_type:
+                                    orderidnotfound = True
+                                    clickable_element = matched_item['element']
+                                    clickable_element.click()
+                                    time.sleep(5)
+                                    # ... Proceed with form filling ...
+                                    try:
+                                        element = self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table')
+                                    except Exception as e:
+                                        logger.log(
+                                            module="SingleSource-singleSource_formopen",
+                                            order_id=hybrid_orderid,
+                                            action_type="Exception",
+                                            remarks=f"Exception finding form element: {e}",
+                                            severity="INFO"
+                                        )
+                                        element = self.driver.find_element(By.XPATH, '//*[@id="form_viewer"]/tbody/tr/td/table[1]/tbody/tr/td/table/tbody/tr/td[1]/font')
+                                    
+                                    formtype_value = element.text.strip()
+                                    logger.log(
+                                        module="SingleSource-singleSource_formopen",
+                                        order_id=hybrid_orderid,
+                                        action_type="Condition-check",
+                                        remarks=f"Form type inside the form (Fallback): {formtype_value}",
+                                        severity="INFO"
+                                    )
+                                    SingleSource_formopen_fill(self, formtype_value, session, merged_json, order_details, order_id, tfs_orderid, is_qc)
+
+                if not orderidnotfound:
+                    logger.log(
+                        module="SingleSource-singleSource_formopen",
+                        order_id=hybrid_orderid,
+                        action_type="Condition-check",
+                        remarks="No matching order found by ID or Address.",
+                        severity="WARNING"
+                    )
+                    update_order_status(hybrid_orderid, "In Progress", "Entry", "Failed", hybrid_token)
 
                     if newform > 0:
                         logger.log(
