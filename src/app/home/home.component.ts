@@ -77,7 +77,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       img: 'assets/images/product_trending_1.png',
       badge: 'BESTSELLER',
       badgeClass: 'badge-gold',
-      category: 'DOGS'
+      category: 'DOGS',
+      rating: 4.8,
+      reviews: 1240,
     },
     {
       id: 2,
@@ -87,7 +89,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       img: 'assets/images/product_trending_2.jpg',
       badge: 'CLASSIC',
       badgeClass: 'badge-amber',
-      category: 'CATS'
+      category: 'CATS',
+      rating: 4.5,
+      reviews: 1024,
     },
     {
       id: 3,
@@ -97,7 +101,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       img: 'assets/images/product_trending_3.png',
       badge: 'DURABLE',
       badgeClass: 'badge-silver',
-      category: 'BIRDS'
+      category: 'BIRDS',
+      rating: 4.6,
+      reviews: 1102,
     },
     {
       id: 4,
@@ -107,7 +113,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       img: 'assets/images/product_trending_4.png',
       badge: 'LIMITED',
       badgeClass: 'badge-dark',
-      category: 'DOGS'
+      category: 'DOGS',
+      rating: 4.7,
+      reviews: 1150,
     },
     {
       id: 5,
@@ -117,7 +125,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       img: 'assets/images/product_trending_1.png',
       badge: 'NEW',
       badgeClass: 'badge-dark',
-      category: 'FISH'
+      category: 'FISH',
+      rating: 4.4,
+      reviews: 1080,
     },
     {
       id: 6,
@@ -127,7 +137,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       img: 'assets/images/product_trending_3.png',
       badge: 'PREMIUM',
       badgeClass: 'badge-gold',
-      category: 'CATS'
+      category: 'CATS',
+      rating: 4.7,
+      reviews: 1150,
     }
   ];
 
@@ -265,6 +277,23 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showPlayButton(): void {
     document.querySelector('.play-button-overlay')?.classList.remove('hidden');
+  }
+
+  getStars(rating: number): number[] {
+    const fullStars = Math.floor(rating);
+    return Array(fullStars).fill(0);
+  }
+
+  // Helper method to check if half star is needed
+  hasHalfStar(rating: number): boolean {
+    return rating % 1 !== 0;
+  }
+
+  // Add to cart method (implement as needed)
+  addToCart(product: any): void {
+    // Your add to cart logic here
+    console.log('Added to cart:', product);
+    // Example: this.cartService.addItem(product);
   }
 
   // ── Navigation methods ───────────────────────────────────────

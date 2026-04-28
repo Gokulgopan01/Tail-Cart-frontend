@@ -1,6 +1,7 @@
 <!-- Hero Section -->
 <section class="hero-wrapper">
   <div class="hero-bg"></div>
+  <!-- <div class="hero-overlay"></div> -->
   <div class="hero-content">
     <div class="hero-tag fade-in">The Future of Pet Security</div>
     <div class="hero-bottom-group">
@@ -8,14 +9,16 @@
         Total Pet Safety.<br>
         <span class="highlight">Smart. Secure. Seamless.</span>
       </h1>
-      <p class="hero-desc fade-up" style="animation-delay: 0.1s">
+      <p class="hero-desc fade-up">
         The only ecosystem your pet ever needs. From precision tracking to AI-powered health insights, all in one place.
       </p>
-      <div class="hero-actions fade-up" style="animation-delay: 0.2s">
-        <button class="btn-primary-luxury" (click)="navigateToShop()">SHOP COLLECTION
+      <div class="hero-actions fade-up">
+        <button class="btn-primary-luxury" (click)="navigateToShop()">
+          SHOP COLLECTION
           <span class="arrow">→</span>
         </button>
-        <button class="btn-glass-luxury" (click)="navigateToAbout()">LEARN MORE
+        <button class="btn-glass-luxury" (click)="navigateToAbout()">
+          LEARN MORE
           <span class="arrow">→</span>
         </button>
       </div>
@@ -72,26 +75,31 @@
   </div>
 </section>
 
-<!-- Recommended for You Section (Curated Essentials) -->
+<!-- New Arrivals Section -->
 <section class="recommended-section">
   <div class="section-container">
     <div class="section-header-row">
       <h2 class="section-title-alt">New Arrivals</h2>
-      <a routerLink="/shop" class="browse-all-link">Explore Now &rsaquo;</a>
+      <a routerLink="/shop" class="browse-all-link">Shop all &rsaquo;</a>
     </div>
     <div class="recommended-grid-premium">
       <div *ngFor="let product of filteredProducts.slice(0, 4)" class="recommendation-card-luxury"
         (click)="navigateToShop()">
         <div class="card-image-wrapper-luxury">
           <img [src]="product.img" [alt]="product.name" class="card-img-luxury">
-          <button class="btn-arrow-on-image">
-            <i class="fas fa-arrow-right"></i>
-          </button>
+          <!-- Price on the image in GOLD color -->
+          <div class="price-on-image">{{product.price}}</div>
         </div>
         <div class="card-info-luxury">
           <h3 class="product-name-luxury">{{product.name}}</h3>
-          <p class="product-desc-luxury">{{product.subtitle}}</p>
-          <span class="product-price-luxury">{{product.price}}</span>
+          <div class="rating-wrapper">
+            <span class="star-icon">⭐</span>
+            <span class="rating-value">{{product.rating}}</span>
+            <span class="review-count">({{product.reviews}})</span>
+          </div>
+          <button class="add-to-cart-btn" (click)="$event.stopPropagation(); addToCart(product)">
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>

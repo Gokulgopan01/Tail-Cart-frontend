@@ -1,150 +1,64 @@
-/* =========================
-   LIGHT THEME (DEFAULT)
-   ========================= */
 :root {
-  /* BRAND COLORS - Inspired by the friendly mascot logo */
-  --primary: #E86A2C;
-  /* Warm orange - playful & energetic */
-  --primary-light: #F48C54;
-  /* Lighter orange for gradients */
-  --primary-soft: #FFF0E8;
-  /* Soft peach background */
+  /* 🔵 MAKE BLUE PRIMARY (from logo cart) */
+  --primary: #2F8DBD;
+  --primary-light: #5AA9D6;
+  --primary-soft: #EAF6FD;
 
-  /* SECONDARY BRAND - Pet-safe calming green */
-  --secondary: #5BA675;
-  /* Gentle sage green - trustworthy */
-  --secondary-light: #7EC19A;
-  --secondary-soft: #EFF5F0;
-
-  /* ACCENT - Golden highlights (from logo details) */
-  --accent: #F2B84D;
-  /* Sunny gold - friendly call to action */
-  --accent-soft: #FFF2DF;
+  /* 🟡 KEEP YELLOW AS ACCENT (not main) */
+  --accent: #F2B84B;
   --accent-hover: #E09E30;
+  --accent-soft: #FFF4D6;
 
-  /* PET-FRIENDLY NEUTRAL TONES */
-  --bg-main: #FFFCF8;
-  /* Warm white base */
+  /* 🟠 SMALL ORANGE (minor highlight only) */
+  --secondary: #F28C38;
+  --secondary-light: #F7B267;
+  --secondary-soft: #FFF1E7;
+
+  /* ⚫ DARKER BACKGROUND (THIS FIXES YOUR MAIN ISSUE) */
+  --bg-main: #F4F6F8;
+  /* was too white → now softer grey */
   --bg-card: #FFFFFF;
-  --bg-muted: #F7F2EB;
-  /* Slightly warm gray-beige */
-  --bg-glass: rgba(255, 252, 248, 0.85);
+  --bg-muted: #E9EEF2;
 
-  /* TEXT COLORS - Soft & readable */
-  --text-primary: #3A2C24;
-  /* Warm dark brown (like pet fur) */
-  --text-secondary: #7A6A5C;
-  /* Muted warm gray */
-  --text-light: #B8A99B;
-  /* Light warm beige */
+  /* 🧠 BETTER TEXT CONTRAST */
+  --text-primary: #1E1E1E;
+  /* darker */
+  --text-secondary: #555555;
+  --text-light: #888888;
   --text-white: #FFFFFF;
 
-  /* BORDER - Subtle & natural */
-  --border-light: #EBE2D8;
-  --border-strong: #DCCCB8;
-  --border-focus: #E86A2C;
+  /* BORDERS */
+  --border-light: #D6DEE6;
+  --border-strong: #BFCAD6;
+  --border-focus: #2F8DBD;
 
   /* STATUS */
-  --success: #6BAF7A;
-  --warning: #F4A950;
-  --danger: #E07A5F;
+  --success: #4CAF50;
+  --warning: #F4A261;
+  --danger: #E76F51;
 
-  /* SHADOWS - Soft & natural */
-  --shadow-sm: 0 6px 14px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
-  --shadow-md: 0 12px 24px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.03);
-  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.04);
+  /* SHADOW */
+  --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
 
-  /* GRADIENTS - Warm & inviting */
-  --gradient-primary: linear-gradient(135deg, #E86A2C, #F48C54);
-  --gradient-secondary: linear-gradient(135deg, #5BA675, #7EC19A);
-  --gradient-accent: linear-gradient(135deg, #F2B84D, #F7D27A);
-  --gradient-soft: linear-gradient(135deg, #FFF0E8, #FFFCF8);
-  --gradient-warm: linear-gradient(135deg, #F48C54, #F7B07A);
-  --gradient-violet: linear-gradient(135deg, #E86A2C, #F2B84D);
+  /* 🔥 IMPORTANT: CHANGE MAIN GRADIENT TO BLUE */
+  --gradient-primary: linear-gradient(135deg, #2F8DBD, #5AA9D6);
+  --gradient-secondary: linear-gradient(135deg, #F2B84B, #F7C96A);
+  --gradient-accent: linear-gradient(135deg, #F28C38, #F7B267);
 
-  /* ===== UI TOKENS - Optimized for Pet Theme ===== */
+  /* UI */
   --surface-bg: var(--bg-card);
   --surface-border: var(--border-light);
-  --surface-blur: none;
 
-  /* Soft glow for interactive elements (subtle, pet-friendly) */
-  --glow-primary: 0 0 12px rgba(232, 106, 44, 0.25);
-  --glow-soft: 0 0 8px rgba(242, 184, 77, 0.2);
-  --glow-success: 0 0 12px rgba(91, 166, 117, 0.25);
+  /* GLOW (reduced brightness) */
+  --glow-primary: 0 0 10px rgba(47, 141, 189, 0.25);
+  --glow-soft: 0 0 6px rgba(0, 0, 0, 0.08);
 
-  --shadow-elevated: var(--shadow-md);
-  --focus-ring: 0 0 0 3px rgba(232, 106, 44, 0.3);
+  --focus-ring: 0 0 0 3px rgba(47, 141, 189, 0.25);
 }
 
 
-/* =========================
-   DARK THEME (FUTURISTIC)
-   ========================= */
-.dark {
-  /* CORE COLORS */
-  --primary: #00E5FF;
-  --primary-light: #00B8D4;
-
-  --accent: #7CFFCB;
-  --accent-soft: rgba(124, 255, 203, 0.15);
-  --accent-hover: #5FFFD2;
-
-  --secondary: #FF7A59;
-  --secondary-soft: rgba(255, 122, 89, 0.15);
-
-  /* BACKGROUND */
-  --bg-main: #0B0F14;
-  --bg-card: rgba(18, 24, 33, 0.65);
-  --bg-muted: rgba(255, 255, 255, 0.03);
-  --bg-glass: rgba(255, 255, 255, 0.05);
-
-  /* TEXT */
-  --text-primary: #E6F1FF;
-  --text-secondary: #8A9BB5;
-  --text-light: #6F8199;
-  --text-white: #ffffff;
-
-  /* BORDER */
-  --border-light: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.15);
-  --border-focus: #00E5FF;
-
-  /* SHADOWS (DEEP + GLOW) */
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.8);
-
-  /* GRADIENTS */
-  --gradient-primary: linear-gradient(135deg, #00E5FF, #00B8D4);
-  --gradient-accent: linear-gradient(135deg, #7CFFCB, #00E5FF);
-
-  /* CATEGORY (slightly muted for dark) */
-  --dog-bg: rgba(255, 243, 232, 0.08);
-  --cat-bg: rgba(240, 247, 255, 0.08);
-  --fish-bg: rgba(232, 251, 245, 0.08);
-  --bird-bg: rgba(255, 240, 245, 0.08);
-  --other-bg: rgba(245, 245, 245, 0.05);
-
-  /* ===== FUTURISTIC BEHAVIOR ===== */
-  --surface-bg: rgba(18, 24, 33, 0.65);
-  --surface-border: rgba(0, 229, 255, 0.15);
-  --surface-blur: blur(20px);
-
-  --glow-primary: 0 0 20px rgba(0, 229, 255, 0.5);
-  --glow-soft: 0 0 40px rgba(0, 229, 255, 0.2);
-
-  --shadow-elevated:
-    0 10px 40px rgba(0, 0, 0, 0.7),
-    inset 0 0 20px rgba(0, 229, 255, 0.05);
-
-  --focus-ring: 0 0 12px rgba(0, 229, 255, 0.6);
-
-  /* BACKGROUND EFFECT */
-  --bg-main:
-    radial-gradient(circle at 15% 25%, rgba(0, 229, 255, 0.12), transparent 40%),
-    radial-gradient(circle at 85% 75%, rgba(0, 184, 212, 0.10), transparent 40%),
-    #0B0F14;
-}
 
 * {
   box-sizing: border-box;
