@@ -151,16 +151,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     { name: 'Dogs', img: 'assets/images/cat_dog.png' },
     { name: 'Cats', img: 'assets/images/cat_cat.png' },
     { name: 'Birds', img: 'assets/images/cat_bird.png' },
-    { name: 'Small Pets', img: 'assets/images/cat_other.png' },
-    { name: 'Fish', icon: 'fas fa-fish' },
-    { name: 'Food & Treats', icon: 'fas fa-bone' },
-    { name: 'Toys & Accessories', icon: 'fas fa-baseball-ball' }
+    { name: 'QR Keychains', img: 'assets/images/product_trending_1.png' },
+    { name: 'GPRS Belts', img: 'assets/images/product_trending_3.png' }
   ];
   selectedCategory: string = 'All Products';
-
-
-
-
 
   // State flags
   isScrolled = false;

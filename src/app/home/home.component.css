@@ -43,9 +43,16 @@
 /* Fix for desktop view - ensure image covers properly */
 @media (min-width: 1024px) {
   .hero-bg {
-    background-size: cover;
     background-position: center 30%;
   }
+}
+
+/* ✅ Mobile ONLY */
+@media (max-width: 480px) {
+  .hero-bg {
+    background-position: 74% center;
+  }
+
 }
 
 /* Ensure image doesn't get cut off on ultra-wide screens */
@@ -227,12 +234,6 @@
     height: 100vh;
     height: 100svh;
     justify-content: center;
-  }
-
-  .hero-bg {
-    background-size: cover;
-    background-position: right center;
-    filter: brightness(0.75);
   }
 
   .hero-left-overlay {
@@ -895,7 +896,7 @@
   .category-grid {
     gap: 0.4rem;
   }
-  
+
   .category-card {
     padding: 0.8rem 0.25rem;
   }
