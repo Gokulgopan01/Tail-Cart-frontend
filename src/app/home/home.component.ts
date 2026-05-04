@@ -17,10 +17,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   offerBanners = [
     {
-      img: 'assets/images/offer_banner.png'
+      img: 'assets/Home/discount_add.png'
     },
     {
-      img: 'assets/images/free_delivery.png'
+      img: 'assets/Home/free_delivery_add.png'
+    },
+    {
+      img: 'assets/Home/buy2_add.png'
     }
   ];
 
@@ -143,13 +146,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   ];
 
-  categories: { name: string; icon?: string; img?: string; cardColor?: string }[] = [
-    { name: 'ALL', icon: 'fas fa-th-large' },
-    { name: 'DOGS', img: 'assets/images/cat_dog.png', cardColor: '#79c2b8' },
-    { name: 'CATS', img: 'assets/images/cat_cat.png', cardColor: '#f5c97a' },
-    { name: 'BIRDS', img: 'assets/images/cat_bird.png', cardColor: '#adf57aff' }
+  categories = [
+    { name: 'All Products', icon: 'fas fa-th-large' },
+    { name: 'Dogs', img: 'assets/images/cat_dog.png' },
+    { name: 'Cats', img: 'assets/images/cat_cat.png' },
+    { name: 'Birds', img: 'assets/images/cat_bird.png' },
+    { name: 'Small Pets', img: 'assets/images/cat_other.png' },
+    { name: 'Fish', icon: 'fas fa-fish' },
+    { name: 'Food & Treats', icon: 'fas fa-bone' },
+    { name: 'Toys & Accessories', icon: 'fas fa-baseball-ball' }
   ];
-  selectedCategory: string = 'ALL';
+  selectedCategory: string = 'All Products';
+
+
+
+
 
   // State flags
   isScrolled = false;
@@ -219,8 +230,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get filteredProducts() {
-    if (this.selectedCategory === 'ALL') return this.products;
-    return this.products.filter(p => (p as any).category === this.selectedCategory);
+    if (this.selectedCategory === 'All Products') return this.products;
+    return this.products.filter(p => (p as any).category.toUpperCase() === this.selectedCategory.toUpperCase());
   }
 
   // ── Ecosystem Carousel Logic ────────────────────────────────

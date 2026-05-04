@@ -1,27 +1,24 @@
 <!-- Hero Section -->
 <section class="hero-wrapper">
   <div class="hero-bg"></div>
-  <!-- <div class="hero-overlay"></div> -->
+  <div class="hero-left-overlay"></div>
   <div class="hero-content">
-    <div class="hero-tag fade-in">The Future of Pet Security</div>
-    <div class="hero-bottom-group">
-      <h1 class="hero-title fade-up">
-        Total Pet Safety.<br>
-        <span class="highlight">Smart. Secure. Seamless.</span>
-      </h1>
-      <p class="hero-desc fade-up">
-        The only ecosystem your pet ever needs. From precision tracking to AI-powered health insights, all in one place.
-      </p>
-      <div class="hero-actions fade-up">
-        <button class="btn-primary-luxury" (click)="navigateToShop()">
-          SHOP COLLECTION
-          <span class="arrow">→</span>
-        </button>
-        <button class="btn-glass-luxury" (click)="navigateToAbout()">
-          LEARN MORE
-          <span class="arrow">→</span>
-        </button>
-      </div>
+    <div class="hero-badge fade-in">Pet Safety Reimagined</div>
+    <h1 class="hero-title fade-up">
+      Pet in luxury<br>
+      <span class="highlight-blue">technology</span>
+    </h1>
+    <p class="hero-desc fade-up">
+      Designed with technology, with pet care and safety at its heart. Smart solutions that keep your companion
+      protected and thriving.
+    </p>
+    <div class="hero-actions fade-up">
+      <button class="btn-primary-blue" (click)="navigateToShop()">
+        Get started
+      </button>
+      <button class="btn-outline-blue" (click)="navigateToAbout()">
+        Learn more
+      </button>
     </div>
   </div>
 </section>
@@ -55,25 +52,71 @@
 <section class="categories-section">
   <div class="section-container">
     <div class="category-header">
-      <h2 class="category-title">Categories</h2>
+      <h2 class="category-title">Explore Categories</h2>
       <a routerLink="/shop" class="browse-all-link">Browse all &rsaquo;</a>
     </div>
-    <div class="category-grid-photos">
-      <!-- Sticker-style cards for Dog & Cat -->
-      <div *ngFor="let cat of categories" class="category-photo-item wiggle-hover"
-        [class.active]="selectedCategory === cat.name" [class.sticker-card]="cat.cardColor"
-        [style.background]="cat.cardColor || ''" (click)="selectCategory(cat.name)">
-        <div class="category-photo-wrapper">
-          <!-- Icon-only for categories without image -->
-          <i *ngIf="cat.icon && !cat.img" [class]="cat.icon" class="cat-icon"></i>
-          <!-- Photo for sticker-style cards -->
-          <img *ngIf="cat.img" [src]="cat.img" [alt]="cat.name" class="cat-img">
+    
+    <!-- Grid Layout -->
+    <div class="category-grid">
+      <div *ngFor="let cat of categories" 
+           class="category-card" 
+           [class.active]="selectedCategory === cat.name"
+           (click)="selectCategory(cat.name)">
+        
+        <div class="category-visual">
+          <div class="visual-inner">
+            <img *ngIf="cat.img" [src]="cat.img" [alt]="cat.name" class="cat-img-circle">
+            <i *ngIf="cat.icon" [class]="cat.icon" class="cat-icon-large"></i>
+          </div>
         </div>
-        <span *ngIf="cat.cardColor" class="category-label-sticker">{{cat.name}}</span>
+        <span class="category-name">{{cat.name}}</span>
+        <div class="active-indicator" *ngIf="selectedCategory === cat.name"></div>
+      </div>
+    </div>
+
+    <!-- Features Bar -->
+    <div class="features-bar">
+      <div class="feature-item">
+        <div class="feature-icon-box blue">
+          <i class="fas fa-truck"></i>
+        </div>
+        <div class="feature-text">
+          <strong>Free Delivery</strong>
+          <span>On first 5 orders</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon-box blue">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="feature-text">
+          <strong>Secure Payment</strong>
+          <span>100% protected</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon-box blue">
+          <i class="fas fa-medal"></i>
+        </div>
+        <div class="feature-text">
+          <strong>Best Quality</strong>
+          <span>For your pets</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon-box blue">
+          <i class="fas fa-headset"></i>
+        </div>
+        <div class="feature-text">
+          <strong>24/7 Support</strong>
+          <span>We're here to help</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+
 
 <!-- New Arrivals Section -->
 <section class="recommended-section">
@@ -223,117 +266,6 @@
     </div>
   </div>
 </section>
-
-<!-- Premium Luxury Footer -->
-<footer class="premium-luxury-footer fade-up">
-  <div class="footer-background-overlay"></div>
-  <div class="footer-wave"></div>
-
-  <div class="footer-container relative">
-    <!-- Top Section -->
-    <div class="footer-top-premium">
-      <div class="footer-brand-premium fade-in">
-        <div class="logo-container">
-          <div class="logo-icon-premium">
-            <svg viewBox="0 0 24 24" fill="currentColor" style="width:28px;height:28px;">
-              <path
-                d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-            </svg>
-          </div>
-          <div class="logo-text">
-            <h2 class="logo-title-premium">TailCart</h2>
-            <p class="logo-subtitle-premium">Premium Pet Care Solutions</p>
-          </div>
-        </div>
-        <p class="brand-tagline-premium">Keeping your furry friends safe, healthy, and happy with cutting-edge
-          technology.</p>
-
-        <div class="social-links-premium">
-          <a href="#" class="social-link" aria-label="Instagram">
-            <div class="social-icon"><i class="fab fa-instagram"></i></div>
-          </a>
-          <a href="#" class="social-link" aria-label="Facebook">
-            <div class="social-icon"><i class="fab fa-facebook-f"></i></div>
-          </a>
-          <a href="#" class="social-link" aria-label="Twitter">
-            <div class="social-icon"><i class="fab fa-twitter"></i></div>
-          </a>
-          <a href="#" class="social-link" aria-label="YouTube">
-            <div class="social-icon"><i class="fab fa-youtube"></i></div>
-          </a>
-        </div>
-      </div>
-
-      <!-- Quick Links -->
-      <div class="footer-links-premium fade-up">
-        <div class="links-grid-premium">
-          <div class="link-column">
-            <h3 class="column-title-premium">Products</h3>
-            <ul class="link-list">
-              <li><a (click)="navigateToShop()" class="footer-link">TailTags</a></li>
-              <li><a (click)="navigateToDocuments()" class="footer-link">TailVault</a></li>
-              <li><a (click)="navigateToAlerts()" class="footer-link">TailScheduler</a></li>
-              <li><a (click)="navigateToDoctor()" class="footer-link">TailCare</a></li>
-            </ul>
-          </div>
-
-          <div class="link-column">
-            <h3 class="column-title-premium">Company</h3>
-            <ul class="link-list">
-              <li><a (click)="navigateToAbout()" class="footer-link">About Us</a></li>
-              <li><a (click)="navigateToAbout()" class="footer-link">Our Story</a></li>
-              <li><a (click)="navigateToAbout()" class="footer-link">Careers</a></li>
-              <li><a (click)="navigateToAbout()" class="footer-link">Contact</a></li>
-            </ul>
-          </div>
-
-          <div class="link-column">
-            <h3 class="column-title-premium">Support</h3>
-            <ul class="link-list">
-              <li><a (click)="navigateToAbout()" class="footer-link">Help Center</a></li>
-              <li><a (click)="navigateToAbout()" class="footer-link">FAQs</a></li>
-              <li><a (click)="navigateToAbout()" class="footer-link">Shipping</a></li>
-              <li><a (click)="navigateToAbout()" class="footer-link">Returns</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Newsletter -->
-    <div class="footer-middle-premium fade-up">
-      <div class="newsletter-section">
-        <div class="newsletter-content">
-          <h3 class="newsletter-title-premium">Stay Updated</h3>
-          <p class="newsletter-text-premium">Get exclusive offers, pet care tips, and product updates delivered to
-            your inbox.</p>
-        </div>
-        <div class="newsletter-form-premium">
-          <input type="email" placeholder="Your email address" class="newsletter-input-premium">
-          <button class="newsletter-button-premium">SUBSCRIBE</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom Section -->
-    <div class="footer-bottom-premium fade-up">
-      <div class="payment-methods-premium">
-        <i class="fab fa-cc-visa payment-icon-premium"></i>
-        <i class="fab fa-cc-mastercard payment-icon-premium"></i>
-        <i class="fab fa-cc-amex payment-icon-premium"></i>
-        <i class="fab fa-cc-paypal payment-icon-premium"></i>
-      </div>
-
-      <div class="copyright-premium">
-        <p>© 2026 TailCart. All rights reserved.</p>
-        <div class="legal-links-premium">
-          <a (click)="navigateToAbout()" class="legal-link">Privacy Policy</a>
-          <a (click)="navigateToAbout()" class="legal-link">Terms of Service</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
 
 <!-- Scroll to Top Button -->
 <button class="scroll-top-btn" (click)="scrollToTop()" [class.visible]="isScrolled">
