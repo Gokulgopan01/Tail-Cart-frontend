@@ -50,7 +50,7 @@
       </div>
 
       <div class="categories-circular-grid">
-        <div *ngFor="let cat of categories" class="cat-circle-card" (click)="setMaterial(cat.material)">
+        <div *ngFor="let cat of categories" class="cat-circle-card" (click)="setMaterial(cat.name)">
           <div class="cat-circle-image">
             <img [src]="cat.icon" [alt]="cat.name">
           </div>
