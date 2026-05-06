@@ -1,95 +1,74 @@
 <div class="shop-wrapper">
 
-  <!-- Joyful Hero Section - Full Width Edge-to-Edge -->
-  <div class="shop-hero-container">
-    <div class="shop-hero-bg">
-      <img src="assets/images/catdog_friends-HomeCover.png" alt="Happy Pet" class="joyful-pet-img">
-    </div>
+  <!-- New Premium Hero Section -->
+  <div class="shop-hero-section">
+    <div class="hero-bg-overlay"></div>
+    <img src="/assets/products/catdog_friends-HomeCover.png" alt="Pet Shop Hero" class="hero-image">
 
-    <div class="shop-hero-content">
-      <!-- Breadcrumbs & Top Actions -->
-      <div class="hero-top-row">
-        <nav class="shop-breadcrumbs">
-          <a routerLink="/home" class="bc-link">Home</a>
-          <span class="bc-sep">/</span>
-          <span class="bc-current">Shop</span>
-        </nav>
-
-        <div class="hero-top-actions">
-          <button class="minimal-cart-btn" routerLink="/cart">
-            <i class="fas fa-shopping-cart"></i>
-            <span class="cart-count-dot" *ngIf="cartCount > 0">{{ cartCount }}</span>
-          </button>
-        </div>
+    <div class="hero-content-container">
+      <div class="hero-nav-row">
+        <button class="hero-back-btn" routerLink="/home">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="hero-cart-btn" routerLink="/cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+        </button>
       </div>
 
-      <div class="search-pill-container">
-        <div class="search-pill-modern">
-          <i class="fas fa-search magnifier-icon"></i>
-          <input type="text" placeholder="Search products" [(ngModel)]="searchQuery" (input)="applyFilters()"
-            class="pill-input">
-          <button class="pill-filter-btn" (click)="toggleFilters()" [class.active]="showFilters">
-            <i class="fas fa-sliders-h"></i>
-          </button>
+      <div class="hero-text-area">
+        <h1 class="hero-title">Shop</h1>
+        <p class="hero-subtitle">Everything for your pets,<br>all in one place 🐾</p>
+      </div>
+
+      <!-- Floating Search Bar -->
+      <div class="search-floating-bar">
+        <div class="search-input-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery" (input)="applyFilters()">
         </div>
+        <button class="search-filter-btn" (click)="toggleFilters()">
+          <i class="fas fa-sliders-h"></i>
+        </button>
       </div>
     </div>
   </div>
 
   <div class="container main-content modern-shop">
-    <!-- Top Categories Section -->
-    <div class="top-categories-section">
-      <h2 class="section-title-centered">Top Categories</h2>
-      <div class="top-categories-grid">
-        <!-- Dog -->
-        <div class="top-cat-card dog" (click)="setMaterial('Wood')">
-          <div class="top-cat-halo">
-            <img src="assets/images/cat_dog.png" alt="Dog">
-          </div>
-          <div class="top-cat-body">
-            <h3>Dog</h3>
-            <span>6 Items</span>
-          </div>
-        </div>
 
-        <!-- Cat -->
-        <div class="top-cat-card cat" (click)="setMaterial('Metal')">
-          <div class="top-cat-halo">
-            <img src="assets/images/cat_cat.png" alt="Cat">
-          </div>
-          <div class="top-cat-body">
-            <h3>Cat</h3>
-            <span>11 Items</span>
-          </div>
-        </div>
+    <!-- Quick Filters Chips -->
+    <div class="quick-filters-scroll">
+      <button *ngFor="let filter of quickFilters" class="filter-chip" (click)="searchQuery = filter; applyFilters()">
+        {{ filter }}
+      </button>
+    </div>
 
-        <!-- Fish -->
-        <div class="top-cat-card fish" (click)="setMaterial('Steel')">
-          <div class="top-cat-halo">
-            <img src="assets/images/cat_other.png" alt="Fish">
-          </div>
-          <div class="top-cat-body">
-            <h3>Fish</h3>
-            <span>7 Items</span>
-          </div>
-        </div>
+    <!-- Shop by Category Section -->
+    <div class="categories-section">
+      <div class="section-header-row">
+        <h2 class="section-title">Shop by Category</h2>
+      </div>
 
-        <!-- Bird -->
-        <div class="top-cat-card bird" (click)="setMaterial('Fiber')">
-          <div class="top-cat-halo">
-            <img src="assets/images/cat_bird.png" alt="Bird">
+      <div class="categories-circular-grid">
+        <div *ngFor="let cat of categories" class="cat-circle-card" (click)="setMaterial(cat.material)">
+          <div class="cat-circle-image">
+            <img [src]="cat.icon" [alt]="cat.name">
           </div>
-          <div class="top-cat-body">
-            <h3>Bird</h3>
-            <span>6 Items</span>
-          </div>
+          <h3 class="cat-circle-name">{{ cat.name }}</h3>
+          <span class="cat-circle-count">{{ cat.count }}</span>
         </div>
       </div>
     </div>
 
-    <!-- Free Delivery Ad Banner (Moved after categories) -->
-    <div class="free-delivery-banner-wrap" data-aos="fade-up">
-      <img src="assets/images/Shop_banner.png" alt="Free Delivery Offer" class="ad-banner-img">
+    <!-- Promotional Ad Poster -->
+    <div class="promo-poster-banner">
+      <div class="promo-image-area">
+        <img src="/assets/products/free_delivery.png" alt="Promo Dog" class="promo-dog">
+        <div class="discount-badge-circle">
+          <span class="disc-val">25%</span>
+          <span class="disc-off">OFF</span>
+        </div>
+      </div>
     </div>
 
     <!-- Products Section Header -->
@@ -103,7 +82,6 @@
 
       <div class="sort-action-wrap">
         <div class="sort-select-wrapper simple-sort">
-          <!-- Hidden real select overlaying the pill -->
           <select [(ngModel)]="sortOption" (change)="applyFilters()" class="sort-select-overlay">
             <option value="newest">Sort by</option>
             <option value="priceLow">Price: Low to High</option>

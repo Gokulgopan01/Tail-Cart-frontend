@@ -102,6 +102,36 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   petSelectError: boolean = false;
   quantity: number = 1;
 
+  categories = [
+    {
+      name: 'Dog',
+      icon: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=300&q=80',
+      count: '120+ items'
+    },
+    {
+      name: 'Cat',
+      icon: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=300&q=80',
+      count: '110+ items'
+    },
+    {
+      name: 'Food',
+      icon: 'https://images.unsplash.com/photo-1615789591457-74a63395c990?auto=format&fit=crop&w=300&q=80',
+      count: '80+ items'
+    },
+    {
+      name: 'Toys',
+      icon: 'https://images.unsplash.com/photo-1596495578065-6e0763fa1178?auto=format&fit=crop&w=300&q=80',
+      count: '60+ items'
+    },
+    {
+      name: 'Accessories',
+      icon: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=300&q=80',
+      count: '90+ items'
+    }
+  ];
+
+  quickFilters = ['Dog Food', 'Cat Food', 'Toys', 'Treats', 'Accessories'];
+
   private productsApi = 'http://127.0.0.1:8000/api/manager/products/';
   private profileApi = 'http://127.0.0.1:8000/api/user/profile/';
 
