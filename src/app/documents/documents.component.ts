@@ -3,8 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 
 interface Document {
   document_id: number;
@@ -43,7 +46,11 @@ interface Remainder {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSnackBarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './documents.component.html',
@@ -57,6 +64,15 @@ export class DocumentsComponent implements OnInit {
   filteredDocuments: Document[] = [];
   filteredRemainders: Remainder[] = [];
   userPets: { id: number, name: string }[] = [];
+  userName: string = 'Gokul';
+  storageUsedPercent: number = 60;
+
+  browseCategories = [
+    { name: 'Categories', icon: 'fas fa-tags', color: '#ecfdf5', iconColor: '#10b981' },
+    { name: 'Pets', icon: 'fas fa-paw', color: '#f5f3ff', iconColor: '#8b5cf6' },
+    { name: 'ID Proofs', icon: 'fas fa-id-card', color: '#fff7ed', iconColor: '#f97316' },
+    { name: 'Finance', icon: 'fas fa-university', color: '#eff6ff', iconColor: '#3b82f6' }
+  ];
 
   overdueCount: number = 0;
   upcomingCount: number = 0;
@@ -127,6 +143,7 @@ export class DocumentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.userId = localStorage.getItem('user_id') || '';
+    this.userName = localStorage.getItem('user_name') || 'Gokul';
     if (this.userId) {
       this.loadDocuments();
       this.loadRemainders();
@@ -308,6 +325,24 @@ export class DocumentsComponent implements OnInit {
     }
 
     this.filteredDocuments = filtered;
+  }
+
+  sortDocuments(type: 'all' | 'pictures'): void {
+    if (type === 'pictures') {
+      this.filteredDocuments = this.documents
+        .filter(doc => this.isImage(doc))
+        .sort((a, b) => new Date(b.upload_date).getTime() - new Date(a.upload_date).getTime());
+    } else {
+      this.filteredDocuments = [...this.documents]
+        .sort((a, b) => new Date(b.upload_date).getTime() - new Date(a.upload_date).getTime());
+    }
+    this.showSnackbar(`Showing sorted ${type}`, 'success');
+  }
+
+  isImage(doc: Document): boolean {
+    if (!doc.document_file) return false;
+    const lower = doc.document_file.toLowerCase();
+    return lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg') || !!lower.match(/\.(png|jpe?g)(?:\?|$)/);
   }
 
   filterRemainders(): void {
