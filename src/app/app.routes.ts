@@ -1,6 +1,57 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes, ExtraOptions } from '@angular/router';
+import { AuthComponent } from './auth/auth.component';
 import { HomeComponent } from './home/home.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ProductsComponent } from './products/products.component';
+import { DocumentsComponent } from './documents/documents.component';
+import { DoctorComponent } from './doctor/doctor.component';
+import { ContactComponent } from './contact/contact.component';
+import { AboutComponent } from './about/about.component';
+import { CartComponent } from './cart/cart.component';
+import { adminGuard } from './guards/admin.guard';
+import { PetPublicComponent } from './pet-public/pet-public.component';
+import { PetProfileComponent } from './pet-profile/pet-profile.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { MyOrdersComponent } from './my-orders/my-orders.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent }
+
+  { path: 'auth', component: AuthComponent },
+  { path: '', component: AuthComponent },
+
+  { path: 'home', component: HomeComponent },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'pet-profile/:petId', component: PetProfileComponent },
+  { path: 'shop', component: ProductsComponent },
+  { path: 'doctor-ai', component: DoctorComponent },
+  { path: 'contact', component: ContactComponent },
+  { path: 'document', component: DocumentsComponent },
+  { path: 'about', component: AboutComponent },
+
+  { path: 'cart', component: CartComponent },
+  { path: 'pet-public', component: PetPublicComponent },
+  { path: 'pet/:uuid', component: PetPublicComponent },
+  { path: 'checkout', component: CheckoutComponent },
+  { path: 'myorders', component: MyOrdersComponent },
+  { path: '**', component: AuthComponent },
+  {
+    path: 'admin/products',
+    component: ProductsComponent,
+    canActivate: [adminGuard]
+  }
 ];
+
+
+const routerOptions: ExtraOptions = {
+  scrollPositionRestoration: 'enabled',
+  anchorScrolling: 'enabled',
+};
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, routerOptions)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
