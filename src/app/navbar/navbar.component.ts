@@ -23,17 +23,29 @@ export class NavbarComponent implements OnInit {
   isScrollingDown = false;
   activeIndex = 0;
 
+  // Mobile sidebar accordion states
+  activeSidebarGroup: string | null = null;
+
   constructor(private router: Router) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       const url = event.urlAfterRedirects;
       const isPetPublic = url.includes('/pet-public') || url.startsWith('/pet/') || /\/pet\//.test(url);
-      this.hideTopNav = url.includes('/profile') || url.includes('/auth') || url.includes('/checkout') || url.includes('/shop') || isPetPublic;
+      this.hideTopNav = url.includes('/profile') || url.includes('/checkout') || url.includes('/shop') || isPetPublic;
       this.hideBottomNav = url.includes('/auth') || url.includes('/checkout') || isPetPublic;
       this.updateActiveIndex(url);
     });
   }
+
+  toggleSidebarGroup(groupName: string) {
+    if (this.activeSidebarGroup === groupName) {
+      this.activeSidebarGroup = null;
+    } else {
+      this.activeSidebarGroup = groupName;
+    }
+  }
+
 
   private updateActiveIndex(url: string) {
     if (url.includes('/home')) this.activeIndex = 0;

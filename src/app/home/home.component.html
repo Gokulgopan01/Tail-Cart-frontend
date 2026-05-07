@@ -23,28 +23,35 @@
   </div>
 </section>
 
-<!-- Offer Banner Section (Carousel) -->
-<section class="offer-banner-section">
-  <!-- Banner Header Row -->
-  <div class="offer-section-header">
-    <h2 class="offer-section-title">Special Offers</h2>
-    <a routerLink="/shop" class="offer-shop-all-link">Shop all &rsaquo;</a>
-  </div>
+<!-- Special Offers Section -->
+<section class="offer-banner-section-modern">
+  <div class="section-container">
+    <div class="offer-header">
+      <h2 class="offer-title">Special Offers</h2>
+      <a routerLink="/shop" class="shop-all-link">Shop all &rsaquo;</a>
+    </div>
 
-  <!-- Banner Carousel -->
-  <div class="banner-carousel-wrapper">
-    <div class="banner-slides" [style.transform]="'translateX(' + (activeBannerIndex * -100) + '%)'">
-      <div *ngFor="let banner of offerBanners; let i = index" class="banner-slide">
-        <img [src]="banner.img" alt="Promotional Offer" class="banner-full-img">
+    <div class="banner-carousel-container">
+      <div class="carousel-slides" [style.transform]="'translateX(' + (activeBannerIndex * -100) + '%)'">
+        <!-- Slide 1 -->
+        <div class="carousel-slide">
+          <img src="assets/Home/buy2_add.png" alt="Special Offer" class="carousel-img">
+        </div>
+        <!-- Slide 2 -->
+        <div class="carousel-slide">
+          <img src="assets/Home/discount_add.png" alt="Free Delivery" class="carousel-img">
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/Home/free_delivery_add.png" alt="Free Delivery" class="carousel-img">
+        </div>
+      </div>
+
+      <!-- Indicators -->
+      <div class="carousel-dots-modern">
+        <span *ngFor="let dot of [0,1,2]; let i = index" class="dot-modern" [class.active]="activeBannerIndex === i"
+          (click)="setBanner(i)"></span>
       </div>
     </div>
-  </div>
-
-  <!-- Carousel Indicators -->
-  <div class="banner-indicators">
-    <span *ngFor="let dot of offerBanners; let i = index" class="indicator-dot" [class.active]="activeBannerIndex === i"
-      (click)="setBanner(i)">
-    </span>
   </div>
 </section>
 
@@ -56,56 +63,48 @@
       <a routerLink="/shop" class="browse-all-link">Browse all &rsaquo;</a>
     </div>
 
-    <!-- Grid Layout -->
-    <div class="category-grid">
-      <div *ngFor="let cat of categories" class="category-card" [class.active]="selectedCategory === cat.name"
-        (click)="selectCategory(cat.name)">
 
-        <div class="category-visual">
-          <div class="visual-inner">
-            <img *ngIf="cat.img" [src]="cat.img" [alt]="cat.name" class="cat-img-circle">
-            <i *ngIf="cat.icon" [class]="cat.icon" class="cat-icon-large"></i>
+    <!-- Grid Layout (6 in a row) -->
+    <div class="category-grid-six">
+      <div *ngFor="let cat of categories" class="category-card-premium" [class.active]="selectedCategory === cat.name"
+        (click)="selectCategory(cat.name)">
+        <div class="cat-visual-box">
+          <div class="visual-circle">
+            <img *ngIf="cat.img" [src]="cat.img" [alt]="cat.name" class="cat-img">
+            <i *ngIf="cat.icon" [class]="cat.icon" class="cat-icon"></i>
           </div>
         </div>
-        <span class="category-name">{{cat.name}}</span>
-        <div class="active-indicator" *ngIf="selectedCategory === cat.name"></div>
+        <span class="cat-name-label">{{cat.name}}</span>
+        <div class="selection-indicator" *ngIf="selectedCategory === cat.name"></div>
       </div>
     </div>
 
-    <!-- Features Bar -->
-    <div class="features-bar">
-      <div class="feature-item">
-        <div class="feature-icon-box blue">
-          <i class="fas fa-truck"></i>
-        </div>
-        <div class="feature-text">
+    <!-- Service Highlights Bar (4 in a row) -->
+    <div class="service-highlights-bar">
+      <div class="highlight-item">
+        <div class="highlight-icon"><i class="fas fa-truck"></i></div>
+        <div class="highlight-text">
           <strong>Free Delivery</strong>
           <span>On first 5 orders</span>
         </div>
       </div>
-      <div class="feature-item">
-        <div class="feature-icon-box blue">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <div class="feature-text">
+      <div class="highlight-item">
+        <div class="highlight-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="highlight-text">
           <strong>Secure Payment</strong>
           <span>100% protected</span>
         </div>
       </div>
-      <div class="feature-item">
-        <div class="feature-icon-box blue">
-          <i class="fas fa-medal"></i>
-        </div>
-        <div class="feature-text">
+      <div class="highlight-item">
+        <div class="highlight-icon"><i class="fas fa-paw"></i></div>
+        <div class="highlight-text">
           <strong>Best Quality</strong>
           <span>For your pets</span>
         </div>
       </div>
-      <div class="feature-item">
-        <div class="feature-icon-box blue">
-          <i class="fas fa-headset"></i>
-        </div>
-        <div class="feature-text">
+      <div class="highlight-item">
+        <div class="highlight-icon"><i class="fas fa-headset"></i></div>
+        <div class="highlight-text">
           <strong>24/7 Support</strong>
           <span>We're here to help</span>
         </div>

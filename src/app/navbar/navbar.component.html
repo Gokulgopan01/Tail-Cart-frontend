@@ -1,3 +1,98 @@
+<!-- DESKTOP NAVBAR (Visible only on Desktop) -->
+<div class="desktop-nav" *ngIf="!hideTopNav">
+  <div class="desktop-nav-container">
+    <!-- Left: Logo -->
+    <div class="nav-logo-section" (click)="navigateToHome()">
+      <i class="fas fa-paw logo-icon"></i>
+      <span class="logo-text">Tail Cart</span>
+    </div>
+
+    <!-- Center: Links -->
+    <div class="nav-links-section">
+      <a routerLink="/home" routerLinkActive="active" class="nav-link">Home</a>
+
+      <div class="nav-dropdown-wrapper">
+        <a routerLink="/shop" routerLinkActive="active" class="nav-link">Store</a>
+        <div class="dropdown-menu">
+          <a routerLink="/shop" [queryParams]="{category: 'toys'}" class="dropdown-item">Pet Tags</a>
+          <a routerLink="/shop" [queryParams]="{category: 'toys'}" class="dropdown-item">GPRS Belts</a>
+          <a routerLink="/shop" [queryParams]="{category: 'food'}" class="dropdown-item">Pet Food</a>
+          <a routerLink="/shop" [queryParams]="{category: 'accessories'}" class="dropdown-item">Pet Accessories</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown-wrapper">
+        <a routerLink="/document" routerLinkActive="active" class="nav-link">Vault</a>
+        <div class="dropdown-menu">
+          <a routerLink="/document" class="dropdown-item">Documents</a>
+          <a routerLink="/document" class="dropdown-item">Reminders</a>
+        </div>
+      </div>
+
+      <a routerLink="/doctor-ai" routerLinkActive="active" class="nav-link">Dr. AI</a>
+      <a routerLink="/about" routerLinkActive="active" class="nav-link">About</a>
+      <a routerLink="/contact" routerLinkActive="active" class="nav-link">Contact</a>
+    </div>
+
+    <!-- Right: Utilities -->
+    <div class="nav-utilities-section">
+      <!-- Free Delivery -->
+      <div class="utility-item delivery-item">
+        <i class="fas fa-mobile-alt utility-icon"></i>
+        <div class="utility-text">
+          <span class="text-primary">FREE DELIVERY</span>
+          <span class="text-secondary">On first 5 orders</span>
+        </div>
+      </div>
+
+      <div class="vertical-divider"></div>
+
+      <!-- User Account -->
+      <div class="nav-dropdown-wrapper">
+        <div class="utility-item user-item" routerLink="/profile">
+          <i class="far fa-user-circle utility-icon"></i>
+          <div class="utility-text">
+            <div class="user-main">
+              <span class="text-primary">Login / Sign up</span>
+            </div>
+            <div class="user-sub">
+              <span class="text-secondary">My account</span>
+              <i class="fas fa-chevron-down sub-icon"></i>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown-menu">
+          <a routerLink="/profile" class="dropdown-item">Owner Profile</a>
+          <a routerLink="/profile" class="dropdown-item">Pet Profile</a>
+          <a routerLink="/pet-public" class="dropdown-item">Pet Lost Profile</a>
+          <button (click)="logout()" class="dropdown-item logout-btn">Logout</button>
+        </div>
+      </div>
+
+      <div class="vertical-divider"></div>
+
+      <!-- Cart -->
+      <div class="nav-dropdown-wrapper">
+        <div class="utility-item cart-item" routerLink="/cart">
+          <div class="cart-icon-wrapper">
+            <i class="fas fa-shopping-cart utility-icon"></i>
+            <span class="cart-badge">{{cartItems}}</span>
+          </div>
+          <div class="utility-text">
+            <span class="text-primary">CART</span>
+            <span class="text-secondary">{{cartItems}} items</span>
+          </div>
+        </div>
+        <div class="dropdown-menu">
+          <a routerLink="/cart" class="dropdown-item">Cart Items</a>
+          <a routerLink="/myorders" class="dropdown-item">My Orders</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE/TABLET NAVBAR (Existing luxury-navbar) -->
 <nav class="luxury-navbar" [class.scrolled]="isScrolled" [class.hidden]="isPastHalfScreen"
   [class.nav-hidden]="isScrollingDown" *ngIf="!hideTopNav">
   <div class="nav-floating-body">
@@ -14,27 +109,15 @@
 
       <!-- Center: Brand Logo -->
       <div class="nav-logo" (click)="navigateToHome()">
-        <span class="brand-text-desktop">TailCart</span>
+        <i class="fas fa-paw logo-icon-mobile"></i>
+        <span class="brand-text-mobile">Tail Cart</span>
       </div>
 
-      <!-- Right: Icons -->
-      <div class="nav-icons">
-        <!-- Notification -->
-        <button class="nav-icon notification-btn" title="Notifications">
-          <i class="fas fa-bell"></i>
-          <span class="badge pulse-red"></span>
-        </button>
-
-        <!-- Cart -->
-        <a class="nav-icon cart-link" routerLink="/cart" title="Cart">
-          <div class="cart-wrapper">
-            <i class="fas fa-shopping-bag"></i>
-            <span class="cart-count">3</span>
-          </div>
+      <!-- Right: Profile Icon -->
+      <div class="nav-icons-mobile">
+        <a class="nav-icon-mobile" routerLink="/profile" title="Profile">
+          <i class="far fa-user-circle"></i>
         </a>
-
-        <!-- Profile Thumb (Desktop) -->
-
       </div>
     </div>
   </div>
@@ -43,7 +126,10 @@
   <div class="sidebar-overlay" [class.active]="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
   <aside class="mobile-sidebar" [class.active]="isMobileMenuOpen">
     <div class="sidebar-header-premium">
-      <span class="menu-title-top">Menu</span>
+      <div class="sidebar-brand">
+        <i class="fas fa-paw logo-icon"></i>
+        <span class="menu-title-top">Tail Cart</span>
+      </div>
       <button class="sidebar-close-luxury" (click)="closeMobileMenu()">
         <i class="fas fa-times"></i>
       </button>
@@ -51,42 +137,106 @@
 
     <div class="sidebar-scroll-content">
       <div class="menu-items-group">
+        <!-- Home -->
         <a class="menu-item-premium" routerLink="/home" (click)="closeMobileMenu()" routerLinkActive="active">
           <div class="item-icon"><i class="fas fa-home"></i></div>
           <span class="item-label">Home</span>
         </a>
-        <a class="menu-item-premium" routerLink="/shop" (click)="closeMobileMenu()" routerLinkActive="active">
-          <div class="item-icon"><i class="fas fa-shopping-bag"></i></div>
-          <span class="item-label">Shop</span>
-        </a>
-        <a class="menu-item-premium" routerLink="/document" (click)="closeMobileMenu()" routerLinkActive="active">
-          <div class="item-icon"><i class="fas fa-folder"></i></div>
-          <span class="item-label">Documents / Reminders</span>
-        </a>
-        <!-- <a class="menu-item-premium" routerLink="/alerts" (click)="closeMobileMenu()" routerLinkActive="active">
-          <div class="item-icon"><i class="fas fa-bell"></i></div>
-          <span class="item-label">Alerts</span>
-        </a> -->
+
+        <!-- Shop/Store Group -->
+        <div class="sidebar-group" [class.active]="activeSidebarGroup === 'store'">
+          <div class="menu-item-premium" (click)="toggleSidebarGroup('store')">
+            <div class="item-icon"><i class="fas fa-shopping-bag"></i></div>
+            <span class="item-label">Shop</span>
+            <i class="fas fa-chevron-down chevron-icon"></i>
+          </div>
+          <div class="group-content">
+            <a class="menu-item-premium sub-item" routerLink="/shop" [queryParams]="{category: 'tags'}" (click)="closeMobileMenu()">
+              <span class="item-label">Pet Tags</span>
+            </a>
+            <a class="menu-item-premium sub-item" routerLink="/shop" [queryParams]="{category: 'belts'}" (click)="closeMobileMenu()">
+              <span class="item-label">GPRS Belts</span>
+            </a>
+            <a class="menu-item-premium sub-item" routerLink="/shop" [queryParams]="{category: 'food'}" (click)="closeMobileMenu()">
+              <span class="item-label">Pet Food</span>
+            </a>
+            <a class="menu-item-premium sub-item" routerLink="/shop" [queryParams]="{category: 'accessories'}" (click)="closeMobileMenu()">
+              <span class="item-label">Pet Accessories</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Vault Group -->
+        <div class="sidebar-group" [class.active]="activeSidebarGroup === 'vault'">
+          <div class="menu-item-premium" (click)="toggleSidebarGroup('vault')">
+            <div class="item-icon"><i class="fas fa-folder"></i></div>
+            <span class="item-label">Vault</span>
+            <i class="fas fa-chevron-down chevron-icon"></i>
+          </div>
+          <div class="group-content">
+            <a class="menu-item-premium sub-item" routerLink="/document" (click)="closeMobileMenu()">
+              <span class="item-label">Documents</span>
+            </a>
+            <a class="menu-item-premium sub-item" routerLink="/document" (click)="closeMobileMenu()">
+              <span class="item-label">Reminders</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Dr. AI -->
         <a class="menu-item-premium" routerLink="/doctor-ai" (click)="closeMobileMenu()" routerLinkActive="active">
           <div class="item-icon"><i class="fas fa-stethoscope"></i></div>
-          <span class="item-label">API Doctor</span>
+          <span class="item-label">Dr. AI</span>
         </a>
-        <!-- <a class="menu-item-premium" routerLink="/profile-public" (click)="closeMobileMenu()" routerLinkActive="active">
-          <div class="item-icon"><i class="fas fa-users"></i></div>
-          <span class="item-label">Public Profile</span>
-        </a> -->
-        <a class="menu-item-premium" routerLink="/profile" (click)="closeMobileMenu()" routerLinkActive="active">
-          <div class="item-icon"><i class="fas fa-user"></i></div>
-          <span class="item-label">Owner Profile</span>
-        </a>
-        <a class="menu-item-premium" routerLink="/cart" (click)="closeMobileMenu()" routerLinkActive="active">
-          <div class="item-icon"><i class="fas fa-shopping-bag"></i></div>
-          <span class="item-label">Cart</span>
-        </a>
+
+        <!-- About -->
         <a class="menu-item-premium" routerLink="/about" (click)="closeMobileMenu()" routerLinkActive="active">
           <div class="item-icon"><i class="fas fa-info-circle"></i></div>
           <span class="item-label">About</span>
         </a>
+
+        <!-- Contact -->
+        <a class="menu-item-premium" routerLink="/contact" (click)="closeMobileMenu()" routerLinkActive="active">
+          <div class="item-icon"><i class="fas fa-envelope"></i></div>
+          <span class="item-label">Contact</span>
+        </a>
+
+        <!-- Profile Group -->
+        <div class="sidebar-group" [class.active]="activeSidebarGroup === 'profiles'">
+          <div class="menu-item-premium" (click)="toggleSidebarGroup('profiles')">
+            <div class="item-icon"><i class="fas fa-user-circle"></i></div>
+            <span class="item-label">Profile</span>
+            <i class="fas fa-chevron-down chevron-icon"></i>
+          </div>
+          <div class="group-content">
+            <a class="menu-item-premium sub-item" routerLink="/profile" (click)="closeMobileMenu()">
+              <span class="item-label">Owner Profile</span>
+            </a>
+            <a class="menu-item-premium sub-item" routerLink="/profile" (click)="closeMobileMenu()">
+              <span class="item-label">Pet Profile</span>
+            </a>
+            <a class="menu-item-premium sub-item" routerLink="/pet-public" (click)="closeMobileMenu()">
+              <span class="item-label">Pet Lost Profile</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Cart/Orders Group -->
+        <div class="sidebar-group" [class.active]="activeSidebarGroup === 'orders'">
+          <div class="menu-item-premium" (click)="toggleSidebarGroup('orders')">
+            <div class="item-icon"><i class="fas fa-shopping-basket"></i></div>
+            <span class="item-label">Cart</span>
+            <i class="fas fa-chevron-down chevron-icon"></i>
+          </div>
+          <div class="group-content">
+            <a class="menu-item-premium sub-item" routerLink="/myorders" (click)="closeMobileMenu()">
+              <span class="item-label">My Orders</span>
+            </a>
+            <a class="menu-item-premium sub-item" routerLink="/cart" (click)="closeMobileMenu()">
+              <span class="item-label">Cart Items</span>
+            </a>
+          </div>
+        </div>
       </div>
 
       <div class="menu-footer-luxury">
@@ -102,8 +252,6 @@
 
 <!-- MOBILE BOTTOM NAV BAR: Floating Premium Pill -->
 <div class="mobile-bottom-nav" *ngIf="!hideBottomNav">
-  <div class="nav-indicator" [style.transform]="'translateX(' + (activeIndex * 100) + '%)'"></div>
-
   <a class="bottom-nav-link" routerLink="/home" routerLinkActive="active">
     <div class="bottom-nav-icon home-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -112,7 +260,7 @@
         <polyline points="9 22 9 12 15 12 15 22"></polyline>
       </svg>
     </div>
-    <span>HOME</span>
+    <span class="nav-label">Home</span>
   </a>
 
   <a class="bottom-nav-link" routerLink="/shop" routerLinkActive="active">
@@ -124,7 +272,7 @@
         <path d="M16 10a4 4 0 0 1-8 0"></path>
       </svg>
     </div>
-    <span>SHOP</span>
+    <span class="nav-label">Store</span>
   </a>
 
   <a class="bottom-nav-link" routerLink="/document" routerLinkActive="active">
@@ -134,7 +282,7 @@
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
       </svg>
     </div>
-    <span>VAULT</span>
+    <span class="nav-label">Vault</span>
   </a>
 
   <a class="bottom-nav-link" routerLink="/profile" routerLinkActive="active">
@@ -145,6 +293,6 @@
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
     </div>
-    <span>PROFILE</span>
+    <span class="nav-label">Profile</span>
   </a>
 </div>

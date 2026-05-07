@@ -1,33 +1,36 @@
-<div class="auth-page">
+<div class="auth-page" [class.dark]="isDarkMode()">
 
   <div class="auth-main-wrapper">
-    <!-- Lottie Banner Container -->
-    <div class="auth-lottie-container">
-      <button class="theme-toggle-btn" (click)="toggleTheme()"
+    <!-- Visual Section (Lottie Background) -->
+    <div class="auth-visual-section">
+      <div class="visual-text-overlay">
+        <h1 class="visual-title">Wake him up</h1>
+        <p class="visual-subtitle">Click on the dog</p>
+      </div>
+
+      <!-- Lottie Container -->
+      <div class="banner-lottie-wrapper">
+        <div #bannerLottie class="banner-lottie-inner"></div>
+      </div>
+
+      <!-- Theme Toggle (Repositioned) -->
+      <button class="theme-toggle-modern" (click)="toggleTheme()"
         [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
-
         <i class="fas" [class.fa-sun]="isDarkMode()" [class.fa-moon]="!isDarkMode()"></i>
-
       </button>
-      <div #bannerLottie class="banner-lottie"></div>
     </div>
 
-    <!-- Form Container -->
-    <div class="auth-form-container">
-      <!-- ... existing content ... -->
-      <div class="auth-box">
-        <!-- Toggle Header -->
-        <div class="auth-toggle-pill">
-          <!-- Sign In / Register buttons -->
-          <button type="button" class="toggle-btn" [class.active]="isLoginMode()" (click)="isLoginMode.set(true)">
-            Sign In
-          </button>
-          <button type="button" class="toggle-btn" [class.active]="!isLoginMode()" (click)="isLoginMode.set(false)">
-            Register
-          </button>
+    <!-- Auth Card Section -->
+    <div class="auth-card-section">
+      <div class="auth-card">
+        <!-- Card Logo -->
+        <div class="card-logo-box">
+          <div class="logo-inner">
+            <i class="fas fa-paw"></i>
+          </div>
         </div>
-        <!-- Headings, Forms, Social etc. -->
-        <!-- [KEEPING ALL EXISTING CONTENT FROM Line 20 to Line 183] -->
+
+        <!-- Headings -->
         <div class="auth-headings">
           <h2 *ngIf="!forgotMode()">{{ isLoginMode() ? 'Welcome Back!' : 'Join the Family' }}</h2>
           <p *ngIf="!forgotMode()">{{ isLoginMode() ? 'Log in to access your premium pet portal.' : 'Start your journey
@@ -51,263 +54,135 @@
           <button type="button" class="btn-close" (click)="successMessage.set('')"><i class="fas fa-times"></i></button>
         </div>
 
-        <!-- Main Form (Login / Register) -->
-        <form *ngIf="!forgotMode()" (ngSubmit)="onSubmit()" #authForm="ngForm" class="modern-form">
+        <!-- Main Form -->
+        <form *ngIf="!forgotMode()" (ngSubmit)="onSubmit()" #authForm="ngForm" class="modern-card-form">
 
           <!-- Username (Register only) -->
-          <div class="input-float-group" *ngIf="!isLoginMode()">
-            <input type="text" id="username" name="username" [(ngModel)]="registerData.username" required minlength="3"
-              maxlength="30" #username="ngModel" [class.invalid]="username.invalid && username.touched" placeholder=" "
-              autocomplete="off">
-            <label for="username">Choose a username</label>
-            <i class="fas fa-user input-icon"></i>
+          <div class="input-modern-group" *ngIf="!isLoginMode()">
+            <div class="input-wrapper">
+              <i class="fas fa-user field-icon"></i>
+              <input type="text" id="username" name="username" [(ngModel)]="registerData.username" required
+                minlength="3" #username="ngModel" placeholder="Choose a username">
+            </div>
 
-            <div class="validation-msg" *ngIf="username.invalid && username.touched">
+            <div class="validation-error" *ngIf="username.invalid && username.touched">
               Username must be 3-30 characters.
             </div>
           </div>
 
           <!-- Email -->
-          <div class="input-float-group">
-            <input type="email" id="email" name="email"
-              [ngModel]="isLoginMode() ? loginData.email_address : registerData.email_address"
-              (ngModelChange)="isLoginMode() ? loginData.email_address = $event : registerData.email_address = $event"
-              required email #emailInput="ngModel" [class.invalid]="emailInput.invalid && emailInput.touched"
-              placeholder=" " autocomplete="off">
-            <label for="email">Email Address</label>
-            <i class="fas fa-envelope input-icon"></i>
-
-            <div class="validation-msg" *ngIf="emailInput.invalid && emailInput.touched">
+          <div class="input-modern-group">
+            <div class="input-wrapper">
+              <i class="fas fa-envelope field-icon"></i>
+              <input type="email" id="email" name="email"
+                [ngModel]="isLoginMode() ? loginData.email_address : registerData.email_address"
+                (ngModelChange)="isLoginMode() ? loginData.email_address = $event : registerData.email_address = $event"
+                required email #emailInput="ngModel" placeholder="Email Address">
+            </div>
+            <div class="validation-error" *ngIf="emailInput.invalid && emailInput.touched">
               Please enter a valid email.
             </div>
           </div>
 
           <!-- Password -->
-          <div class="input-float-group">
-            <input [type]="showPassword ? 'text' : 'password'" id="password" name="password"
-              [ngModel]="isLoginMode() ? loginData.password : registerData.password"
-              (ngModelChange)="isLoginMode() ? loginData.password = $event : registerData.password = $event" required
-              minlength="6" #password="ngModel" [class.invalid]="password.invalid && password.touched" placeholder=" "
-              autocomplete="off">
-            <label for="password">Password</label>
-            <i class="fas fa-lock input-icon"></i>
-
-            <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
-              <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
-            </button>
-
-            <div class="validation-msg" *ngIf="password.invalid && password.touched">
+          <div class="input-modern-group">
+            <div class="input-wrapper">
+              <i class="fas fa-lock field-icon"></i>
+              <input [type]="showPassword ? 'text' : 'password'" id="password" name="password"
+                [ngModel]="isLoginMode() ? loginData.password : registerData.password"
+                (ngModelChange)="isLoginMode() ? loginData.password = $event : registerData.password = $event" required
+                minlength="6" #password="ngModel" placeholder="Password">
+              <button type="button" class="password-eye" (click)="togglePasswordVisibility()">
+                <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+              </button>
+            </div>
+            <div class="validation-error" *ngIf="password.invalid && password.touched">
               Password must be at least 6 characters.
             </div>
           </div>
 
-          <!-- Remember Me & Forgot Password -->
-          <div class="form-options" *ngIf="isLoginMode()">
-            <label class="modern-checkbox">
+          <!-- Options -->
+          <div class="form-card-options" *ngIf="isLoginMode()">
+            <label class="compact-checkbox">
               <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe">
-              <span class="checkmark">
-                <i class="fas fa-check"></i>
-              </span>
-              <span class="check-text">Remember me</span>
+              <span class="box"></span>
+              <span class="label">Remember me</span>
             </label>
-            <a href="javascript:void(0)" (click)="forgotMode.set(true)" class="forgot-link">Forgot password?</a>
+            <a href="javascript:void(0)" (click)="forgotMode.set(true)" class="forgot-link-text">Forgot password?</a>
           </div>
 
           <!-- Submit -->
-          <button type="submit" class="modern-submit-btn" [disabled]="authForm.invalid || isLoading()"
-            [class.is-loading]="isLoading()">
-            <span class="btn-text" *ngIf="!isLoading()">
-              {{ isLoginMode() ? 'Sign In to Account' : 'Create TailCart Account' }}
-            </span>
-            <div class="loader-ring" *ngIf="isLoading()"></div>
+          <button type="submit" class="btn-card-submit" [disabled]="authForm.invalid || isLoading()">
+            <span *ngIf="!isLoading()"><i class="fas fa-paw"></i> {{ isLoginMode() ? 'Sign In to Account' : 'Register Now' }}</span>
+            <div class="loader-dots" *ngIf="isLoading()">
+              <span></span><span></span><span></span>
+            </div>
           </button>
 
-          <!-- Social Separator -->
-          <div class="social-divider">
+          <!-- Divider -->
+          <div class="divider-text">
             <span>or continue with</span>
           </div>
 
-          <div class="social-grid">
-            <a href="https://www.google.com" target="_blank" style="text-decoration: none;">
-              <button type="button" class="social-btn google">
-                <img src="https://cdn.iconscout.com/icon/free/png-256/free-google-1772223-1507807.png" alt="Google">
-                Google
-              </button>
-            </a>
-            <a href="https://www.facebook.com" target="_blank" style="text-decoration: none;">
-              <button type="button" class="social-btn facebook">
-                <i class="fab fa-facebook-f"></i>
-                Facebook
-              </button>
-            </a>
+          <!-- Social -->
+          <div class="social-flex-row">
+            <button type="button" class="btn-social-outline google" onclick="window.open('https://google.com', '_blank')">
+              <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google">
+              Continue with Google
+            </button>
+            <button type="button" class="btn-social-outline facebook" onclick="window.open('https://facebook.com', '_blank')">
+              <i class="fab fa-facebook"></i>
+              Continue with Facebook
+            </button>
           </div>
+
+          <!-- Footer Switch -->
+          <div class="card-footer-switch">
+             <div class="cute-dogs-icons">
+               <i class="fas fa-dog dog-icon-mini"></i>
+               <i class="fas fa-paw paw-icon-mini"></i>
+             </div>
+             <p>{{ isLoginMode() ? 'New here?' : 'Already have an account?' }} 
+               <a href="javascript:void(0)" (click)="onSwitchMode()">{{ isLoginMode() ? 'Create an account' : 'Sign in here' }}</a>
+             </p>
+          </div>
+
         </form>
 
-        <!-- Forgot Password Flow -->
-        <div *ngIf="forgotMode()" class="forgot-flow">
-          <!-- Step 1: Email -->
-          <div *ngIf="forgotStep() === 1" class="forgot-step">
-            <div class="input-float-group">
-              <input type="email" id="forgot-email" name="forgot-email" [(ngModel)]="forgotData.email_address" required
-                email placeholder=" " autocomplete="off">
-              <label for="forgot-email">Email Address</label>
-              <i class="fas fa-envelope input-icon"></i>
-            </div>
-
-            <button type="button" class="modern-submit-btn" (click)="onForgotPassword()" [disabled]="isLoading()">
-              <span class="btn-text">Send OTP</span>
-              <div class="loader-ring" *ngIf="isLoading()"></div>
-            </button>
-
-            <div class="forgot-step-footer">
-              <a href="javascript:void(0)" (click)="forgotMode.set(false)" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to Login
-              </a>
-            </div>
-          </div>
-
-          <!-- Step 2: OTP & New Password -->
-          <div *ngIf="forgotStep() === 2" class="forgot-step">
-            <div class="input-float-group">
-              <input type="text" id="otp" name="otp" [(ngModel)]="forgotData.otp" required maxlength="6" placeholder=" "
-                autocomplete="off">
-              <label for="otp">Enter 6-digit OTP</label>
-              <i class="fas fa-key input-icon"></i>
-            </div>
-
-            <div class="input-float-group">
-              <input [type]="showPassword ? 'text' : 'password'" id="new-password" name="new-password"
-                [(ngModel)]="forgotData.new_password" required minlength="6" placeholder=" " autocomplete="off">
-              <label for="new-password">New Password</label>
-              <i class="fas fa-lock input-icon"></i>
-            </div>
-
-            <button type="button" class="modern-submit-btn" (click)="onResetPassword()" [disabled]="isLoading()">
-              <span class="btn-text">Reset Password</span>
-              <div class="loader-ring" *ngIf="isLoading()"></div>
-            </button>
-
-            <div class="forgot-step-footer">
-              <a href="javascript:void(0)" (click)="forgotStep.set(1)" class="back-link">
-                <i class="fas fa-arrow-left"></i> Use different email
-              </a>
-            </div>
-          </div>
+        <!-- Forgot Password Flow (Updated classes) -->
+        <div *ngIf="forgotMode()" class="forgot-flow-card">
+           <!-- Step 1 -->
+           <div *ngIf="forgotStep() === 1">
+              <div class="input-modern-group">
+                <div class="input-wrapper">
+                  <i class="fas fa-envelope field-icon"></i>
+                  <input type="email" [(ngModel)]="forgotData.email_address" placeholder="Email Address">
+                </div>
+              </div>
+              <button class="btn-card-submit" (click)="onForgotPassword()">Send OTP</button>
+              <a (click)="forgotMode.set(false)" class="back-link">Back to Login</a>
+           </div>
+           <!-- Step 2 -->
+           <div *ngIf="forgotStep() === 2">
+              <div class="input-modern-group">
+                <div class="input-wrapper">
+                  <i class="fas fa-key field-icon"></i>
+                  <input type="text" [(ngModel)]="forgotData.otp" placeholder="Enter 6-digit OTP">
+                </div>
+              </div>
+              <div class="input-modern-group">
+                <div class="input-wrapper">
+                  <i class="fas fa-lock field-icon"></i>
+                  <input type="password" [(ngModel)]="forgotData.new_password" placeholder="New Password">
+                </div>
+              </div>
+              <button class="btn-card-submit" (click)="onResetPassword()">Reset Password</button>
+           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Premium Luxury Footer -->
-  <footer class="premium-luxury-footer">
-    <div class="footer-background-overlay"></div>
-
-
-    <div class="footer-container relative">
-      <!-- Top Section -->
-      <div class="footer-top-premium">
-        <div class="footer-brand-premium">
-          <div class="logo-container">
-            <div class="logo-icon-premium">
-              <svg viewBox="0 0 24 24" fill="currentColor" style="width:28px;height:28px;">
-                <path
-                  d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-              </svg>
-            </div>
-            <div class="logo-text">
-              <h2 class="logo-title-premium">TailCart</h2>
-              <p class="logo-subtitle-premium">Premium Pet Care Solutions</p>
-            </div>
-          </div>
-          <p class="brand-tagline-premium">Keeping your furry friends safe, healthy, and happy with cutting-edge
-            technology.</p>
-
-          <div class="social-links-premium">
-            <a href="#" class="social-link" aria-label="Instagram">
-              <div class="social-icon"><i class="fab fa-instagram"></i></div>
-            </a>
-            <a href="#" class="social-link" aria-label="Facebook">
-              <div class="social-icon"><i class="fab fa-facebook-f"></i></div>
-            </a>
-            <a href="#" class="social-link" aria-label="Twitter">
-              <div class="social-icon"><i class="fab fa-twitter"></i></div>
-            </a>
-            <a href="#" class="social-link" aria-label="YouTube">
-              <div class="social-icon"><i class="fab fa-youtube"></i></div>
-            </a>
-          </div>
-        </div>
-
-        <!-- Quick Links -->
-        <div class="footer-links-premium">
-          <div class="links-grid-premium">
-            <div class="link-column">
-              <h3 class="column-title-premium">Products</h3>
-              <ul class="link-list">
-                <li><a routerLink="/shop" class="footer-link">TailTags</a></li>
-                <li><a routerLink="/document" class="footer-link">TailVault</a></li>
-                <li><a routerLink="/document" class="footer-link">TailScheduler</a></li>
-                <li><a routerLink="/doctor-ai" class="footer-link">TailCare</a></li>
-              </ul>
-            </div>
-
-            <div class="link-column">
-              <h3 class="column-title-premium">Company</h3>
-              <ul class="link-list">
-                <li><a routerLink="/about" class="footer-link">About Us</a></li>
-                <li><a routerLink="/about" class="footer-link">Our Story</a></li>
-                <li><a routerLink="/about" class="footer-link">Careers</a></li>
-                <li><a routerLink="/about" class="footer-link">Contact</a></li>
-              </ul>
-            </div>
-
-            <div class="link-column">
-              <h3 class="column-title-premium">Support</h3>
-              <ul class="link-list">
-                <li><a routerLink="/about" class="footer-link">Help Center</a></li>
-                <li><a routerLink="/about" class="footer-link">FAQs</a></li>
-                <li><a routerLink="/about" class="footer-link">Shipping</a></li>
-                <li><a routerLink="/about" class="footer-link">Returns</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Newsletter -->
-      <div class="footer-middle-premium">
-        <div class="newsletter-section">
-          <div class="newsletter-content">
-            <h3 class="newsletter-title-premium">Stay Updated</h3>
-            <p class="newsletter-text-premium">Get exclusive offers, pet care tips, and product updates delivered to
-              your in-box.</p>
-          </div>
-          <div class="newsletter-form-premium">
-            <input type="email" placeholder="Your email address" class="newsletter-input-premium">
-            <button class="newsletter-button-premium">SUBSCRIBE</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bottom Section -->
-      <div class="footer-bottom-premium">
-        <div class="payment-methods-premium">
-          <i class="fab fa-cc-visa payment-icon-premium"></i>
-          <i class="fab fa-cc-mastercard payment-icon-premium"></i>
-          <i class="fab fa-cc-amex payment-icon-premium"></i>
-          <i class="fab fa-cc-paypal payment-icon-premium"></i>
-        </div>
-
-        <div class="copyright-premium">
-          <p>© 2026 TailCart. All rights reserved.</p>
-          <div class="legal-links-premium">
-            <a routerLink="/about" class="legal-link">Privacy Policy</a>
-            <a routerLink="/about" class="legal-link">Terms of Service</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
 
   <!-- Scroll to Top Button -->
   <button class="scroll-top-btn" (click)="scrollToTop()" [class.visible]="isScrolled()">
