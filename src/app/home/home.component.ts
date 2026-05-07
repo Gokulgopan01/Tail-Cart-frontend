@@ -1,11 +1,11 @@
 import { Component, HostListener, AfterViewInit, ElementRef, ViewChild, OnDestroy, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
+import { NgFor, NgIf, UpperCasePipe, CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf, RouterModule, UpperCasePipe],
+  imports: [NgFor, NgIf, RouterModule, UpperCasePipe, CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -163,7 +163,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   isDetailedVideoPlaying = false;
   private hasAutoPlayed = false;
 
-  @ViewChild('ecoCarousel', { static: false }) ecoCarousel!: ElementRef<HTMLDivElement>;
   @ViewChild('featureVideo', { static: false }) featureVideo!: ElementRef<HTMLVideoElement>;
 
   activeEcosystemIndex: number = 0;
@@ -231,15 +230,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   // ── Ecosystem Carousel Logic ────────────────────────────────
   selectEcosystemTab(index: number): void {
     this.activeEcosystemIndex = index;
-    const carousel = this.ecoCarousel.nativeElement;
-    const slideWidth = carousel.offsetWidth;
-    carousel.scrollTo({ left: index * slideWidth, behavior: 'smooth' });
   }
 
-  onEcosystemScroll(event: any): void {
-    const carousel = event.target;
-    const newIndex = Math.round(carousel.scrollLeft / carousel.offsetWidth);
-    if (newIndex !== this.activeEcosystemIndex) this.activeEcosystemIndex = newIndex;
+  getSlideClass(index: number): string {
+    if (index === this.activeEcosystemIndex) return 'active';
+    if (index === (this.activeEcosystemIndex - 1 + this.services.length) % this.services.length) return 'prev';
+    if (index === (this.activeEcosystemIndex + 1) % this.services.length) return 'next';
+    return 'hidden';
   }
 
   // ── Video & Scroll Logic ─────────────────────────────────────

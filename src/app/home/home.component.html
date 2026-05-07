@@ -55,14 +55,12 @@
       <h2 class="category-title">Explore Categories</h2>
       <a routerLink="/shop" class="browse-all-link">Browse all &rsaquo;</a>
     </div>
-    
+
     <!-- Grid Layout -->
     <div class="category-grid">
-      <div *ngFor="let cat of categories" 
-           class="category-card" 
-           [class.active]="selectedCategory === cat.name"
-           (click)="selectCategory(cat.name)">
-        
+      <div *ngFor="let cat of categories" class="category-card" [class.active]="selectedCategory === cat.name"
+        (click)="selectCategory(cat.name)">
+
         <div class="category-visual">
           <div class="visual-inner">
             <img *ngIf="cat.img" [src]="cat.img" [alt]="cat.name" class="cat-img-circle">
@@ -149,38 +147,146 @@
   </div>
 </section>
 
-<!-- The TailCart Ecosystem (Tabbed Carousel) -->
-<section class="ecosystem-revamp">
-  <div class="ecosystem-container">
-    <h2 class="ecosystem-heading fade-in">The TailCart Ecosystem</h2>
+<!-- The TailCart Ecosystem (Advanced 3D Stack Carousel) -->
+<section class="ecosystem-revamp" [style.--active-color]="services[activeEcosystemIndex].color">
+  <div class="ecosystem-mesh-bg"></div>
 
-    <!-- Tab Bar -->
+  <div class="ecosystem-container">
+    <div class="ecosystem-header fade-in">
+      <h2 class="ecosystem-heading">Our Eco-system</h2>
+      <p class="eco-subheading">A seamless synergy of smart hardware and intelligent software, designed to protect what
+        matters most.</p>
+    </div>
+
+    <!-- Tab Bar Controller -->
     <div class="tab-bar-container fade-in">
-      <div class="tab-bar">
-        <button *ngFor="let service of services; let i = index" class="tab-item"
+      <div class="tab-bar-luxury">
+        <button *ngFor="let service of services; let i = index" class="tab-btn-luxury"
           [class.active]="activeEcosystemIndex === i" (click)="selectEcosystemTab(i)">
+          <span class="tab-indicator" [style.background]="service.color"></span>
           {{service.name}}
         </button>
       </div>
     </div>
 
-    <!-- Manual Carousel -->
-    <div class="ecosystem-carousel-wrapper fade-in">
-      <div class="ecosystem-carousel" #ecoCarousel (scroll)="onEcosystemScroll($event)">
-        <div *ngFor="let service of services; let i = index" class="eco-slide"
-          [class.active-slide]="activeEcosystemIndex === i">
-          <div class="eco-card-luxury">
-            <div class="eco-card-image">
-              <img [src]="service.img" [alt]="service.name">
+    <!-- 3D Stack Carousel -->
+    <div class="stack-carousel-viewport fade-in">
+      <div class="stack-carousel-container">
+        <div *ngFor="let service of services; let i = index" class="stack-slide" [ngClass]="getSlideClass(i)"
+          [style.--slide-color]="service.color" (click)="selectEcosystemTab(i)">
+
+          <div class="eco-card-glass">
+            <div class="card-glow-effect"></div>
+            <div class="eco-card-inner">
+              <div class="eco-card-image-box">
+                <img [src]="service.img" [alt]="service.name" class="eco-card-img-main">
+                <div class="img-reflection"></div>
+              </div>
+
+              <div class="eco-card-details">
+                <div class="service-badge" [style.background]="service.color + '22'" [style.color]="service.color">
+                  {{ service.id | uppercase }}
+                </div>
+                <h3 class="eco-card-title-adv">{{service.name}}</h3>
+                <p class="eco-card-desc-adv">{{service.desc}}</p>
+
+                <div class="eco-card-footer">
+                  <button class="btn-eco-premium" (click)="$event.stopPropagation(); navigateToService(service.route)">
+                    <span>{{ service.cta }}</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
             </div>
-            <div class="eco-card-content">
-              <h3 class="eco-card-title">{{service.name}}</h3>
-              <p class="eco-card-desc">{{service.desc}}</p>
-              <button class="btn-eco-action" [style.background-color]="service.color"
-                (click)="navigateToService(service.route)">
-                {{ service.cta | uppercase }}
-                <span class="arrow">→</span>
-              </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel Progress / Navigation -->
+    <div class="eco-navigation fade-in">
+      <button class="nav-arrow prev"
+        (click)="selectEcosystemTab((activeEcosystemIndex - 1 + services.length) % services.length)">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class="eco-dots">
+        <span *ngFor="let dot of services; let i = index" class="eco-dot" [class.active]="activeEcosystemIndex === i"
+          (click)="selectEcosystemTab(i)"></span>
+      </div>
+      <button class="nav-arrow next" (click)="selectEcosystemTab((activeEcosystemIndex + 1) % services.length)">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works (Tail Tag Protection) -->
+<section class="protection-how-it-works">
+  <div class="protection-container">
+    <div class="protection-grid">
+      <!-- Video / Visual Side -->
+      <div class="protection-visual fade-in">
+        <div class="protection-video-frame">
+          <div class="video-overlay-glow"></div>
+          <video #featureVideo class="protection-video" [muted]="isDetailedVideoMuted" playsinline preload="auto" loop
+            muted autoplay controls>
+            <source src="assets/videos/pet_scan.mp4" type="video/mp4">
+          </video>
+
+        </div>
+      </div>
+
+      <!-- Steps Side -->
+      <div class="protection-content">
+        <div class="section-intro-left fade-in">
+          <h2 class="protection-title">How Tail Tag Protection Works</h2>
+          <p class="protection-subtitle">Our 4-step rapid recovery system ensures your pet is never truly lost.</p>
+        </div>
+
+        <div class="protection-steps">
+          <div class="protection-step fade-up">
+            <div class="step-icon-box">
+              <i class="fas fa-qrcode"></i>
+            </div>
+            <div class="step-details">
+              <span class="step-number">Phase 01</span>
+              <h3>Secure Activation</h3>
+              <p>Link your premium QR tag to your pet's digital profile in seconds. All data is encrypted and secure.
+              </p>
+            </div>
+          </div>
+
+          <div class="protection-step fade-up">
+            <div class="step-icon-box">
+              <i class="fas fa-mobile-android"></i>
+            </div>
+            <div class="step-details">
+              <span class="step-number">Phase 02</span>
+              <h3>Instant Smart Scan</h3>
+              <p>If found, anyone with a smartphone can scan the tag. No app download or special hardware required.</p>
+            </div>
+          </div>
+
+          <div class="protection-step fade-up">
+            <div class="step-icon-box">
+              <i class="fas fa-location-dot"></i>
+            </div>
+            <div class="step-details">
+              <span class="step-number">Phase 03</span>
+              <h3>Real-Time Geo-Alert</h3>
+              <p>The moment the tag is scanned, you receive an instant GPS notification of your pet's precise location.
+              </p>
+            </div>
+          </div>
+
+          <div class="protection-step fade-up">
+            <div class="step-icon-box">
+              <i class="fas fa-comments"></i>
+            </div>
+            <div class="step-details">
+              <span class="step-number">Phase 04</span>
+              <h3>Rapid Reunion</h3>
+              <p>Connect with the finder through our secure gateway and bring your furry friend home safely.</p>
             </div>
           </div>
         </div>
@@ -189,80 +295,58 @@
   </div>
 </section>
 
-<!-- How It Works (Video Section) -->
-<section class="process-section">
-  <div class="process-layout">
-    <div class="section-intro-left">
-      <span class="section-tag-gold">Seamless Recovery</span>
-      <h2 class="section-title-fun">How It Works</h2>
+<!-- FAQ Section (Ecosystem Support) -->
+<section class="faq-modern-section">
+  <div class="faq-container">
+    <div class="faq-header fade-in">
+      <span class="faq-tag">Expert Answers</span>
+      <h2 class="faq-title">Pet Parent FAQs</h2>
+      <p class="faq-subtitle">Everything you need to know about the TailCart ecosystem and our protection protocols.</p>
     </div>
 
-    <div class="video-mockup-frame">
-      <video #featureVideo class="feature-video-luxury" [muted]="isDetailedVideoMuted" playsinline preload="auto" loop
-        muted autoplay controls>
-        <source src="assets/videos/pet_scan.mp4" type="video/mp4">
-      </video>
-    </div>
+    <div class="faq-accordion-list">
+      <div *ngFor="let item of [0,1,2,3,4]; let i = index" class="faq-accordion-item fade-up"
+        [class.active]="faqStates[i]" [style.animation-delay]="(i * 0.1) + 's'">
 
-    <div class="step-item">
-      <div class="step-number-fun">1</div>
-      <div class="step-info-fun">
-        <h3>Secure & Attach</h3>
-        <p>Attach the premium smart tag to your pet's collar. It's waterproof, lightweight, and durable.</p>
-      </div>
-    </div>
-
-    <div class="step-item">
-      <div class="step-number-fun">2</div>
-      <div class="step-info-fun">
-        <h3>Instant Scan</h3>
-        <p>If your pet gets lost, any smartphone can scan the tag without needing an app to view your contact info.
-        </p>
-      </div>
-    </div>
-
-    <div class="step-item">
-      <div class="step-number-fun">3</div>
-      <div class="step-info-fun">
-        <h3>Safe Reunion</h3>
-        <p>Receive immediate alerts with the finder's location and reunite with your furry friend in minutes.</p>
-      </div>
-    </div>
-  </div>
-
-</section>
-
-<!-- FAQ Section -->
-<section class="faq-section-refined fade-up">
-  <div class="faq-inner-container">
-    <div class="section-intro-left fade-in">
-      <span class="section-tag-gold">Common Inquiries</span>
-      <h2 class="section-title-fun">Pet Parent FAQs</h2>
-    </div>
-
-    <div class="faq-grid-luxury">
-      <div *ngFor="let item of [0,1,2,3]; let i = index" class="faq-item-fun" [class.active]="faqStates[i]">
-        <button class="faq-trigger-fun" (click)="toggleFaq(i)">
-          <span *ngIf="i === 0">How does the QR pet tag work?</span>
-          <span *ngIf="i === 1">Is my pet's data secure?</span>
-          <span *ngIf="i === 2">Do I need a battery for the tag?</span>
-          <span *ngIf="i === 3">Can I update my details later?</span>
-          <div class="faq-icon-wrapper">
-            <span class="faq-plus">{{ faqStates[i] ? '−' : '+' }}</span>
+        <button class="faq-accordion-trigger" (click)="toggleFaq(i)">
+          <div class="faq-q-box">
+            <span class="faq-index">0{{i+1}}</span>
+            <span class="faq-question">
+              <ng-container *ngIf="i === 0">How exactly does the Tail Tag scan work?</ng-container>
+              <ng-container *ngIf="i === 1">Is my personal data visible to anyone who scans?</ng-container>
+              <ng-container *ngIf="i === 2">Do the smart tags require batteries or charging?</ng-container>
+              <ng-container *ngIf="i === 3">Can I manage multiple pets on a single account?</ng-container>
+              <ng-container *ngIf="i === 4">What happens if the tag is scanned in an area with poor
+                signal?</ng-container>
+            </span>
+          </div>
+          <div class="faq-icon-box-modern">
+            <span class="faq-chevron"></span>
           </div>
         </button>
-        <div class="faq-answer-fun" [class.show]="faqStates[i]">
-          <p *ngIf="i === 0">Each tag carries a unique encrypted QR code. When scanned, it opens a secure pet profile
-            showing your contact details instantly.</p>
-          <p *ngIf="i === 1">Absolutely. Your data is encrypted and you have full control over what information is
-            displayed publicly during a scan.</p>
-          <p *ngIf="i === 2">No batteries required. Our tags use passive QR technology, ensuring they never run out of
-            power when you need them most.</p>
-          <p *ngIf="i === 3">Yes, you can edit your pet's information, owner details, and medical records anytime
-            through
-            your dashboard.</p>
+
+        <div class="faq-accordion-content" [class.show]="faqStates[i]">
+          <div class="faq-answer-inner">
+            <p *ngIf="i === 0">Our tags use passive QR technology. When scanned by any smartphone, it instantly opens a
+              secure pet profile and sends you a real-time GPS notification of the scan's location, without the finder
+              needing any app.</p>
+            <p *ngIf="i === 1">You have absolute control. Through your Tail Vault, you can toggle exactly which
+              information (phone, address, medical notes) is visible to a finder. All data is stored with bank-grade
+              encryption.</p>
+            <p *ngIf="i === 2">No charging or batteries are ever needed. Tail Tags are built to last a lifetime using
+              durable, aerospace-grade materials and passive NFC/QR tech that's always "on" when needed.</p>
+            <p *ngIf="i === 3">Yes! The TailCart app and dashboard are designed for multi-pet households. You can add
+              unlimited pets, each with their own unique tags, medical records, and protection settings.</p>
+            <p *ngIf="i === 4">The scan will still register the interaction. The finder can see your contact info if
+              previously loaded, and you'll receive the location alert as soon as the device regains connectivity.</p>
+          </div>
         </div>
       </div>
+    </div>
+
+    <div class="faq-footer fade-in">
+      <p>Still have questions? <a (click)="navigateToAbout()" class="faq-contact-link">Contact our support team
+          &rarr;</a></p>
     </div>
   </div>
 </section>
