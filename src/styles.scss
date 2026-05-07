@@ -1,0 +1,11 @@
+/* Global resets to ensure edge-to-edge layouts */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
