@@ -11,7 +11,7 @@ import { FooterComponent } from './footer/footer.component';
   template: `
   <app-navbar></app-navbar>
   
-  <main class="main-content page-content-wrapper page-transition-wrapper">
+  <main class="main-content page-content-wrapper">
     <router-outlet></router-outlet>
   </main>
 

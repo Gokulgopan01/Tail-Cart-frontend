@@ -60,14 +60,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
   rememberMe = false;
 
   // running cat
-  @ViewChild('lottieContainer', { static: true })
-  lottieContainer!: ElementRef<HTMLDivElement>;
   private animation: AnimationItem | null = null;
-
-  // login lottie
-  @ViewChild('bannerLottie', { static: true })
-  bannerLottie!: ElementRef<HTMLDivElement>;
-  private bannerAnimation: AnimationItem | null = null;
 
   // success lottie
   @ViewChild('successLottie')
@@ -137,16 +130,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.bannerAnimation = lottie.loadAnimation({
-      container: this.bannerLottie.nativeElement,
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      path: 'assets/Lottie/Login_banner.json',
-      rendererSettings: {
-        preserveAspectRatio: 'xMidYMid slice'
-      }
-    });
+    // Lottie animation for banner removed as per user request
   }
 
   private initSuccessAnimation(): void {
@@ -350,7 +334,6 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.animation?.destroy();
-    this.bannerAnimation?.destroy();
     this.successAnimation?.destroy();
     this.animation = null;
   }

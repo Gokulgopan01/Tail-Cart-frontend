@@ -1,37 +1,34 @@
 <div class="auth-page" [class.dark]="isDarkMode()">
 
   <div class="auth-main-wrapper">
-    <!-- Visual Section (Lottie Background) -->
-    <div class="auth-visual-section">
-      <div class="visual-text-overlay">
-        <h1 class="visual-title">Wake him up</h1>
-        <p class="visual-subtitle">Click on the dog</p>
+    <!-- Auth Card Section (Now on the Left) -->
+    <div class="auth-card-section">
+      <!-- Mobile Specific Headings (Visible only on Mobile) -->
+      <div class="mobile-headings-container">
+        <h2 class="mobile-welcome">Welcome<br><span class="mobile-back">Back!</span></h2>
+        <p class="mobile-subtitle">Log in to access your premium pet portal.</p>
+        <div class="mobile-heart-icon">
+          <i class="fas fa-heart"></i>
+          <i class="fas fa-paw"></i>
+        </div>
       </div>
 
-      <!-- Lottie Container -->
-      <div class="banner-lottie-wrapper">
-        <div #bannerLottie class="banner-lottie-inner"></div>
-      </div>
-
-      <!-- Theme Toggle (Repositioned) -->
+      <!-- Theme Toggle -->
       <button class="theme-toggle-modern" (click)="toggleTheme()"
         [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
         <i class="fas" [class.fa-sun]="isDarkMode()" [class.fa-moon]="!isDarkMode()"></i>
       </button>
-    </div>
 
-    <!-- Auth Card Section -->
-    <div class="auth-card-section">
       <div class="auth-card">
-        <!-- Card Logo -->
-        <div class="card-logo-box">
-          <div class="logo-inner">
+        <!-- Card Logo (Paw in Circle) -->
+        <div class="card-logo-overlay">
+          <div class="logo-circle">
             <i class="fas fa-paw"></i>
           </div>
         </div>
 
-        <!-- Headings -->
-        <div class="auth-headings">
+        <!-- Headings (Visible on Desktop) -->
+        <div class="auth-headings desktop-only">
           <h2 *ngIf="!forgotMode()">{{ isLoginMode() ? 'Welcome Back!' : 'Join the Family' }}</h2>
           <p *ngIf="!forgotMode()">{{ isLoginMode() ? 'Log in to access your premium pet portal.' : 'Start your journey
             to luxury pet care today.' }}</p>
@@ -102,10 +99,10 @@
           </div>
 
           <!-- Options -->
-          <div class="form-card-options" *ngIf="isLoginMode()">
+          <div class="form-card-options">
             <label class="compact-checkbox">
               <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe">
-              <span class="box"></span>
+              <span class="box"><i class="fas fa-check"></i></span>
               <span class="label">Remember me</span>
             </label>
             <a href="javascript:void(0)" (click)="forgotMode.set(true)" class="forgot-link-text">Forgot password?</a>
@@ -113,7 +110,8 @@
 
           <!-- Submit -->
           <button type="submit" class="btn-card-submit" [disabled]="authForm.invalid || isLoading()">
-            <span *ngIf="!isLoading()"><i class="fas fa-paw"></i> {{ isLoginMode() ? 'Sign In to Account' : 'Register Now' }}</span>
+            <span *ngIf="!isLoading()"><i class="fas fa-paw"></i> {{ isLoginMode() ? 'Sign In to Account' : 'Register
+              Now' }}</span>
             <div class="loader-dots" *ngIf="isLoading()">
               <span></span><span></span><span></span>
             </div>
@@ -126,58 +124,56 @@
 
           <!-- Social -->
           <div class="social-flex-row">
-            <button type="button" class="btn-social-outline google" onclick="window.open('https://google.com', '_blank')">
+            <button type="button" class="btn-social-outline google"
+              onclick="window.open('https://google.com', '_blank')">
               <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google">
               Continue with Google
-            </button>
-            <button type="button" class="btn-social-outline facebook" onclick="window.open('https://facebook.com', '_blank')">
-              <i class="fab fa-facebook"></i>
-              Continue with Facebook
             </button>
           </div>
 
           <!-- Footer Switch -->
           <div class="card-footer-switch">
-             <div class="cute-dogs-icons">
-               <i class="fas fa-dog dog-icon-mini"></i>
-               <i class="fas fa-paw paw-icon-mini"></i>
-             </div>
-             <p>{{ isLoginMode() ? 'New here?' : 'Already have an account?' }} 
-               <a href="javascript:void(0)" (click)="onSwitchMode()">{{ isLoginMode() ? 'Create an account' : 'Sign in here' }}</a>
-             </p>
+            <div class="footer-heart-icon">
+              <i class="fas fa-heart"></i>
+              <i class="fas fa-paw"></i>
+            </div>
+            <p>{{ isLoginMode() ? 'New here?' : 'Already have an account?' }}
+              <a href="javascript:void(0)" (click)="onSwitchMode()">{{ isLoginMode() ? 'Create an account' : 'Sign in
+                here' }}</a>
+            </p>
           </div>
 
         </form>
 
         <!-- Forgot Password Flow (Updated classes) -->
         <div *ngIf="forgotMode()" class="forgot-flow-card">
-           <!-- Step 1 -->
-           <div *ngIf="forgotStep() === 1">
-              <div class="input-modern-group">
-                <div class="input-wrapper">
-                  <i class="fas fa-envelope field-icon"></i>
-                  <input type="email" [(ngModel)]="forgotData.email_address" placeholder="Email Address">
-                </div>
+          <!-- Step 1 -->
+          <div *ngIf="forgotStep() === 1">
+            <div class="input-modern-group">
+              <div class="input-wrapper">
+                <i class="fas fa-envelope field-icon"></i>
+                <input type="email" [(ngModel)]="forgotData.email_address" placeholder="Email Address">
               </div>
-              <button class="btn-card-submit" (click)="onForgotPassword()">Send OTP</button>
-              <a (click)="forgotMode.set(false)" class="back-link">Back to Login</a>
-           </div>
-           <!-- Step 2 -->
-           <div *ngIf="forgotStep() === 2">
-              <div class="input-modern-group">
-                <div class="input-wrapper">
-                  <i class="fas fa-key field-icon"></i>
-                  <input type="text" [(ngModel)]="forgotData.otp" placeholder="Enter 6-digit OTP">
-                </div>
+            </div>
+            <button class="btn-card-submit" (click)="onForgotPassword()">Send OTP</button>
+            <a (click)="forgotMode.set(false)" class="back-link">Back to Login</a>
+          </div>
+          <!-- Step 2 -->
+          <div *ngIf="forgotStep() === 2">
+            <div class="input-modern-group">
+              <div class="input-wrapper">
+                <i class="fas fa-key field-icon"></i>
+                <input type="text" [(ngModel)]="forgotData.otp" placeholder="Enter 6-digit OTP">
               </div>
-              <div class="input-modern-group">
-                <div class="input-wrapper">
-                  <i class="fas fa-lock field-icon"></i>
-                  <input type="password" [(ngModel)]="forgotData.new_password" placeholder="New Password">
-                </div>
+            </div>
+            <div class="input-modern-group">
+              <div class="input-wrapper">
+                <i class="fas fa-lock field-icon"></i>
+                <input type="password" [(ngModel)]="forgotData.new_password" placeholder="New Password">
               </div>
-              <button class="btn-card-submit" (click)="onResetPassword()">Reset Password</button>
-           </div>
+            </div>
+            <button class="btn-card-submit" (click)="onResetPassword()">Reset Password</button>
+          </div>
         </div>
       </div>
     </div>

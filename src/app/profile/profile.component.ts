@@ -206,7 +206,7 @@ export class ProfileComponent implements OnInit {
 
   handleOwnerImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
-    img.src = 'assets/icons/avatar.svg';
+    img.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
   }
 
   toggleEditMode(): void {
@@ -607,7 +607,7 @@ export class ProfileComponent implements OnInit {
   }
 
   getOwnerPhotoUrl(): string {
-    if (!this.profile?.owner_photo) return 'assets/icons/avatar.svg';
+    if (!this.profile?.owner_photo) return 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
     return 'http://127.0.0.1:8000' + (this.profile.owner_photo.startsWith('/') ? this.profile.owner_photo : '/' + this.profile.owner_photo);
   }
 

@@ -8,8 +8,8 @@
 
     <div class="header-info-bar">
       <div class="header-text-group">
-        <span class="header-tagline">OWNER & CURATOR</span>
-        <h1 class="header-name">{{ profile.owner_name || 'Set Name' }}</h1>
+        <span class="header-tagline">OWNER & CURATOR :</span>
+        <h1 class="header-name">{{ profile.owner_name || 'Gokul' }}</h1>
       </div>
       <button class="btn-edit-profile" (click)="toggleEditMode()">
         <i class="fas fa-pen"></i> Edit Profile
@@ -17,88 +17,79 @@
     </div>
   </header>
 
-  <main class="profile-main-scroll">
+  <main class="profile-container">
     <!-- 2. Identity & Contact Card -->
-    <section class="profile-section-card">
-      <h2 class="section-title-muted">IDENTITY & CONTACT</h2>
+    <section class="glass-card section-padding">
+      <h2 class="section-label">IDENTITY & CONTACT</h2>
 
-      <div class="contact-list">
-        <div class="contact-item">
-          <div class="contact-icon purple"><i class="fas fa-phone-alt"></i></div>
-          <div class="contact-details">
-            <span class="contact-label">Phone</span>
-            <p class="contact-value">{{ profile.owner_phone || 'Add phone number' }}</p>
+      <div class="info-grid">
+        <div class="info-row">
+          <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
+          <div class="info-content">
+            <span class="info-label">Phone</span>
+            <p class="info-value">{{ profile.owner_phone || '907223948' }}</p>
           </div>
         </div>
 
-        <div class="contact-item">
-          <div class="contact-icon purple"><i class="fas fa-envelope"></i></div>
-          <div class="contact-details">
-            <span class="contact-label">Email</span>
-            <p class="contact-value">{{ profile.owner_email || 'Add email' }}</p>
+        <div class="info-row">
+          <div class="info-icon"><i class="fas fa-envelope"></i></div>
+          <div class="info-content">
+            <span class="info-label">Email</span>
+            <p class="info-value">{{ profile.owner_email || 'gokul@gmail.com' }}</p>
           </div>
         </div>
 
-        <div class="contact-item">
-          <div class="contact-icon purple"><i class="fas fa-map-marker-alt"></i></div>
-          <div class="contact-details">
-            <span class="contact-label">Address</span>
-            <p class="contact-value">{{ profile.owner_address || 'Add your address' }}</p>
+        <div class="info-row">
+          <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="info-content">
+            <span class="info-label">Address</span>
+            <p class="info-value">{{ profile.owner_address || 'greenland nediyavilla' }}</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 3. Emergency Protocol Card -->
-    <section class="profile-section-card emergency-bg">
-      <div class="emergency-content">
-        <div class="emergency-text">
-          <h2 class="section-title-muted danger-text">EMERGENCY PROTOCOL</h2>
-          <h3 class="emergency-contact-name">{{ profile.emergency_contact_name || 'Assign Contact' }}</h3>
-          <p class="emergency-phone">{{ profile.emergency_contact_phone || '+00 0000000000' }}</p>
-        </div>
-        <a [href]="'tel:' + profile.emergency_contact_phone" class="btn-emergency-call">
-          <i class="fas fa-phone-alt"></i>
+    <!-- 3. Emergency Card -->
+    <section class="glass-card section-padding emergency-theme">
+      <h2 class="section-label danger">EMERGENCY</h2>
+      <div class="emergency-details">
+        <span class="info-label">Additional Contacting</span>
+        <h3 class="emergency-name">{{ profile.emergency_contact_name || 'Gowri' }}</h3>
+        <p class="emergency-phone">{{ profile.emergency_contact_phone || '7854888555' }}</p>
+
+        <a [href]="'tel:' + (profile.emergency_contact_phone || '7854888555')" class="btn-emergency-call">
+          <i class="fas fa-phone-alt"></i> Call Now
         </a>
       </div>
     </section>
 
-    <!-- Section Divider -->
-    <div class="section-divider"></div>
-
-    <!-- 4. Pets Section Header -->
-    <div class="section-header-modern">
-      <h2 class="section-title-muted no-margin">YOUR PETS</h2>
-      <button class="btn-add-pet-circle" (click)="startAddPet()">
-        <i class="fas fa-plus"></i>
+    <!-- 4. Your Pets Section -->
+    <div class="pets-header">
+      <h2 class="section-label">YOUR PETS</h2>
+      <button class="btn-add-pet" (click)="startAddPet()">
+        <i class="fas fa-plus"></i> Add Pet
       </button>
     </div>
 
-    <!-- 4. Pets Section Content -->
-    <section class="pets-section" *ngIf="pets.length > 0; else emptyPets">
-      <div class="pet-card-modern" *ngFor="let pet of pets">
-        <div class="pet-photo-wrapper">
-          <img [src]="getPetPhotoUrl(pet)" [alt]="pet.pet_name" class="pet-img-large">
-          <div class="pet-badge-tl">{{ pet.age }} YEAR{{ pet.age !== 1 ? 'S' : '' }}</div>
-          <div class="pet-badge-br" [class.lost]="pet.is_lost">
-            <span class="dot"></span> {{ pet.is_lost ? 'REPORTED LOST' : 'HEALTHY & SAFE' }}
-          </div>
-          <div class="pet-actions-top-right">
-            <button class="mini-action-btn" (click)="editPet(pet, $event)"><i class="fas fa-edit"></i></button>
-            <button class="mini-action-btn danger" (click)="deletePet(pet, $event)"><i
-                class="fas fa-trash"></i></button>
-          </div>
+    <section class="pets-grid" *ngIf="pets.length > 0; else emptyPets">
+      <div class="pet-modern-card" *ngFor="let pet of pets">
+        <div class="pet-img-container">
+          <img [src]="getPetPhotoUrl(pet)" [alt]="pet.pet_name" class="pet-photo">
+          <div class="pet-age-tag">{{ pet.age }} Years</div>
         </div>
 
-        <div class="pet-info-footer">
-          <h3 class="pet-display-name">{{ pet.pet_name }}</h3>
-          <div class="pet-status-row">
-            <i class="fas" [ngClass]="pet.species === 'Dog' ? 'fa-paw' : 'fa-cat'"></i>
-            <span>{{ pet.species }} • {{ pet.breed || 'Unknown Breed' }}</span>
+        <div class="pet-card-content">
+          <h3 class="pet-title">{{ pet.pet_name }}</h3>
+          <p class="pet-subtitle">{{ pet.species }} • {{ pet.breed || 'Unique' }}</p>
+
+          <div class="pet-card-actions">
+            <button class="btn-pet-action view" [routerLink]="['/pet-profile', pet.pet_id]">
+              <i class="fas fa-eye"></i> View
+            </button>
+            <button class="btn-pet-action edit" (click)="editPet(pet, $event)">
+              <i class="fas fa-edit"></i> Edit
+            </button>
           </div>
-          <button class="btn-view-pet-full" [routerLink]="['/pet-profile', pet.pet_id]">
-            View Pet Profile <i class="fas fa-arrow-right"></i>
-          </button>
         </div>
       </div>
     </section>
