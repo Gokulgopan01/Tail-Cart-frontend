@@ -4,14 +4,14 @@
     <!-- Auth Card Section (Now on the Left) -->
     <div class="auth-card-section">
       <!-- Mobile Specific Headings (Visible only on Mobile) -->
-      <div class="mobile-headings-container">
+      <!-- <div class="mobile-headings-container">
         <h2 class="mobile-welcome">Welcome<br><span class="mobile-back">Back!</span></h2>
         <p class="mobile-subtitle">Log in to access your premium pet portal.</p>
         <div class="mobile-heart-icon">
           <i class="fas fa-heart"></i>
           <i class="fas fa-paw"></i>
         </div>
-      </div>
+      </div> -->
 
       <!-- Theme Toggle -->
       <button class="theme-toggle-modern" (click)="toggleTheme()"
@@ -46,7 +46,7 @@
         </div>
 
         <div class="modern-alert success-alert" *ngIf="successMessage()">
-          <i class="fas fa-check-circle"></i>
+          <!-- <i class="fas fa-check-circle"></i> -->
           <span>{{ successMessage() }}</span>
           <button type="button" class="btn-close" (click)="successMessage.set('')"><i class="fas fa-times"></i></button>
         </div>
@@ -102,7 +102,7 @@
           <div class="form-card-options">
             <label class="compact-checkbox">
               <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe">
-              <span class="box"><i class="fas fa-check"></i></span>
+              <span class="box"></span>
               <span class="label">Remember me</span>
             </label>
             <a href="javascript:void(0)" (click)="forgotMode.set(true)" class="forgot-link-text">Forgot password?</a>
@@ -133,8 +133,8 @@
 
           <!-- Footer Switch -->
           <div class="card-footer-switch">
-            <div class="footer-heart-icon">
-              <i class="fas fa-heart"></i>
+            <div class="mobile-pet-icon">
+              <i class="fas fa-dog"></i>
               <i class="fas fa-paw"></i>
             </div>
             <p>{{ isLoginMode() ? 'New here?' : 'Already have an account?' }}

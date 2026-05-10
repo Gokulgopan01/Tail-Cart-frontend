@@ -53,7 +53,7 @@
 
 .nav-link {
   text-decoration: none;
-  color: #4b5563;
+  color: #000000;
   font-weight: 500;
   font-size: 1rem;
   transition: all 0.3s ease;
@@ -250,6 +250,127 @@
   font-size: 1.5rem;
   color: white;
   transition: all 0.3s ease;
+}
+
+.utility-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar */
+.utility-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  border: 2px solid rgba(255, 255, 255, 0.65);
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 0 0 3px rgba(255, 255, 255, 0.04);
+
+  transition: all 0.3s ease;
+}
+
+.utility-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Hover */
+.utility-item:hover .utility-avatar {
+  transform: scale(1.05);
+  border-color: #ffffff;
+}
+
+/* Text */
+.utility-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.utility-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.utility-subtitle {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .utility-avatar {
+    width: 42px;
+    height: 42px;
+  }
+
+  .utility-label {
+    font-size: 0.9rem;
+  }
+
+  .utility-subtitle {
+    font-size: 0.75rem;
+  }
+}
+
+/* Avatar Container */
+.nav-avatar-mobile {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid rgba(255, 255, 255, 0.7);
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.18),
+    0 0 0 3px rgba(255, 255, 255, 0.05);
+}
+
+/* Avatar Image */
+.nav-avatar-mobile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Hover */
+.nav-avatar-mobile:hover {
+  transform: scale(1.06);
+  border-color: #ffffff;
+}
+
+/* 480px */
+@media (max-width: 480px) {
+  .nav-avatar-mobile {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* 360px */
+@media (max-width: 360px) {
+  .nav-avatar-mobile {
+    width: 34px;
+    height: 34px;
+  }
 }
 
 .luxury-navbar.scrolled .nav-icon-mobile {
