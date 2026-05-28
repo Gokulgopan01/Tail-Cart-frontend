@@ -5,12 +5,11 @@
   left: 0;
   width: 100%;
   height: 80px;
-  background: white;
+  background: transparent;
   border-bottom: 1px solid #f0f0f0;
   z-index: 10000;
   display: flex;
   align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .desktop-nav-container {
@@ -31,18 +30,39 @@
 }
 
 .logo-icon {
-  font-size: 2rem;
-  color: #2563eb;
-  /* Blue as in image */
+  font-size: 2.2rem;
+  color: #2F6B47 !important;
+}
+
+.brand-green-text {
+  color: #2F6B47 !important;
+}
+
+.logo-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  line-height: 1.1;
 }
 
 .logo-text {
   font-family: 'Montserrat', sans-serif;
   font-weight: 800;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: #0c1a12;
   letter-spacing: -0.5px;
 }
+
+.logo-subtitle {
+  font-size: 0.65rem;
+  color: #555555;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
 
 /* Center: Links */
 .nav-links-section {
@@ -225,8 +245,8 @@
 /* ── MOBILE NAV REFINEMENTS ── */
 .logo-icon-mobile {
   font-size: 1.2rem;
-  color: #2563eb;
-  margin-right: 8px;
+  color: #2F6B47 !important;
+  margin-right: 4px;
 }
 
 .brand-text-mobile {
@@ -240,6 +260,28 @@
 .luxury-navbar.scrolled .brand-text-mobile {
   color: #0c1a12;
 }
+
+.logo-text-wrapper.mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  line-height: 1.1;
+}
+
+.logo-subtitle.mobile {
+  font-size: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.luxury-navbar.scrolled .logo-subtitle.mobile {
+  color: #555555;
+}
+
 
 .nav-icons-mobile {
   display: flex;

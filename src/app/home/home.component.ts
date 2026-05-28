@@ -307,6 +307,14 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   navigateToAbout(): void { this.router.navigate(['/about']); }
   navigateToService(route: string): void { this.router.navigate([route]); }
 
+  scrollToHowItWorks(): void {
+    const el = document.querySelector('.protection-how-it-works');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+
   // ── Vault Animation Logic ────────────────────────────────────
   private startVaultAnimation(): void {
     this.vaultAnimationTimer = setInterval(() => {

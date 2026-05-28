@@ -1,55 +1,271 @@
 <!-- Hero Section -->
 <section class="hero-wrapper">
   <div class="hero-bg"></div>
-  <div class="hero-left-overlay"></div>
   <div class="hero-content">
-    <div class="hero-badge fade-in">Pet Safety Reimagined</div>
     <h1 class="hero-title fade-up">
-      Pet in luxury<br>
-      <span class="highlight-blue">technology</span>
+      Never Lose<br>
+      <span class="highlight-green">Your Pet</span> Again.
     </h1>
     <p class="hero-desc fade-up">
-      Designed with technology, with pet care and safety at its heart. Smart solutions that keep your companion
-      protected and thriving.
+      Smart QR Pet Tags with Instant Owner Alerts,<br class="desktop-only">
+      Live Location Sharing, Medical Records &amp;<br class="desktop-only">
+      Emergency Recovery Tools.
     </p>
     <div class="hero-actions fade-up">
-      <button class="btn-primary-blue" (click)="navigateToShop()">
-        Get started
+      <button class="btn-primary-green" (click)="navigateToShop()">
+        <span class="btn-icon-box">
+          <i class="fas fa-paw"></i>
+        </span>
+        Protect My Pet
       </button>
-      <button class="btn-outline-blue" (click)="navigateToAbout()">
-        Learn more
+      <button class="btn-outline-green" (click)="scrollToHowItWorks()">
+        <span class="play-btn-icon"><i class="fas fa-circle-play"></i></span> How It Works
       </button>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stats Bar Section ── -->
+<section class="stats-bar-section">
+  <div class="stats-bar-container">
+
+    <div class="stat-card">
+      <div class="stat-icon-box">
+        <i class="fas fa-paw"></i>
+      </div>
+      <div class="stat-text">
+        <strong class="stat-number">1,200+</strong>
+        <span class="stat-label">Pets Protected</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-box">
+        <i class="fas fa-location-dot"></i>
+      </div>
+      <div class="stat-text">
+        <strong class="stat-number">Instant</strong>
+        <span class="stat-label">Location Sharing</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-box">
+        <i class="fas fa-shield-heart"></i>
+      </div>
+      <div class="stat-text">
+        <strong class="stat-number">100%</strong>
+        <span class="stat-label">Secure &amp; Private</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-box">
+        <i class="fas fa-battery-full"></i>
+      </div>
+      <div class="stat-text">
+        <strong class="stat-number">No Battery</strong>
+        <span class="stat-label">No Charging Needed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── The Difference Section ── -->
+<section class="difference-section">
+  <div class="difference-container">
+    <!-- Left: Problem Statement -->
+    <div class="difference-left">
+      <h2 class="difference-heading">
+        Every year <span class="highlight-green">thousands</span><br>of pets go missing.
+      </h2>
+      <p class="difference-desc">
+        Most collars only display a phone number. TailCart instantly connects finders with pet owners through smart QR
+        technology and real-time location sharing.
+      </p>
+    </div>
+
+    <!-- Right: Comparison Cards -->
+    <div class="difference-right">
+      <!-- Traditional Tag Card -->
+      <div class="comparison-card traditional-card">
+        <h3 class="card-title">Traditional Tags</h3>
+        <p class="card-subtitle">Phone number only</p>
+        <div class="tag-image-wrapper">
+          <div class="traditional-tag-visual">
+            <div class="metal-tag">
+              <span class="tag-text">PLEASE CALL<br>123-450-7890</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-verdict fail">✗</div>
+      </div>
+
+      <!-- VS Badge -->
+      <div class="vs-badge">VS</div>
+
+      <!-- TailCart Smart Tag Card -->
+      <div class="comparison-card smart-card">
+        <h3 class="card-title">TailCart Smart Tag</h3>
+        <ul class="smart-features-list">
+          <li><span class="check-icon">✓</span> Instant QR Scan</li>
+          <li><span class="check-icon">✓</span> Pet Profile Access</li>
+          <li><span class="check-icon">✓</span> Location Sharing</li>
+          <li><span class="check-icon">✓</span> Owner Notification</li>
+          <li><span class="check-icon">✓</span> Faster Reunion</li>
+        </ul>
+        <div class="card-verdict success">✓</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How TailCart Protects Section ── -->
+<section class="protection-how-it-works">
+  <div class="how-container">
+    <h2 class="how-title">How TailCart Protection Works</h2>
+    <div class="how-steps">
+
+      <div class="how-step">
+        <div class="step-circle">
+          <i class="fas fa-id-card"></i>
+          <span class="step-num">1</span>
+        </div>
+        <h4 class="step-name">Register Your Pet</h4>
+        <p class="step-desc">Create a profile with important details</p>
+      </div>
+
+      <div class="step-arrow">→</div>
+
+      <div class="how-step">
+        <div class="step-circle">
+          <i class="fas fa-tag"></i>
+          <span class="step-num">2</span>
+        </div>
+        <h4 class="step-name">Attach Tail Tag</h4>
+        <p class="step-desc">Secure the smart QR tag to your pet</p>
+      </div>
+
+      <div class="step-arrow">→</div>
+
+      <div class="how-step">
+        <div class="step-circle">
+          <i class="fas fa-magnifying-glass"></i>
+          <span class="step-num">3</span>
+        </div>
+        <h4 class="step-name">Pet Gets Lost</h4>
+        <p class="step-desc">Someone finds your pet and scans the tag</p>
+      </div>
+
+      <div class="step-arrow">→</div>
+
+      <div class="how-step">
+        <div class="step-circle">
+          <i class="fas fa-location-dot"></i>
+          <span class="step-num">4</span>
+        </div>
+        <h4 class="step-name">Location Shared</h4>
+        <p class="step-desc">You receive the exact location instantly</p>
+      </div>
+
+      <div class="step-arrow">→</div>
+
+      <div class="how-step">
+        <div class="step-circle">
+          <i class="fas fa-bell"></i>
+          <span class="step-num">5</span>
+        </div>
+        <h4 class="step-name">Connect Securely</h4>
+        <p class="step-desc">Chat with the finder via our secure system</p>
+      </div>
+
+      <div class="step-arrow">→</div>
+
+      <div class="how-step">
+        <div class="step-circle">
+          <i class="fas fa-heart"></i>
+          <span class="step-num">6</span>
+        </div>
+        <h4 class="step-name">Happy Reunion</h4>
+        <p class="step-desc">Bring your furry friend home safely</p>
+      </div>
+
     </div>
   </div>
 </section>
 
 <!-- Special Offers Section -->
 <section class="offer-banner-section-modern">
-  <div class="section-container">
-    <div class="offer-header">
-      <h2 class="offer-title">Special Offers</h2>
-      <a routerLink="/shop" class="shop-all-link">Shop all &rsaquo;</a>
+  <div class="promo-banners-grid">
+
+    <!-- Banner 1: 50% OFF -->
+    <div class="promo-banner-card banner-discount">
+      <div class="promo-text-col">
+        <h2 class="promo-heading">
+          <span class="promo-big">50% OFF</span>
+          <span class="promo-sub-h">On Your First Order</span>
+        </h2>
+        <p class="promo-desc">Premium pet essentials at half the price.<br>Because they deserve the best!</p>
+        <button class="promo-shop-btn" (click)="navigateToShop()">Shop Now <span class="btn-arrow">→</span></button>
+      </div>
+      <div class="promo-img-col">
+        <div class="promo-circle-badge">50%<br><span>OFF</span></div>
+        <img src="assets/Home/buy2_add.png" alt="Happy pet" class="promo-pet-img">
+      </div>
     </div>
 
-    <div class="banner-carousel-container">
-      <div class="carousel-slides" [style.transform]="'translateX(' + (activeBannerIndex * -100) + '%)'">
-        <!-- Slide 1 -->
-        <div class="carousel-slide">
-          <img src="assets/Home/buy2_add.png" alt="Special Offer" class="carousel-img">
-        </div>
-        <!-- Slide 2 -->
-        <div class="carousel-slide">
-          <img src="assets/Home/discount_add.png" alt="Free Delivery" class="carousel-img">
-        </div>
-        <div class="carousel-slide">
-          <img src="assets/Home/free_delivery_add.png" alt="Free Delivery" class="carousel-img">
+    <!-- Banner 2: Free Delivery -->
+    <div class="promo-banner-card banner-delivery">
+      <div class="promo-text-col">
+        <h2 class="promo-heading">
+          <span class="promo-big">FREE DELIVERY</span>
+          <span class="promo-sub-h">On First 3 Orders</span>
+        </h2>
+        <p class="promo-desc">No minimum order value.<br>We deliver happiness to your doorstep!</p>
+        <button class="promo-shop-btn" (click)="navigateToShop()">Shop Now <span class="btn-arrow">→</span></button>
+      </div>
+      <div class="promo-img-col delivery-img-col">
+        <div class="delivery-visual">
+          <img src="assets/Home/free_delivery_add.png" alt="Happy pet" class="promo-pet-img">
         </div>
       </div>
+    </div>
 
-      <!-- Indicators -->
-      <div class="carousel-dots-modern">
-        <span *ngFor="let dot of [0,1,2]; let i = index" class="dot-modern" [class.active]="activeBannerIndex === i"
-          (click)="setBanner(i)"></span>
+  </div>
+</section>
+
+<!-- Service Highlights Bar -->
+<section class="service-highlights-section">
+  <div class="service-highlights-bar">
+    <div class="highlight-item">
+      <div class="highlight-icon"><i class="fas fa-truck"></i></div>
+      <div class="highlight-text">
+        <strong>Free Delivery</strong>
+        <span>On first 3 orders</span>
+      </div>
+    </div>
+    <div class="hl-divider"></div>
+    <div class="highlight-item">
+      <div class="highlight-icon"><i class="fas fa-shield-alt"></i></div>
+      <div class="highlight-text">
+        <strong>Secure Payment</strong>
+        <span>100% protected</span>
+      </div>
+    </div>
+    <div class="hl-divider"></div>
+    <div class="highlight-item">
+      <div class="highlight-icon"><i class="fas fa-paw"></i></div>
+      <div class="highlight-text">
+        <strong>Best Quality</strong>
+        <span>For your pets</span>
+      </div>
+    </div>
+    <div class="hl-divider"></div>
+    <div class="highlight-item">
+      <div class="highlight-icon"><i class="fas fa-headset"></i></div>
+      <div class="highlight-text">
+        <strong>24/7 Support</strong>
+        <span>We're here to help</span>
       </div>
     </div>
   </div>
@@ -62,7 +278,6 @@
       <h2 class="category-title">Explore Categories</h2>
       <a routerLink="/shop" class="browse-all-link">Browse all &rsaquo;</a>
     </div>
-
 
     <!-- Grid Layout (6 in a row) -->
     <div class="category-grid-six">
@@ -79,41 +294,8 @@
       </div>
     </div>
 
-    <!-- Service Highlights Bar (4 in a row) -->
-    <div class="service-highlights-bar">
-      <div class="highlight-item">
-        <div class="highlight-icon"><i class="fas fa-truck"></i></div>
-        <div class="highlight-text">
-          <strong>Free Delivery</strong>
-          <span>On first 5 orders</span>
-        </div>
-      </div>
-      <div class="highlight-item">
-        <div class="highlight-icon"><i class="fas fa-shield-alt"></i></div>
-        <div class="highlight-text">
-          <strong>Secure Payment</strong>
-          <span>100% protected</span>
-        </div>
-      </div>
-      <div class="highlight-item">
-        <div class="highlight-icon"><i class="fas fa-paw"></i></div>
-        <div class="highlight-text">
-          <strong>Best Quality</strong>
-          <span>For your pets</span>
-        </div>
-      </div>
-      <div class="highlight-item">
-        <div class="highlight-icon"><i class="fas fa-headset"></i></div>
-        <div class="highlight-text">
-          <strong>24/7 Support</strong>
-          <span>We're here to help</span>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
-
-
 
 <!-- New Arrivals Section -->
 <section class="recommended-section">
@@ -133,11 +315,12 @@
         <div class="card-info-luxury">
           <h3 class="product-name-luxury">{{product.name}}</h3>
           <div class="rating-wrapper">
-            <span class="star-icon">⭐</span>
+            <i class="fas fa-star star-icon"></i>
             <span class="rating-value">{{product.rating}}</span>
             <span class="review-count">({{product.reviews}})</span>
           </div>
           <button class="add-to-cart-btn" (click)="$event.stopPropagation(); addToCart(product)">
+            <i class="fas fa-cart-shopping"></i>
             Add to Cart
           </button>
         </div>
