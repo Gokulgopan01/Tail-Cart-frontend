@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf, RouterModule, UpperCasePipe, CommonModule],
+  imports: [NgFor, NgIf, RouterModule, CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 'keychain',
       name: 'Tail Tag',
       desc: 'Premium aerospace-grade smart tags with instant scan recovery technology.',
-      img: 'assets/images/hero_qr_keychain.png',
+      img: 'assets/Home/tailtag.png',
       color: '#003c30',
       route: '/shop',
       cta: 'Explore Tags'
@@ -46,8 +46,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 'vault',
       name: 'Tail Vault',
       desc: 'Securely manage all your pet\'s health records and paperwork in one place.',
-      img: 'assets/images/hero_document_locker.png',
-      color: '#fbc02d',
+      img: 'assets/Home/tailvault.png',
+      color: '#6b4f1d',
       route: '/documents',
       cta: 'Open Vault'
     },
@@ -55,8 +55,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 'reminders',
       name: 'Smart Scheduler',
       desc: 'Never miss a critical care date with intelligent alerts.',
-      img: 'assets/images/hero_alert_system.png',
-      color: '#8e24aa',
+      img: 'assets/Home/SmartScheduler.png',
+      color: '#1f2a44',
       route: '/document',
       cta: 'Set Reminders'
     },
@@ -64,8 +64,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 'doctor',
       name: 'Tail Care+',
       desc: '24/7 AI-powered health insights for your pets.',
-      img: 'assets/images/hero_ai_doctor.png',
-      color: '#43a047',
+      img: 'assets/Home/Doctor.png',
+      color: '#4a1f36',
       route: '/doctor-ai',
       cta: 'Ask AI Doctor'
     }
@@ -165,7 +165,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('featureVideo', { static: false }) featureVideo!: ElementRef<HTMLVideoElement>;
 
-  activeEcosystemIndex: number = 0;
+  activeEcosystemIndex = 0;
+
+  contentAnimating = false;
+  imageAnimating = false;
 
   constructor(private router: Router) { }
 
@@ -228,8 +231,24 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // ── Ecosystem Carousel Logic ────────────────────────────────
-  selectEcosystemTab(index: number): void {
-    this.activeEcosystemIndex = index;
+  selectEcosystemTab(index: number) {
+
+    if (index === this.activeEcosystemIndex) return;
+
+    /* OUT ANIMATION */
+    this.contentAnimating = true;
+    this.imageAnimating = true;
+
+    setTimeout(() => {
+
+      /* CHANGE SLIDE */
+      this.activeEcosystemIndex = index;
+
+      /* RESET */
+      this.contentAnimating = false;
+      this.imageAnimating = false;
+
+    }, 650);
   }
 
   getSlideClass(index: number): string {
