@@ -1,5 +1,5 @@
 <!-- DESKTOP NAVBAR (Visible only on Desktop) -->
-<div class="desktop-nav" *ngIf="!hideTopNav" [class.scrolled]="isScrolled">
+<div class="desktop-nav" *ngIf="!hideTopNav" [class.scrolled]="isScrolled" [class.nav-hidden]="isScrollingDown">
   <div class="desktop-nav-container">
     <!-- Left: Logo -->
     <div class="nav-logo-section" (click)="navigateToHome()">
@@ -41,7 +41,7 @@
     <div class="nav-utilities-section">
       <!-- Free Delivery -->
       <div class="utility-item delivery-item">
-        <i class="fas fa-mobile-alt utility-icon"></i>
+        <i class="fas fa-truck-fast"></i>
         <div class="utility-text">
           <span class="text-primary">FREE DELIVERY</span>
           <span class="text-secondary">On first 5 orders</span>
@@ -80,7 +80,7 @@
       <div class="nav-dropdown-wrapper">
         <div class="utility-item cart-item" routerLink="/cart">
           <div class="cart-icon-wrapper">
-            <i class="fas fa-shopping-cart utility-icon"></i>
+            <i class="fas fa-cart-shopping utility-icon"></i>
             <span class="cart-badge">{{cartItems}}</span>
           </div>
           <div class="utility-text">
