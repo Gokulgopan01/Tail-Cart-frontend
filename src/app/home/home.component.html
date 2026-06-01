@@ -2,16 +2,16 @@
 <section class="hero-wrapper">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <h1 class="hero-title_hero fade-up">
+    <h1 class="hero-title_hero fade-in">
       Never Lose<br>
       <span class="highlight-green">Your Pet</span> Again.
     </h1>
-    <p class="hero-desc fade-up">
+    <p class="hero-desc fade-up" style="animation-delay: 0.15s;">
       Smart QR Pet Tags with Instant Owner Alerts,<br class="desktop-only">
       Live Location Sharing, Medical Records &amp;<br class="desktop-only">
       Emergency Recovery Tools.
     </p>
-    <div class="hero-actions fade-up">
+    <div class="hero-actions fade-up" style="animation-delay: 0.3s;">
       <button class="btn-primary-green" (click)="navigateToShop()">
         <span class="btn-icon-box">
           <i class="fas fa-paw"></i>
@@ -29,7 +29,7 @@
 <section class="stats-bar-section">
   <div class="stats-bar-container">
 
-    <div class="stat-card">
+    <div class="stat-card pop-in hover-lift" style="animation-delay: 0.1s;">
       <div class="stat-icon-box">
         <i class="fas fa-paw"></i>
       </div>
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="stat-card">
+    <div class="stat-card pop-in hover-lift" style="animation-delay: 0.2s;">
       <div class="stat-icon-box">
         <i class="fas fa-location-dot"></i>
       </div>
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <div class="stat-card">
+    <div class="stat-card pop-in hover-lift" style="animation-delay: 0.3s;">
       <div class="stat-icon-box">
         <i class="fas fa-shield-heart"></i>
       </div>
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <div class="stat-card">
+    <div class="stat-card pop-in hover-lift" style="animation-delay: 0.4s;">
       <div class="stat-icon-box">
         <i class="fas fa-battery-full"></i>
       </div>
@@ -76,10 +76,10 @@
   <div class="difference-container">
     <!-- Left: Problem Statement -->
     <div class="difference-left">
-      <h2 class="difference-heading">
+      <h2 class="difference-heading fade-in">
         Every year <span class="highlight-green">thousands</span><br>of pets go missing.
       </h2>
-      <p class="difference-desc">
+      <p class="difference-desc fade-up" style="animation-delay: 0.15s;">
         Most collars only display a phone number. TailCart instantly connects finders with pet owners through smart QR
         technology and real-time location sharing.
       </p>
@@ -88,7 +88,7 @@
     <!-- Right: Comparison Cards -->
     <div class="difference-right">
       <!-- Traditional Tag Card -->
-      <div class="comparison-card traditional-card">
+      <div class="comparison-card traditional-card pop-in hover-lift">
         <h3 class="card-title">Traditional Tags</h3>
         <p class="card-subtitle">Phone number only</p>
         <div class="tag-image-wrapper">
@@ -105,7 +105,7 @@
       <div class="vs-badge">VS</div>
 
       <!-- TailCart Smart Tag Card -->
-      <div class="comparison-card smart-card">
+      <div class="comparison-card smart-card pop-in hover-lift" style="animation-delay: 0.15s;">
         <h3 class="card-title">TailCart Smart Tag</h3>
         <ul class="smart-features-list">
           <li><span class="check-icon">✓</span> Instant QR Scan</li>
@@ -126,7 +126,7 @@
     <h2 class="how-title">How TailCart Protection Works</h2>
     <div class="how-steps">
 
-      <div class="how-step">
+      <div class="how-step pop-in hover-lift" style="animation-delay: 0.1s;">
         <div class="step-circle">
           <i class="fas fa-id-card"></i>
           <span class="step-num">1</span>
@@ -137,7 +137,7 @@
 
       <div class="step-arrow">→</div>
 
-      <div class="how-step">
+      <div class="how-step pop-in hover-lift" style="animation-delay: 0.2s;">
         <div class="step-circle">
           <i class="fas fa-tag"></i>
           <span class="step-num">2</span>
@@ -148,7 +148,7 @@
 
       <div class="step-arrow">→</div>
 
-      <div class="how-step">
+      <div class="how-step pop-in hover-lift" style="animation-delay: 0.3s;">
         <div class="step-circle">
           <i class="fas fa-magnifying-glass"></i>
           <span class="step-num">3</span>
@@ -159,7 +159,7 @@
 
       <div class="step-arrow">→</div>
 
-      <div class="how-step">
+      <div class="how-step pop-in hover-lift" style="animation-delay: 0.4s;">
         <div class="step-circle">
           <i class="fas fa-location-dot"></i>
           <span class="step-num">4</span>
@@ -170,7 +170,7 @@
 
       <div class="step-arrow">→</div>
 
-      <div class="how-step">
+      <div class="how-step pop-in hover-lift" style="animation-delay: 0.3s;">
         <div class="step-circle">
           <i class="fas fa-bell"></i>
           <span class="step-num">5</span>
@@ -181,7 +181,7 @@
 
       <div class="step-arrow">→</div>
 
-      <div class="how-step">
+      <div class="how-step pop-in hover-lift" style="animation-delay: 0.3s;">
         <div class="step-circle">
           <i class="fas fa-heart"></i>
           <span class="step-num">6</span>
@@ -200,7 +200,7 @@
     <div class="promo-banners-grid">
 
       <!-- Banner 1: 50% OFF -->
-      <div class="promo-banner-card banner-discount">
+      <div class="promo-banner-card banner-discount pop-in hover-lift">
         <div class="promo-text-col">
           <h2 class="promo-heading">
             <span class="promo-big">50% OFF</span>
@@ -469,7 +469,7 @@
   </div>
 
   <!-- LEFT CONTENT -->
-  <div class="hero-content" [class.content-animate]="contentAnimating">
+  <div class="hero-content" [ngClass]="contentAnimating ? 'animate-out-text' : 'animate-in-text'">
 
     <!-- Slide Counter -->
     <div class="hero-counter">
@@ -511,7 +511,7 @@
   </div>
 
   <!-- IMAGE -->
-  <div class="hero-image-section" [class.image-animate]="imageAnimating">
+  <div class="hero-image-section" [ngClass]="imageAnimating ? 'animate-out-image' : 'animate-in-image'">
     <img [src]="services[activeEcosystemIndex].img" [alt]="services[activeEcosystemIndex].name" class="hero-image" />
   </div>
 

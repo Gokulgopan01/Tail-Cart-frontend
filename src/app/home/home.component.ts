@@ -170,7 +170,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   contentAnimating = false;
   imageAnimating = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private el: ElementRef) { }
 
   ngOnInit(): void {
     this.startBannerTimer();
@@ -192,6 +192,21 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initializeVideo();
+    this.setupIntersectionObserver();
+  }
+
+  private setupIntersectionObserver(): void {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target); // Optional: animate only once
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    const animatedElements = this.el.nativeElement.querySelectorAll('.fade-up, .fade-in, .pop-in');
+    animatedElements.forEach((el: Element) => observer.observe(el));
   }
 
   ngOnDestroy(): void {
