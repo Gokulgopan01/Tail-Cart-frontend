@@ -48,7 +48,7 @@ interface ApiResponse {
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatSnackBarModule, RouterLink],
+  imports: [CommonModule, FormsModule, MatSnackBarModule],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })

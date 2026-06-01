@@ -1,387 +1,361 @@
-<div class="shop-wrapper">
+<div class="shop-page">
 
-  <!-- New Premium Hero Section -->
-  <div class="shop-hero-section">
-    <div class="hero-bg-overlay"></div>
-    <img src="/assets/products/catdog_friends-HomeCover.png" alt="Pet Shop Hero" class="hero-image">
+  <!-- HERO SECTION -->
+  <section class="hero-banner">
 
-    <div class="hero-content-container">
-      <div class="hero-nav-row">
-        <button class="hero-back-btn" routerLink="/home">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="hero-cart-btn" routerLink="/cart">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
-        </button>
-      </div>
+    <div class="hero-content">
 
-      <div class="hero-text-area">
-        <h1 class="hero-title">Shop</h1>
-        <p class="hero-subtitle">Everything for your pets,<br>all in one place 🐾</p>
-      </div>
+      <span class="hero-label">
+        SHOP
+      </span>
 
-      <!-- Floating Search Bar -->
-      <div class="search-floating-bar">
-        <div class="search-input-wrapper">
-          <i class="fas fa-search search-icon"></i>
-          <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery" (input)="applyFilters()">
+      <h1>
+        Everything for your pets,
+        <span>all in one place.</span>
+      </h1>
+
+      <div class="hero-features">
+
+        <div class="feature">
+          <i class="fas fa-shield-alt"></i>
+          <div>
+            <strong>Premium Quality</strong>
+            <p>Products</p>
+          </div>
         </div>
-        <button class="search-filter-btn" (click)="toggleFilters()">
-          <i class="fas fa-sliders-h"></i>
-        </button>
+
+        <div class="feature">
+          <i class="fas fa-users"></i>
+          <div>
+            <strong>Trusted by</strong>
+            <p>50,000+ Pet Parents</p>
+          </div>
+        </div>
+
+        <div class="feature">
+          <i class="fas fa-truck"></i>
+          <div>
+            <strong>Fast & Reliable</strong>
+            <p>Delivery</p>
+          </div>
+        </div>
+
       </div>
-    </div>
-  </div>
 
-  <div class="container main-content modern-shop">
-
-    <!-- Quick Filters Chips -->
-    <div class="quick-filters-scroll">
-      <button *ngFor="let filter of quickFilters" class="filter-chip" (click)="searchQuery = filter; applyFilters()">
-        {{ filter }}
+      <button class="shop-btn">
+        Shop Now
       </button>
+
     </div>
 
-    <!-- Shop by Category Section -->
-    <div class="categories-section">
-      <div class="section-header-row">
-        <h2 class="section-title">Shop by Category</h2>
-      </div>
-
-      <div class="categories-circular-grid">
-        <div *ngFor="let cat of categories" class="cat-circle-card" (click)="setMaterial(cat.name)">
-          <div class="cat-circle-image">
-            <img [src]="cat.icon" [alt]="cat.name">
-          </div>
-          <h3 class="cat-circle-name">{{ cat.name }}</h3>
-          <span class="cat-circle-count">{{ cat.count }}</span>
-        </div>
-      </div>
+    <div class="hero-image">
+      <img src="assets/products/catdog_friends-HomeCover.png" alt="Pet Banner">
     </div>
 
-    <!-- Promotional Ad Poster -->
-    <div class="promo-poster-banner">
-      <div class="promo-image-area">
-        <img src="/assets/products/free_delivery.png" alt="Promo Dog" class="promo-dog">
-        <div class="discount-badge-circle">
-          <span class="disc-val">25%</span>
-          <span class="disc-off">OFF</span>
-        </div>
-      </div>
-    </div>
+  </section>
 
-    <!-- Products Section Header -->
-    <div class="products-section-header">
-      <div class="products-title-group">
-        <h2 class="our-products-title">Our Products</h2>
-        <p class="showing-count-alt" *ngIf="filteredProducts.length > 0">
-          Found {{ filteredProducts.length }} premium items
-        </p>
-      </div>
+  <!-- BREADCRUMB -->
 
-      <div class="sort-action-wrap">
-        <div class="sort-select-wrapper simple-sort">
-          <select [(ngModel)]="sortOption" (change)="applyFilters()" class="sort-select-overlay">
-            <option value="newest">Sort by</option>
-            <option value="priceLow">Price: Low to High</option>
-            <option value="priceHigh">Price: High to Low</option>
-            <option value="name">Name: A-Z</option>
-          </select>
-          <div class="sort-pill-visual">
-            <i class="fas fa-bars sort-bars-icon"></i>
-            <span>Sort by</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="breadcrumb">
+
+    <span>Home</span>
+
+    <i class="fas fa-chevron-right"></i>
+
+    <span class="active">Shop</span>
 
   </div>
 
-  <!-- Product Display Area -->
-  <div class="showing-count" *ngIf="false"> <!-- Hidden in favor of new header -->
-    Showing {{ filteredProducts.length }} products
-  </div>
+  <!-- MAIN CONTENT -->
 
-  <div [class.products-grid]="isGridView" [class.products-list]="!isGridView">
-    <div class="product-card" *ngFor="let product of filteredProducts" (click)="openQuickView(product, $event)">
-      <div class="card-image-area">
-        <img [src]="product.thumbnail_image" [alt]="product.product_name" class="product-thumb">
-        <div class="card-badge bestseller" *ngIf="product.deals">BESTSELLER</div>
-      </div>
+  <div class="shop-layout">
 
-      <div class="card-content">
-        <h3 class="product-title">{{ product.product_name }}</h3>
-        <p class="product-material">{{ product.product_material }}</p>
+    <!-- SIDEBAR -->
 
-        <!-- Price Row -->
-        <div class="price-row">
-          <span class="selling-price">₹{{ product.selling_price }}</span>
-          <span class="original-price" *ngIf="product.discount_percentage! > 0">
-            ₹{{ product.original_price }}
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
+    <aside class="sidebar">
 
-  <!-- Empty State -->
-  <div class="empty-state" *ngIf="filteredProducts.length === 0 && !isLoading">
-    <div #noProductsLottie class="empty-lottie"></div>
-    <h3>No products found</h3>
-    <button class="btn-primary" (click)="clearFilters()" *ngIf="searchQuery || selectedMaterial !== 'ALL'">Clear
-      Filters</button>
-  </div>
+      <div class="sidebar-card">
 
-  <!-- Load More Section -->
-  <div class="load-more-container" *ngIf="nextPageUrl">
-    <button class="load-more-btn" (click)="loadMore()" [disabled]="isLoading">
-      <span *ngIf="!isLoading">Explore More</span>
-      <span *ngIf="isLoading" class="spinner"><i class="fas fa-circle-notch fa-spin"></i> Loading...</span>
-    </button>
-  </div>
-</div>
-
-<!-- FILTER MODAL -->
-<div class="filter-modal-overlay" *ngIf="showFilters" (click)="toggleFilters()">
-  <div class="filter-modal-card" (click)="$event.stopPropagation()">
-    <div class="filter-modal-header">
-      <button class="back-filter-btn" (click)="toggleFilters()">
-        <i class="fas fa-chevron-left"></i>
-      </button>
-      <h3 class="filter-title">Filter</h3>
-      <button class="reset-filter-btn" (click)="clearFilters()">Reset</button>
-    </div>
-
-    <div class="filter-modal-body">
-      <!-- Sort Section (Mobile Optimized) -->
-      <div class="filter-section">
-        <span class="filter-label">Sort By</span>
-        <div class="sort-pills">
-          <button class="sort-pill" [class.active]="sortOption === 'newest'"
-            (click)="sortOption = 'newest'; applyFilters()">Newest</button>
-          <button class="sort-pill" [class.active]="sortOption === 'priceLow'"
-            (click)="sortOption = 'priceLow'; applyFilters()">Price: Low-High</button>
-          <button class="sort-pill" [class.active]="sortOption === 'priceHigh'"
-            (click)="sortOption = 'priceHigh'; applyFilters()">Price: High-Low</button>
-          <button class="sort-pill" [class.active]="sortOption === 'name'"
-            (click)="sortOption = 'name'; applyFilters()">Name A-Z</button>
-        </div>
-      </div>
-
-      <!-- Material Section -->
-      <div class="filter-section">
-        <span class="filter-label">Material</span>
-        <div class="material-chips-grid">
-          <button *ngFor="let mat of materialOptions" class="material-chip" [class.active]="selectedMaterial === mat"
-            (click)="setMaterial(mat)">
-            {{ mat }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Color Section -->
-      <div class="filter-section" *ngIf="availableColors.length > 0">
-        <span class="filter-label">Colors</span>
-        <div class="color-swatches-grid">
-          <button class="color-swatch-pill all" [class.active]="selectedColor === 'ALL'"
-            (click)="setColor('ALL')">ALL</button>
-          <div *ngFor="let col of availableColors" class="color-swatch-item" [style.backgroundColor]="col" [title]="col"
-            [class.active]="selectedColor === col" (click)="setColor(col)">
-          </div>
-        </div>
-      </div>
-
-      <!-- Price Section -->
-      <div class="filter-section">
-        <span class="filter-label">Max Price: ₹{{ maxPrice }}</span>
-        <div class="price-range-wrapper">
-          <input type="range" min="0" max="15000" step="500" [(ngModel)]="maxPrice" (input)="applyFilters()"
-            class="modern-range">
-        </div>
-      </div>
-    </div>
-
-    <div class="filter-modal-footer">
-      <button class="btn-clear" (click)="clearFilters()">Reset All</button>
-      <button class="btn-apply" (click)="toggleFilters()">Show Results</button>
-    </div>
-  </div>
-</div>
-
-<!-- QUICK VIEW MODAL -->
-<div class="qv-modal-overlay" *ngIf="showQuickView" (click)="closeQuickView()">
-  <div class="qv-modal-card" (click)="$event.stopPropagation()">
-
-    <!-- Top Nav -->
-    <div class="qv-top-nav">
-      <button class="qv-back-btn" (click)="closeQuickView()">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-      <h3 class="qv-nav-title">Product Details</h3>
-      <button class="qv-share-btn">
-        <i class="fas fa-share-alt"></i>
-      </button>
-    </div>
-
-    <!-- Main Content Scroll Area -->
-    <div class="qv-main-scroll" #quickViewScrollContainer>
-
-      <!-- Image Gallery section -->
-      <div class="qv-gallery-section">
-        <div class="qv-main-image-wrapper">
-          <img [src]="primaryQvImage" [alt]="selectedProductForQuickView?.product_name" class="qv-main-image">
+        <div class="sidebar-header">
+          <h3>Filter Products</h3>
         </div>
 
-        <!-- Thumbnails -->
-        <div class="qv-thumbnails">
-          <div class="qv-thumbnail" [class.active]="primaryQvImage === selectedProductForQuickView?.thumbnail_image"
-            (click)="setQvMainImage(selectedProductForQuickView?.thumbnail_image)">
-            <img [src]="selectedProductForQuickView?.thumbnail_image" alt="Thumbnail 1">
-          </div>
-          <div class="qv-thumbnail" *ngIf="selectedProductForQuickView?.second_image_1"
-            [class.active]="primaryQvImage === selectedProductForQuickView?.second_image_1"
-            (click)="setQvMainImage(selectedProductForQuickView?.second_image_1)">
-            <img [src]="selectedProductForQuickView?.second_image_1" alt="Thumbnail 2">
-          </div>
-        </div>
-      </div>
+        <!-- CATEGORY -->
 
-      <!-- Header Info -->
-      <div class="qv-header-info">
-        <p class="qv-collection">THE HERITAGE ATELIER</p>
-        <div class="qv-title-row">
-          <h2 class="qv-product-title">{{ selectedProductForQuickView?.product_name }}</h2>
-          <button class="qv-wishlist-btn">
-            <i class="far fa-heart"></i>
-          </button>
-        </div>
+        <div class="filter-section">
 
-        <div class="qv-rating-row">
-          <div class="qv-rating-badge">
-            <i class="fas fa-star"></i>
-            <span>{{ selectedProductForQuickView?.reviews_stars || '4.7' }}</span>
-          </div>
-          <span class="qv-rating-count">({{ selectedProductForQuickView?.review_count || 0 }} reviews)</span>
-        </div>
-      </div>
+          <h4>Categories</h4>
 
-      <!-- Elevated Price Card -->
-      <div class="qv-price-card">
-        <div class="qv-price-row">
-          <span class="qv-current-price">{{ selectedProductForQuickView?.selling_price }}</span>
-          <span class="qv-old-price">{{ selectedProductForQuickView?.original_price }}</span>
-          <span class="qv-discount-pill" *ngIf="selectedProductForQuickView?.discount_percentage">{{
-            selectedProductForQuickView?.discount_percentage }}% OFF</span>
-        </div>
-        <div class="qv-price-divider"></div>
-        <p class="qv-premium-offer">LIMITED PREMIUM OFFER</p>
-      </div>
+          <label>
+            <input type="checkbox">
+            Dog
+          </label>
 
-      <!-- Features Grid -->
-      <div class="qv-features-grid">
-        <div class="qv-feature-card">
-          <div class="qv-feature-header">
-            <i class="fas fa-gem"></i>
-            <span>MATERIAL</span>
-          </div>
-          <p class="qv-feature-desc">
-            Premium optical-grade acrylic, hand-polished for crystal clarity and durability.
-          </p>
+          <label>
+            <input type="checkbox">
+            Cat
+          </label>
+
+          <label>
+            <input type="checkbox">
+            Food
+          </label>
+
+          <label>
+            <input type="checkbox">
+            Toys
+          </label>
+
+          <label>
+            <input type="checkbox">
+            Accessories
+          </label>
+
+          <label>
+            <input type="checkbox">
+            Treats
+          </label>
+
         </div>
 
-        <div class="qv-feature-card">
-          <div class="qv-feature-header">
-            <i class="fas fa-th-large"></i>
-            <span>SPECIFICATIONS</span>
-          </div>
-          <ul class="qv-spec-list">
-            <li>• Diameter: 30mm</li>
-            <li>• Weight: 4 grams</li>
-            <li>• Water resistant</li>
-          </ul>
-        </div>
-      </div>
+        <!-- MATERIAL -->
 
-      <!-- Color Selection -->
-      <div class="qv-shade-section" *ngIf="selectedProductForQuickView?.colours?.length">
-        <span class="qv-feature-label">SELECT SHADE</span>
-        <div class="qv-shade-selector">
-          <div *ngFor="let color of selectedProductForQuickView?.colours; let i = index" class="qv-shade-swatch"
-            [style.backgroundColor]="color.toLowerCase()" [class.active]="i === 0">
-          </div>
-        </div>
-      </div>
+        <div class="filter-section">
 
-      <!-- Selection & Quantity Grid -->
-      <div class="qv-selection-grid">
-        <div class="qv-selection-item">
-          <span class="qv-feature-label">SELECT PET</span>
-          <select [(ngModel)]="selectedPetId" class="qv-select" [class.error]="petSelectError">
-            <option value="">None</option>
-            <option *ngFor="let pet of userPets" [value]="pet.pet_id">{{ pet.pet_name }}</option>
-          </select>
+          <h4>Material</h4>
+
+          <label *ngFor="let material of materialOptions">
+
+            <input type="radio" name="material" [checked]="selectedMaterial === material"
+              (change)="setMaterial(material)">
+
+            {{ material }}
+
+          </label>
+
         </div>
 
-        <div class="qv-selection-item">
-          <span class="qv-feature-label">QUANTITY</span>
-          <div class="qv-qty-controls">
-            <button class="qty-btn" (click)="decrementQuantity()">-</button>
-            <span class="qty-val">{{ quantity }}</span>
-            <button class="qty-btn" (click)="incrementQuantity()">+</button>
-          </div>
-        </div>
-      </div>
+        <!-- COLOR -->
 
-      <!-- Tabbed Area -->
-      <div class="qv-tabs-container">
-        <div class="qv-tabs-header">
-          <button class="qv-tab-btn" [class.active]="activeQvTab === 'about'" (click)="setQvTab('about')">ABOUT</button>
-          <button class="qv-tab-btn" [class.active]="activeQvTab === 'reviews'"
-            (click)="setQvTab('reviews')">REVIEWS</button>
-        </div>
+        <div class="filter-section" *ngIf="availableColors.length">
 
-        <div class="qv-tab-content" *ngIf="activeQvTab === 'about'">
-          <h3 class="qv-content-title">The Art of Durability</h3>
-          <p class="qv-content-text">
-            {{ selectedProductForQuickView?.product_long_description || 'Crafted from aerospace-grade translucent fiber,
-            our Round Tag redefined pet accessories. Each piece undergoes a 12-step finish.' }}
-          </p>
-        </div>
+          <h4>Colors</h4>
 
-        <div class="qv-tab-content" *ngIf="activeQvTab === 'reviews'">
-          <h3 class="qv-content-title">Customer Reviews</h3>
-          <div class="reviews-list" *ngIf="selectedProductForQuickView?.reviews?.length; else noReviews">
-            <div class="review-item" *ngFor="let review of selectedProductForQuickView?.reviews">
-              <div class="review-header">
-                <span class="review-author">{{ review.username }}</span>
-                <div class="review-rating">
-                  <i class="fas fa-star qv-star-icon"></i>
-                  <span>{{ review.rating }}</span>
-                </div>
-              </div>
-              <p class="review-comment">{{ review.comment }}</p>
-              <span class="review-date">{{ review.created_at | date:'mediumDate' }}</span>
+          <div class="color-grid">
+
+            <div class="color-box" *ngFor="let color of availableColors" [style.background]="color"
+              (click)="setColor(color)">
             </div>
+
           </div>
-          <ng-template #noReviews>
-            <p class="qv-content-text" style="color: var(--text-light); text-align: center; padding: 20px 0;">No reviews
-              yet for this product.</p>
-          </ng-template>
+
         </div>
+
+        <!-- PRICE -->
+
+        <div class="filter-section">
+
+          <h4>Price Range</h4>
+
+          <input type="range" min="0" max="15000" [(ngModel)]="maxPrice" (input)="applyFilters()">
+
+          <div class="price-range">
+
+            <span>₹0</span>
+            <span>₹{{maxPrice}}</span>
+
+          </div>
+
+        </div>
+
+        <!-- SORT -->
+
+        <div class="filter-section">
+
+          <h4>Sort By</h4>
+
+          <select [(ngModel)]="sortOption" (change)="applyFilters()">
+
+            <option value="newest">
+              Newest
+            </option>
+
+            <option value="priceLow">
+              Price Low - High
+            </option>
+
+            <option value="priceHigh">
+              Price High - Low
+            </option>
+
+            <option value="name">
+              Name A-Z
+            </option>
+
+          </select>
+
+        </div>
+
+        <button class="clear-filter-btn" (click)="clearFilters()">
+
+          Clear All
+
+        </button>
+
       </div>
 
-      <!-- Empty space to clear the end of text -->
-      <div style="height: 15px;"></div>
-    </div> <!-- end qv-main-scroll -->
+    </aside>
 
-    <!-- Fixed Bottom Action Bar -->
-    <div class="qv-bottom-bar">
-      <button class="qv-btn-outline" (click)="addToCart(selectedProductForQuickView!)">ADD TO CART</button>
-      <button class="qv-btn-solid" (click)="buyNow()">
-        <i class="fas fa-shopping-cart"></i> BUY NOW
-      </button>
+    <!-- RIGHT CONTENT -->
+
+    <div class="content-area">
+
+      <!-- CATEGORIES -->
+
+      <section class="category-section">
+
+        <h2>
+          Shop by Category
+        </h2>
+
+        <div class="category-row">
+
+          <div class="category-card" *ngFor="let cat of categories">
+
+            <img [src]="cat.icon" [alt]="cat.name">
+
+            <h4>{{cat.name}}</h4>
+
+            <span>{{cat.count}}</span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- PRODUCT HEADER -->
+
+      <div class="products-header">
+
+        <div>
+
+          Showing
+          <strong>
+            {{filteredProducts.length}}
+          </strong>
+          products
+
+        </div>
+
+        <div class="header-right">
+
+          <select [(ngModel)]="sortOption" (change)="applyFilters()">
+
+            <option value="newest">
+              Sort by Popularity
+            </option>
+
+            <option value="priceLow">
+              Price Low - High
+            </option>
+
+            <option value="priceHigh">
+              Price High - Low
+            </option>
+
+            <option value="name">
+              Name A-Z
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+      <!-- PRODUCTS GRID -->
+
+      <div class="products-grid">
+
+        <div class="product-card" *ngFor="let product of filteredProducts">
+
+          <div class="product-image">
+
+            <img [src]="product.thumbnail_image" [alt]="product.product_name">
+
+            <span class="discount-badge" *ngIf="product.discount_percentage">
+
+              -{{product.discount_percentage}}%
+
+            </span>
+
+          </div>
+
+          <div class="product-content">
+
+            <h3>
+              {{product.product_name}}
+            </h3>
+
+            <p class="material">
+              {{product.product_material}}
+            </p>
+
+            <div class="rating">
+
+              <i class="fas fa-star"></i>
+
+              {{product.reviews_stars}}
+
+            </div>
+
+            <div class="price-row">
+
+              <span class="selling-price">
+                ₹{{product.selling_price}}
+              </span>
+
+              <span class="original-price" *ngIf="product.discount_percentage">
+
+                ₹{{product.original_price}}
+
+              </span>
+
+            </div>
+
+            <button class="add-cart-btn" (click)="openQuickView(product,$event)">
+
+              Add To Cart
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- LOAD MORE -->
+
+      <div class="load-more-container" *ngIf="nextPageUrl">
+
+        <button class="load-more-btn" (click)="loadMore()" [disabled]="isLoading">
+
+          <span *ngIf="!isLoading">
+            View More Products
+          </span>
+
+          <span *ngIf="isLoading">
+            Loading...
+          </span>
+
+        </button>
+
+      </div>
+
     </div>
 
   </div>
+
 </div>
