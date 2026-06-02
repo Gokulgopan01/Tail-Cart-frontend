@@ -48,7 +48,7 @@ interface ApiResponse {
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, MatSnackBarModule, RouterLink],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
@@ -57,9 +57,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   filteredProducts: Product[] = [];
   nextPageUrl: string | null = null;
   isLoading = false;
-  @ViewChild('quickViewScrollContainer') quickViewScrollContainer!: ElementRef;
-
-
 
   // Empty State Lottie
   private emptyStateAnimation: AnimationItem | null = null;
@@ -89,12 +86,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedColor = 'ALL';
   availableColors: string[] = [];
   cartCount = 0;
-
-  // Quick View State
-  showQuickView = false;
-  selectedProductForQuickView: Product | null = null;
-  activeQvTab: 'about' | 'reviews' | 'closet' = 'about';
-  primaryQvImage: string | null = null;
 
   // Selection State
   userPets: Pet[] = [];
@@ -256,17 +247,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.applyFilters();
   }
 
-  toggleFilters() {
-    this.showFilters = !this.showFilters;
-    if (this.showFilters) {
-      document.body.style.overflow = 'hidden';
-      document.body.classList.add('qv-modal-open');
-    } else {
-      document.body.style.overflow = '';
-      document.body.classList.remove('qv-modal-open');
-    }
-  }
-
   setColor(color: string) {
     this.selectedColor = color;
     this.applyFilters();
@@ -281,68 +261,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.applyFilters();
   }
 
-  toggleViewMode(isGrid: boolean) {
-    this.isGridView = isGrid;
-  }
-
-  // Quick View Methods
-  openQuickView(product: Product, event: Event) {
-    event.stopPropagation();
-
-    // Scroll window to top first to fix the modal positioning issue
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    this.selectedProductForQuickView = product;
-    this.primaryQvImage = product.thumbnail_image; // default main image
-    this.activeQvTab = 'about'; // reset tab
-    this.quantity = 1; // reset quantity
-    this.selectedPetId = ''; // default "None"
-    this.petSelectError = false;
-
-    this.showQuickView = true;
-
-    // Delay locking scroll to allow smooth scroll to top to finish
-    setTimeout(() => {
-      document.body.style.overflow = 'hidden'; // Lock scroll
-      document.body.classList.add('qv-modal-open'); // Hook for global CSS to hide navbar
-    }, 500);
-
-    // Reset scroll position to top of modal
-    setTimeout(() => {
-      if (this.quickViewScrollContainer) {
-        this.quickViewScrollContainer.nativeElement.scrollTop = 0;
-      }
-    }, 100);
-  }
-
-  closeQuickView() {
-    this.showQuickView = false;
-    this.selectedProductForQuickView = null;
-    this.primaryQvImage = null;
-    document.body.style.overflow = ''; // Unlock scroll
-    document.body.classList.remove('qv-modal-open');
-  }
-
-  setQvMainImage(imgUrl: string | undefined) {
-    if (imgUrl) {
-      this.primaryQvImage = imgUrl;
-    }
-  }
-
-  setQvTab(tab: 'about' | 'reviews' | 'closet') {
-    this.activeQvTab = tab;
-  }
-
-  incrementQuantity() {
-    this.quantity++;
-  }
-
-  decrementQuantity() {
-    if (this.quantity > 1) {
-      this.quantity--;
-    }
-  }
-
   ngAfterViewInit() {
     // Banner lottie removed, empty state initializes when needed via ViewChild setter
   }
@@ -355,41 +273,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
       panelClass: [`snackbar-${type}`]
-    });
-  }
-
-  /** Add product to cart via POST /api/user/cart/ */
-  addToCart(product: Product): void {
-    const userId = localStorage.getItem('user_id');
-    if (!userId) {
-      this.showSnackbar('Please log in first', 'error');
-      return;
-    }
-
-    if (!this.selectedPetId) {
-      this.petSelectError = true;
-      this.showSnackbar('Please select a pet for this product', 'error');
-      return;
-    }
-
-    this.petSelectError = false;
-
-    const formData = new FormData();
-    formData.append('owner', userId);
-    formData.append('pet', this.selectedPetId);
-    formData.append('product', product.id.toString());
-    formData.append('quantity', this.quantity.toString());
-
-    const token = localStorage.getItem('access_token');
-    const headers: any = token ? { Authorization: `Bearer ${token}` } : {};
-
-    this.http.post('http://127.0.0.1:8000/api/user/cart/', formData, { headers }).subscribe({
-      next: (res: any) => {
-        this.showSnackbar(res.message || 'Item added to cart successfully!', 'success');
-      },
-      error: (err) => {
-        this.showSnackbar('Failed to add item to cart', 'error');
-      }
     });
   }
 
@@ -411,10 +294,5 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
         console.warn('Could not fetch cart count');
       }
     });
-  }
-
-  buyNow(): void {
-    this.closeQuickView();
-    this.router.navigate(['/cart']);
   }
 }

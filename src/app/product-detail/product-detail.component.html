@@ -1,0 +1,113 @@
+<div class="product-detail-page" *ngIf="!isLoading && product">
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <span class="back-btn" routerLink="/shop">
+      <i class="fas fa-arrow-left"></i> Back to Shop
+    </span>
+    <span class="separator">|</span>
+    <span routerLink="/home">Home</span>
+    <i class="fas fa-chevron-right"></i>
+    <span routerLink="/shop">Shop</span>
+    <i class="fas fa-chevron-right"></i>
+    <span class="active">{{product.product_name}}</span>
+  </div>
+
+  <div class="detail-container">
+    <!-- LEFT: Image Gallery -->
+    <div class="image-gallery">
+      <div class="main-image-container">
+        <img [src]="mainImage" [alt]="product.product_name" class="main-image">
+        <span class="discount-badge" *ngIf="calculateDiscount(product.original_price, product.selling_price) > 0">
+          -{{calculateDiscount(product.original_price, product.selling_price)}}%
+        </span>
+      </div>
+      
+      <div class="thumbnail-slider">
+        <div class="thumb-box" [class.active]="mainImage === product.thumbnail_image" (click)="setMainImage(product.thumbnail_image)">
+          <img [src]="product.thumbnail_image" alt="Thumbnail 1">
+        </div>
+        <div class="thumb-box" *ngIf="product.second_image_1" [class.active]="mainImage === product.second_image_1" (click)="setMainImage(product.second_image_1)">
+          <img [src]="product.second_image_1" alt="Thumbnail 2">
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Product Info & Actions -->
+    <div class="product-info">
+      <h1 class="product-title">{{product.product_name}}</h1>
+      
+      <div class="rating-row">
+        <div class="rating-badge">
+          {{product.reviews_stars}} <i class="fas fa-star"></i>
+        </div>
+        <span class="stock-status in-stock" *ngIf="product.in_stock">In Stock</span>
+        <span class="stock-status out-of-stock" *ngIf="!product.in_stock">Out of Stock</span>
+        <span class="deal-badge" *ngIf="product.deals">{{product.deals}}</span>
+      </div>
+
+      <div class="price-section">
+        <span class="selling-price">₹{{product.selling_price}}</span>
+        <span class="original-price" *ngIf="product.original_price !== product.selling_price">₹{{product.original_price}}</span>
+      </div>
+
+      <!-- Attributes -->
+      <div class="attributes-section">
+        <div class="attribute">
+          <strong>Material:</strong> <span>{{product.product_material}}</span>
+        </div>
+        <div class="attribute" *ngIf="product.colours && product.colours.length > 0">
+          <strong>Available Colors:</strong>
+          <div class="color-options">
+            <span class="color-dot" *ngFor="let color of product.colours" [style.background]="color" [title]="color"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pet Selection & Quantity -->
+      <div class="action-card">
+        <h3>Add to Cart</h3>
+        
+        <div class="form-group">
+          <label for="petSelect">Select Your Pet <span class="required">*</span></label>
+          <select id="petSelect" [(ngModel)]="selectedPetId" [class.error]="petSelectError">
+            <option value="" disabled selected>-- Select a Pet --</option>
+            <option *ngFor="let pet of userPets" [value]="pet.pet_id">{{pet.pet_name}}</option>
+          </select>
+          <small class="error-msg" *ngIf="petSelectError">Please select a pet to continue.</small>
+          <small class="hint-msg" *ngIf="userPets.length === 0">You don't have any pets listed. Please add a pet in your profile first.</small>
+        </div>
+
+        <div class="quantity-group">
+          <label>Quantity</label>
+          <div class="quantity-selector">
+            <button (click)="decrementQuantity()" [disabled]="quantity <= 1">-</button>
+            <input type="number" [(ngModel)]="quantity" min="1" readonly>
+            <button (click)="incrementQuantity()">+</button>
+          </div>
+        </div>
+
+        <button class="add-to-cart-btn" (click)="addToCart()" [disabled]="!product.in_stock">
+          <i class="fas fa-shopping-cart"></i> Add to Cart
+        </button>
+      </div>
+
+      <!-- Specifications & Description -->
+      <div class="details-section">
+        <h3>Product Details</h3>
+        <p class="description">{{product.product_long_description}}</p>
+        
+        <div class="specifications" *ngIf="product.product_other_specifications">
+          <h4>Other Specifications</h4>
+          <p>{{product.product_other_specifications}}</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-state" *ngIf="isLoading">
+  <div class="spinner"></div>
+  <p>Loading Product...</p>
+</div>

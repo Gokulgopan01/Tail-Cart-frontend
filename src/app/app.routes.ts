@@ -14,6 +14,7 @@ import { PetPublicComponent } from './pet-public/pet-public.component';
 import { PetProfileComponent } from './pet-profile/pet-profile.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { MyOrdersComponent } from './my-orders/my-orders.component';
+import { ProductDetailComponent } from './product-detail/product-detail.component';
 
 export const routes: Routes = [
 
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'pet-profile/:petId', component: PetProfileComponent },
   { path: 'shop', component: ProductsComponent },
+  { path: 'product/:id', component: ProductDetailComponent },
   { path: 'doctor-ai', component: DoctorComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'document', component: DocumentsComponent },

@@ -51,6 +51,7 @@
     <div class="hero-image">
       <img src="assets/products/catdog_friends-HomeCover.png" alt="Pet Banner">
     </div>
+    <div class="hero-overlay"></div>
 
   </section>
 
@@ -324,10 +325,8 @@
 
             </div>
 
-            <button class="add-cart-btn" (click)="openQuickView(product,$event)">
-
-              Add To Cart
-
+            <button class="add-cart-btn" [routerLink]="['/product', product.id]">
+              Quick View
             </button>
 
           </div>
