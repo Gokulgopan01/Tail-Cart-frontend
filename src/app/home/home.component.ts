@@ -76,6 +76,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 1,
       name: 'Guardian Alpha',
       subtitle: 'Polished Gold Edition',
+      description: 'Premium stainless steel smart tag with a polished gold finish, instant QR scanning, and secure pet profile access.',
       price: '₹688.00',
       img: 'assets/images/product_trending_1.png',
       badge: 'BESTSELLER',
@@ -88,6 +89,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 2,
       name: 'Wooden Frame',
       subtitle: 'Artisan Walnut Craft',
+      description: 'Handcrafted walnut-finish tag designed for pet parents who love natural aesthetics with modern smart features.',
       price: '₹499.00',
       img: 'assets/images/product_trending_2.jpg',
       badge: 'CLASSIC',
@@ -100,6 +102,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 3,
       name: 'Fiber Frame',
       subtitle: 'Lightweight Carbon',
+      description: 'Ultra-light carbon fiber smart tag built for everyday comfort, durability, and seamless location sharing.',
       price: '₹499.00',
       img: 'assets/images/product_trending_3.png',
       badge: 'DURABLE',
@@ -112,6 +115,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 4,
       name: 'Stealth Carbon',
       subtitle: 'Waterproof Performance',
+      description: 'Rugged waterproof smart tag engineered for active pets with enhanced durability and all-weather protection.',
       price: '₹499.00',
       img: 'assets/images/product_trending_4.png',
       badge: 'LIMITED',
@@ -124,6 +128,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 5,
       name: 'Guardian Onyx',
       subtitle: 'Matte Black Series',
+      description: 'Elegant matte black smart tag combining a minimalist design with fast QR access and secure owner notifications.',
       price: '₹750.00',
       img: 'assets/images/product_trending_1.png',
       badge: 'NEW',
@@ -136,6 +141,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 6,
       name: 'Guardian Aero',
       subtitle: 'Titanium Finish',
+      description: 'Lightweight titanium-finish smart tag offering premium durability, instant scanning, and real-time pet connectivity.',
       price: '₹899.00',
       img: 'assets/images/product_trending_3.png',
       badge: 'PREMIUM',
@@ -170,7 +176,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   contentAnimating = false;
   imageAnimating = false;
 
-  constructor(private router: Router, private el: ElementRef) { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.startBannerTimer();
@@ -192,21 +198,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initializeVideo();
-    this.setupIntersectionObserver();
-  }
-
-  private setupIntersectionObserver(): void {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target); // Optional: animate only once
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
-
-    const animatedElements = this.el.nativeElement.querySelectorAll('.fade-up, .fade-in, .pop-in');
-    animatedElements.forEach((el: Element) => observer.observe(el));
   }
 
   ngOnDestroy(): void {

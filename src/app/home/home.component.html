@@ -2,16 +2,16 @@
 <section class="hero-wrapper">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <h1 class="hero-title_hero fade-in">
+    <h1 class="hero-title_hero fade-up">
       Never Lose<br>
       <span class="highlight-green">Your Pet</span> Again.
     </h1>
-    <p class="hero-desc fade-up" style="animation-delay: 0.15s;">
+    <p class="hero-desc fade-up">
       Smart QR Pet Tags with Instant Owner Alerts,<br class="desktop-only">
       Live Location Sharing, Medical Records &amp;<br class="desktop-only">
       Emergency Recovery Tools.
     </p>
-    <div class="hero-actions fade-up" style="animation-delay: 0.3s;">
+    <div class="hero-actions fade-up">
       <button class="btn-primary-green" (click)="navigateToShop()">
         <span class="btn-icon-box">
           <i class="fas fa-paw"></i>
@@ -29,7 +29,7 @@
 <section class="stats-bar-section">
   <div class="stats-bar-container">
 
-    <div class="stat-card pop-in hover-lift" style="animation-delay: 0.1s;">
+    <div class="stat-card">
       <div class="stat-icon-box">
         <i class="fas fa-paw"></i>
       </div>
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="stat-card pop-in hover-lift" style="animation-delay: 0.2s;">
+    <div class="stat-card">
       <div class="stat-icon-box">
         <i class="fas fa-location-dot"></i>
       </div>
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <div class="stat-card pop-in hover-lift" style="animation-delay: 0.3s;">
+    <div class="stat-card">
       <div class="stat-icon-box">
         <i class="fas fa-shield-heart"></i>
       </div>
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <div class="stat-card pop-in hover-lift" style="animation-delay: 0.4s;">
+    <div class="stat-card">
       <div class="stat-icon-box">
         <i class="fas fa-battery-full"></i>
       </div>
@@ -74,165 +74,355 @@
 <!-- ── The Difference Section ── -->
 <section class="difference-section">
   <div class="difference-container">
+
     <!-- Left: Problem Statement -->
     <div class="difference-left">
-      <h2 class="difference-heading fade-in">
+      <h2 class="difference-heading">
         Every year <span class="highlight-green">thousands</span><br>of pets go missing.
       </h2>
-      <p class="difference-desc fade-up" style="animation-delay: 0.15s;">
-        Most collars only display a phone number. TailCart instantly connects finders with pet owners through smart QR
-        technology and real-time location sharing.
+      <div class="heading-divider"></div>
+      <p class="difference-desc">
+        Most collars only display a phone number. TailiCart instantly connects finders with pet owners through smart
+        QR technology and real-time location sharing.
       </p>
+
+      <!-- Trusted by pet parents -->
+      <div class="trusted-row">
+        <div class="trusted-avatars">
+          <img src="/assets/images/cat_dog.png" alt="Dog" class="trusted-avatar">
+          <img src="/assets/images/cat_cat.png" alt="Cat" class="trusted-avatar">
+          <img src="/assets/images/cat_bird.png" alt="Poodle" class="trusted-avatar">
+          <div class="trusted-count">1,200+</div>
+        </div>
+        <div class="trusted-text">
+          Trusted by<br>pet parents
+        </div>
+      </div>
     </div>
 
     <!-- Right: Comparison Cards -->
     <div class="difference-right">
+
       <!-- Traditional Tag Card -->
-      <div class="comparison-card traditional-card pop-in hover-lift">
+      <div class="comparison-card traditional-card">
         <h3 class="card-title">Traditional Tags</h3>
         <p class="card-subtitle">Phone number only</p>
+
         <div class="tag-image-wrapper">
           <div class="traditional-tag-visual">
             <div class="metal-tag">
-              <span class="tag-text">PLEASE CALL<br>123-450-7890</span>
+              <span class="tag-text">PLEASE CALL<br>123-456-7890</span>
             </div>
           </div>
         </div>
-        <div class="card-verdict fail">✗</div>
+
+        <ul class="fail-features-list">
+          <li><span class="x-icon"><i class="fas fa-xmark"></i></span> No real-time location</li>
+          <li><span class="x-icon"><i class="fas fa-xmark"></i></span> No owner notification</li>
+          <li><span class="x-icon"><i class="fas fa-xmark"></i></span> Harder reunion process</li>
+        </ul>
       </div>
 
       <!-- VS Badge -->
       <div class="vs-badge">VS</div>
 
-      <!-- TailCart Smart Tag Card -->
-      <div class="comparison-card smart-card pop-in hover-lift" style="animation-delay: 0.15s;">
-        <h3 class="card-title">TailCart Smart Tag</h3>
+      <!-- TailiCart Smart Tag Card -->
+      <div class="comparison-card smart-card">
+        <div class="ribbon-badge">
+          <i class="fas fa-star"></i>
+        </div>
+
+        <h3 class="card-title">TailiCart Smart Tag</h3>
+
         <ul class="smart-features-list">
-          <li><span class="check-icon">✓</span> Instant QR Scan</li>
-          <li><span class="check-icon">✓</span> Pet Profile Access</li>
-          <li><span class="check-icon">✓</span> Location Sharing</li>
-          <li><span class="check-icon">✓</span> Owner Notification</li>
-          <li><span class="check-icon">✓</span> Faster Reunion</li>
+          <li><span class="check-icon"><i class="fas fa-check"></i></span> Instant QR Scan</li>
+          <li><span class="check-icon"><i class="fas fa-check"></i></span> Pet Profile Access</li>
+          <li><span class="check-icon"><i class="fas fa-check"></i></span> Location Sharing</li>
+          <li><span class="check-icon"><i class="fas fa-check"></i></span> Owner Notification</li>
+          <li><span class="check-icon"><i class="fas fa-check"></i></span> Faster Reunion</li>
         </ul>
-        <div class="card-verdict success">✓</div>
       </div>
     </div>
+
+    <!-- Bottom tagline banner -->
+    <div class="difference-banner">
+      <span class="banner-icon"><i class="fas fa-shield-heart"></i></span>
+      Helping pets get home <strong>faster, safer, and smarter.</strong>
+    </div>
+
   </div>
 </section>
 
-<!-- ── How TailCart Protects Section ── -->
-<section class="protection-how-it-works">
+<!-- ══════════════════════════════════════
+     CATEGORIES SECTION
+══════════════════════════════════════ -->
+<section class="categories-section">
   <div class="section-container">
-    <h2 class="how-title">How TailCart Protection Works</h2>
-    <div class="how-steps">
 
-      <div class="how-step pop-in hover-lift" style="animation-delay: 0.1s;">
-        <div class="step-circle">
-          <i class="fas fa-id-card"></i>
-          <span class="step-num">1</span>
-        </div>
-        <h4 class="step-name">Register Your Pet</h4>
-        <p class="step-desc">Create a profile with important details</p>
-      </div>
-
-      <div class="step-arrow">→</div>
-
-      <div class="how-step pop-in hover-lift" style="animation-delay: 0.2s;">
-        <div class="step-circle">
-          <i class="fas fa-tag"></i>
-          <span class="step-num">2</span>
-        </div>
-        <h4 class="step-name">Attach Tail Tag</h4>
-        <p class="step-desc">Secure the smart QR tag to your pet</p>
-      </div>
-
-      <div class="step-arrow">→</div>
-
-      <div class="how-step pop-in hover-lift" style="animation-delay: 0.3s;">
-        <div class="step-circle">
-          <i class="fas fa-magnifying-glass"></i>
-          <span class="step-num">3</span>
-        </div>
-        <h4 class="step-name">Pet Gets Lost</h4>
-        <p class="step-desc">Someone finds your pet and scans the tag</p>
-      </div>
-
-      <div class="step-arrow">→</div>
-
-      <div class="how-step pop-in hover-lift" style="animation-delay: 0.4s;">
-        <div class="step-circle">
-          <i class="fas fa-location-dot"></i>
-          <span class="step-num">4</span>
-        </div>
-        <h4 class="step-name">Location Shared</h4>
-        <p class="step-desc">You receive the exact location instantly</p>
-      </div>
-
-      <div class="step-arrow">→</div>
-
-      <div class="how-step pop-in hover-lift" style="animation-delay: 0.3s;">
-        <div class="step-circle">
-          <i class="fas fa-bell"></i>
-          <span class="step-num">5</span>
-        </div>
-        <h4 class="step-name">Connect Securely</h4>
-        <p class="step-desc">Chat with the finder via our secure system</p>
-      </div>
-
-      <div class="step-arrow">→</div>
-
-      <div class="how-step pop-in hover-lift" style="animation-delay: 0.3s;">
-        <div class="step-circle">
-          <i class="fas fa-heart"></i>
-          <span class="step-num">6</span>
-        </div>
-        <h4 class="step-name">Happy Reunion</h4>
-        <p class="step-desc">Bring your furry friend home safely</p>
-      </div>
-
+    <div class="category-header">
+      <h2 class="category-title">Top Categories</h2>
+      <a routerLink="/shop" class="browse-all-link">View all →</a>
     </div>
+
+    <div class="category-grid-six">
+      <div *ngFor="let cat of categories" class="category-card-premium" [class.active]="selectedCategory === cat.name"
+        (click)="selectCategory(cat.name)">
+
+        <div class="cat-visual-box">
+          <div class="visual-circle">
+            <img *ngIf="cat.img" [src]="cat.img" [alt]="cat.name" class="cat-img">
+            <i *ngIf="cat.icon" [class]="cat.icon" class="cat-icon"></i>
+          </div>
+        </div>
+
+        <span class="cat-name-label">{{ cat.name }}</span>
+
+        <div class="selection-indicator" *ngIf="selectedCategory === cat.name"></div>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<!-- Special Offers Section -->
+
+<!-- ══════════════════════════════════════
+     SPECIAL OFFERS / PROMO BANNERS
+══════════════════════════════════════ -->
 <section class="offer-banner-section-modern">
   <div class="section-container">
     <div class="promo-banners-grid">
 
       <!-- Banner 1: 50% OFF -->
-      <div class="promo-banner-card banner-discount pop-in hover-lift">
+      <div class="promo-banner-card banner-discount">
         <div class="promo-text-col">
+          <p class="promo-eyebrow">Best Deal, Online Only</p>
           <h2 class="promo-heading">
-            <span class="promo-big">50% OFF</span>
-            <span class="promo-sub-h">On Your First Order</span>
+            <span class="promo-big">Hot Summer</span>
+            <span class="promo-sub-h">Deals</span>
           </h2>
           <p class="promo-desc">Premium pet essentials at half the price.<br>Because they deserve the best!</p>
           <button class="promo-shop-btn" (click)="navigateToShop()">Shop Now <span class="btn-arrow">→</span></button>
         </div>
         <div class="promo-img-col">
-          <div class="promo-circle-badge">50%<br><span>OFF</span></div>
           <img src="assets/Home/offer50.png" alt="Happy pet" class="promo-pet-img">
         </div>
       </div>
 
       <!-- Banner 2: Free Delivery -->
-      <div class="promo-banner-card banner-delivery">
+      <div class="promo-banner-card banner-treats">
         <div class="promo-text-col">
+          <p class="promo-eyebrow">Fast &amp; Reliable Shipping</p>
+
           <h2 class="promo-heading">
-            <span class="promo-big">FREE DELIVERY</span>
-            <span class="promo-sub-h">On First 3 Orders</span>
+            <span class="promo-big">Free Delivery</span>
+            <span class="promo-sub-h">on your first 5 orders</span>
           </h2>
-          <p class="promo-desc">No minimum order value.<br>We deliver happiness to your doorstep!</p>
-          <button class="promo-shop-btn" (click)="navigateToShop()">Shop Now <span class="btn-arrow">→</span></button>
+
+          <p class="promo-desc">
+            No minimum order value.<br>
+            Get your TailCart essentials delivered right to your doorstep.
+          </p>
+
+          <button class="promo-shop-btn" (click)="navigateToShop()">
+            Shop Now <span class="btn-arrow">→</span>
+          </button>
         </div>
-        <div class="promo-img-col delivery-img-col">
-          <div class="delivery-visual">
-            <img src="assets/Home/freedelivery.png" alt="Happy pet" class="promo-pet-img">
+
+        <div class="promo-img-col">
+          <img src="assets/Home/freedelivery.png" alt="Free delivery on first 5 orders" class="promo-pet-img">
+        </div>
+      </div>
+
+      <!-- Banner 3: New in this Year -->
+      <!-- Banner 3: 50% OFF -->
+      <div class="promo-banner-card banner-new">
+        <div class="promo-text-col">
+
+          <p class="promo-eyebrow">Limited Time Offer</p>
+
+          <h2 class="promo-heading">
+            <span class="promo-big">50% OFF</span>
+            <span class="promo-sub-h">on selected items</span>
+          </h2>
+
+          <p class="promo-desc">
+            Save big on smart pet tags, accessories<br>
+            and premium essentials for your furry friends.
+          </p>
+
+          <div class="promo-offer-badge">
+            🎉 Use code: <strong>TAIL50</strong>
           </div>
+
+          <button class="promo-shop-btn" (click)="navigateToShop()">
+            Shop Now <span class="btn-arrow">→</span>
+          </button>
+
+        </div>
+
+        <div class="promo-img-col">
+          <img src="assets/Home/new-arrival.png" alt="50% off selected TailCart products" class="promo-pet-img">
         </div>
       </div>
 
     </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     BEST SELLER / TOP PICKS SECTION
+══════════════════════════════════════ -->
+<section class="recommended-section">
+  <div class="section-container">
+
+    <div class="recommended-header">
+      <h2 class="recommended-title">Best Seller</h2>
+      <a routerLink="/shop" class="recommended-view-all">
+        View all <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="recommended-grid">
+
+      <div *ngFor="let product of filteredProducts.slice(0,5)" class="product-card" (click)="navigateToShop()">
+
+        <div class="product-image-wrap">
+          <div class="product-badge" *ngIf="product.badge">{{ product.badge }}</div>
+          <img [src]="product.img" [alt]="product.name" class="product-image" />
+        </div>
+
+        <div class="product-content">
+          <h3 class="product-name">{{ product.name }}</h3>
+
+          <div class="product-rating">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+            <span class="rating-count">({{ product.reviews }})</span>
+          </div>
+
+          <p class="product-desc">{{ product.description }}</p>
+
+          <div class="product-bottom">
+            <div class="price-wrap">
+              <span class="current-price">{{ product.price }}</span>
+              <span class="old-price">₹799.00</span>
+            </div>
+            <button class="cart-btn" (click)="$event.stopPropagation(); addToCart(product)">
+              <i class="fas fa-cart-shopping"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ── How TailCart Protects Section ── -->
+<section class="protection-how-it-works">
+  <div class="hiw-inner">
+
+    <!-- Left: Text + Steps -->
+    <div class="hiw-left">
+      <span class="hiw-badge">
+        <i class="fas fa-shield-halved"></i> Complete Protection for Your Pet
+      </span>
+      <h2 class="hiw-heading">How TailCart <span class="hiw-accent">Protection Works</span></h2>
+      <p class="hiw-subtext">Our smart tag and platform work together to keep your pet safe and help you bring them home
+        faster.</p>
+
+      <div class="hiw-steps">
+
+        <div class="hiw-step">
+          <div class="hiw-icon-wrap">
+            <i class="fas fa-id-card"></i>
+            <span class="hiw-num">1</span>
+          </div>
+          <div>
+            <h4 class="hiw-step-title">Register Your Pet</h4>
+            <p class="hiw-step-desc">Create your pet's profile with important details.</p>
+          </div>
+        </div>
+
+        <div class="hiw-step">
+          <div class="hiw-icon-wrap">
+            <i class="fas fa-tag"></i>
+            <span class="hiw-num">2</span>
+          </div>
+          <div>
+            <h4 class="hiw-step-title">Attach TailCart Tag</h4>
+            <p class="hiw-step-desc">Securely attach the smart tag to your pet's collar.</p>
+          </div>
+        </div>
+
+        <div class="hiw-step">
+          <div class="hiw-icon-wrap">
+            <i class="fas fa-magnifying-glass"></i>
+            <span class="hiw-num">3</span>
+          </div>
+          <div>
+            <h4 class="hiw-step-title">Pet Gets Lost</h4>
+            <p class="hiw-step-desc">Someone finds your pet and scans the QR code.</p>
+          </div>
+        </div>
+
+        <div class="hiw-step">
+          <div class="hiw-icon-wrap">
+            <i class="fas fa-location-dot"></i>
+            <span class="hiw-num">4</span>
+          </div>
+          <div>
+            <h4 class="hiw-step-title">Location Shared</h4>
+            <p class="hiw-step-desc">Finder instantly sees location and your pet's profile.</p>
+          </div>
+        </div>
+
+        <div class="hiw-step">
+          <div class="hiw-icon-wrap">
+            <i class="fas fa-bell"></i>
+            <span class="hiw-num">5</span>
+          </div>
+          <div>
+            <h4 class="hiw-step-title">Connect Securely</h4>
+            <p class="hiw-step-desc">Finder contacts you securely through our system.</p>
+          </div>
+        </div>
+
+        <div class="hiw-step">
+          <div class="hiw-icon-wrap">
+            <i class="fas fa-heart"></i>
+            <span class="hiw-num">6</span>
+          </div>
+          <div>
+            <h4 class="hiw-step-title">Happy Reunion</h4>
+            <p class="hiw-step-desc">You and your furry friend are reunited safely.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right: Image -->
+    <div class="hiw-right">
+      <div class="hiw-image-circle">
+        <img src="/assets/Home/how_it_works.png" alt="Happy pet owner with dog" class="hiw-pet-img" />
+      </div>
+      <div class="hiw-badge-circle">
+        <i class="fas fa-shield-halved hiw-shield-icon"></i>
+        <span class="hiw-badge-line1">Smart Technology</span>
+        <span class="hiw-badge-line2">Real Protection</span>
+      </div>
+      <!-- <div class="hiw-paw-badge">
+        <i class="fas fa-paw"></i>
+      </div> -->
+    </div>
+
   </div>
 </section>
 
@@ -332,130 +522,6 @@
 
 </section>
 
-<!-- Categories Section -->
-<section class="categories-section">
-  <div class="section-container">
-
-    <div class="category-header">
-      <h2 class="category-title">Explore Categories</h2>
-
-      <a routerLink="/shop" class="browse-all-link">
-        View all →
-      </a>
-    </div>
-
-    <div class="category-grid-six">
-
-      <div *ngFor="let cat of categories" class="category-card-premium" [class.active]="selectedCategory === cat.name"
-        (click)="selectCategory(cat.name)">
-
-        <div class="cat-visual-box">
-          <div class="visual-circle">
-
-            <img *ngIf="cat.img" [src]="cat.img" [alt]="cat.name" class="cat-img">
-
-            <i *ngIf="cat.icon" [class]="cat.icon" class="cat-icon">
-            </i>
-
-          </div>
-        </div>
-
-        <span class="cat-name-label">
-          {{cat.name}}
-        </span>
-
-        <div class="selection-indicator" *ngIf="selectedCategory === cat.name">
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-<!-- New Arrivals Section -->
-<!-- ── Top Picks / Product Listing Section ── -->
-<section class="recommended-section">
-  <div class="section-container">
-
-    <!-- Header -->
-    <div class="recommended-header">
-      <h2 class="recommended-title">Top Picks For Your Pets</h2>
-
-      <a routerLink="/shop" class="recommended-view-all">
-        View all
-        <i class="fas fa-arrow-right"></i>
-      </a>
-    </div>
-
-    <!-- Product Grid -->
-    <div class="recommended-grid">
-
-      <!-- Product Card -->
-      <div *ngFor="let product of filteredProducts.slice(0,5)" class="product-card" (click)="navigateToShop()">
-
-        <!-- Product Image -->
-        <div class="product-image-wrap">
-
-          <!-- Badge -->
-          <div class="product-badge">
-            Bestseller
-          </div>
-
-          <img [src]="product.img" [alt]="product.name" class="product-image" />
-
-        </div>
-
-        <!-- Product Info -->
-        <div class="product-content">
-
-          <h3 class="product-name">
-            {{ product.name }}
-          </h3>
-
-          <!-- Rating -->
-          <div class="product-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-
-            <span class="rating-count">
-              ({{ product.reviews }})
-            </span>
-          </div>
-
-          <!-- Bottom -->
-          <div class="product-bottom">
-
-            <div class="price-wrap">
-              <span class="current-price">
-                {{ product.price }}
-              </span>
-
-              <span class="old-price">
-                ₹799.00
-              </span>
-            </div>
-
-            <button class="cart-btn" (click)="$event.stopPropagation(); addToCart(product)">
-              <i class="fas fa-cart-shopping"></i>
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-
 <section class="ecosystem-hero" [style.background]="services[activeEcosystemIndex].color">
 
   <!-- Background Glow -->
@@ -469,7 +535,7 @@
   </div>
 
   <!-- LEFT CONTENT -->
-  <div class="hero-content" [ngClass]="contentAnimating ? 'animate-out-text' : 'animate-in-text'">
+  <div class="hero-content" [class.content-animate]="contentAnimating">
 
     <!-- Slide Counter -->
     <div class="hero-counter">
@@ -511,7 +577,7 @@
   </div>
 
   <!-- IMAGE -->
-  <div class="hero-image-section" [ngClass]="imageAnimating ? 'animate-out-image' : 'animate-in-image'">
+  <div class="hero-image-section" [class.image-animate]="imageAnimating">
     <img [src]="services[activeEcosystemIndex].img" [alt]="services[activeEcosystemIndex].name" class="hero-image" />
   </div>
 
