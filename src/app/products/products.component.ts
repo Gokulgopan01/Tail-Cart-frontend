@@ -59,8 +59,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = false;
   @ViewChild('quickViewScrollContainer') quickViewScrollContainer!: ElementRef;
 
-
-
   // Empty State Lottie
   private emptyStateAnimation: AnimationItem | null = null;
   @ViewChild('noProductsLottie', { static: false }) set noProductsLottie(el: ElementRef<HTMLDivElement> | undefined) {
@@ -83,7 +81,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   searchQuery = '';
   selectedMaterial = 'ALL';
   sortOption = 'newest';
-  showFilters = false;
+  showFilters = false; // mobile filter sheet
   maxPrice = 15000;
   materialOptions = ['ALL', 'Wood', 'Metal', 'Steel', 'Fiber', 'Plastic'];
   selectedColor = 'ALL';
@@ -93,8 +91,9 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   // Quick View State
   showQuickView = false;
   selectedProductForQuickView: Product | null = null;
-  activeQvTab: 'about' | 'reviews' | 'closet' = 'about';
+  activeQvTab: 'about' | 'reviews' = 'about';
   primaryQvImage: string | null = null;
+  selectedShadeIndex = 0;
 
   // Selection State
   userPets: Pet[] = [];
@@ -245,6 +244,15 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  // Count of active filters, used for the mobile filter button badge
+  get activeFilterCount(): number {
+    let count = 0;
+    if (this.selectedMaterial !== 'ALL') count++;
+    if (this.selectedColor !== 'ALL') count++;
+    if (this.maxPrice < 15000) count++;
+    return count;
+  }
+
   loadMore() {
     if (this.nextPageUrl) {
       this.fetchProducts(this.nextPageUrl);
@@ -272,6 +280,11 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.applyFilters();
   }
 
+  setSort(option: string) {
+    this.sortOption = option;
+    this.applyFilters();
+  }
+
   clearFilters() {
     this.searchQuery = '';
     this.selectedMaterial = 'ALL';
@@ -296,8 +309,9 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.primaryQvImage = product.thumbnail_image; // default main image
     this.activeQvTab = 'about'; // reset tab
     this.quantity = 1; // reset quantity
-    this.selectedPetId = ''; // default "None"
+    this.selectedPetId = this.userPets.length > 0 ? this.userPets[0].pet_id.toString() : '';
     this.petSelectError = false;
+    this.selectedShadeIndex = 0;
 
     this.showQuickView = true;
 
@@ -329,8 +343,12 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  setQvTab(tab: 'about' | 'reviews' | 'closet') {
+  setQvTab(tab: 'about' | 'reviews') {
     this.activeQvTab = tab;
+  }
+
+  setShade(index: number) {
+    this.selectedShadeIndex = index;
   }
 
   incrementQuantity() {
@@ -341,6 +359,17 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.quantity > 1) {
       this.quantity--;
     }
+  }
+
+  // Splits the free-text specifications string into a clean list for display.
+  // Accepts newline, pipe, or comma separated values from the API.
+  getSpecsList(product: Product | null): string[] {
+    const raw = product?.product_other_specifications;
+    if (!raw) return [];
+    return raw
+      .split(/\r?\n|\||;/)
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
   }
 
   ngAfterViewInit() {
@@ -414,6 +443,12 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   buyNow(): void {
+    if (!this.selectedProductForQuickView) return;
+    if (!this.selectedPetId) {
+      this.petSelectError = true;
+      this.showSnackbar('Please select a pet for this product', 'error');
+      return;
+    }
     this.closeQuickView();
     this.router.navigate(['/cart']);
   }

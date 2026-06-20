@@ -15,6 +15,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   activeBannerIndex: number = 0;
   private bannerTimer: any;
 
+  slideDirection: 'forward' | 'backward' = 'forward';
+
+  contentState: 'idle' | 'exit' | 'enter' = 'idle';
+  imageState: 'idle' | 'exit' | 'enter' = 'idle';
+
   offerBanners = [
     {
       img: 'assets/Home/discount_add.png'
@@ -153,10 +158,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
 
   categories = [
-    { name: 'All Products', icon: 'fas fa-th-large' },
-    { name: 'Dogs', img: 'assets/images/cat_dog.png' },
-    { name: 'Cats', img: 'assets/images/cat_cat.png' },
-    { name: 'Birds', img: 'assets/images/cat_bird.png' },
+    { name: 'Dogs', img: 'assets/Home/dog_catagory.png' },
+    { name: 'Cats', img: 'assets/Home/cat_catagory.png' },
+    { name: 'Toys', img: 'assets/Home/toys_catagory.png' },
+    { name: 'Other', img: 'assets/Home/accesories.png' },
     { name: 'QR Keychains', img: 'assets/images/product_trending_1.png' },
     { name: 'GPRS Belts', img: 'assets/images/product_trending_3.png' }
   ];
@@ -195,6 +200,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
   }
+
+
 
   ngAfterViewInit(): void {
     this.initializeVideo();
@@ -238,24 +245,28 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // ── Ecosystem Carousel Logic ────────────────────────────────
   selectEcosystemTab(index: number) {
-
     if (index === this.activeEcosystemIndex) return;
 
-    /* OUT ANIMATION */
-    this.contentAnimating = true;
-    this.imageAnimating = true;
+    this.slideDirection = index > this.activeEcosystemIndex ? 'forward' : 'backward';
+
+    // Phase 1: EXIT
+    this.contentState = 'exit';
+    this.imageState = 'exit';
 
     setTimeout(() => {
-
-      /* CHANGE SLIDE */
+      // Phase 2: swap slide, then trigger ENTER
       this.activeEcosystemIndex = index;
+      this.contentState = 'enter';
+      this.imageState = 'enter';
 
-      /* RESET */
-      this.contentAnimating = false;
-      this.imageAnimating = false;
-
-    }, 650);
+      // Phase 3: settle back to idle
+      setTimeout(() => {
+        this.contentState = 'idle';
+        this.imageState = 'idle';
+      }, 700);
+    }, 550);
   }
+
 
   getSlideClass(index: number): string {
     if (index === this.activeEcosystemIndex) return 'active';

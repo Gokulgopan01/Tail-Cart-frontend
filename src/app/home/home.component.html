@@ -1,6 +1,39 @@
 <!-- Hero Section -->
 <section class="hero-wrapper">
   <div class="hero-bg"></div>
+
+  <!-- Floating badge top-left -->
+  <div class="hero-badge-pill">
+    <i class="fas fa-shield-halved"></i>
+    Smart Pet Protection
+  </div>
+
+  <!-- Floating feature cards on image -->
+  <div class="hero-float-card hero-float-location">
+    <div class="float-icon"><i class="fas fa-location-dot"></i></div>
+    <div class="float-text">
+      <strong>Live Location</strong>
+      <span>Always Know Where They Are</span>
+    </div>
+  </div>
+
+  <div class="hero-float-card hero-float-alerts">
+    <div class="float-icon float-icon-bell"><i class="fas fa-bell"></i></div>
+    <div class="float-text">
+      <strong>Instant Alerts</strong>
+      <span>Get Notified Immediately</span>
+    </div>
+  </div>
+
+  <div class="hero-float-card hero-float-records">
+    <div class="float-icon float-icon-record"><i class="fas fa-notes-medical"></i></div>
+    <div class="float-text">
+      <strong>Medical Records</strong>
+      <span>All Info, Always Accessible</span>
+    </div>
+  </div>
+
+  <!-- Main content left -->
   <div class="hero-content">
     <h1 class="hero-title_hero fade-up">
       Never Lose<br>
@@ -19,55 +52,92 @@
         Protect My Pet
       </button>
       <button class="btn-outline-green" (click)="scrollToHowItWorks()">
-        <span class="play-btn-icon"><i class="fas fa-circle-play"></i></span> How It Works
+        <span class="play-btn-icon"><i class="fas fa-play"></i></span>
+        How It Works
       </button>
+    </div>
+
+    <!-- Trust row -->
+    <div class="hero-trust fade-up">
+      <div class="trust-avatars">
+        <img src="assets/Home/avatar1.png" alt="" class="trust-avatar" onerror="this.style.display='none'">
+        <img src="assets/Home/avatar2.png" alt="" class="trust-avatar" onerror="this.style.display='none'">
+        <img src="assets/Home/avatar3.png" alt="" class="trust-avatar" onerror="this.style.display='none'">
+        <div class="trust-avatar trust-avatar-fallback">+</div>
+      </div>
+      <div class="trust-text">
+        <div class="trust-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <span>Trusted by 10,000+ pet parents</span>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ── Stats Bar Section ── -->
+<!-- Stats Bar -->
 <section class="stats-bar-section">
   <div class="stats-bar-container">
 
     <div class="stat-card">
       <div class="stat-icon-box">
-        <i class="fas fa-paw"></i>
+        <i class="fas fa-qrcode"></i>
       </div>
       <div class="stat-text">
-        <strong class="stat-number">1,200+</strong>
-        <span class="stat-label">Pets Protected</span>
+        <strong class="stat-number">Smart QR Tags</strong>
+        <span class="stat-label">Scan to reconnect pets with their owners</span>
       </div>
     </div>
+
+    <div class="stat-divider"></div>
 
     <div class="stat-card">
       <div class="stat-icon-box">
         <i class="fas fa-location-dot"></i>
       </div>
       <div class="stat-text">
-        <strong class="stat-number">Instant</strong>
-        <span class="stat-label">Location Sharing</span>
+        <strong class="stat-number">Live Tracking</strong>
+        <span class="stat-label">Real-time location sharing &amp; updates</span>
       </div>
     </div>
+
+    <div class="stat-divider"></div>
+
+    <div class="stat-card">
+      <div class="stat-icon-box">
+        <i class="fas fa-briefcase-medical"></i>
+      </div>
+      <div class="stat-text">
+        <strong class="stat-number">Medical Records</strong>
+        <span class="stat-label">Securely store medical history &amp; documents</span>
+      </div>
+    </div>
+
+    <div class="stat-divider"></div>
+
+    <div class="stat-card">
+      <div class="stat-icon-box">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div class="stat-text">
+        <strong class="stat-number">Instant Alerts</strong>
+        <span class="stat-label">Get notified if your pet is found or scanned</span>
+      </div>
+    </div>
+
+    <div class="stat-divider"></div>
 
     <div class="stat-card">
       <div class="stat-icon-box">
         <i class="fas fa-shield-heart"></i>
       </div>
       <div class="stat-text">
-        <strong class="stat-number">100%</strong>
-        <span class="stat-label">Secure &amp; Private</span>
+        <strong class="stat-number">Emergency Tools</strong>
+        <span class="stat-label">Recovery tools for peace of mind</span>
       </div>
     </div>
 
-    <div class="stat-card">
-      <div class="stat-icon-box">
-        <i class="fas fa-battery-full"></i>
-      </div>
-      <div class="stat-text">
-        <strong class="stat-number">No Battery</strong>
-        <span class="stat-label">No Charging Needed</span>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -154,30 +224,29 @@
 </section>
 
 <!-- ══════════════════════════════════════
-     CATEGORIES SECTION
+      CATEGORIES SECTION
+  ══════════════════════════════════════ -->
+<!-- ══════════════════════════════════════
+   CATEGORIES SECTION
 ══════════════════════════════════════ -->
 <section class="categories-section">
   <div class="section-container">
 
     <div class="category-header">
-      <h2 class="category-title">Top Categories</h2>
+      <h2 class="category-title">Best Sellers</h2>
       <a routerLink="/shop" class="browse-all-link">View all →</a>
     </div>
 
     <div class="category-grid-six">
       <div *ngFor="let cat of categories" class="category-card-premium" [class.active]="selectedCategory === cat.name"
         (click)="selectCategory(cat.name)">
-
-        <div class="cat-visual-box">
-          <div class="visual-circle">
-            <img *ngIf="cat.img" [src]="cat.img" [alt]="cat.name" class="cat-img">
-            <i *ngIf="cat.icon" [class]="cat.icon" class="cat-icon"></i>
-          </div>
+        <div class="cat-image-wrap">
+          <img [src]="cat.img" [alt]="cat.name" class="cat-img" />
         </div>
 
-        <span class="cat-name-label">{{ cat.name }}</span>
-
-        <div class="selection-indicator" *ngIf="selectedCategory === cat.name"></div>
+        <div class="cat-overlay">
+          <span class="cat-name-label">{{ cat.name }}</span>
+        </div>
       </div>
     </div>
 
@@ -535,30 +604,27 @@
   </div>
 
   <!-- LEFT CONTENT -->
-  <div class="hero-content" [class.content-animate]="contentAnimating">
+  <div class="hero-content" [class.content-exit-forward]="contentState === 'exit' && slideDirection === 'forward'"
+    [class.content-exit-backward]="contentState === 'exit' && slideDirection === 'backward'"
+    [class.content-enter-forward]="contentState === 'enter' && slideDirection === 'forward'"
+    [class.content-enter-backward]="contentState === 'enter' && slideDirection === 'backward'">
 
     <!-- Slide Counter -->
     <div class="hero-counter">
       <span class="active-number">
         {{ (activeEcosystemIndex + 1).toString().padStart(2,'0') }}
       </span>
-
       <span class="total-number">
         /{{ services.length.toString().padStart(2,'0') }}
       </span>
-
       <div class="counter-line"></div>
     </div>
 
     <!-- Title -->
-    <h1 class="hero-title">
-      {{ services[activeEcosystemIndex].name }}
-    </h1>
+    <h1 class="hero-title">{{ services[activeEcosystemIndex].name }}</h1>
 
     <!-- Description -->
-    <p class="hero-description">
-      {{ services[activeEcosystemIndex].desc }}
-    </p>
+    <p class="hero-description">{{ services[activeEcosystemIndex].desc }}</p>
 
     <!-- CTA -->
     <button class="hero-btn" (click)="navigateToService(services[activeEcosystemIndex].route)">
@@ -568,16 +634,17 @@
 
     <!-- Progress -->
     <div class="hero-progress">
-
       <span *ngFor="let service of services; let i = index" class="progress-item"
         [class.active]="activeEcosystemIndex === i" (click)="selectEcosystemTab(i)">
       </span>
-
     </div>
   </div>
 
   <!-- IMAGE -->
-  <div class="hero-image-section" [class.image-animate]="imageAnimating">
+  <div class="hero-image-section" [class.image-exit-forward]="imageState === 'exit' && slideDirection === 'forward'"
+    [class.image-exit-backward]="imageState === 'exit' && slideDirection === 'backward'"
+    [class.image-enter-forward]="imageState === 'enter' && slideDirection === 'forward'"
+    [class.image-enter-backward]="imageState === 'enter' && slideDirection === 'backward'">
     <img [src]="services[activeEcosystemIndex].img" [alt]="services[activeEcosystemIndex].name" class="hero-image" />
   </div>
 
@@ -586,18 +653,15 @@
     (click)="selectEcosystemTab((activeEcosystemIndex - 1 + services.length) % services.length)">
     <i class="fas fa-arrow-left"></i>
   </button>
-
   <button class="hero-arrow right" (click)="selectEcosystemTab((activeEcosystemIndex + 1) % services.length)">
     <i class="fas fa-arrow-right"></i>
   </button>
 
   <!-- Bottom Dots -->
   <div class="hero-dots">
-
     <span *ngFor="let service of services; let i = index" class="hero-dot" [class.active]="activeEcosystemIndex === i"
       (click)="selectEcosystemTab(i)">
     </span>
-
   </div>
 
 </section>
