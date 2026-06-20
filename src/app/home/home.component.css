@@ -19,10 +19,17 @@ section {
   --glass-border: var(--border-light);
 }
 
-.section-container {
-  max-width: 1200px;
+.section-container,
+.stats-bar-container,
+.difference-container,
+.hiw-inner,
+.faq-container {
+  width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 5%;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  box-sizing: border-box;
 }
 
 /* ═══════════════════════════════════════════
@@ -395,12 +402,7 @@ section {
   animation-delay: 0.38s;
 }
 
-@keyframes fadeUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+
 
 /* ═══════════════════════════════════════════
    STATS BAR
@@ -415,9 +417,6 @@ section {
 }
 
 .stats-bar-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 2rem;
   display: flex;
   align-items: stretch;
   gap: 0;
@@ -759,9 +758,8 @@ section {
 }
 
 .difference-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 2.5rem 2rem;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
   background: #fbfcfb;
   border-radius: 28px;
   display: grid;
@@ -1276,6 +1274,146 @@ section {
   .smart-features-list li,
   .fail-features-list li {
     font-size: 0.72rem;
+  }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE BREAKPOINTS (CATEGORIES, PROMO BANNERS, RECOMMENDED PRODUCTS)
+   ══════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .category-grid-six {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .promo-banners-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .banner-new {
+    grid-column: 1 / -1;
+  }
+
+  .recommended-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+
+  .categories-section,
+  .offer-banner-section-modern,
+  .recommended-section {
+    padding: 2.5rem 0;
+  }
+
+  .category-grid-six {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .cat-name-label {
+    font-size: 0.85rem;
+  }
+
+  .promo-banners-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .banner-new {
+    grid-column: auto;
+  }
+
+  .promo-banner-card {
+    padding: 20px 18px;
+    min-height: 150px;
+  }
+
+  .promo-img-col {
+    width: 80px;
+  }
+
+  .recommended-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .categories-section,
+  .offer-banner-section-modern,
+  .recommended-section {
+    padding: 2rem 0;
+  }
+
+  .category-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .category-title {
+    font-size: 1.15rem;
+  }
+
+  .browse-all-link {
+    font-size: 0.8rem;
+  }
+
+  .category-grid-six {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .category-card-premium {
+    aspect-ratio: 1 / 1.15;
+    border-radius: 5px;
+  }
+
+  .cat-overlay {
+    padding: 0 0.5rem 1rem;
+  }
+
+  .cat-name-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.3px;
+  }
+}
+
+@media (max-width: 360px) {
+  .category-grid-six {
+    gap: 8px;
+  }
+
+  .category-card-premium {
+    aspect-ratio: 1 / 1.05;
+  }
+
+  .cat-overlay {
+    padding-bottom: 0.75rem;
+  }
+
+  .cat-name-label {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .category-title {
+    font-size: 1rem;
+  }
+
+  .browse-all-link span,
+  .browse-all-link {
+    font-size: 0.72rem;
+  }
+
+  .category-grid-six {
+    gap: 6px;
+  }
+
+  .cat-name-label {
+    font-size: 0.7rem;
   }
 }
 
@@ -1827,81 +1965,7 @@ section {
 }
 
 
-/* ══════════════════════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════════════════════ */
 
-/* Tablet */
-@media (max-width: 1024px) {
-  .category-grid-six {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .promo-banners-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .banner-new {
-    grid-column: 1 / -1;
-  }
-
-  .recommended-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-
-  .categories-section,
-  .offer-banner-section-modern,
-  .recommended-section {
-    padding: 2.5rem 0;
-  }
-
-  .category-grid-six {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 10px !important;
-  }
-
-  .category-card-premium {
-    padding: 14px 6px 12px;
-    border-radius: 12px;
-    gap: 7px;
-  }
-
-  .cat-visual-box {
-    width: 54px;
-    height: 54px;
-  }
-
-  .cat-name-label {
-    font-size: 0.75rem;
-  }
-
-  .promo-banners-grid {
-    grid-template-columns: 1fr !important;
-    gap: 14px;
-  }
-
-  .banner-new {
-    grid-column: auto;
-  }
-
-  .promo-banner-card {
-    padding: 20px 18px;
-    min-height: 150px;
-  }
-
-  .promo-img-col {
-    width: 80px;
-  }
-
-  .recommended-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
-  }
-}
 
 
 
@@ -1938,12 +2002,10 @@ section {
 /* ── How It Works Section ── */
 .protection-how-it-works {
   background: #f7faf7;
-  padding: 72px 24px;
+  padding: 72px 0;
 }
 
 .hiw-inner {
-  max-width: 1100px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   gap: 64px;
@@ -2346,11 +2408,7 @@ section {
   background: #f7f9f7;
 }
 
-.faq-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
+/* .faq-container is now styled in the shared container system */
 
 /* ── Header ── */
 
@@ -3818,25 +3876,26 @@ section {
    GLOBAL SECTION CONTAINER
 ═══════════════════════════════════════ */
 
-.section-container {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  box-sizing: border-box;
-}
-
 /* Large Desktop */
 @media (min-width: 1600px) {
-  .section-container {
+
+  .section-container,
+  .stats-bar-container,
+  .difference-container,
+  .hiw-inner,
+  .faq-container {
     max-width: 1400px;
   }
 }
 
 /* Laptop */
 @media (max-width: 1200px) {
-  .section-container {
+
+  .section-container,
+  .stats-bar-container,
+  .difference-container,
+  .hiw-inner,
+  .faq-container {
     padding-left: 1.8rem;
     padding-right: 1.8rem;
   }
@@ -3844,7 +3903,12 @@ section {
 
 /* Tablet */
 @media (max-width: 768px) {
-  .section-container {
+
+  .section-container,
+  .stats-bar-container,
+  .difference-container,
+  .hiw-inner,
+  .faq-container {
     padding-left: 1.2rem;
     padding-right: 1.2rem;
   }
@@ -3852,7 +3916,12 @@ section {
 
 /* Mobile */
 @media (max-width: 480px) {
-  .section-container {
+
+  .section-container,
+  .stats-bar-container,
+  .difference-container,
+  .hiw-inner,
+  .faq-container {
     padding-left: 1rem;
     padding-right: 1rem;
   }
@@ -3936,98 +4005,7 @@ section {
   animation: faqFadeIn 0.3s ease both;
 }
 
-/* Text entrance from left */
-@keyframes cinematicTextIn {
-  from {
-    opacity: 0;
-    transform: translateX(-140px) translateY(20px);
-  }
 
-  to {
-    opacity: 1;
-    transform: translateX(0) translateY(0);
-  }
-}
-
-/* Image entrance from right */
-@keyframes cinematicImageIn {
-  from {
-    opacity: 0;
-    transform: translateX(220px) scale(0.85) rotate(-4deg);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1) rotate(0deg);
-  }
-}
-
-/* Old text slides out right */
-@keyframes cinematicExitRight {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  to {
-    opacity: 0;
-    transform: translateX(140%);
-  }
-}
-
-/* Old image slides out left */
-@keyframes cinematicExitLeft {
-  from {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-
-  to {
-    opacity: 0;
-    transform: translateX(-140%) scale(0.8);
-  }
-}
-
-/* New text enters from left */
-@keyframes cinematicEnterLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-140%) translateY(30px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0) translateY(0);
-  }
-}
-
-/* New image enters from right */
-@keyframes cinematicEnterRight {
-  from {
-    opacity: 0;
-    transform: translateX(140%) scale(0.82) rotate(-5deg);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1) rotate(0deg);
-  }
-}
-
-/* Hero image float loop */
-@keyframes floatImage {
-  0% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-14px);
-  }
-
-  100% {
-    transform: translateY(0px);
-  }
-}
 
 /* ══════════════════════════════════════════
    STATS BAR — count-up pop
@@ -4114,18 +4092,7 @@ section {
   }
 }
 
-/* ══════════════════════════════════════════
-   HIGHLIGHTS MARQUEE
-══════════════════════════════════════════ */
-@keyframes marqueeMove {
-  from {
-    transform: translateX(0);
-  }
 
-  to {
-    transform: translateX(-50%);
-  }
-}
 
 /* ══════════════════════════════════════════
    HOW IT WORKS — step reveal
