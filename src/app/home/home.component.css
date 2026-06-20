@@ -2163,6 +2163,53 @@ section {
 
   .hiw-heading {
     font-size: 28px;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .protection-how-it-works {
+    padding: 48px 16px;
+  }
+
+  .hiw-heading {
+    font-size: 22px;
+    white-space: normal;
+  }
+
+  .hiw-subtext {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .hiw-image-circle {
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .hiw-right {
+    min-height: 260px;
+  }
+
+  .hiw-badge-circle {
+    width: 90px;
+    height: 90px;
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .hiw-shield-icon {
+    font-size: 16px;
+  }
+
+  .hiw-badge-line1 {
+    font-size: 9px;
+  }
+
+  .hiw-badge-line2 {
+    font-size: 8px;
   }
 }
 
