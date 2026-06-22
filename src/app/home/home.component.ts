@@ -169,7 +169,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // State flags
   isScrolled = false;
-  faqStates: boolean[] = [false, false, false, false];
+  faqStates: boolean[] = [false, false, false, false, false];
   isDetailedVideoMuted = true;
   isDetailedVideoPlaying = false;
   private hasAutoPlayed = false;
@@ -310,7 +310,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   toggleFaq(index: number): void {
-    this.faqStates[index] = !this.faqStates[index];
+    const isOpen = this.faqStates[index];
+
+    // Close every item
+    this.faqStates = this.faqStates.map(() => false);
+
+    // If the clicked item was closed, open it
+    if (!isOpen) {
+      this.faqStates[index] = true;
+    }
   }
 
   showPlayButton(): void {
