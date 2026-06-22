@@ -262,76 +262,15 @@
     <div class="promo-banners-grid">
 
       <!-- Banner 1: 50% OFF -->
-      <div class="promo-banner-card banner-discount">
-        <div class="promo-text-col">
-          <p class="promo-eyebrow">Best Deal, Online Only</p>
-          <h2 class="promo-heading">
-            <span class="promo-big">Hot Summer</span>
-            <span class="promo-sub-h">Deals</span>
-          </h2>
-          <p class="promo-desc">Premium pet essentials at half the price.<br>Because they deserve the best!</p>
-          <button class="promo-shop-btn" (click)="navigateToShop()">Shop Now <span class="btn-arrow">→</span></button>
-        </div>
-        <div class="promo-img-col">
-          <img src="assets/Home/offer50.png" alt="Happy pet" class="promo-pet-img">
-        </div>
+      <div class="promo-banner-card banner-discount" style="background-image: url('assets/Home/premium_foods.png')">
       </div>
 
       <!-- Banner 2: Free Delivery -->
-      <div class="promo-banner-card banner-treats">
-        <div class="promo-text-col">
-          <p class="promo-eyebrow">Fast &amp; Reliable Shipping</p>
-
-          <h2 class="promo-heading">
-            <span class="promo-big">Free Delivery</span>
-            <span class="promo-sub-h">on your first 5 orders</span>
-          </h2>
-
-          <p class="promo-desc">
-            No minimum order value.<br>
-            Get your TailCart essentials delivered right to your doorstep.
-          </p>
-
-          <button class="promo-shop-btn" (click)="navigateToShop()">
-            Shop Now <span class="btn-arrow">→</span>
-          </button>
-        </div>
-
-        <div class="promo-img-col">
-          <img src="assets/Home/freedelivery.png" alt="Free delivery on first 5 orders" class="promo-pet-img">
-        </div>
+      <div class="promo-banner-card banner-treats" style="background-image: url('assets/Home/delivery_add.png')">
       </div>
 
-      <!-- Banner 3: New in this Year -->
       <!-- Banner 3: 50% OFF -->
-      <div class="promo-banner-card banner-new">
-        <div class="promo-text-col">
-
-          <p class="promo-eyebrow">Limited Time Offer</p>
-
-          <h2 class="promo-heading">
-            <span class="promo-big">50% OFF</span>
-            <span class="promo-sub-h">on selected items</span>
-          </h2>
-
-          <p class="promo-desc">
-            Save big on smart pet tags, accessories<br>
-            and premium essentials for your furry friends.
-          </p>
-
-          <div class="promo-offer-badge">
-            🎉 Use code: <strong>TAIL50</strong>
-          </div>
-
-          <button class="promo-shop-btn" (click)="navigateToShop()">
-            Shop Now <span class="btn-arrow">→</span>
-          </button>
-
-        </div>
-
-        <div class="promo-img-col">
-          <img src="assets/Home/new-arrival.png" alt="50% off selected TailCart products" class="promo-pet-img">
-        </div>
+      <div class="promo-banner-card banner-new" style="background-image: url('assets/Home/50offer.png')">
       </div>
 
     </div>
@@ -666,66 +605,165 @@
 
 </section>
 
-<!-- FAQ Section (Ecosystem Support) -->
+<!-- ══════════════════════════════════════════
+     FAQ Section — TailCart
+══════════════════════════════════════════ -->
 <section class="faq-modern-section">
-  <div class="faq-container">
-    <div class="faq-header fade-in">
-      <span class="faq-tag">Expert Answers</span>
-      <h2 class="faq-title">Pet Parent FAQs</h2>
-      <p class="faq-subtitle">Everything you need to know about the TailCart ecosystem and our protection protocols.
-      </p>
+  <div class="faq-layout">
+
+    <!-- ════ LEFT — Full-height visual ════ -->
+    <div class="faq-visual-col">
+      <!-- Green circle backdrop -->
+      <div class="faq-green-circle"></div>
+
+      <!-- Dog image — full height, flush left -->
+      <img src="assets/Home/faq.png" alt="Happy dog wearing a TailCart smart tag" class="faq-hero-img" />
+
+      <!-- Floating dots only (no cards) -->
+      <span class="faq-dot faq-dot--map"></span>
+      <span class="faq-dot faq-dot--tag"></span>
+
+      <!-- Dashed connector line (SVG, purely decorative) -->
+      <svg class="faq-connector" viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true">
+        <path d="M60 20 Q45 80 55 110 Q65 140 40 180" stroke="#2F6B47" stroke-width="1.5" stroke-dasharray="5 5"
+          fill="none" />
+      </svg>
     </div>
 
-    <div class="faq-accordion-list">
-      <div *ngFor="let item of [0,1,2,3,4]; let i = index" class="faq-accordion-item fade-up"
-        [class.active]="faqStates[i]" [style.animation-delay]="(i * 0.1) + 's'">
+    <!-- ════ RIGHT — Content ════ -->
+    <div class="faq-content-col">
+      <div class="faq-header">
+        <span class="faq-eyebrow">Expert Answers</span>
+        <h2 class="faq-title">Pet Parent FAQs</h2>
+        <p class="faq-subtitle">
+          Everything you need to know about the TailCart ecosystem
+          and our protection protocols.
+        </p>
+      </div>
 
-        <button class="faq-accordion-trigger" (click)="toggleFaq(i)">
-          <div class="faq-q-box">
-            <span class="faq-index">0{{i+1}}</span>
-            <span class="faq-question">
-              <ng-container *ngIf="i === 0">How exactly does the Tail Tag scan work?</ng-container>
-              <ng-container *ngIf="i === 1">Is my personal data visible to anyone who scans?</ng-container>
-              <ng-container *ngIf="i === 2">Do the smart tags require batteries or charging?</ng-container>
-              <ng-container *ngIf="i === 3">Can I manage multiple pets on a single account?</ng-container>
-              <ng-container *ngIf="i === 4">What happens if the tag is scanned in an area with poor
-                signal?</ng-container>
-            </span>
-          </div>
-          <div class="faq-icon-box-modern">
-            <span class="faq-chevron"></span>
-          </div>
-        </button>
+      <!-- Accordion -->
+      <div class="faq-accordion-list">
 
-        <div class="faq-accordion-content" [class.show]="faqStates[i]">
-          <div class="faq-answer-inner">
-            <p *ngIf="i === 0">Our tags use passive QR technology. When scanned by any smartphone, it instantly
-              opens a
-              secure pet profile and sends you a real-time GPS notification of the scan's location, without the
-              finder
-              needing any app.</p>
-            <p *ngIf="i === 1">You have absolute control. Through your Tail Vault, you can toggle exactly which
-              information (phone, address, medical notes) is visible to a finder. All data is stored with bank-grade
-              encryption.</p>
-            <p *ngIf="i === 2">No charging or batteries are ever needed. Tail Tags are built to last a lifetime
-              using
-              durable, aerospace-grade materials and passive NFC/QR tech that's always "on" when needed.</p>
-            <p *ngIf="i === 3">Yes! The TailCart app and dashboard are designed for multi-pet households. You can
-              add
-              unlimited pets, each with their own unique tags, medical records, and protection settings.</p>
-            <p *ngIf="i === 4">The scan will still register the interaction. The finder can see your contact info if
-              previously loaded, and you'll receive the location alert as soon as the device regains connectivity.
-            </p>
+        <div class="faq-accordion-item" [class.active]="faqStates[0]">
+          <button class="faq-accordion-trigger" [attr.aria-expanded]="faqStates[0]" (click)="toggleFaq(0)">
+            <div class="faq-q-box">
+              <span class="faq-index">01</span>
+              <span class="faq-question">How exactly does the Tail Tag scan work?</span>
+            </div>
+            <svg class="faq-chevron-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="faq-accordion-content" [class.show]="faqStates[0]">
+            <div class="faq-answer-inner">
+              <p>Our tags use passive QR technology. When scanned by any smartphone, it instantly
+                opens a secure pet profile and sends you a real-time GPS notification of the
+                scan's location — without the finder needing any app.</p>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="faq-footer fade-in">
-      <p>Still have questions? <a (click)="navigateToAbout()" class="faq-contact-link">Contact our support team
-          &rarr;</a></p>
-    </div>
-  </div>
+        <div class="faq-accordion-item" [class.active]="faqStates[1]">
+          <button class="faq-accordion-trigger" [attr.aria-expanded]="faqStates[1]" (click)="toggleFaq(1)">
+            <div class="faq-q-box">
+              <span class="faq-index">02</span>
+              <span class="faq-question">Is my personal data visible to anyone who scans?</span>
+            </div>
+            <svg class="faq-chevron-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="faq-accordion-content" [class.show]="faqStates[1]">
+            <div class="faq-answer-inner">
+              <p>You have absolute control. Through your Tail Vault, you can toggle exactly which
+                information (phone, address, medical notes) is visible to a finder. All data is
+                stored with bank-grade encryption.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item" [class.active]="faqStates[2]">
+          <button class="faq-accordion-trigger" [attr.aria-expanded]="faqStates[2]" (click)="toggleFaq(2)">
+            <div class="faq-q-box">
+              <span class="faq-index">03</span>
+              <span class="faq-question">Do the smart tags require batteries or charging?</span>
+            </div>
+            <svg class="faq-chevron-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="faq-accordion-content" [class.show]="faqStates[2]">
+            <div class="faq-answer-inner">
+              <p>No charging or batteries are ever needed. Tail Tags are built to last a lifetime
+                using durable, aerospace-grade materials and passive NFC/QR tech that's always
+                "on" when needed.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item" [class.active]="faqStates[3]">
+          <button class="faq-accordion-trigger" [attr.aria-expanded]="faqStates[3]" (click)="toggleFaq(3)">
+            <div class="faq-q-box">
+              <span class="faq-index">04</span>
+              <span class="faq-question">Can I manage multiple pets on a single account?</span>
+            </div>
+            <svg class="faq-chevron-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="faq-accordion-content" [class.show]="faqStates[3]">
+            <div class="faq-answer-inner">
+              <p>Yes! The TailCart app and dashboard are designed for multi-pet households. You
+                can add unlimited pets, each with their own unique tags, medical records, and
+                protection settings.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-accordion-item" [class.active]="faqStates[4]">
+          <button class="faq-accordion-trigger" [attr.aria-expanded]="faqStates[4]" (click)="toggleFaq(4)">
+            <div class="faq-q-box">
+              <span class="faq-index">05</span>
+              <span class="faq-question">What happens if the tag is scanned in an area with poor signal?</span>
+            </div>
+            <svg class="faq-chevron-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="faq-accordion-content" [class.show]="faqStates[4]">
+            <div class="faq-answer-inner">
+              <p>The scan will still register the interaction. The finder can see your contact
+                info if previously loaded, and you'll receive the location alert as soon as the
+                device regains connectivity.</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /faq-accordion-list -->
+
+      <!-- Footer -->
+      <div class="faq-footer">
+        <svg class="faq-footer-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.5" stroke="#2F6B47" stroke-width="1.5" />
+          <path d="M8.5 13.5s1 2 3.5 2 3.5-2 3.5-2" stroke="#2F6B47" stroke-width="1.5" stroke-linecap="round" />
+          <circle cx="9" cy="9.5" r="1" fill="#2F6B47" />
+          <circle cx="15" cy="9.5" r="1" fill="#2F6B47" />
+        </svg>
+        <p>Still have questions?
+          <a class="faq-contact-link" (click)="navigateToAbout()">
+            Contact our support team &rarr;
+          </a>
+        </p>
+      </div>
+
+    </div><!-- /faq-content-col -->
+  </div><!-- /faq-layout -->
 </section>
 
 <!-- Scroll to Top Button -->

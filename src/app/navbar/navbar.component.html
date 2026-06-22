@@ -1,5 +1,5 @@
 <!-- DESKTOP NAVBAR (Visible only on Desktop) -->
-<div class="desktop-nav" [class.scrolled]="isScrolled" [class.nav-hidden]="isScrollingDown">
+<div class="desktop-nav" [class.scrolled]="isScrolled">
   <div class="desktop-nav-container">
     <!-- Left: Logo -->
     <div class="nav-logo-section" (click)="navigateToHome()">
@@ -99,7 +99,7 @@
 
 <!-- MOBILE/TABLET NAVBAR (Existing luxury-navbar) -->
 <nav class="luxury-navbar" [class.scrolled]="isScrolled" [class.hidden]="isPastHalfScreen"
-  [class.nav-hidden]="isScrollingDown" *ngIf="!hideTopNav">
+  *ngIf="!hideTopNav">
   <div class="nav-floating-body">
     <div class="nav-container container">
       <!-- Left: Menu Toggle -->
