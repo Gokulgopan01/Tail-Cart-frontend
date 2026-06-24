@@ -143,81 +143,111 @@
 
 <!-- ── The Difference Section ── -->
 <section class="difference-section">
+  <!-- Background Decorations -->
+  <div class="diff-bg-elements">
+    <div class="diff-glow diff-glow-tr"></div>
+    <div class="diff-glow diff-glow-bl"></div>
+    <i class="fas fa-paw diff-paw diff-paw-1"></i>
+    <i class="fas fa-paw diff-paw diff-paw-2"></i>
+    <i class="fas fa-paw diff-paw diff-paw-3"></i>
+    <i class="fas fa-leaf diff-leaf diff-leaf-1"></i>
+  </div>
+
   <div class="difference-container">
 
-    <!-- Left: Problem Statement -->
-    <div class="difference-left">
-      <h2 class="difference-heading">
-        Every year <span class="highlight-green">thousands</span><br>of pets go missing.
-      </h2>
-      <div class="heading-divider"></div>
-      <p class="difference-desc">
-        Most collars only display a phone number. TailiCart instantly connects finders with pet owners through smart
-        QR technology and real-time location sharing.
-      </p>
-
-      <!-- Trusted by pet parents -->
-      <div class="trusted-row">
-        <div class="trusted-avatars">
-          <img src="/assets/images/cat_dog.png" alt="Dog" class="trusted-avatar">
-          <img src="/assets/images/cat_cat.png" alt="Cat" class="trusted-avatar">
-          <img src="/assets/images/cat_bird.png" alt="Poodle" class="trusted-avatar">
-          <div class="trusted-count">1,200+</div>
+    <div class="difference-grid-layout">
+      <!-- Left: Problem Statement -->
+      <div class="difference-left">
+        <div class="diff-badge-pill">
+          <i class="fas fa-shield-halved"></i> Smarter Tag. Safer Pets.
         </div>
-        <div class="trusted-text">
-          Trusted by<br>pet parents
-        </div>
-      </div>
-    </div>
+        <h2 class="difference-heading">
+          Every year thousands<br>of pets <span class="highlight-green">go missing.</span>
+        </h2>
+        <p class="difference-desc">
+          Most collars only display a phone number. TailiCart instantly connects finders with pet owners through
+          smart QR technology and real-time location sharing.
+        </p>
 
-    <!-- Right: Comparison Cards -->
-    <div class="difference-right">
-
-      <!-- Traditional Tag Card -->
-      <div class="comparison-card traditional-card">
-        <h3 class="card-title">Traditional Tags</h3>
-        <p class="card-subtitle">Phone number only</p>
-
-        <div class="tag-image-wrapper">
-          <div class="traditional-tag-visual">
-            <div class="metal-tag">
-              <span class="tag-text">PLEASE CALL<br>123-456-7890</span>
-            </div>
+        <!-- Trusted by pet parents -->
+        <div class="trusted-row">
+          <div class="trusted-avatars">
+            <img src="/assets/images/cat_dog.png" alt="Dog" class="trusted-avatar">
+            <img src="/assets/images/cat_cat.png" alt="Cat" class="trusted-avatar">
+            <img src="/assets/images/cat_bird.png" alt="Poodle" class="trusted-avatar">
+            <div class="trusted-count">1,200+</div>
+          </div>
+          <div class="trusted-text">
+            Trusted by pet parents
           </div>
         </div>
-
-        <ul class="fail-features-list">
-          <li><span class="x-icon"><i class="fas fa-xmark"></i></span> No real-time location</li>
-          <li><span class="x-icon"><i class="fas fa-xmark"></i></span> No owner notification</li>
-          <li><span class="x-icon"><i class="fas fa-xmark"></i></span> Harder reunion process</li>
-        </ul>
       </div>
 
-      <!-- VS Badge -->
-      <div class="vs-badge">VS</div>
+      <!-- Center: Dog Image -->
+      <div class="difference-center-dog">
+        <img src="assets/Home/tailcart_hero_dog.png" alt="Happy dog with tag" class="diff-dog-image">
+      </div>
 
-      <!-- TailiCart Smart Tag Card -->
-      <div class="comparison-card smart-card">
-        <div class="ribbon-badge">
-          <i class="fas fa-star"></i>
+      <!-- Right: Comparison Cards -->
+      <div class="difference-right">
+
+        <!-- Traditional Tag Card -->
+        <div class="comparison-card traditional-card">
+          <h3 class="card-title">Traditional Tags</h3>
+          <p class="card-subtitle">Phone number only</p>
+
+          <div class="tag-image-wrapper">
+            <img src="assets/Home/traditional_tag.png" alt="Traditional Tag" class="tag-actual-img"
+              onerror="this.style.display='none'">
+          </div>
+
+          <ul class="fail-features-list">
+            <li><span class="x-icon"><i class="fas fa-xmark"></i></span> No real-time location</li>
+            <li><span class="x-icon"><i class="fas fa-xmark"></i></span> No owner notification</li>
+            <li><span class="x-icon"><i class="fas fa-xmark"></i></span> Harder reunion process</li>
+          </ul>
         </div>
 
-        <h3 class="card-title">TailiCart Smart Tag</h3>
+        <!-- VS Badge -->
+        <div class="vs-badge">VS</div>
 
-        <ul class="smart-features-list">
-          <li><span class="check-icon"><i class="fas fa-check"></i></span> Instant QR Scan</li>
-          <li><span class="check-icon"><i class="fas fa-check"></i></span> Pet Profile Access</li>
-          <li><span class="check-icon"><i class="fas fa-check"></i></span> Location Sharing</li>
-          <li><span class="check-icon"><i class="fas fa-check"></i></span> Owner Notification</li>
-          <li><span class="check-icon"><i class="fas fa-check"></i></span> Faster Reunion</li>
-        </ul>
+        <!-- TailiCart Smart Tag Card -->
+        <div class="comparison-card smart-card">
+          <div class="ribbon-badge">
+            <i class="fas fa-star"></i>
+          </div>
+
+          <h3 class="card-title">TailiCart Smart Tag</h3>
+
+          <div class="tag-image-wrapper">
+            <img src="assets/Home/smart_tag.png" alt="Smart Tag" class="tag-actual-img"
+              onerror="this.style.display='none'">
+          </div>
+
+          <ul class="smart-features-list">
+            <li><span class="check-icon"><i class="fas fa-check"></i></span> Instant QR Scan</li>
+            <li><span class="check-icon"><i class="fas fa-check"></i></span> Pet Profile Access</li>
+            <li><span class="check-icon"><i class="fas fa-check"></i></span> Location Sharing</li>
+            <li><span class="check-icon"><i class="fas fa-check"></i></span> Owner Notification</li>
+            <li><span class="check-icon"><i class="fas fa-check"></i></span> Faster Reunion</li>
+          </ul>
+        </div>
       </div>
     </div>
 
     <!-- Bottom tagline banner -->
     <div class="difference-banner">
-      <span class="banner-icon"><i class="fas fa-shield-heart"></i></span>
-      Helping pets get home <strong>faster, safer, and smarter.</strong>
+      <div class="banner-left">
+        <span class="banner-icon"><i class="fas fa-shield-halved"></i></span>
+        <div class="banner-text">
+          Helping pets get home <br><strong>faster, safer, and smarter.</strong>
+        </div>
+      </div>
+      <div class="banner-right">
+        <div class="banner-feature"><i class="far fa-bell"></i> Real-time Alerts</div>
+        <div class="banner-feature"><i class="fas fa-lock"></i> Secure & Private</div>
+        <div class="banner-feature"><i class="fas fa-history"></i> Works 24/7</div>
+      </div>
     </div>
 
   </div>
@@ -341,16 +371,16 @@
       <span class="hiw-badge">
         <i class="fas fa-shield-halved"></i> Complete Protection for Your Pet
       </span>
-      <h2 class="hiw-heading">How TailCart <span class="hiw-accent">Protection Works</span></h2>
+      <h2 class="hiw-heading">How TailCart <br><span class="hiw-accent">Protection Works</span></h2>
       <p class="hiw-subtext">Our smart tag and platform work together to keep your pet safe and help you bring them home
         faster.</p>
 
       <div class="hiw-steps">
 
         <div class="hiw-step">
+          <div class="hiw-num">1</div>
           <div class="hiw-icon-wrap">
-            <i class="fas fa-id-card"></i>
-            <span class="hiw-num">1</span>
+            <i class="fas fa-address-card"></i>
           </div>
           <div>
             <h4 class="hiw-step-title">Register Your Pet</h4>
@@ -359,9 +389,9 @@
         </div>
 
         <div class="hiw-step">
+          <div class="hiw-num">2</div>
           <div class="hiw-icon-wrap">
-            <i class="fas fa-tag"></i>
-            <span class="hiw-num">2</span>
+            <i class="fas fa-paw"></i>
           </div>
           <div>
             <h4 class="hiw-step-title">Attach TailCart Tag</h4>
@@ -370,9 +400,9 @@
         </div>
 
         <div class="hiw-step">
+          <div class="hiw-num">3</div>
           <div class="hiw-icon-wrap">
-            <i class="fas fa-magnifying-glass"></i>
-            <span class="hiw-num">3</span>
+            <i class="fas fa-search"></i>
           </div>
           <div>
             <h4 class="hiw-step-title">Pet Gets Lost</h4>
@@ -381,9 +411,9 @@
         </div>
 
         <div class="hiw-step">
+          <div class="hiw-num">4</div>
           <div class="hiw-icon-wrap">
             <i class="fas fa-location-dot"></i>
-            <span class="hiw-num">4</span>
           </div>
           <div>
             <h4 class="hiw-step-title">Location Shared</h4>
@@ -392,9 +422,9 @@
         </div>
 
         <div class="hiw-step">
+          <div class="hiw-num">5</div>
           <div class="hiw-icon-wrap">
-            <i class="fas fa-bell"></i>
-            <span class="hiw-num">5</span>
+            <i class="fas fa-shield-alt"></i>
           </div>
           <div>
             <h4 class="hiw-step-title">Connect Securely</h4>
@@ -403,9 +433,9 @@
         </div>
 
         <div class="hiw-step">
+          <div class="hiw-num">6</div>
           <div class="hiw-icon-wrap">
             <i class="fas fa-heart"></i>
-            <span class="hiw-num">6</span>
           </div>
           <div>
             <h4 class="hiw-step-title">Happy Reunion</h4>
@@ -426,9 +456,9 @@
         <span class="hiw-badge-line1">Smart Technology</span>
         <span class="hiw-badge-line2">Real Protection</span>
       </div>
-      <!-- <div class="hiw-paw-badge">
+      <div class="hiw-paw-badge">
         <i class="fas fa-paw"></i>
-      </div> -->
+      </div>
     </div>
 
   </div>

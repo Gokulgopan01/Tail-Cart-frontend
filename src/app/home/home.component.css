@@ -768,63 +768,79 @@ section {
   }
 }
 
-/* ══════════════════════════════════════════════════
-   ── The Difference Section ──
-══════════════════════════════════════════════════ */
+/* ==========================================
+   DIFFERENCE SECTION
+========================================== */
+
 .difference-section {
-  background: #f7f9f7;
-  padding: 0.5rem 0;
+  position: relative;
+  overflow: hidden;
+  padding: 90px 0;
+  background:
+    radial-gradient(circle at 15% 30%, rgba(46, 125, 76, 0.08), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(46, 125, 76, 0.05), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #f7fbf8 100%);
 }
 
 .difference-container {
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
-  background: #fbfcfb;
-  border-radius: 28px;
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  align-items: center;
-  gap: 4rem;
+  max-width: 1500px;
+  margin: auto;
+  padding: 0 40px;
+  position: relative;
+  z-index: 2;
 }
 
-.difference-left {
-  display: flex;
-  flex-direction: column;
+.difference-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 450px 1.2fr;
+  align-items: center;
+  gap: 40px;
+}
+
+/* ==========================================
+   BADGE
+========================================== */
+
+.diff-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #e8f6ec;
+  color: #1f6f43;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: 600;
+  margin-bottom: 25px;
 }
 
 .difference-heading {
-  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  font-size: clamp(3rem, 4vw, 4.6rem);
+  line-height: 1.05;
   font-weight: 800;
-  color: #0c1a12;
-  line-height: 1.25;
-  margin-bottom: 1.2rem;
+  color: #07131c;
+  margin-bottom: 25px;
 }
 
-.difference-heading .highlight-green {
-  color: #1F3D1A;
-}
-
-.heading-divider {
-  width: 48px;
-  height: 4px;
-  border-radius: 2px;
-  background: #2F6B47;
-  margin-bottom: 1.4rem;
+.highlight-green {
+  color: #2f7a4b;
 }
 
 .difference-desc {
-  font-size: 1.02rem;
-  color: #4b554f;
-  line-height: 1.7;
-  max-width: 400px;
-  margin-bottom: 2rem;
+  font-size: 1.15rem;
+  line-height: 1.9;
+  max-width: 520px;
+  color: #4c5b55;
+  margin-bottom: 40px;
 }
 
-/* Trusted by pet parents row */
+/* ==========================================
+   TRUSTED
+========================================== */
+
 .trusted-row {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 20px;
 }
 
 .trusted-avatars {
@@ -833,13 +849,13 @@ section {
 }
 
 .trusted-avatar {
-  width: 44px;
-  height: 44px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #fbfcfb;
+  border: 4px solid #fff;
   margin-left: -14px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
 }
 
 .trusted-avatar:first-child {
@@ -847,456 +863,341 @@ section {
 }
 
 .trusted-count {
-  width: 44px;
-  height: 44px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  background: #2F6B47;
-  color: #ffffff;
-  font-size: 0.7rem;
-  font-weight: 700;
+  background: #2f7a4b;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 700;
   margin-left: -14px;
-  border: 3px solid #fbfcfb;
-  text-align: center;
-  line-height: 1.1;
 }
 
 .trusted-text {
-  font-size: 0.88rem;
-  color: #4b554f;
+  font-size: 1rem;
   font-weight: 500;
-  line-height: 1.4;
+  color: #48564f;
 }
 
-/* Comparison cards row */
-.difference-right {
-  display: flex;
-  align-items: center;
-  gap: 0;
+/* ==========================================
+   DOG IMAGE
+========================================== */
+
+.difference-center-dog {
   position: relative;
+  display: flex;
+  justify-content: center;
+  transform: translateX(-25px);
+}
+
+.difference-center-dog::before {
+  content: "";
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,
+      #2f7a4b,
+      #1f5c37);
+  bottom: -50px;
+  z-index: -1;
+}
+
+.diff-dog-image {
+  width: 100%;
+  max-width: 480px;
+  object-fit: contain;
+  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .18));
+  animation: floatDog 6s ease-in-out infinite;
+
+  /* IMPORTANT: override centering properly */
+  margin-left: -25px;
+}
+
+@keyframes floatDog {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* ==========================================
+   RIGHT COMPARISON
+========================================== */
+
+.difference-right {
+  position: relative;
+  display: flex;
+  gap: 30px;
 }
 
 .comparison-card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 1.8rem 1.6rem 1.4rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
   flex: 1;
-  min-height: 320px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  border: 1.5px solid #e8ede9;
-  position: relative;
-  overflow: hidden;
+  background: rgba(255, 255, 255, .75);
+  backdrop-filter: blur(15px);
+  border-radius: 30px;
+  padding: 35px;
+  min-height: 560px;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, .06);
 }
 
 .traditional-card {
-  border-color: #e5e5e5;
-  background: #fafafa;
+  border: 1px solid rgba(0, 0, 0, .06);
 }
 
 .smart-card {
-  border-color: #2F6B47;
-  background: #ffffff;
+  border: 2px solid #2f7a4b;
+  position: relative;
 }
 
 .card-title {
-  font-size: 1rem;
+  font-size: 1.7rem;
   font-weight: 700;
-  color: #0c1a12;
-  margin: 0;
+  margin-bottom: 10px;
 }
 
 .card-subtitle {
-  font-size: 0.82rem;
-  color: #888;
-  margin: 0;
+  color: #7b8681;
+  margin-bottom: 30px;
 }
 
-/* Ribbon / star badge on smart card */
-.ribbon-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 46px;
-  height: 46px;
-  background: #1F3D1A;
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-  padding: 8px;
-}
+/* ==========================================
+   TAG IMAGE
+========================================== */
 
-.ribbon-badge i {
-  color: #ffffff;
-  font-size: 0.7rem;
-}
-
-/* Metal tag visual */
 .tag-image-wrapper {
-  flex: 0 0 auto;
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 0.6rem 0 1rem;
+  margin: 30px 0 40px;
 }
 
-.traditional-tag-visual {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.tag-actual-img {
+  width: 150px;
+  transition: .4s ease;
 }
 
-.metal-tag {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #e0e0e0, #a8a8a8 60%, #888 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 3px rgba(255, 255, 255, 0.4);
-  border: 2px solid #c0c0c0;
+.smart-card .tag-actual-img:hover {
+  transform: rotate(-5deg) scale(1.05);
 }
 
-.tag-text {
-  font-size: 0.52rem;
-  font-weight: 600;
-  color: #333;
-  line-height: 1.4;
-  letter-spacing: 0.02em;
-}
+/* ==========================================
+   FEATURES
+========================================== */
 
-/* Fail / X features list (Traditional card) */
-.fail-features-list {
-  list-style: none;
-  padding: 0;
-  margin: 0.4rem 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-}
-
-.fail-features-list li {
-  font-size: 0.88rem;
-  color: #5c5c5c;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.x-icon {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #fdecea;
-  border: 1.5px solid #f5c6c2;
-  color: #d32f2f;
-  font-size: 0.6rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-/* Smart features list */
+.fail-features-list,
 .smart-features-list {
   list-style: none;
   padding: 0;
-  margin: 0.6rem 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  flex: 1;
+  margin: 0;
 }
 
+.fail-features-list li,
 .smart-features-list li {
-  font-size: 0.92rem;
-  color: #1a3d2b;
-  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 12px;
+  margin-bottom: 20px;
+  font-size: 1.05rem;
 }
 
+.x-icon,
 .check-icon {
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: #e8f5e9;
-  border: 1.5px solid #a5d6a7;
-  color: #2F6B47;
-  font-size: 0.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
-/* VS badge */
+.x-icon {
+  background: #fde8e8;
+  color: #e04545;
+}
+
+.check-icon {
+  background: #e8f6ec;
+  color: #2f7a4b;
+}
+
+/* ==========================================
+   VS BADGE
+========================================== */
+
 .vs-badge {
-  width: 46px;
-  height: 46px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background: #2F6B47;
-  color: #fff;
-  font-size: 0.85rem;
+  background: linear-gradient(135deg,
+      #2f7a4b,
+      #1c5a35);
+  color: white;
+  font-size: 1.4rem;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(47, 107, 71, 0.35);
-  z-index: 2;
-  margin: 0 -10px;
-  position: relative;
+  z-index: 10;
+  box-shadow: 0 15px 30px rgba(47, 122, 75, .35);
 }
 
-/* Bottom tagline banner */
+/* ==========================================
+   RIBBON
+========================================== */
+
+.ribbon-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 90px;
+  height: 90px;
+  background: #1f5c37;
+  clip-path: polygon(100% 0,
+      100% 100%,
+      0 0);
+}
+
+.ribbon-badge i {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: white;
+}
+
+/* ==========================================
+   BOTTOM BANNER
+========================================== */
+
 .difference-banner {
-  grid-column: 1 / -1;
-  background: #eef3ed;
-  border-radius: 16px;
-  padding: 1.1rem 1.8rem;
-  margin-top: 1rem;
+  margin-top: 80px;
+  background:
+    linear-gradient(135deg,
+      #0f5b33,
+      #164a2f,
+      #0f5b33);
+
+  color: white;
+  border-radius: 32px;
+  padding: 35px 50px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.banner-left {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  font-size: 0.98rem;
-  color: #2c3b2f;
-  font-weight: 500;
-}
-
-.difference-banner strong {
-  color: #1F3D1A;
-  font-weight: 700;
+  gap: 20px;
 }
 
 .banner-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, .2);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #2F6B47;
-  font-size: 1.1rem;
+  font-size: 1.6rem;
 }
 
-/* ════════════════════════════════════════
-   Difference Section Mobile
-════════════════════════════════════════ */
+.banner-text {
+  font-size: 1.4rem;
+  line-height: 1.4;
+}
 
-@media (max-width: 768px) {
+.banner-text strong {
+  color: #b9ff7d;
+}
 
-  .difference-section {
-    padding: 3.5rem 0;
-  }
+.banner-right {
+  display: flex;
+  gap: 50px;
+}
 
-  .difference-container {
+.banner-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: .95;
+}
+
+/* ==========================================
+   FLOATING PAWS
+========================================== */
+
+.diff-paw {
+  position: absolute;
+  color: rgba(47, 122, 75, .12);
+  font-size: 40px;
+}
+
+.diff-paw-1 {
+  top: 120px;
+  left: 35%;
+}
+
+.diff-paw-2 {
+  top: 220px;
+  right: 28%;
+}
+
+.diff-paw-3 {
+  bottom: 180px;
+  left: 55%;
+}
+
+.diff-leaf {
+  position: absolute;
+  top: 80px;
+  left: 25%;
+  color: rgba(47, 122, 75, .2);
+  font-size: 34px;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width:1200px) {
+
+  .difference-grid-layout {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
-    padding: 2rem 1.25rem;
     text-align: center;
-  }
-
-  .difference-left {
-    align-items: center;
-  }
-
-  .heading-divider {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .difference-desc {
-    max-width: 100%;
-    margin: 0 auto 2rem;
-  }
-
-  .trusted-row {
-    justify-content: center;
   }
 
   .difference-right {
     flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
-
-  .comparison-card {
-    min-height: auto;
-    padding: 1.5rem;
   }
 
   .vs-badge {
-    margin: 0 auto;
+    display: none;
   }
 
   .difference-banner {
     flex-direction: column;
-    text-align: center;
+    gap: 30px;
+  }
+
+  .banner-right {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
-
-/* Phones: 450px → 300px */
-@media (max-width: 450px) {
-
-  .difference-section {
-    padding: 3rem 0;
-  }
-
-  .difference-container {
-    padding: 1.5rem 14px;
-    gap: 2rem;
-    border-radius: 20px;
-  }
-
-  .difference-heading {
-    font-size: 1.55rem;
-    line-height: 1.3;
-    margin-bottom: 1rem;
-  }
-
-  .difference-desc {
-    font-size: 0.88rem;
-    line-height: 1.65;
-  }
-
-  .trusted-avatar,
-  .trusted-count {
-    width: 38px;
-    height: 38px;
-  }
-
-  .trusted-text {
-    font-size: 0.8rem;
-  }
-
-  .comparison-card {
-    padding: 1.25rem;
-    border-radius: 14px;
-  }
-
-  .card-title {
-    font-size: 0.95rem;
-  }
-
-  .card-subtitle {
-    font-size: 0.75rem;
-  }
-
-  .metal-tag {
-    width: 78px;
-    height: 78px;
-  }
-
-  .tag-text {
-    font-size: 0.45rem;
-    line-height: 1.3;
-  }
-
-  .smart-features-list,
-  .fail-features-list {
-    gap: 0.55rem;
-  }
-
-  .smart-features-list li,
-  .fail-features-list li {
-    font-size: 0.82rem;
-    justify-content: flex-start;
-  }
-
-  .check-icon,
-  .x-icon {
-    width: 20px;
-    height: 20px;
-    font-size: 0.55rem;
-  }
-
-  .vs-badge {
-    width: 42px;
-    height: 42px;
-    font-size: 0.75rem;
-  }
-
-  .ribbon-badge {
-    width: 38px;
-    height: 38px;
-  }
-
-  .difference-banner {
-    font-size: 0.85rem;
-    padding: 1rem 1.2rem;
-  }
-}
-
-/* Small Phones */
-@media (max-width: 360px) {
-
-  .difference-container {
-    padding: 1.25rem 12px;
-  }
-
-  .difference-heading {
-    font-size: 1.35rem;
-  }
-
-  .difference-desc {
-    font-size: 0.82rem;
-  }
-
-  .comparison-card {
-    padding: 1rem;
-  }
-
-  .metal-tag {
-    width: 70px;
-    height: 70px;
-  }
-
-  .smart-features-list li,
-  .fail-features-list li {
-    font-size: 0.76rem;
-  }
-
-  .vs-badge {
-    width: 38px;
-    height: 38px;
-    font-size: 0.7rem;
-  }
-}
-
-/* Very Small Phones (320px) */
-@media (max-width: 320px) {
-
-  .difference-heading {
-    font-size: 1.25rem;
-  }
-
-  .difference-desc {
-    font-size: 0.78rem;
-  }
-
-  .comparison-card {
-    padding: 0.9rem;
-  }
-
-  .metal-tag {
-    width: 64px;
-    height: 64px;
-  }
-
-  .smart-features-list li,
-  .fail-features-list li {
-    font-size: 0.72rem;
-  }
-}
-
-
 
 /* ══════════════════════════════════════
    CATEGORIES SECTION
@@ -1912,12 +1813,12 @@ section {
 }
 
 .hiw-heading {
-  font-size: 36px;
+  font-size: 56px;
   font-weight: 800;
   color: #111;
-  line-height: 1.2;
-  margin: 0 0 14px;
-  white-space: nowrap;
+  line-height: 1.15;
+  margin: 0 0 16px;
+  white-space: normal;
 }
 
 .hiw-accent {
@@ -1925,11 +1826,11 @@ section {
 }
 
 .hiw-subtext {
-  font-size: 15px;
+  font-size: 18px;
   color: #555;
-  line-height: 1.65;
-  margin: 0 0 32px;
-  max-width: 420px;
+  line-height: 1.6;
+  margin: 0 0 40px;
+  max-width: 520px;
 }
 
 /* ── Steps List ── */
@@ -1941,9 +1842,9 @@ section {
 
 .hiw-step {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 14px 0;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 0;
   position: relative;
 }
 
@@ -1951,18 +1852,36 @@ section {
 .hiw-step:not(:last-child)::after {
   content: '';
   position: absolute;
-  left: 20px;
-  top: 52px;
-  bottom: -14px;
+  left: 11px;
+  top: 40px;
+  bottom: -16px;
   width: 1px;
   border-left: 2px dashed #b2ddc0;
+  z-index: 0;
+}
+
+.hiw-num {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  background: #1f9e52;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  z-index: 2;
 }
 
 .hiw-icon-wrap {
   position: relative;
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
   background: #fff;
   border: 1.5px solid #d0ead9;
   border-radius: 50%;
@@ -1970,36 +1889,19 @@ section {
   align-items: center;
   justify-content: center;
   color: #1f9e52;
-  font-size: 16px;
+  font-size: 20px;
   z-index: 1;
 }
 
-.hiw-num {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  width: 18px;
-  height: 18px;
-  background: #1f9e52;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
 .hiw-step-title {
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   color: #111;
-  margin: 0 0 3px;
+  margin: 0 0 4px;
 }
 
 .hiw-step-desc {
-  font-size: 13.5px;
+  font-size: 15px;
   color: #666;
   margin: 0;
   line-height: 1.5;
@@ -2007,39 +1909,44 @@ section {
 
 /* ── Right Column ── */
 .hiw-right {
-  flex: 0 0 560px;
+  flex: 0 0 55%;
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 560px;
+  align-items: flex-end;
+  justify-content: flex-end;
+  min-height: 700px;
+  margin-right: -2rem;
+  /* Let image stretch to right edge */
+  margin-bottom: -72px;
+  /* Let image stretch to bottom edge */
 }
 
 .hiw-image-circle {
-  width: 720px;
-  height: 720px;
-
+  width: 100%;
+  height: 100%;
   border-radius: 0;
   overflow: visible;
-
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  justify-content: flex-end;
 }
 
 .hiw-pet-img {
-  width: 100%;
-  height: 100%;
+  width: 110%;
+  max-width: none;
+  height: auto;
   object-fit: contain;
+  object-position: bottom right;
+  transform-origin: bottom right;
 }
 
 /* Green badge bottom-right */
 .hiw-badge-circle {
   position: absolute;
-  bottom: 20px;
-  right: 0px;
-  width: 120px;
-  height: 120px;
+  bottom: 80px;
+  right: 40px;
+  width: 140px;
+  height: 140px;
   background: #1a5c35;
   border-radius: 50%;
   display: flex;
@@ -2048,23 +1955,24 @@ section {
   justify-content: center;
   color: #fff;
   text-align: center;
-  gap: 4px;
+  gap: 6px;
+  box-shadow: 0 10px 30px rgba(26, 92, 53, 0.4);
 }
 
 .hiw-shield-icon {
-  font-size: 22px;
+  font-size: 28px;
   color: #fff;
   margin-bottom: 2px;
 }
 
 .hiw-badge-line1 {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   line-height: 1.2;
 }
 
 .hiw-badge-line2 {
-  font-size: 10px;
+  font-size: 12px;
   color: #a8d5bb;
   line-height: 1.2;
 }
@@ -2072,17 +1980,18 @@ section {
 /* Yellow paw badge top-right */
 .hiw-paw-badge {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 56px;
-  height: 56px;
+  top: 10%;
+  right: 15%;
+  width: 64px;
+  height: 64px;
   background: #f5c842;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 26px;
   color: #fff;
+  box-shadow: 0 8px 20px rgba(245, 200, 66, 0.4);
 }
 
 /* ── Responsive ── */
@@ -3929,8 +3838,8 @@ section {
   .hiw-inner,
   .faq-container {
     max-width: 100%;
-    padding-left: 72px;
-    padding-right: 72px;
+    padding-left: 110px;
+    padding-right: 110px;
   }
 }
 
@@ -3942,8 +3851,8 @@ section {
   .difference-container,
   .hiw-inner,
   .faq-container {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 72px;
+    padding-right: 72px;
   }
 }
 
