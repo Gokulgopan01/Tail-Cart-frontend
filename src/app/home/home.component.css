@@ -1276,22 +1276,22 @@ section {
 ========================================== */
 
 .categories-section {
-  padding: 80px 40px;
+  padding: 80px 30px;
   background: #f0efea;
   width: 100%;
   box-sizing: border-box;
 }
 
 .categories-layout {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   display: grid;
   gap: 14px;
   grid-template-columns: 0.72fr 1fr 1fr;
   grid-template-areas:
-    "intro dogs  cats"
-    "toys  toys  toys"
-    "food  food  accessories";
+    "intro dogs cats"
+    "toys toys toys"
+    "food accessories accessories";
 }
 
 /* ==========================================
