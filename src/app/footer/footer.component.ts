@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, MatSnackBarModule],
+  imports: [CommonModule, MatSnackBarModule, RouterModule],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css']
 })
@@ -16,6 +16,10 @@ export class FooterComponent {
 
   navigateTo(path: string): void {
     this.router.navigate([path]);
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   subscribeNewsletter(email: string): void {
