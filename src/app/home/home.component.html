@@ -253,36 +253,114 @@
   </div>
 </section>
 
-<!-- ══════════════════════════════════════
-      CATEGORIES SECTION
-  ══════════════════════════════════════ -->
+
+
+
 <!-- ══════════════════════════════════════
    CATEGORIES SECTION
 ══════════════════════════════════════ -->
-<section class="categories-section">
-  <div class="section-container">
 
-    <div class="category-header">
-      <h2 class="category-title">Best Sellers</h2>
-      <a routerLink="/shop" class="browse-all-link">View all →</a>
+<section class="categories-section">
+  <div class="categories-layout">
+
+    <!-- INTRO -->
+    <div class="intro-panel">
+      <span class="intro-tag">EXPLORE OUR COLLECTIONS</span>
+      <h2>Everything<br>Your Pet Needs</h2>
+      <p>From playful moments to everyday care, find everything to keep your pets happy and healthy.</p>
+      <div class="intro-actions">
+        <a routerLink="/shop" class="shop-btn">SHOP ALL COLLECTIONS →</a>
+        <span class="paw-icon">🐾</span>
+      </div>
     </div>
 
-    <div class="category-grid-six">
-      <div *ngFor="let cat of categories" class="category-card-premium" [class.active]="selectedCategory === cat.name"
-        (click)="selectCategory(cat.name)">
-        <div class="cat-image-wrap">
-          <img [src]="cat.img" [alt]="cat.name" class="cat-img" />
-        </div>
+    <!-- DOGS -->
+    <div class="category-card dog-card" (click)="selectCategory('Dogs')">
+      <div class="card-icon-badge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path
+            d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2 .344-2.5 3.5-2.5 3.5L2 8l-.5 3.5 1 1.5H4v2l2 1.5h4l1-1V14l3-1.5V10l-4-4.828z" />
+        </svg>
+      </div>
+      <img src="assets/Home/dog_catagory.png" alt="Dogs">
+      <div class="category-content">
+        <h3>For Dogs</h3>
+        <p>Essentials for every happy pup</p>
+        <a class="explore-btn">EXPLORE →</a>
+      </div>
+    </div>
 
-        <div class="cat-overlay">
-          <span class="cat-name-label">{{ cat.name }}</span>
+    <!-- CATS -->
+    <div class="category-card cat-card" (click)="selectCategory('Cats')">
+      <div class="card-icon-badge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path
+            d="M12 5C8 5 5 7.5 5 11c0 1.5.5 3 1.5 4L5 17l2.5-.5C8.5 17.5 10 18 12 18s3.5-.5 4.5-1.5L19 17l-1.5-2C18.5 14 19 12.5 19 11c0-3.5-3-6-7-6z" />
+          <path d="M5 5L7 9M19 5L17 9" />
+        </svg>
+      </div>
+      <img src="assets/Home/cat_catagory.png" alt="Cats">
+      <div class="category-content">
+        <h3>For Cats</h3>
+        <p>Everything for curious and cute cats</p>
+        <a class="explore-btn">EXPLORE →</a>
+      </div>
+    </div>
+
+    <!-- TOYS -->
+    <div class="toys-banner" (click)="selectCategory('Toys')">
+      <div class="toys-text">
+        <div class="toys-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" />
+          </svg>
         </div>
+        <span class="toys-tag">PLAY. CHEW. REPEAT.</span>
+        <h3>Toys &amp; Fun</h3>
+        <p>Engaging toys for active minds and happy tails.</p>
+        <a class="toys-explore-btn">EXPLORE TOYS →</a>
+      </div>
+      <div class="toys-image">
+        <img src="assets/Home/toys_catagory.png" alt="Toys">
+      </div>
+    </div>
+
+    <!-- FOOD — full image with overlay -->
+    <div class="category-small food-card" (click)="selectCategory('Food')">
+      <div class="card-icon-badge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M4 4h16v2a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4z" />
+          <path d="M8 10v10M16 10v10" />
+        </svg>
+      </div>
+      <img src="assets/images/product_trending_1.png" alt="Food">
+      <div class="category-content">
+        <h3>Food &amp; Treats</h3>
+        <p>Nutritious food and tasty treats for their well-being.</p>
+        <a class="explore-btn">EXPLORE →</a>
+      </div>
+    </div>
+
+    <!-- ACCESSORIES — full image with overlay -->
+    <div class="category-small accessories-card" (click)="selectCategory('Accessories')">
+      <div class="card-icon-badge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+          <path d="M8 12h8M12 8v8" />
+        </svg>
+      </div>
+      <img src="assets/Home/accesories.png" alt="Accessories">
+      <div class="category-content">
+        <h3>Accessories</h3>
+        <p>Collars, leashes, beds and more.</p>
+        <a class="explore-btn">EXPLORE →</a>
       </div>
     </div>
 
   </div>
 </section>
-
 
 <!-- ══════════════════════════════════════
      SPECIAL OFFERS / PROMO BANNERS
@@ -315,44 +393,61 @@
   <div class="section-container">
 
     <div class="recommended-header">
-      <h2 class="recommended-title">Best Seller</h2>
+      <div>
+        <span class="section-tag">★ BEST SELLERS</span>
+        <h2 class="recommended-title">Best Sellers</h2>
+        <p class="section-subtitle">
+          Discover our most loved products, trusted by pets and their humans.
+        </p>
+      </div>
+
       <a routerLink="/shop" class="recommended-view-all">
-        View all <i class="fas fa-arrow-right"></i>
+        View All Products
+        <i class="fas fa-arrow-right"></i>
       </a>
     </div>
 
     <div class="recommended-grid">
 
-      <div *ngFor="let product of filteredProducts.slice(0,5)" class="product-card" (click)="navigateToShop()">
+      <div *ngFor="let product of filteredProducts.slice(0,8)" class="product-card" (click)="navigateToShop()">
 
         <div class="product-image-wrap">
-          <div class="product-badge" *ngIf="product.badge">{{ product.badge }}</div>
+
+          <span class="product-badge" *ngIf="product.badge">
+            {{ product.badge }}
+          </span>
+
           <img [src]="product.img" [alt]="product.name" class="product-image" />
+
+          <div class="product-rating">
+            <i class="fas fa-heart"></i>
+            {{ product.rating || '4.8' }}
+          </div>
+
         </div>
 
         <div class="product-content">
-          <h3 class="product-name">{{ product.name }}</h3>
 
-          <div class="product-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <span class="rating-count">({{ product.reviews }})</span>
-          </div>
+          <h3 class="product-name">
+            {{ product.name }}
+          </h3>
 
-          <p class="product-desc">{{ product.description }}</p>
+          <p class="product-desc">
+            {{ product.description }}
+          </p>
 
-          <div class="product-bottom">
-            <div class="price-wrap">
-              <span class="current-price">{{ product.price }}</span>
-              <span class="old-price">₹799.00</span>
+          <div class="product-footer">
+
+            <div class="product-price">
+              {{ product.price }}
             </div>
+
             <button class="cart-btn" (click)="$event.stopPropagation(); addToCart(product)">
               <i class="fas fa-cart-shopping"></i>
             </button>
+
           </div>
+
         </div>
 
       </div>
