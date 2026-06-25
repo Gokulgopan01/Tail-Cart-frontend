@@ -1270,6 +1270,7 @@ section {
 }
 
 
+
 /* ==========================================
    CATEGORY SECTION
 ========================================== */
@@ -1288,7 +1289,7 @@ section {
   gap: 14px;
   grid-template-columns: 0.72fr 1fr 1fr;
   grid-template-areas:
-    "intro dogs cats"
+    "intro dogs  cats"
     "toys  toys  toys"
     "food  food  accessories";
 }
@@ -1368,7 +1369,7 @@ section {
   justify-content: center;
   padding: 11px 20px;
   border-radius: 7px;
-  border: 2px solid #111;
+  border: 2px solid #1d6f42;
   background: #1d6f42;
   color: #fff;
   font-size: 11px;
@@ -1391,12 +1392,12 @@ section {
 }
 
 /* ==========================================
-   SHARED CARD BASE
-   All cards: image fills, text overlaid
+   SHARED CARD BASE — image fills fully, text overlaid
 ========================================== */
 
 .category-card,
-.category-small {
+.category-small,
+.toys-banner {
   position: relative;
   overflow: hidden;
   cursor: pointer;
@@ -1404,9 +1405,10 @@ section {
   background: #ccc;
 }
 
-/* full-cover image */
+/* full-cover image for all card types */
 .category-card img,
-.category-small img {
+.category-small img,
+.toys-banner img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1417,20 +1419,22 @@ section {
 }
 
 .category-card:hover img,
-.category-small:hover img {
+.category-small:hover img,
+.toys-banner:hover img {
   transform: scale(1.06);
 }
 
-/* gradient overlay — bottom fade */
+/* gradient overlay for all cards */
 .category-card::before,
-.category-small::before {
+.category-small::before,
+.toys-banner::before {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom,
-      rgba(0, 0, 0, 0.08) 0%,
-      rgba(0, 0, 0, 0.15) 40%,
-      rgba(0, 0, 0, 0.6) 100%);
+      rgba(0, 0, 0, 0.06) 0%,
+      rgba(0, 0, 0, 0.18) 40%,
+      rgba(0, 0, 0, 0.65) 100%);
   z-index: 1;
 }
 
@@ -1442,12 +1446,16 @@ section {
   height: 340px;
 }
 
+.toys-banner {
+  height: 280px;
+}
+
 .category-small {
-  height: 230px;
+  height: 280px;
 }
 
 /* ==========================================
-   ICON BADGE (top-left, inside card)
+   ICON BADGE — top-left, inside every card
 ========================================== */
 
 .card-icon-badge {
@@ -1459,7 +1467,6 @@ section {
   height: 38px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1467,7 +1474,7 @@ section {
 }
 
 /* ==========================================
-   CARD CONTENT (bottom-left overlay)
+   CARD CONTENT — bottom-left overlay (used on ALL cards)
 ========================================== */
 
 .category-content {
@@ -1492,83 +1499,39 @@ section {
   margin-bottom: 14px;
 }
 
-.explore-btn {
-  display: inline-block;
-  padding: 7px 16px;
-  border: 1.5px solid rgba(255, 255, 255, 0.85);
-  border-radius: 5px;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  text-decoration: none;
-  cursor: pointer;
-  background: transparent;
-  transition: 0.2s;
-}
-
-.explore-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
-}
-
 /* ==========================================
-   TOYS BANNER — split layout (text left / image right)
+   TOYS BANNER SPECIFIC CONTENT LAYOUT
 ========================================== */
 
-.toys-banner {
-  display: flex;
-  align-items: stretch;
-  border-radius: 18px;
-  overflow: hidden;
-  cursor: pointer;
-  background: #e5e3db;
-  height: 210px;
-}
-
-.toys-text {
-  flex: 0 0 270px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 28px 28px;
-  gap: 0;
+.toys-content {
+  position: absolute;
+  left: 24px;
+  bottom: 24px;
   z-index: 2;
-}
-
-.toys-badge {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.07);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #444;
-  margin-bottom: 10px;
-  flex-shrink: 0;
+  color: #fff;
 }
 
 .toys-tag {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.8px;
-  color: #888;
+  color: rgba(255, 255, 255, 0.75);
   text-transform: uppercase;
-  margin-bottom: 6px;
   display: block;
+  margin-bottom: 6px;
 }
 
-.toys-text h3 {
-  font-size: 26px;
+.toys-content h3 {
+  font-size: 28px;
   font-weight: 800;
-  color: #111;
+  color: #fff;
   margin-bottom: 6px;
   line-height: 1.15;
 }
 
-.toys-text p {
+.toys-content p {
   font-size: 13px;
-  color: #555;
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.5;
   margin-bottom: 16px;
 }
@@ -1587,36 +1550,35 @@ section {
   text-decoration: none;
   cursor: pointer;
   transition: 0.2s;
+  border: none;
 }
 
 .toys-explore-btn:hover {
   background: #175c37;
 }
 
-.toys-image {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-}
-
-.toys-image img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.7s ease;
-}
-
-.toys-banner:hover .toys-image img {
-  transform: scale(1.05);
-}
-
 /* ==========================================
-   BOTTOM SMALL CARDS
-   Food & Accessories — image fills, text overlay
+   EXPLORE BUTTON (on image cards)
 ========================================== */
+
+.explore-btn {
+  display: inline-block;
+  padding: 7px 16px;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-radius: 5px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-decoration: none;
+  cursor: pointer;
+  background: transparent;
+  transition: 0.2s;
+}
+
+.explore-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
 
 /* ==========================================
    RESPONSIVE
@@ -1638,10 +1600,6 @@ section {
 
   .intro-panel h2 {
     font-size: 38px;
-  }
-
-  .toys-text {
-    flex: 0 0 240px;
   }
 }
 
@@ -1679,31 +1637,14 @@ section {
     height: 280px;
   }
 
-  .category-small {
-    height: 220px;
-  }
-
   .toys-banner {
-    height: auto;
-    flex-direction: column;
+    height: 260px;
   }
 
-  .toys-text {
-    flex: none;
-    padding: 22px;
-  }
-
-  .toys-image {
-    height: 180px;
-    position: relative;
-  }
-
-  .toys-image img {
-    position: absolute;
+  .category-small {
+    height: 240px;
   }
 }
-
-
 
 /* ══════════════════════════════════════════════════════
    PROMO BANNERS SECTION  (3-column grid like the image)

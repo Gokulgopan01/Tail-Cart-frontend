@@ -307,27 +307,25 @@
       </div>
     </div>
 
-    <!-- TOYS -->
+    <!-- TOYS — full image, text overlaid at bottom-left -->
     <div class="toys-banner" (click)="selectCategory('Toys')">
-      <div class="toys-text">
-        <div class="toys-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <circle cx="12" cy="12" r="3" />
-            <path
-              d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" />
-          </svg>
-        </div>
+      <div class="card-icon-badge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" />
+        </svg>
+      </div>
+      <img src="assets/Home/toys_catagory.png" alt="Toys">
+      <div class="toys-content">
         <span class="toys-tag">PLAY. CHEW. REPEAT.</span>
         <h3>Toys &amp; Fun</h3>
         <p>Engaging toys for active minds and happy tails.</p>
         <a class="toys-explore-btn">EXPLORE TOYS →</a>
       </div>
-      <div class="toys-image">
-        <img src="assets/Home/toys_catagory.png" alt="Toys">
-      </div>
     </div>
 
-    <!-- FOOD — full image with overlay -->
+    <!-- FOOD — full image, text overlaid -->
     <div class="category-small food-card" (click)="selectCategory('Food')">
       <div class="card-icon-badge">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -343,12 +341,12 @@
       </div>
     </div>
 
-    <!-- ACCESSORIES — full image with overlay -->
+    <!-- ACCESSORIES — full image, text overlaid -->
     <div class="category-small accessories-card" (click)="selectCategory('Accessories')">
       <div class="card-icon-badge">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-          <path d="M8 12h8M12 8v8" />
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
         </svg>
       </div>
       <img src="assets/Home/accesories.png" alt="Accessories">
@@ -361,7 +359,6 @@
 
   </div>
 </section>
-
 <!-- ══════════════════════════════════════
      SPECIAL OFFERS / PROMO BANNERS
 ══════════════════════════════════════ -->
