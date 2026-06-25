@@ -4518,7 +4518,7 @@ section {
     position: relative !important;
     top: auto !important;
     right: auto !important;
-    transform: none !important;
+    transform: none;
     height: auto !important;
     margin-bottom: 30px !important;
     display: flex !important;
@@ -4532,17 +4532,57 @@ section {
   }
 
   .orbit-ring {
-    display: none !important;
+    display: block !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    border-radius: 50% !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+  }
+
+  .ring-1 {
+    width: 280px !important;
+    height: 280px !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .ring-2 {
+    width: 360px !important;
+    height: 360px !important;
+    transform: translate(-50%, -50%) !important;
   }
 
   .hero-image {
     width: 80% !important;
     max-width: 400px !important;
-    transform: none !important;
+    transform: none;
   }
 
   .hero-arrow {
-    display: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: absolute !important;
+    top: 280px !important;
+    transform: translateY(-50%) !important;
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 1.1rem !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    border-radius: 50% !important;
+    z-index: 100 !important;
+  }
+
+  .hero-arrow.left {
+    left: 20px !important;
+  }
+
+  .hero-arrow.right {
+    right: 20px !important;
   }
 
   .hero-service-nav {
@@ -4653,6 +4693,31 @@ section {
   .hero-image {
     width: 100% !important;
     max-width: 240px !important;
+  }
+
+  .hero-arrow {
+    top: 210px !important;
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .hero-arrow.left {
+    left: 10px !important;
+  }
+
+  .hero-arrow.right {
+    right: 10px !important;
+  }
+
+  .ring-1 {
+    width: 250px !important;
+    height: 250px !important;
+  }
+
+  .ring-2 {
+    width: 300px !important;
+    height: 300px !important;
   }
 }
 
