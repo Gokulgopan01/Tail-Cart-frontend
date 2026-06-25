@@ -461,7 +461,7 @@
     <!-- Left: Text + Steps -->
     <div class="hiw-left">
       <span class="hiw-badge">
-        <i class="fas fa-shield-halved"></i> Complete Protection for Your Pet
+        <i class="fas fa-shield-halved"></i> Smart Pet Protection
       </span>
       <h2 class="hiw-heading">How TailCart <br><span class="hiw-accent">Protection Works</span></h2>
       <p class="hiw-subtext">Our smart tag and platform work together to keep your pet safe and help you bring them home
@@ -520,37 +520,105 @@
           </div>
           <div>
             <h4 class="hiw-step-title">Connect Securely</h4>
-            <p class="hiw-step-desc">Finder contacts you securely through our system.</p>
-          </div>
-        </div>
-
-        <div class="hiw-step">
-          <div class="hiw-num">6</div>
-          <div class="hiw-icon-wrap">
-            <i class="fas fa-heart"></i>
-          </div>
-          <div>
-            <h4 class="hiw-step-title">Happy Reunion</h4>
-            <p class="hiw-step-desc">You and your furry friend are reunited safely.</p>
+            <p class="hiw-step-desc">We connect you both safely and get your pet home.</p>
           </div>
         </div>
 
       </div>
     </div>
 
-    <!-- Right: Image -->
+    <!-- Right: Modern Visual Area -->
     <div class="hiw-right">
-      <div class="hiw-image-circle">
-        <img src="/assets/Home/how_it_works.png" alt="Happy pet owner with dog" class="hiw-pet-img" />
+
+      <!-- Background Glow -->
+      <div class="hiw-glow"></div>
+
+      <!-- Main Pet + Owner Image -->
+      <img src="/assets/Home/how_it_works.png" alt="Pet owner hugging dog" class="hiw-pet-img">
+
+      <!-- Small floating check badge -->
+      <div class="hiw-mini-check">
+        <i class="fas fa-check"></i>
       </div>
-      <div class="hiw-badge-circle">
-        <i class="fas fa-shield-halved hiw-shield-icon"></i>
-        <span class="hiw-badge-line1">Smart Technology</span>
-        <span class="hiw-badge-line2">Real Protection</span>
+
+      <!-- Success Card -->
+      <div class="hiw-success-card">
+        <div class="success-icon">
+          <i class="fas fa-check"></i>
+        </div>
+
+        <div>
+          <h5>You're all set!</h5>
+          <p>Your pet is protected and ready.</p>
+        </div>
       </div>
-      <div class="hiw-paw-badge">
+
+      <!-- Phone Mockup -->
+      <div class="hiw-phone-card">
+
+        <div class="phone-notch"></div>
+
+        <div class="phone-header">
+          <img src="/assets/Home/how_it_works.png">
+          <div>
+            <h6>Rocky</h6>
+            <span>Active</span>
+          </div>
+        </div>
+
+        <div class="phone-map">
+          <div class="map-pin">
+            <i class="fas fa-paw"></i>
+          </div>
+        </div>
+
+        <div class="phone-footer">
+          <div class="phone-footer-row">
+            <span class="phone-footer-label">Last seen</span>
+            <span class="phone-footer-time">8min</span>
+          </div>
+          <div class="phone-footer-status">2 min ago</div>
+          <div class="phone-footer-address">
+            <i class="fas fa-location-dot"></i> Central Park, New York, NY
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Floating Tech Badge -->
+      <div class="hiw-tech-card">
+        <i class="fas fa-shield-halved"></i>
+        <div>
+          <h5>Smart Technology</h5>
+          <span>Real-time protection and peace of mind</span>
+        </div>
+      </div>
+
+      <!-- Paw Badges -->
+      <div class="hiw-paw-badge paw1">
         <i class="fas fa-paw"></i>
       </div>
+
+      <div class="hiw-paw-badge paw2">
+        <i class="fas fa-paw"></i>
+      </div>
+
+      <!-- Bottom Feature Strip -->
+      <div class="hiw-feature-strip">
+        <div class="hiw-feature-item">
+          <i class="fas fa-shield-halved"></i> Secure &amp; Reliable
+        </div>
+        <div class="hiw-feature-item">
+          <i class="fas fa-bolt"></i> Instant Notifications
+        </div>
+        <div class="hiw-feature-item">
+          <i class="fas fa-lock"></i> Privacy First
+        </div>
+        <div class="hiw-feature-item">
+          <i class="fas fa-users"></i> Community Powered
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -694,11 +762,11 @@
     </button>
 
     <!-- Progress -->
-    <div class="hero-progress">
+    <!-- <div class="hero-progress">
       <span *ngFor="let service of services; let i = index" class="progress-item"
         [class.active]="activeEcosystemIndex === i" (click)="selectEcosystemTab(i)">
       </span>
-    </div>
+    </div> -->
   </div>
 
   <!-- IMAGE -->
@@ -706,6 +774,9 @@
     [class.image-exit-backward]="imageState === 'exit' && slideDirection === 'backward'"
     [class.image-enter-forward]="imageState === 'enter' && slideDirection === 'forward'"
     [class.image-enter-backward]="imageState === 'enter' && slideDirection === 'backward'">
+
+    <div class="orbit-ring ring-1"></div>
+    <div class="orbit-ring ring-2"></div>
     <img [src]="services[activeEcosystemIndex].img" [alt]="services[activeEcosystemIndex].name" class="hero-image" />
   </div>
 
@@ -719,10 +790,13 @@
   </button>
 
   <!-- Bottom Dots -->
-  <div class="hero-dots">
-    <span *ngFor="let service of services; let i = index" class="hero-dot" [class.active]="activeEcosystemIndex === i"
+  <div class="hero-service-nav">
+
+    <button *ngFor="let service of services; let i=index" [class.active]="activeEcosystemIndex === i"
       (click)="selectEcosystemTab(i)">
-    </span>
+      {{service.name}}
+    </button>
+
   </div>
 
 </section>
