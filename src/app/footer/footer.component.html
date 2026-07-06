@@ -1,40 +1,75 @@
 <footer class="footer">
+
+  <!-- Floating trust card — sits astride the top edge of the footer -->
+  <div class="trust-float">
+    <div class="trust-float-track">
+      <div class="trust-pill">
+        <i class="fas fa-paw"></i>
+        <div class="trust-pill-text">
+          <strong>Pet&nbsp;Friendly</strong>
+          <span>Because pets deserve the best</span>
+        </div>
+      </div>
+      <div class="trust-pill">
+        <i class="fas fa-heart"></i>
+        <div class="trust-pill-text">
+          <strong>Loved by Pets</strong>
+          <span>Happy pets, happy parents</span>
+        </div>
+      </div>
+      <div class="trust-pill">
+        <i class="fas fa-box-open"></i>
+        <div class="trust-pill-text">
+          <strong>5000+ Products</strong>
+          <span>Wide range for every pet</span>
+        </div>
+      </div>
+      <div class="trust-pill">
+        <i class="fas fa-users"></i>
+        <div class="trust-pill-text">
+          <strong>10K+ Pet Parents</strong>
+          <span>Thank you for trusting us</span>
+        </div>
+      </div>
+      <div class="trust-pill">
+        <i class="fas fa-certificate"></i>
+        <div class="trust-pill-text">
+          <strong>Quality Assured</strong>
+          <span>Premium quality you can trust</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="footer-top">
 
     <!-- Brand Column -->
     <div class="footer-brand-col">
       <div class="footer-logo">
-        <i class="fas fa-paw brand-logo-icon"></i>
+        <span class="brand-logo-badge"><i class="fas fa-paw"></i></span>
         <span class="brand-name">TailCart</span>
       </div>
       <p class="brand-tagline">
         Everything your pet needs, delivered with love.
       </p>
 
-      <!-- Key Features under description -->
       <div class="footer-features">
         <div class="feature-item">
-          <div class="feature-icon-circle">
-            <i class="fas fa-truck"></i>
-          </div>
+          <i class="fas fa-truck"></i>
           <div class="feature-text">
             <strong>Free Delivery</strong>
             <span>On orders above $49</span>
           </div>
         </div>
         <div class="feature-item">
-          <div class="feature-icon-circle">
-            <i class="fas fa-shield-halved"></i>
-          </div>
+          <i class="fas fa-shield-halved"></i>
           <div class="feature-text">
             <strong>Secure Payments</strong>
-            <span>100% safe & secure</span>
+            <span>100% safe &amp; secure</span>
           </div>
         </div>
         <div class="feature-item">
-          <div class="feature-icon-circle">
-            <i class="fas fa-headset"></i>
-          </div>
+          <i class="fas fa-headset"></i>
           <div class="feature-text">
             <strong>24/7 Support</strong>
             <span>We're here for you</span>
@@ -45,24 +80,29 @@
 
     <!-- Links Columns Container -->
     <div class="footer-links-container">
-      <!-- Products Column -->
-      <div class="links-column">
-        <h4>PRODUCTS</h4>
+
+      <details class="links-column" open>
+        <summary>
+          <h4>Products</h4>
+          <i class="fas fa-chevron-down summary-chevron"></i>
+        </summary>
         <ul>
           <li><a routerLink="/shop">Dog Supplies</a></li>
           <li><a routerLink="/shop">Cat Supplies</a></li>
-          <li><a routerLink="/shop">Food & Treats</a></li>
-          <li><a routerLink="/shop">Toys & Accessories</a></li>
-          <li><a routerLink="/shop">Health & Wellness</a></li>
+          <li><a routerLink="/shop">Food &amp; Treats</a></li>
+          <li><a routerLink="/shop">Toys &amp; Accessories</a></li>
+          <li><a routerLink="/shop">Health &amp; Wellness</a></li>
           <li><a routerLink="/shop">Grooming</a></li>
-          <li><a routerLink="/shop">Sale & Offers</a></li>
+          <li><a routerLink="/shop">Sale &amp; Offers</a></li>
           <li><a routerLink="/shop">New Arrivals</a></li>
         </ul>
-      </div>
+      </details>
 
-      <!-- Company Column -->
-      <div class="links-column">
-        <h4>COMPANY</h4>
+      <details class="links-column" open>
+        <summary>
+          <h4>Company</h4>
+          <i class="fas fa-chevron-down summary-chevron"></i>
+        </summary>
         <ul>
           <li><a routerLink="/about">About Us</a></li>
           <li><a href="#">Our Story</a></li>
@@ -73,27 +113,30 @@
           <li><a href="#">Affiliate Program</a></li>
           <li><a routerLink="/contact">Contact Us</a></li>
         </ul>
-      </div>
+      </details>
 
-      <!-- Support Column -->
-      <div class="links-column">
-        <h4>SUPPORT</h4>
+      <details class="links-column" open>
+        <summary>
+          <h4>Support</h4>
+          <i class="fas fa-chevron-down summary-chevron"></i>
+        </summary>
         <ul>
           <li><a href="#">Help Center</a></li>
           <li><a href="#">Track Order</a></li>
-          <li><a href="#">Shipping & Delivery</a></li>
-          <li><a href="#">Returns & Refunds</a></li>
+          <li><a href="#">Shipping &amp; Delivery</a></li>
+          <li><a href="#">Returns &amp; Refunds</a></li>
           <li><a href="#">FAQs</a></li>
           <li><a href="#">Size Guide</a></li>
           <li><a href="#">Terms of Service</a></li>
           <li><a href="#">Privacy Policy</a></li>
         </ul>
-      </div>
+      </details>
+
     </div>
 
     <!-- Newsletter Column -->
     <div class="footer-newsletter-col">
-      <h4>STAY UPDATED</h4>
+      <h4>Stay Updated</h4>
       <p class="newsletter-desc">
         Subscribe to get exclusive offers, pet care tips and updates from TailCart.
       </p>
@@ -104,125 +147,47 @@
           <input type="email" placeholder="Your email address" class="subscribe-input" #emailInput>
         </div>
         <button class="subscribe-btn" (click)="subscribeNewsletter(emailInput.value); emailInput.value=''">
-          Subscribe <i class="fas fa-arrow-right"></i>
+          <span>Subscribe</span> <i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
-      <!-- Dog & Cat Mascot Illustration -->
-      <div class="mascot-container">
-        <!-- Floating hearts/decorations -->
-        <i class="far fa-heart heart-floating heart-1"></i>
-        <i class="far fa-heart heart-floating heart-2"></i>
-        <div class="mascot-circle-bg"></div>
-        <img src="assets/images/footer_pets_bg.png" alt="Happy Pets" class="mascot-image"
-          onerror="this.src='assets/Home/tailcart_hero_dog.png'">
+      <div class="social-circles">
+        <a href="#" class="social-circle" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-circle" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-circle" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="#" class="social-circle" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
       </div>
     </div>
 
   </div>
 
-  <!-- Trust strip -->
-  <div class="trust-strip">
-    <div class="trust-strip-item">
-      <div class="trust-icon-wrapper">
-        <i class="fas fa-paw"></i>
-      </div>
-      <div class="trust-info">
-        <strong>Pet Friendly</strong>
-        <span>Because pets deserve the best</span>
-      </div>
-    </div>
-    <div class="trust-divider"></div>
-    <div class="trust-strip-item">
-      <div class="trust-icon-wrapper">
-        <i class="fas fa-heart"></i>
-      </div>
-      <div class="trust-info">
-        <strong>Loved by Pets</strong>
-        <span>Happy pets, happy parents</span>
-      </div>
-    </div>
-    <div class="trust-divider"></div>
-    <div class="trust-strip-item">
-      <div class="trust-icon-wrapper">
-        <i class="fas fa-box-open"></i>
-      </div>
-      <div class="trust-info">
-        <strong>5000+ Products</strong>
-        <span>Wide range for every pet</span>
-      </div>
-    </div>
-    <div class="trust-divider"></div>
-    <div class="trust-strip-item">
-      <div class="trust-icon-wrapper">
-        <i class="fas fa-users"></i>
-      </div>
-      <div class="trust-info">
-        <strong>Trusted by <span class="green-highlight">10K+ Pet Parents</span></strong>
-        <span>Thank you for trusting us</span>
-      </div>
-    </div>
-    <div class="trust-divider"></div>
-    <div class="trust-strip-item">
-      <div class="trust-icon-wrapper">
-        <i class="fas fa-certificate"></i>
-      </div>
-      <div class="trust-info">
-        <strong>Quality Assured</strong>
-        <span>Premium quality you can trust</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bottom Dark Green Bar -->
+  <!-- Bottom Bar -->
   <div class="footer-bottom">
     <div class="footer-copyright">
-      <div class="bottom-logo-circle">
-        <i class="fas fa-paw"></i>
-      </div>
+      <span class="copy-badge"><i class="fas fa-paw"></i></span>
       <span>&copy; 2024 TailCart. All rights reserved.</span>
     </div>
 
-    <!-- Payment Badges -->
     <div class="payment-badges">
-      <div class="payment-card visa-card">
-        <span class="visa-text">VISA</span>
-      </div>
+      <div class="payment-card visa-card"><span class="visa-text">VISA</span></div>
       <div class="payment-card mastercard-card">
         <div class="mc-circles">
           <span class="mc-circle mc-red"></span>
           <span class="mc-circle mc-orange"></span>
         </div>
-        <span class="mc-text">mastercard</span>
       </div>
-      <div class="payment-card amex-card">
-        <span class="amex-text">AMEX</span>
-      </div>
-      <div class="payment-card paypal-card">
-        <span class="paypal-text">PayPal</span>
-      </div>
-      <div class="payment-card applepay-card">
-        <i class="fab fa-apple"></i> <span class="apple-pay-text">Pay</span>
-      </div>
+      <div class="payment-card amex-card"><span class="amex-text">AMEX</span></div>
+      <div class="payment-card paypal-card"><span class="paypal-text">PayPal</span></div>
+      <div class="payment-card applepay-card"><i class="fab fa-apple"></i><span class="apple-pay-text">Pay</span></div>
     </div>
 
-    <!-- Socials & Legal -->
-    <div class="footer-legal-socials">
-      <div class="legal-links">
-        <a href="#">Privacy Policy</a>
-        <span class="legal-pipe">|</span>
-        <a href="#">Terms of Service</a>
-        <span class="legal-pipe">|</span>
-        <a href="#">Refund Policy</a>
-      </div>
-
-      <div class="social-circles">
-        <a href="#" class="social-circle"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="social-circle"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="social-circle"><i class="fab fa-youtube"></i></a>
-        <a href="#" class="social-circle"><i class="fab fa-tiktok"></i></a>
-      </div>
+    <div class="legal-links">
+      <a href="#">Privacy</a>
+      <span class="legal-pipe">·</span>
+      <a href="#">Terms</a>
+      <span class="legal-pipe">·</span>
+      <a href="#">Refunds</a>
     </div>
-
   </div>
+
 </footer>

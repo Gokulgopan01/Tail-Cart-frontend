@@ -1,63 +1,180 @@
-.footer {
-  background: linear-gradient(180deg,
-      #f4faf5 0%,
-      #d7eadb 100%);
+/* =========================================================
+   TAILCART FOOTER — TOKENS
+   Palette:  pine-900 #0E2A21 (bg) · pine-800 #17392C (surface)
+             mint-400 #7FE3A6 (primary accent) · coral-400 #FF8C69 (warm accent)
+             cream-50 #F6F3EA (text) · sage-300 #9BB7A8 (muted text)
+   Type:     Display -> 'Baloo 2' (rounded, friendly, pet-brand personality)
+             Body    -> 'Plus Jakarta Sans'
+   Signature: floating "trust pill" bar that straddles the footer's top seam
+   ========================================================= */
 
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+.footer {
+  --pine-900: #0E2A21;
+  --pine-800: #17392C;
+  --pine-700: #1F4A38;
+  --mint-400: #7FE3A6;
+  --coral-400: #FF8C69;
+  --cream-50: #F6F3EA;
+  --sage-300: #9BB7A8;
+
+  position: relative;
+  background: radial-gradient(120% 140% at 15% 0%, var(--pine-700) 0%, var(--pine-900) 55%);
   border-radius: 32px 32px 0 0;
-  overflow: hidden;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  color: var(--cream-50);
+  padding-top: 46px;
+  isolation: isolate;
 }
 
-.footer-top {
-  max-width: 100%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  padding: 50px 110px 30px;
-  align-items: start;
+/* subtle paw-print texture */
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: radial-gradient(rgba(246, 243, 234, 0.05) 2px, transparent 2px);
+  background-size: 26px 26px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.footer-top,
+.footer-bottom,
+.trust-float {
+  position: relative;
+  z-index: 1;
 }
 
 /* =========================================================
-   BRAND COLUMN
+   SIGNATURE — FLOATING TRUST BAR
    ========================================================= */
+.trust-float {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 40px;
+  transform: translateY(-50%);
+}
+
+.trust-float-track {
+  display: flex;
+  gap: 10px;
+  background: var(--pine-800);
+  border: 1px solid rgba(127, 227, 166, 0.15);
+  border-radius: 999px;
+  padding: 10px;
+  box-shadow: 0 24px 48px rgba(3, 20, 13, 0.35);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.trust-float-track::-webkit-scrollbar {
+  display: none;
+}
+
+.trust-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: 8px 18px 8px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.trust-pill:not(:last-child) {
+  border-right: 1px solid rgba(155, 183, 168, 0.18);
+}
+
+.trust-pill i {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--mint-400);
+  color: var(--pine-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.trust-pill-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.trust-pill-text strong {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--cream-50);
+}
+
+.trust-pill-text span {
+  font-size: 0.74rem;
+  color: var(--sage-300);
+}
+
+/* =========================================================
+   TOP AREA
+   ========================================================= */
+.footer-top {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  gap: 40px;
+  padding: 4px 40px 40px;
+  align-items: start;
+}
+
+/* -- Brand column -- */
 .footer-brand-col {
   width: 280px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 
 .footer-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: #0f3b2d;
+  gap: 12px;
 }
 
-.brand-logo-icon {
-  font-size: 2.2rem;
-  color: #0f7a4c;
+.brand-logo-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, var(--mint-400), #52c98a);
+  color: var(--pine-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
 }
 
 .brand-name {
-  font-size: 2rem;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.9rem;
   font-weight: 800;
   letter-spacing: -0.5px;
+  color: var(--cream-50);
 }
 
 .brand-tagline {
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   line-height: 1.6;
-  color: #4c5e56;
+  color: var(--sage-300);
 }
 
 .footer-features {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 6px;
+  gap: 14px;
+  margin-top: 4px;
 }
 
 .feature-item {
@@ -66,42 +183,40 @@
   gap: 12px;
 }
 
-.feature-icon-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #e3f5eb;
-  color: #0f7a4c;
+.feature-item>i {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--pine-800);
+  color: var(--coral-400);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   flex-shrink: 0;
 }
 
 .feature-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .feature-text strong {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 700;
-  color: #0f3b2d;
+  color: var(--cream-50);
 }
 
 .feature-text span {
-  font-size: 0.82rem;
-  color: #5b7268;
+  font-size: 0.78rem;
+  color: var(--sage-300);
 }
 
-/* =========================================================
-   LINKS CONTAINER
-   ========================================================= */
+/* -- Links -- */
 .footer-links-container {
   display: flex;
-  gap: 60px;
+  gap: 32px;
   flex-grow: 1;
   justify-content: center;
 }
@@ -111,25 +226,40 @@
   flex-shrink: 0;
 }
 
-.links-column h4 {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #0f3b2d;
-  letter-spacing: 0.8px;
-  margin-bottom: 22px;
-  position: relative;
-  display: inline-block;
-  padding-bottom: 8px;
+.links-column summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+  margin-bottom: 18px;
 }
 
-.links-column h4::after {
+.links-column summary::-webkit-details-marker {
+  display: none;
+}
+
+.links-column summary::marker {
   content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 24px;
-  height: 2px;
-  background-color: #0f7a4c;
+}
+
+.links-column h4 {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--mint-400);
+  letter-spacing: 0.4px;
+  margin: 0;
+}
+
+.summary-chevron {
+  font-size: 0.72rem;
+  color: var(--sage-300);
+  transition: transform 0.25s ease;
+}
+
+details[open] .summary-chevron {
+  transform: rotate(180deg);
 }
 
 .links-column ul {
@@ -138,28 +268,26 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 11px;
 }
 
 .links-column a {
-  font-size: 0.92rem;
-  color: #4c5e56;
+  font-size: 0.9rem;
+  color: var(--sage-300);
   text-decoration: none;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, padding-left 0.2s ease;
   display: inline-block;
 }
 
 .links-column a:hover {
-  color: #0f7a4c;
-  transform: translateX(4px);
+  color: var(--mint-400);
+  padding-left: 4px;
 }
 
-/* =========================================================
-   NEWSLETTER COLUMN
-   ========================================================= */
+/* -- Newsletter -- */
 .footer-newsletter-col {
-  width: 320px;
+  width: 300px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -167,804 +295,463 @@
 }
 
 .footer-newsletter-col h4 {
+  font-family: 'Baloo 2', sans-serif;
   font-size: 0.95rem;
-  font-weight: 800;
-  color: #0f3b2d;
-  letter-spacing: 0.8px;
-  margin-bottom: 6px;
-  position: relative;
-  display: inline-block;
-  padding-bottom: 8px;
-  align-self: start;
-}
-
-.footer-newsletter-col h4::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 24px;
-  height: 2px;
-  background-color: #0f7a4c;
+  font-weight: 700;
+  color: var(--mint-400);
+  letter-spacing: 0.4px;
+  margin: 0;
 }
 
 .newsletter-desc {
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   line-height: 1.6;
-  color: #4c5e56;
+  color: var(--sage-300);
 }
 
 .newsletter-form {
   display: flex;
-  align-items: center;
-  background: white;
-  border-radius: 60px;
-  padding: 6px;
-  box-shadow: 0 10px 30px rgba(15, 122, 76, 0.05);
-  border: 1px solid rgba(15, 122, 76, 0.07);
-  width: 100%;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--pine-800);
+  border-radius: 20px;
+  padding: 8px;
+  border: 1px solid rgba(127, 227, 166, 0.12);
 }
 
 .input-wrapper {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 16px;
-  flex: 1;
+  padding: 8px 12px;
 }
 
 .mail-icon {
-  color: #8da498;
-  font-size: 1.1rem;
+  color: var(--sage-300);
+  font-size: 1rem;
 }
 
 .subscribe-input {
   border: none;
   background: transparent;
   outline: none;
-  font-size: 0.92rem;
-  color: #0f3b2d;
+  font-size: 0.9rem;
+  color: var(--cream-50);
   width: 100%;
+  font-family: inherit;
 }
 
 .subscribe-input::placeholder {
-  color: #8da498;
+  color: var(--sage-300);
 }
 
 .subscribe-btn {
-  border: none;
-  background: #0f7a4c;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 0.92rem;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.3s ease;
-  white-space: nowrap;
+  background: linear-gradient(120deg, var(--mint-400), #52c98a);
+  color: var(--pine-900);
+  border: none;
+  border-radius: 14px;
+  padding: 11px 16px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .subscribe-btn:hover {
-  background: #0d6b42;
-  box-shadow: 0 4px 12px rgba(15, 122, 76, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(127, 227, 166, 0.25);
 }
 
-/* =========================================================
-   MASCOT ANIMATION
-   ========================================================= */
-.mascot-container {
-  position: relative;
-  width: 100%;
-  height: 170px;
-  margin-top: 10px;
+.subscribe-btn:focus-visible {
+  outline: 2px solid var(--coral-400);
+  outline-offset: 2px;
+}
+
+.social-circles {
   display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  overflow: visible;
+  gap: 10px;
+  margin-top: 4px;
 }
 
-.mascot-circle-bg {
-  position: absolute;
-  width: 140px;
-  height: 140px;
-  background-color: #e3f5eb;
+.social-circle {
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  bottom: 0;
-  z-index: 1;
-}
-
-.mascot-image {
-  position: relative;
-  width: auto;
-  height: 160px;
-  object-fit: contain;
-  z-index: 2;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  transform-origin: bottom center;
-}
-
-.mascot-container:hover .mascot-image {
-  transform: scale(1.05) translateY(-4px);
-}
-
-.heart-floating {
-  position: absolute;
-  color: #0f7a4c;
-  opacity: 0.25;
-  z-index: 3;
-}
-
-.heart-1 {
-  top: 15px;
-  left: 20%;
-  font-size: 1.1rem;
-  animation: floatHeart 4s ease-in-out infinite;
-}
-
-.heart-2 {
-  top: 50px;
-  right: 20%;
-  font-size: 0.85rem;
-  animation: floatHeart 5s ease-in-out infinite alternate;
-}
-
-@keyframes floatHeart {
-  0% {
-    transform: translateY(0) rotate(0deg) scale(1);
-    opacity: 0.15;
-  }
-
-  50% {
-    transform: translateY(-10px) rotate(15deg) scale(1.1);
-    opacity: 0.35;
-  }
-
-  100% {
-    transform: translateY(0) rotate(0deg) scale(1);
-    opacity: 0.15;
-  }
-}
-
-/* =========================================================
-   TRUST STRIP
-   ========================================================= */
-.trust-strip {
-  background: white;
-  margin: 0 110px 30px;
-  border-radius: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 30px;
-  box-shadow: 0 10px 30px rgba(15, 122, 76, 0.03);
-  border: 1px solid rgba(15, 122, 76, 0.04);
-}
-
-.trust-strip-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex: 1;
-  justify-content: center;
-}
-
-.trust-icon-wrapper {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #e3f5eb;
-  color: #0f7a4c;
+  background: var(--pine-800);
+  color: var(--cream-50);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
-  flex-shrink: 0;
-}
-
-.trust-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.trust-info strong {
+  text-decoration: none;
   font-size: 0.95rem;
-  font-weight: 700;
-  color: #0f3b2d;
+  border: 1px solid rgba(127, 227, 166, 0.12);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
-.green-highlight {
-  color: #0f7a4c;
-}
-
-.trust-info span {
-  font-size: 0.82rem;
-  color: #60786d;
-}
-
-.trust-divider {
-  width: 1px;
-  height: 36px;
-  background-color: #e1ede6;
-  flex-shrink: 0;
+.social-circle:hover {
+  background: var(--coral-400);
+  color: var(--pine-900);
+  transform: translateY(-2px);
 }
 
 /* =========================================================
-   FOOTER BOTTOM BAR
+   BOTTOM BAR
    ========================================================= */
 .footer-bottom {
-  background: #0c3b2d;
-  color: white;
-  padding: 24px 110px;
+  max-width: 1240px;
+  margin: 0 auto;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  position: relative;
-  z-index: 5;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 40px 28px;
+  border-top: 1px solid rgba(155, 183, 168, 0.15);
 }
 
 .footer-copyright {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+  color: var(--sage-300);
 }
 
-.bottom-logo-circle {
-  width: 28px;
-  height: 28px;
+.copy-badge {
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--mint-400);
+  color: var(--pine-900);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
-  color: #9cff6b;
+  font-size: 0.75rem;
+  flex-shrink: 0;
 }
 
-/* Payment Badges */
 .payment-badges {
   display: flex;
   gap: 8px;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .payment-card {
   height: 26px;
   padding: 0 10px;
-  background: white;
-  border-radius: 5px;
+  border-radius: 6px;
+  background: var(--cream-50);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  user-select: none;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--pine-900);
 }
 
-.visa-card {
+.visa-text {
   color: #1a1f71;
-  font-weight: 900;
-  font-size: 0.72rem;
-  font-style: italic;
+}
+
+.amex-text {
+  color: #2e77bc;
+}
+
+.paypal-text {
+  color: #003087;
 }
 
 .mastercard-card {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
 }
 
 .mc-circles {
   display: flex;
-  position: relative;
-  width: 14px;
-  height: 10px;
 }
 
 .mc-circle {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  position: absolute;
 }
 
 .mc-red {
   background: #eb001b;
-  left: 0;
 }
 
 .mc-orange {
-  background: #ff5f00;
-  right: 0;
-  opacity: 0.85;
-}
-
-.mc-text {
-  font-size: 0.48rem;
-  color: #222;
-  font-weight: 800;
-  margin-left: 1px;
-}
-
-.amex-card {
-  background: #017ece;
-  color: white;
-  font-weight: 850;
-  font-size: 0.6rem;
-  letter-spacing: 0.5px;
-}
-
-.paypal-card {
-  color: #003087;
-  font-weight: 900;
-  font-size: 0.7rem;
-  font-style: italic;
+  background: #ff9800;
+  margin-left: -5px;
 }
 
 .applepay-card {
-  color: black;
-  font-size: 0.75rem;
-  font-weight: 700;
+  gap: 4px;
 }
 
-.apple-pay-text {
-  font-weight: 600;
-  font-size: 0.68rem;
-  margin-left: 1px;
-}
-
-/* Socials & Legal */
-.footer-legal-socials {
-  display: flex;
-  align-items: center;
-  gap: 24px;
+.applepay-card i {
+  font-size: 0.85rem;
 }
 
 .legal-links {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 0.82rem;
 }
 
 .legal-links a {
-  font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--sage-300);
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
 }
 
 .legal-links a:hover {
-  color: #9cff6b;
+  color: var(--mint-400);
 }
 
 .legal-pipe {
-  color: rgba(255, 255, 255, 0.25);
-  font-size: 0.8rem;
-}
-
-.social-circles {
-  display: flex;
-  gap: 8px;
-}
-
-.social-circle {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  transition: all 0.3s;
-  text-decoration: none;
-}
-
-.social-circle:hover {
-  background: #0f7a4c;
-  color: white;
-  transform: translateY(-2px);
-}
-
-/* Back to Top */
-.back-to-top {
-  position: absolute;
-  right: 40px;
-  top: -20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #9cff6b;
-  border: none;
-  color: #0c3b2d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9rem;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  transition: all 0.3s;
-  z-index: 10;
-}
-
-.back-to-top:hover {
-  background: white;
-  color: #0f7a4c;
-  transform: translateY(-2px);
+  color: rgba(155, 183, 168, 0.4);
 }
 
 /* =========================================================
-   RESPONSIVE DESIGN (MEDIA QUERIES)
+   DESKTOP — force link columns open & non-toggleable
    ========================================================= */
-@media (max-width: 1440px) {
-  .footer-top {
-    padding: 50px 72px 30px;
-    gap: 30px;
+@media (min-width: 641px) {
+  .links-column summary {
+    pointer-events: none;
   }
 
-  .trust-strip {
-    margin: 0 72px 30px;
-  }
-
-  .footer-bottom {
-    padding: 24px 72px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .footer-top {
-    display: grid;
-    grid-template-columns: 1fr 1.3fr 1fr;
-    gap: 20px;
-    padding: 50px 40px 20px;
-  }
-
-  .footer-brand-col,
-  .footer-newsletter-col {
-    width: 100%;
-  }
-
-  .footer-links-container {
-    gap: 15px;
-  }
-
-  .trust-strip {
-    margin: 0 40px 25px;
-    padding: 16px 20px;
-  }
-
-  .trust-strip-item {
-    gap: 8px;
-  }
-
-  .trust-info strong {
-    font-size: 0.88rem;
-  }
-
-  .trust-info span {
-    font-size: 0.76rem;
-  }
-
-  .footer-bottom {
-    padding: 20px 40px;
-  }
-}
-
-@media (max-width: 991px) {
-  .footer-top {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 36px;
-    padding: 40px 24px;
-  }
-
-  .footer-links-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    margin: 8px 0;
-    gap: 20px;
-  }
-
-  .trust-strip {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin: 0 24px 30px;
-    padding: 16px;
-  }
-
-  .trust-divider {
+  .summary-chevron {
     display: none;
   }
 
-  .footer-bottom {
-    flex-direction: column;
-    gap: 16px;
-    text-align: center;
-    padding: 24px;
-  }
-
-  .footer-legal-socials {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .back-to-top {
-    right: 24px;
+  .footer-links-container details:not([open])>*:not(summary) {
+    display: flex !important;
   }
 }
 
-@media (max-width: 600px) {
+/* =========================================================
+   TABLET  ≤ 1024px
+   ========================================================= */
+@media (max-width: 1024px) {
   .footer-top {
-    padding: 40px 16px;
-    gap: 28px;
+    flex-wrap: wrap;
+    padding-bottom: 32px;
   }
 
   .footer-brand-col {
-    align-items: center;
-    text-align: center;
-  }
-
-  .footer-logo {
-    justify-content: center;
-  }
-
-  .footer-features {
-    align-items: flex-start;
-    text-align: left;
     width: 100%;
-    max-width: 260px;
-    margin: 0 auto;
   }
 
   .footer-links-container {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    text-align: center;
-  }
-
-  .links-column h4::after {
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100%;
+    justify-content: flex-start;
+    gap: 28px;
   }
 
   .footer-newsletter-col {
-    align-items: center;
-    text-align: center;
-  }
-
-  .footer-newsletter-col h4 {
-    align-self: center;
-  }
-
-  .footer-newsletter-col h4::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .newsletter-form {
-    border-radius: 20px;
-    flex-direction: column;
-    padding: 8px;
-    gap: 8px;
-  }
-
-  .input-wrapper {
     width: 100%;
-    padding: 6px 10px;
-    background: #f7fbf8;
-    border-radius: 10px;
-  }
-
-  .subscribe-btn {
-    width: 100%;
-    border-radius: 10px;
-    padding: 10px;
-  }
-
-  .trust-strip {
-    grid-template-columns: 1fr;
-    margin: 0 16px 20px;
-    gap: 12px;
-    padding: 16px;
-  }
-
-  .trust-strip-item {
-    justify-content: flex-start;
-  }
-
-  .payment-badges {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .legal-links {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .legal-pipe {
-    display: none;
-  }
-
-  .back-to-top {
-    right: 16px;
-    top: -18px;
   }
 }
 
 /* =========================================================
-   STRICT MOBILE VIEW (480px down to 350px)
+   MOBILE  ≤ 640px  (accordion becomes interactive)
    ========================================================= */
-@media (max-width: 480px) {
+@media (max-width: 640px) {
+  .footer {
+    border-radius: 24px 24px 0 0;
+    padding-top: 40px;
+  }
+
+  .trust-float {
+    padding: 0 20px;
+  }
+
+  .trust-pill {
+    padding: 8px 14px 8px 6px;
+  }
+
   .footer-top {
-    padding: 30px 16px 16px !important;
-    gap: 20px !important;
+    padding: 4px 24px 28px;
+    flex-direction: column;
+    gap: 28px;
   }
 
-  .brand-logo-icon {
-    font-size: 1.6rem !important;
-  }
-
-  .brand-name {
-    font-size: 1.5rem !important;
-  }
-
-  .brand-tagline {
-    font-size: 0.85rem !important;
-    margin-bottom: 4px;
-  }
-
-  .footer-features {
-    gap: 6px !important;
-    margin-top: 2px !important;
-  }
-
-  .feature-icon-circle {
-    width: 30px !important;
-    height: 30px !important;
-    font-size: 0.85rem !important;
-  }
-
-  .feature-text strong {
-    font-size: 0.8rem !important;
-  }
-
-  .feature-text span {
-    font-size: 0.72rem !important;
+  .footer-brand-col,
+  .footer-links-container,
+  .footer-newsletter-col {
+    width: 100%;
   }
 
   .footer-links-container {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 16px !important;
-    text-align: left !important;
-    width: 100% !important;
+    flex-direction: column;
+    gap: 0;
   }
 
-  /* Span the third column (Support) across both columns on mobile */
-  .footer-links-container>.links-column:nth-child(3) {
-    grid-column: span 2 !important;
+  .links-column {
+    width: 100%;
+    border-bottom: 1px solid rgba(155, 183, 168, 0.15);
+    padding: 14px 0;
   }
 
-  .links-column h4 {
-    font-size: 0.85rem !important;
-    margin-bottom: 10px !important;
-    padding-bottom: 4px !important;
+  .links-column:first-child {
+    border-top: 1px solid rgba(155, 183, 168, 0.15);
   }
 
-  .links-column ul {
-    gap: 6px !important;
+  .links-column summary {
+    margin-bottom: 0;
   }
 
-  .links-column a {
-    font-size: 0.82rem !important;
-  }
-
-  .footer-newsletter-col {
-    gap: 10px !important;
-  }
-
-  .newsletter-desc {
-    font-size: 0.82rem !important;
-  }
-
-  .subscribe-input {
-    font-size: 0.82rem !important;
-  }
-
-  .subscribe-btn {
-    font-size: 0.82rem !important;
-    padding: 10px !important;
-  }
-
-  .mascot-container {
-    height: 120px !important;
-    margin-top: 5px !important;
-  }
-
-  .mascot-circle-bg {
-    width: 90px !important;
-    height: 90px !important;
-  }
-
-  .mascot-image {
-    height: 110px !important;
-  }
-
-  .trust-strip {
-    grid-template-columns: 1fr !important;
-    margin: 0 16px 16px !important;
-    gap: 10px !important;
-    padding: 12px 16px !important;
-    border-radius: 12px !important;
-  }
-
-  .trust-strip-item {
-    gap: 10px !important;
-  }
-
-  .trust-icon-wrapper {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 0.9rem !important;
-  }
-
-  .trust-info strong {
-    font-size: 0.8rem !important;
-  }
-
-  .trust-info span {
-    font-size: 0.7rem !important;
+  .links-column[open] summary {
+    margin-bottom: 14px;
   }
 
   .footer-bottom {
-    padding: 16px 16px !important;
-    gap: 12px !important;
+    flex-direction: column;
+    padding: 20px 24px 26px;
+    text-align: center;
+  }
+}
+
+/* =========================================================
+   SMALL PHONES  480px → 300px  (important target range)
+   ========================================================= */
+@media (max-width: 480px) {
+  .footer {
+    padding-top: 34px;
   }
 
-  .footer-copyright span {
-    font-size: 0.78rem !important;
+  .brand-name {
+    font-size: 1.5rem;
   }
 
-  .legal-links a {
-    font-size: 0.78rem !important;
+  .brand-logo-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    font-size: 1rem;
   }
 
-  .social-circle {
-    width: 26px !important;
-    height: 26px !important;
-    font-size: 0.75rem !important;
+  .brand-tagline {
+    font-size: 0.86rem;
+  }
+
+  .trust-float-track {
+    gap: 4px;
+    padding: 8px;
+  }
+
+  .trust-pill {
+    padding: 6px 10px 6px 4px;
+    gap: 8px;
+  }
+
+  .trust-pill i {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+
+  .trust-pill-text strong {
+    font-size: 0.78rem;
+  }
+
+  .trust-pill-text span {
+    font-size: 0;
+  }
+
+  /* keep pills scannable, drop sub-copy to save width */
+  .trust-pill-text span::after {
+    content: '';
+  }
+
+  .footer-features {
+    gap: 10px;
+  }
+
+  .feature-item>i {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+
+  .feature-text strong {
+    font-size: 0.82rem;
+  }
+
+  .feature-text span {
+    font-size: 0.72rem;
+  }
+
+  .newsletter-form {
+    border-radius: 16px;
+  }
+
+  .subscribe-btn {
+    padding: 10px 14px;
+    font-size: 0.86rem;
+  }
+
+  .payment-badges {
+    gap: 6px;
   }
 
   .payment-card {
-    height: 22px !important;
-    padding: 0 6px !important;
+    height: 24px;
+    padding: 0 8px;
+    font-size: 0.62rem;
   }
 
-  .visa-text {
-    font-size: 0.65rem !important;
+  .legal-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 360px) {
+
+  .footer-top,
+  .footer-bottom {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
-  .mc-text {
-    font-size: 0.4rem !important;
+  .trust-float {
+    padding: 0 12px;
   }
 
-  .amex-text {
-    font-size: 0.52rem !important;
+  .trust-pill-text {
+    display: none;
   }
 
-  .paypal-text {
-    font-size: 0.62rem !important;
+  /* icon-only pills at extreme widths */
+  .trust-pill {
+    padding: 6px;
   }
 
-  .apple-pay-text {
-    font-size: 0.58rem !important;
+  .trust-pill i {
+    width: 30px;
+    height: 30px;
+  }
+
+  .social-circles {
+    gap: 8px;
+  }
+
+  .social-circle {
+    width: 34px;
+    height: 34px;
+    font-size: 0.85rem;
+  }
+
+  .subscribe-btn span {
+    font-size: 0.82rem;
   }
 }
