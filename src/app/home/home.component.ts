@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf, RouterModule, CommonModule],
+  imports: [NgFor, RouterModule, CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -79,55 +79,31 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   products = [
     {
       id: 1,
-      name: 'Guardian Alpha',
-      subtitle: 'Polished Gold Edition',
-      description: 'Premium stainless steel smart tag with a polished gold finish, instant QR scanning, and secure pet profile access.',
-      price: '₹688.00',
+      name: 'Wooden QR Keychain',
+      price: '₹688',
       img: 'assets/images/product_trending_1.png',
-      badge: 'BESTSELLER',
-      badgeClass: 'badge-gold',
-      category: 'DOGS',
-      rating: 4.8,
-      reviews: 1240,
+      category: 'DOGS'
     },
     {
       id: 2,
-      name: 'Wooden Frame',
-      subtitle: 'Artisan Walnut Craft',
-      description: 'Handcrafted walnut-finish tag designed for pet parents who love natural aesthetics with modern smart features.',
-      price: '₹499.00',
+      name: 'Metal QR Keychain',
+      price: '₹499',
       img: 'assets/images/product_trending_2.jpg',
-      badge: 'CLASSIC',
-      badgeClass: 'badge-amber',
-      category: 'CATS',
-      rating: 4.5,
-      reviews: 1024,
+      category: 'CATS'
     },
     {
       id: 3,
-      name: 'Fiber Frame',
-      subtitle: 'Lightweight Carbon',
-      description: 'Ultra-light carbon fiber smart tag built for everyday comfort, durability, and seamless location sharing.',
-      price: '₹499.00',
+      name: 'Fiberglass QR Keychain',
+      price: '₹499',
       img: 'assets/images/product_trending_3.png',
-      badge: 'DURABLE',
-      badgeClass: 'badge-silver',
-      category: 'BIRDS',
-      rating: 4.6,
-      reviews: 1102,
+      category: 'BIRDS'
     },
     {
       id: 4,
-      name: 'Stealth Carbon',
-      subtitle: 'Waterproof Performance',
-      description: 'Rugged waterproof smart tag engineered for active pets with enhanced durability and all-weather protection.',
-      price: '₹499.00',
+      name: 'GPS Tracker Collar',
+      price: '₹499',
       img: 'assets/images/product_trending_4.png',
-      badge: 'LIMITED',
-      badgeClass: 'badge-dark',
-      category: 'DOGS',
-      rating: 4.7,
-      reviews: 1150,
+      category: 'DOGS'
     }
   ];
 

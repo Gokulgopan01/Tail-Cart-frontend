@@ -390,57 +390,35 @@
   <div class="section-container">
 
     <div class="recommended-header">
-      <div>
-        <h2 class="recommended-title">Best Sellers</h2>
-      </div>
+      <div class="title-row">
+        <h2>BESTSELLER</h2>
 
-      <a routerLink="/shop" class="recommended-view-all">
-        View All Products
-        <i class="fas fa-arrow-right"></i>
-      </a>
+        <a routerLink="/shop" class="explore-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
     </div>
 
     <div class="recommended-grid">
 
-      <div *ngFor="let product of filteredProducts.slice(0,8)" class="product-card" (click)="navigateToShop()">
+      <div *ngFor="let product of filteredProducts.slice(0,8)" class="product-card" (click)="navigateToShop()"
+        style="border: 1px solid #eaeaea; border-radius: 12px; overflow: hidden; background: #faf9f6; box-shadow: none;">
 
-        <div class="product-image-wrap">
-
-          <span class="product-badge" *ngIf="product.badge">
-            {{ product.badge }}
-          </span>
-
-          <img [src]="product.img" [alt]="product.name" class="product-image" />
-
-          <div class="product-rating">
-            <i class="fas fa-heart"></i>
-            {{ product.rating || '4.8' }}
-          </div>
-
+        <div class="product-image-wrap" style="padding: 0;">
+          <img [src]="product.img" [alt]="product.name" class="product-image"
+            style="width: 100%; height: auto; border-bottom-left-radius: 0; border-bottom-right-radius: 0;" />
         </div>
 
-        <div class="product-content">
-
-          <h3 class="product-name">
+        <div class="product-content" style="text-align: left; padding: 20px;">
+          <h3 class="product-name"
+            style="font-size: 1.05rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: #332b26;">
             {{ product.name }}
           </h3>
+          <div style="width: 25px; height: 2px; background-color: #436d50; margin-bottom: 15px;"></div>
 
-          <p class="product-desc">
-            {{ product.description }}
-          </p>
-
-          <div class="product-footer">
-
-            <div class="product-price">
-              {{ product.price }}
-            </div>
-
-            <button class="cart-btn" (click)="$event.stopPropagation(); addToCart(product)">
-              <i class="fas fa-cart-shopping"></i>
-            </button>
-
+          <div class="product-price" style="font-size: 0.85rem; color: #888;">
+            Starting from <strong style="color: #436d50; font-size: 1rem;">{{ product.price }}</strong> onwards
           </div>
-
         </div>
 
       </div>

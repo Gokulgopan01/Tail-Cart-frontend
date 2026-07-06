@@ -58,7 +58,7 @@ section {
   align-items: center;
   justify-content: flex-start;
   color: #0c1a12;
-  background-color: #f3efe8;
+  /* background-color: #f3efe8; */
 
   /* Rounded card feel like the reference */
   border-radius: 0;
@@ -1359,6 +1359,7 @@ section {
    CATEGORY SECTION
 ========================================== */
 
+
 .categories-section {
   padding: 80px 90px;
   background: #f0efea;
@@ -1367,8 +1368,10 @@ section {
 }
 
 .categories-layout {
-  max-width: 1600px;
+  max-width: 100%;
+  width: calc(100% - 60px);
   margin: 0 auto;
+  padding: 0;
   display: grid;
   gap: 14px;
   grid-template-columns: 0.72fr 1fr 1fr;
@@ -1852,7 +1855,7 @@ section {
 ══════════════════════════════════════════════════════ */
 .offer-banner-section-modern .section-container {
   max-width: 100%;
-  width: calc(100% - 40px);
+  width: calc(100% - 60px);
   /* 10px left + 10px right */
   margin: 0 auto;
   padding: 0;
@@ -1995,7 +1998,7 @@ section {
 
 .recommended-section .section-container {
   max-width: 100%;
-  width: calc(100% - 20px);
+  width: calc(100% - 60px);
   /* 10px left + 10px right */
   margin: 0 auto;
   padding: 0;
@@ -2029,6 +2032,49 @@ section {
   align-items: flex-start;
   margin-bottom: 40px;
   gap: 20px;
+}
+
+.recommended-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.title-row h2 {
+  margin: 0;
+  font-size: 2.7rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #332b26;
+}
+
+.explore-arrow {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1.5px solid #d5e3d8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2f6b46;
+  text-decoration: none;
+  background: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.explore-arrow:hover {
+  background: #2f6b46;
+  color: #fff;
+  transform: translateX(5px);
+  box-shadow: 0 12px 28px rgba(47, 107, 70, 0.25);
 }
 
 .recommended-title {
