@@ -128,32 +128,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       category: 'DOGS',
       rating: 4.7,
       reviews: 1150,
-    },
-    {
-      id: 5,
-      name: 'Guardian Onyx',
-      subtitle: 'Matte Black Series',
-      description: 'Elegant matte black smart tag combining a minimalist design with fast QR access and secure owner notifications.',
-      price: '₹750.00',
-      img: 'assets/images/product_trending_1.png',
-      badge: 'NEW',
-      badgeClass: 'badge-dark',
-      category: 'FISH',
-      rating: 4.4,
-      reviews: 1080,
-    },
-    {
-      id: 6,
-      name: 'Guardian Aero',
-      subtitle: 'Titanium Finish',
-      description: 'Lightweight titanium-finish smart tag offering premium durability, instant scanning, and real-time pet connectivity.',
-      price: '₹899.00',
-      img: 'assets/images/product_trending_3.png',
-      badge: 'PREMIUM',
-      badgeClass: 'badge-gold',
-      category: 'CATS',
-      rating: 4.7,
-      reviews: 1150,
     }
   ];
 

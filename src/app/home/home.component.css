@@ -1850,6 +1850,15 @@ section {
 /* ══════════════════════════════════════════════════════
    PROMO BANNERS SECTION  (3-column grid like the image)
 ══════════════════════════════════════════════════════ */
+.offer-banner-section-modern .section-container {
+  max-width: 100%;
+  width: calc(100% - 40px);
+  /* 10px left + 10px right */
+  margin: 0 auto;
+  padding: 0;
+}
+
+
 .offer-banner-section-modern {
   padding: 3rem 0;
   background: #f9f9f9;
@@ -1984,15 +1993,26 @@ section {
    SECTION
 ========================= */
 
+.recommended-section .section-container {
+  max-width: 100%;
+  width: calc(100% - 20px);
+  /* 10px left + 10px right */
+  margin: 0 auto;
+  padding: 0;
+}
+
 .recommended-section {
   padding: 80px 0;
   background: #fff;
 }
 
 .section-container {
-  width: 92%;
-  max-width: 1450px;
-  margin: auto;
+  max-width: 1700px;
+  /* or 1800px */
+  width: 98%;
+  margin: 0 auto;
+  padding: 0 8px;
+  /* smaller side padding */
 }
 
 .section-tag {

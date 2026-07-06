@@ -275,7 +275,7 @@
     </div>
 
     <!-- DOGS -->
-    <div class="category-card dog-card" (click)="selectCategory('Dogs')">
+    <div class="category-card dog-card" (click)="navigateToShop()">
       <div class="card-icon-badge">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path
@@ -291,7 +291,7 @@
     </div>
 
     <!-- CATS -->
-    <div class="category-card cat-card" (click)="selectCategory('Cats')">
+    <div class="category-card cat-card" (click)="navigateToShop()">
       <div class="card-icon-badge">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path
@@ -308,7 +308,7 @@
     </div>
 
     <!-- TOYS — full image, text overlaid at bottom-left -->
-    <div class="toys-banner" (click)="selectCategory('Toys')">
+    <div class="toys-banner" (click)="navigateToShop()">
       <div class="card-icon-badge">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <circle cx="12" cy="12" r="3" />
@@ -326,7 +326,7 @@
     </div>
 
     <!-- FOOD — full image, text overlaid -->
-    <div class="category-small food-card" (click)="selectCategory('Food')">
+    <div class="category-small food-card" (click)="navigateToShop()">
       <div class="card-icon-badge">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M4 4h16v2a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4z" />
@@ -342,7 +342,7 @@
     </div>
 
     <!-- ACCESSORIES — full image, text overlaid -->
-    <div class="category-small accessories-card" (click)="selectCategory('Accessories')">
+    <div class="category-small accessories-card" (click)="navigateToShop()">
       <div class="card-icon-badge">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <circle cx="12" cy="8" r="4" />
@@ -391,11 +391,7 @@
 
     <div class="recommended-header">
       <div>
-        <span class="section-tag">★ BEST SELLERS</span>
         <h2 class="recommended-title">Best Sellers</h2>
-        <p class="section-subtitle">
-          Discover our most loved products, trusted by pets and their humans.
-        </p>
       </div>
 
       <a routerLink="/shop" class="recommended-view-all">
