@@ -453,63 +453,38 @@ section {
 ═══════════════════════════════════════════ */
 
 @media (max-width: 768px) {
+
   .hero-wrapper {
-    height: auto;
+    height: 100vh;
     min-height: 100vh;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: stretch;
-    padding-top: 60px;
-    padding-bottom: 32px;
+    padding-top: 70px;
+    padding-bottom: 0;
   }
 
   .hero-bg {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    background-position: center;
-    background-size: 100% 100%;
-    z-index: 1;
+    background-image:
+      linear-gradient(to bottom,
+        rgba(255, 255, 255, 0) 70%,
+        #fff 100%),
+      url('/assets/Home/Home-Hero.png');
+
+    background-size: cover;
+    background-position: 70% center;
   }
 
+  /* Remove the desktop white overlay completely */
   .hero-wrapper::after {
-    background: linear-gradient(to bottom,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0) 30%,
-        rgba(255, 255, 255, 0.75) 60%,
-        rgba(255, 255, 255, 0.98) 100%);
-  }
-
-  .hero-connector,
-  .hero-float-card {
-    display: none;
+    content: none;
   }
 
   .hero-content {
     max-width: 100%;
-    padding: 24px 24px 0;
+    padding: 24px 20px 40px;
+    margin-top: auto;
   }
 
-  .hero-title_hero {
-    font-size: clamp(2rem, 8vw, 2.6rem);
-    text-align: center;
-  }
-
-  .hero-desc {
-    max-width: 100%;
-    text-align: center;
-    margin-inline: auto;
-  }
-
-  .hero-actions {
-    justify-content: center;
-  }
-
-  .hero-trust {
-    justify-content: center;
-  }
-
-  .desktop-only {
+  .hero-connector,
+  .hero-float-card {
     display: none;
   }
 }
@@ -1915,6 +1890,7 @@ section {
   }
 
   .categories-layout {
+    width: 100%;
     grid-template-columns: 1fr 1fr;
     grid-template-areas: none !important;
     gap: 12px;
@@ -2468,11 +2444,32 @@ section {
   }
 }
 
+@media (max-width: 480px) {
+  .offer-banner-section-modern .section-container {
+    width: 100%;
+    padding: 0;
+  }
+
+  .promo-banners-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .promo-banner-card {
+    border-radius: 0;
+  }
+
+  .recommended-section .section-container {
+    width: 100%;
+    padding: 0 16px;
+  }
+}
+
 
 /* ── How It Works Section ---------------------------------------------------------------------── */
 .protection-how-it-works {
   background: #f7faf7;
-  padding: 72px 0;
+  padding: 72px 40px;
 }
 
 .hiw-inner {
