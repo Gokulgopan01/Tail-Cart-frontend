@@ -2,8 +2,9 @@
 
   <!-- ============ HERO ============ -->
   <header class="shop-hero">
-    <img src="/assets/products/catdog_friends-HomeCover.png" alt="Pet Shop" class="shop-hero__bg">
-    <div class="shop-hero__overlay"></div>
+    <img src="/assets/products/catdog_friends-HomeCover.png" alt="Dog and cat sitting together at home"
+      class="shop-hero__bg">
+    <div class="shop-hero__scrim"></div>
 
     <div class="shop-hero__nav">
       <button class="icon-btn" routerLink="/home" aria-label="Back">
@@ -16,378 +17,65 @@
     </div>
 
     <div class="shop-hero__text">
-      <span class="eyebrow">Pet Supplies, Curated</span>
-      <h1>Shop</h1>
-      <p>Everything your pet needs, in one place 🐾</p>
+      <span class="eyebrow">Everything for your pets</span>
+      <h1>All in one happy place <span class="eyebrow-paw">🐾</span></h1>
+      <p>Premium products for pets, picked with love and care.</p>
+    </div>
+
+    <!-- ============ SEARCH + TOOLBAR (overlapping card) ============ -->
+    <div class="shop-toolbar">
+      <div class="shop-toolbar__row">
+        <div class="search-field">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search for products..." [(ngModel)]="searchQuery" (input)="applyFilters()">
+          <button class="search-clear" *ngIf="searchQuery" (click)="searchQuery=''; applyFilters()"
+            aria-label="Clear search">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Desktop inline controls -->
+        <div class="toolbar-inline only-desktop">
+          <div class="select-pill">
+            <select [(ngModel)]="categoryFilter" (change)="applyFilters()">
+              <option value="all">All Categories</option>
+              <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.label }}</option>
+            </select>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="select-pill select-pill--dark">
+            <select [(ngModel)]="sortOption" (change)="applyFilters()">
+              <option value="newest">Newest</option>
+              <option value="priceLow">Price: Low to High</option>
+              <option value="priceHigh">Price: High to Low</option>
+              <option value="name">Name: A-Z</option>
+            </select>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+
+        <!-- Mobile filter trigger -->
+        <button class="filter-trigger only-mobile" (click)="toggleFilters()">
+          <i class="fas fa-sliders-h"></i>
+          <span>Filters</span>
+          <span class="filter-trigger__count" *ngIf="activeFilterCount > 0">{{ activeFilterCount }}</span>
+        </button>
+      </div>
+
+      <!-- Category avatars -->
+      <div class="category-row">
+        <button *ngFor="let cat of categories" class="category-card" [class.active]="cat.id === activeCategory"
+          (click)="selectCategory(cat.id)">
+          <span class="category-card__avatar">
+            <img [src]="cat.image" [alt]="cat.label">
+          </span>
+          <span class="category-card__label">{{ cat.label }}</span>
+          <span class="category-card__count">{{ cat.count }}+ items</span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- ============ SEARCH + TOOLBAR ============ -->
-  <div class="shop-toolbar">
-    <div class="search-field">
-      <i class="fas fa-search"></i>
-      <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery" (input)="applyFilters()">
-      <button class="search-clear" *ngIf="searchQuery" (click)="searchQuery=''; applyFilters()"
-        aria-label="Clear search">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
+  <div class="shop-toolbar-spacer"></div>
 
-    <!-- Desktop inline controls -->
-    <div class="toolbar-inline only-desktop">
-      <div class="select-pill">
-        <i class="fas fa-sort"></i>
-        <select [(ngModel)]="sortOption" (change)="applyFilters()">
-          <option value="newest">Newest</option>
-          <option value="priceLow">Price: Low to High</option>
-          <option value="priceHigh">Price: High to Low</option>
-          <option value="name">Name: A-Z</option>
-        </select>
-      </div>
-      <div class="view-toggle">
-        <button [class.active]="isGridView" (click)="toggleViewMode(true)" aria-label="Grid view">
-          <i class="fas fa-th-large"></i>
-        </button>
-        <button [class.active]="!isGridView" (click)="toggleViewMode(false)" aria-label="List view">
-          <i class="fas fa-list"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile filter trigger -->
-    <button class="filter-trigger only-mobile" (click)="toggleFilters()">
-      <i class="fas fa-sliders-h"></i>
-      <span>Filters</span>
-      <span class="filter-trigger__count" *ngIf="activeFilterCount > 0">{{ activeFilterCount }}</span>
-    </button>
-  </div>
-
-  <!-- ============ BODY: SIDEBAR + CONTENT ============ -->
-  <div class="shop-body">
-
-    <!-- Desktop sidebar filters -->
-    <aside class="shop-sidebar only-desktop">
-      <div class="sidebar-head">
-        <h3>Filters</h3>
-        <button class="text-link" (click)="clearFilters()">Clear all</button>
-      </div>
-
-      <div class="sidebar-section">
-        <span class="sidebar-label">Material</span>
-        <div class="chip-stack">
-          <button *ngFor="let mat of materialOptions" class="chip" [class.active]="selectedMaterial === mat"
-            (click)="setMaterial(mat)">{{ mat }}</button>
-        </div>
-      </div>
-
-      <div class="sidebar-section" *ngIf="availableColors.length > 0">
-        <span class="sidebar-label">Colour</span>
-        <div class="swatch-row">
-          <button class="swatch-pill" [class.active]="selectedColor === 'ALL'" (click)="setColor('ALL')">All</button>
-          <button *ngFor="let col of availableColors" class="swatch-dot" [style.backgroundColor]="col" [title]="col"
-            [class.active]="selectedColor === col" (click)="setColor(col)"></button>
-        </div>
-      </div>
-
-      <div class="sidebar-section">
-        <span class="sidebar-label">Max price · ₹{{ maxPrice }}</span>
-        <input type="range" min="0" max="15000" step="500" [(ngModel)]="maxPrice" (input)="applyFilters()"
-          class="range-input">
-      </div>
-    </aside>
-
-    <!-- Main content -->
-    <main class="shop-content">
-
-      <!-- Quick filter chips -->
-      <div class="quick-chip-row">
-        <button *ngFor="let filter of quickFilters" class="quick-chip" [class.active]="searchQuery === filter"
-          (click)="searchQuery = filter; applyFilters()">{{ filter }}</button>
-      </div>
-
-      <!-- Categories -->
-      <section class="category-section">
-        <h2 class="section-title">Shop by Category</h2>
-        <div class="category-row">
-          <button *ngFor="let cat of categories" class="category-item" (click)="setMaterial(cat.name)">
-            <span class="category-item__ring">
-              <img [src]="cat.icon" [alt]="cat.name">
-            </span>
-            <span class="category-item__name">{{ cat.name }}</span>
-            <span class="category-item__count">{{ cat.count }}</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- Promo banner -->
-      <section class="promo-banner">
-        <img src="/assets/products/free_delivery.png" alt="Free delivery offer" class="promo-banner__img">
-        <div class="promo-banner__copy">
-          <span class="promo-banner__tag">Limited time</span>
-          <h3>25% off pet accessories</h3>
-          <p>Free delivery on every order this week</p>
-        </div>
-      </section>
-
-      <!-- Products header -->
-      <div class="products-head">
-        <div>
-          <h2 class="section-title">Our Products</h2>
-          <p class="products-head__count" *ngIf="filteredProducts.length > 0">
-            {{ filteredProducts.length }} item{{ filteredProducts.length === 1 ? '' : 's' }} found
-          </p>
-        </div>
-
-        <!-- Mobile sort + view toggle -->
-        <div class="products-head__controls only-mobile">
-          <select class="sort-select-mobile" [(ngModel)]="sortOption" (change)="applyFilters()">
-            <option value="newest">Newest</option>
-            <option value="priceLow">Price: Low to High</option>
-            <option value="priceHigh">Price: High to Low</option>
-            <option value="name">Name: A-Z</option>
-          </select>
-          <div class="view-toggle">
-            <button [class.active]="isGridView" (click)="toggleViewMode(true)" aria-label="Grid view">
-              <i class="fas fa-th-large"></i>
-            </button>
-            <button [class.active]="!isGridView" (click)="toggleViewMode(false)" aria-label="List view">
-              <i class="fas fa-list"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Product grid / list -->
-      <div class="product-collection" [class.is-grid]="isGridView" [class.is-list]="!isGridView">
-        <article class="product-card" *ngFor="let product of filteredProducts" (click)="openQuickView(product, $event)">
-          <div class="product-card__media">
-            <img [src]="product.thumbnail_image" [alt]="product.product_name">
-            <span class="product-card__badge" *ngIf="product.deals">Bestseller</span>
-            <span class="product-card__discount" *ngIf="product.discount_percentage! > 0">-{{
-              product.discount_percentage }}%</span>
-            <button class="product-card__quick" (click)="openQuickView(product, $event)">Quick View</button>
-          </div>
-          <div class="product-card__body">
-            <span class="product-card__material">{{ product.product_material }}</span>
-            <h3 class="product-card__name">{{ product.product_name }}</h3>
-            <div class="product-card__price-row">
-              <span class="price-now">₹{{ product.selling_price }}</span>
-              <span class="price-was" *ngIf="product.discount_percentage! > 0">₹{{ product.original_price }}</span>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- Empty state -->
-      <div class="empty-state" *ngIf="filteredProducts.length === 0 && !isLoading">
-        <div #noProductsLottie class="empty-state__lottie"></div>
-        <h3>No products found</h3>
-        <p>Try adjusting your search or filters</p>
-        <button class="btn-primary" (click)="clearFilters()" *ngIf="searchQuery || selectedMaterial !== 'ALL'">Clear
-          Filters</button>
-      </div>
-
-      <!-- Load more -->
-      <div class="load-more-row" *ngIf="nextPageUrl">
-        <button class="btn-outline" (click)="loadMore()" [disabled]="isLoading">
-          <span *ngIf="!isLoading">Explore More</span>
-          <span *ngIf="isLoading"><i class="fas fa-circle-notch fa-spin"></i> Loading...</span>
-        </button>
-      </div>
-    </main>
-  </div>
-</div>
-
-<!-- ============ MOBILE FILTER SHEET ============ -->
-<div class="sheet-overlay only-mobile" *ngIf="showFilters" (click)="toggleFilters()">
-  <div class="sheet-card" (click)="$event.stopPropagation()">
-    <div class="sheet-head">
-      <button class="icon-btn" (click)="toggleFilters()" aria-label="Close"><i class="fas fa-chevron-left"></i></button>
-      <h3>Filters</h3>
-      <button class="text-link" (click)="clearFilters()">Reset</button>
-    </div>
-
-    <div class="sheet-body">
-      <div class="sidebar-section">
-        <span class="sidebar-label">Sort by</span>
-        <div class="chip-stack">
-          <button class="chip" [class.active]="sortOption === 'newest'" (click)="setSort('newest')">Newest</button>
-          <button class="chip" [class.active]="sortOption === 'priceLow'" (click)="setSort('priceLow')">Price:
-            Low-High</button>
-          <button class="chip" [class.active]="sortOption === 'priceHigh'" (click)="setSort('priceHigh')">Price:
-            High-Low</button>
-          <button class="chip" [class.active]="sortOption === 'name'" (click)="setSort('name')">Name A-Z</button>
-        </div>
-      </div>
-
-      <div class="sidebar-section">
-        <span class="sidebar-label">Material</span>
-        <div class="chip-stack">
-          <button *ngFor="let mat of materialOptions" class="chip" [class.active]="selectedMaterial === mat"
-            (click)="setMaterial(mat)">{{ mat }}</button>
-        </div>
-      </div>
-
-      <div class="sidebar-section" *ngIf="availableColors.length > 0">
-        <span class="sidebar-label">Colour</span>
-        <div class="swatch-row">
-          <button class="swatch-pill" [class.active]="selectedColor === 'ALL'" (click)="setColor('ALL')">All</button>
-          <button *ngFor="let col of availableColors" class="swatch-dot" [style.backgroundColor]="col" [title]="col"
-            [class.active]="selectedColor === col" (click)="setColor(col)"></button>
-        </div>
-      </div>
-
-      <div class="sidebar-section">
-        <span class="sidebar-label">Max price · ₹{{ maxPrice }}</span>
-        <input type="range" min="0" max="15000" step="500" [(ngModel)]="maxPrice" (input)="applyFilters()"
-          class="range-input">
-      </div>
-    </div>
-
-    <div class="sheet-foot">
-      <button class="btn-outline" (click)="clearFilters()">Reset all</button>
-      <button class="btn-primary" (click)="toggleFilters()">Show {{ filteredProducts.length }} results</button>
-    </div>
-  </div>
-</div>
-
-<!-- ============ QUICK VIEW MODAL ============ -->
-<div class="qv-overlay" *ngIf="showQuickView" (click)="closeQuickView()">
-  <div class="qv-card" (click)="$event.stopPropagation()">
-
-    <div class="qv-topbar">
-      <button class="icon-btn" (click)="closeQuickView()" aria-label="Close"><i class="fas fa-arrow-left"></i></button>
-      <h3>Product Details</h3>
-      <button class="icon-btn" aria-label="Share"><i class="fas fa-share-alt"></i></button>
-    </div>
-
-    <div class="qv-layout">
-
-      <!-- Gallery -->
-      <div class="qv-gallery">
-        <div class="qv-gallery__main">
-          <img [src]="primaryQvImage" [alt]="selectedProductForQuickView?.product_name">
-          <span class="qv-gallery__discount" *ngIf="selectedProductForQuickView?.discount_percentage">
-            -{{ selectedProductForQuickView?.discount_percentage }}%
-          </span>
-        </div>
-        <div class="qv-gallery__thumbs">
-          <button class="qv-gallery__thumb"
-            [class.active]="primaryQvImage === selectedProductForQuickView?.thumbnail_image"
-            (click)="setQvMainImage(selectedProductForQuickView?.thumbnail_image)">
-            <img [src]="selectedProductForQuickView?.thumbnail_image" alt="Thumbnail 1">
-          </button>
-          <button class="qv-gallery__thumb" *ngIf="selectedProductForQuickView?.second_image_1"
-            [class.active]="primaryQvImage === selectedProductForQuickView?.second_image_1"
-            (click)="setQvMainImage(selectedProductForQuickView?.second_image_1)">
-            <img [src]="selectedProductForQuickView?.second_image_1" alt="Thumbnail 2">
-          </button>
-        </div>
-      </div>
-
-      <!-- Details column (scrollable) -->
-      <div class="qv-details" #quickViewScrollContainer>
-
-        <div class="qv-header">
-          <span class="qv-header__eyebrow">{{ selectedProductForQuickView?.product_material }}</span>
-          <div class="qv-header__title-row">
-            <h2>{{ selectedProductForQuickView?.product_name }}</h2>
-            <button class="icon-btn icon-btn--ghost" aria-label="Wishlist"><i class="far fa-heart"></i></button>
-          </div>
-          <div class="qv-header__rating">
-            <span class="rating-pill"><i class="fas fa-star"></i> {{ selectedProductForQuickView?.reviews_stars || '4.7'
-              }}</span>
-            <span class="rating-count">({{ selectedProductForQuickView?.review_count || 0 }} reviews)</span>
-          </div>
-        </div>
-
-        <div class="qv-price-card">
-          <span class="price-now price-now--lg">₹{{ selectedProductForQuickView?.selling_price }}</span>
-          <span class="price-was" *ngIf="selectedProductForQuickView?.discount_percentage">₹{{
-            selectedProductForQuickView?.original_price }}</span>
-          <span class="price-pill" *ngIf="selectedProductForQuickView?.discount_percentage">{{
-            selectedProductForQuickView?.discount_percentage }}% off</span>
-        </div>
-
-        <!-- Shade / colour selection -->
-        <div class="qv-block" *ngIf="selectedProductForQuickView?.colours?.length">
-          <span class="sidebar-label">Select shade</span>
-          <div class="shade-row">
-            <button *ngFor="let color of selectedProductForQuickView?.colours; let i = index" class="shade-dot"
-              [style.backgroundColor]="color.toLowerCase()" [class.active]="i === selectedShadeIndex" [title]="color"
-              (click)="setShade(i)"></button>
-          </div>
-        </div>
-
-        <!-- Pet + quantity selection (required before adding to cart) -->
-        <div class="qv-block qv-selection-grid">
-          <div>
-            <span class="sidebar-label">Select pet <span class="required-mark">*</span></span>
-            <select [(ngModel)]="selectedPetId" class="select-field" [class.error]="petSelectError">
-              <option value="">Choose a pet</option>
-              <option *ngFor="let pet of userPets" [value]="pet.pet_id">{{ pet.pet_name }}</option>
-            </select>
-            <span class="field-error" *ngIf="petSelectError">Please select a pet to continue</span>
-          </div>
-
-          <div>
-            <span class="sidebar-label">Quantity</span>
-            <div class="qty-stepper">
-              <button (click)="decrementQuantity()" aria-label="Decrease quantity">−</button>
-              <span>{{ quantity }}</span>
-              <button (click)="incrementQuantity()" aria-label="Increase quantity">+</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tabs -->
-        <div class="qv-tabs">
-          <div class="qv-tabs__head">
-            <button [class.active]="activeQvTab === 'about'" (click)="setQvTab('about')">About</button>
-            <button [class.active]="activeQvTab === 'reviews'" (click)="setQvTab('reviews')">Reviews</button>
-          </div>
-
-          <div class="qv-tabs__panel" *ngIf="activeQvTab === 'about'">
-            <p class="qv-description">
-              {{ selectedProductForQuickView?.product_long_description || 'No description available for this product
-              yet.' }}
-            </p>
-
-            <div class="spec-list" *ngIf="getSpecsList(selectedProductForQuickView).length">
-              <span class="sidebar-label">Specifications</span>
-              <ul>
-                <li *ngFor="let spec of getSpecsList(selectedProductForQuickView)">{{ spec }}</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="qv-tabs__panel" *ngIf="activeQvTab === 'reviews'">
-            <div class="review-list" *ngIf="selectedProductForQuickView?.reviews?.length; else noReviews">
-              <div class="review-item" *ngFor="let review of selectedProductForQuickView?.reviews">
-                <div class="review-item__head">
-                  <span>{{ review.username }}</span>
-                  <span class="rating-pill rating-pill--sm"><i class="fas fa-star"></i> {{ review.rating }}</span>
-                </div>
-                <p>{{ review.comment }}</p>
-                <span class="review-item__date">{{ review.created_at | date:'mediumDate' }}</span>
-              </div>
-            </div>
-            <ng-template #noReviews>
-              <p class="empty-copy">No reviews yet for this product.</p>
-            </ng-template>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom action bar -->
-    <div class="qv-actionbar">
-      <button class="btn-outline" (click)="addToCart(selectedProductForQuickView!)">
-        <i class="fas fa-shopping-bag"></i> Add to Cart
-      </button>
-      <button class="btn-primary" (click)="buyNow()">
-        <i class="fas fa-bolt"></i> Buy Now
-      </button>
-    </div>
-  </div>
 </div>

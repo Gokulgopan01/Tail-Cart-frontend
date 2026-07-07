@@ -45,6 +45,13 @@ interface ApiResponse {
   results: Product[];
 }
 
+interface Category {
+  id: string;
+  label: string;
+  image: string;
+  count: number;
+}
+
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -101,38 +108,50 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   petSelectError: boolean = false;
   quantity: number = 1;
 
-  categories = [
-    {
-      name: 'Dog',
-      icon: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=300&q=80',
-      count: '120+ items'
-    },
-    {
-      name: 'Cat',
-      icon: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=300&q=80',
-      count: '110+ items'
-    },
-    {
-      name: 'Food',
-      icon: 'https://images.unsplash.com/photo-1615789591457-74a63395c990?auto=format&fit=crop&w=300&q=80',
-      count: '80+ items'
-    },
-    {
-      name: 'Toys',
-      icon: 'https://images.unsplash.com/photo-1596495578065-6e0763fa1178?auto=format&fit=crop&w=300&q=80',
-      count: '60+ items'
-    },
-    {
-      name: 'Accessories',
-      icon: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=300&q=80',
-      count: '90+ items'
-    }
-  ];
-
-  quickFilters = ['Dog Food', 'Cat Food', 'Toys', 'Treats', 'Accessories'];
+  categoryFilter = 'all';
+  activeCategory = 'all';
 
   private productsApi = 'http://127.0.0.1:8000/api/manager/products/';
   private profileApi = 'http://127.0.0.1:8000/api/user/profile/';
+
+  categories: Category[] = [
+    {
+      id: 'all',
+      label: 'All',
+      image: 'assets/products/offer_banner.png',
+      count: 250
+    },
+    {
+      id: 'dogs',
+      label: 'Dogs',
+      image: 'assets/products/Dog.png',
+      count: 120
+    },
+    {
+      id: 'cats',
+      label: 'Cats',
+      image: 'assets/products/cat.png',
+      count: 95
+    },
+    {
+      id: 'food',
+      label: 'Food',
+      image: 'assets/products/food.png',
+      count: 80
+    },
+    {
+      id: 'toys',
+      label: 'Toys',
+      image: 'assets/products/toys.png',
+      count: 65
+    },
+    {
+      id: 'accessories',
+      label: 'Accessories',
+      image: 'assets/products/accessories.png',
+      count: 70
+    }
+  ];
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar, private router: Router) { }
 
@@ -211,28 +230,46 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   applyFilters() {
     let temp = [...this.products];
 
-    // Search filter
-    if (this.searchQuery) {
+    // Category filter
+    if (this.categoryFilter !== 'all') {
+      temp = temp.filter(product =>
+        product.product_material?.toLowerCase() === this.categoryFilter.toLowerCase()
+      );
+
+      // If your API has a category field, replace the above with:
+      // product.category === this.categoryFilter
+    }
+
+    // Search
+    if (this.searchQuery.trim()) {
       const query = this.searchQuery.toLowerCase();
-      temp = temp.filter(p => p.product_name.toLowerCase().includes(query));
+      temp = temp.filter(product =>
+        product.product_name.toLowerCase().includes(query)
+      );
     }
 
-    // Material filter
+    // Material
     if (this.selectedMaterial !== 'ALL') {
-      temp = temp.filter(p => p.product_material === this.selectedMaterial);
+      temp = temp.filter(
+        product => product.product_material === this.selectedMaterial
+      );
     }
 
-    // Color filter
+    // Color
     if (this.selectedColor !== 'ALL') {
-      temp = temp.filter(p => p.colours && p.colours.includes(this.selectedColor));
+      temp = temp.filter(
+        product => product.colours?.includes(this.selectedColor)
+      );
     }
 
-    // Price range filter
-    temp = temp.filter(p => parseFloat(p.selling_price) <= this.maxPrice);
+    // Price
+    temp = temp.filter(
+      product => parseFloat(product.selling_price) <= this.maxPrice
+    );
 
-    // Sorting
     this.filteredProducts = this.sortProducts(temp);
   }
+
 
   sortProducts(list: Product[]): Product[] {
     const sorted = [...list];
@@ -243,6 +280,14 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
       default: return sorted.sort((a, b) => b.id - a.id);
     }
   }
+
+  selectCategory(categoryId: string): void {
+    this.activeCategory = categoryId;
+    this.categoryFilter = categoryId;
+    this.applyFilters();
+  }
+
+
 
   // Count of active filters, used for the mobile filter button badge
   get activeFilterCount(): number {

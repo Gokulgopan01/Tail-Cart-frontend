@@ -70,7 +70,7 @@ section {
   height: 100%;
   background-image: url('/assets/Home/Home-Hero.png');
   background-size: cover;
-  background-position: top 10% center;
+  background-position: top 5% center;
   background-repeat: no-repeat;
   z-index: 1;
   transition: transform 10s ease-out;
