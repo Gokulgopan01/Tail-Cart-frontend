@@ -2,80 +2,279 @@
 
   <!-- ============ HERO ============ -->
   <header class="shop-hero">
+
     <img src="/assets/products/catdog_friends-HomeCover.png" alt="Dog and cat sitting together at home"
       class="shop-hero__bg">
+
     <div class="shop-hero__scrim"></div>
 
+    <!-- Navigation -->
     <div class="shop-hero__nav">
+
       <button class="icon-btn" routerLink="/home" aria-label="Back">
         <i class="fas fa-chevron-left"></i>
       </button>
+
       <button class="icon-btn" routerLink="/cart" aria-label="Cart">
         <i class="fas fa-shopping-cart"></i>
-        <span class="badge-dot" *ngIf="cartCount > 0">{{ cartCount }}</span>
+        <span class="badge-dot" *ngIf="cartCount > 0">
+          {{ cartCount }}
+        </span>
       </button>
+
     </div>
 
+    <!-- Hero Text -->
     <div class="shop-hero__text">
       <span class="eyebrow">Everything for your pets</span>
-      <h1>All in one happy place <span class="eyebrow-paw">🐾</span></h1>
-      <p>Premium products for pets, picked with love and care.</p>
+
+      <h1>
+        All in one happy place
+        <span class="eyebrow-paw">🐾</span>
+      </h1>
+
+      <p>
+        Premium products for pets, picked with love and care.
+      </p>
     </div>
 
-    <!-- ============ SEARCH + TOOLBAR (overlapping card) ============ -->
+    <!-- ================= SEARCH CARD ================= -->
+
     <div class="shop-toolbar">
+
       <div class="shop-toolbar__row">
+
+        <!-- Search -->
         <div class="search-field">
+
           <i class="fas fa-search"></i>
+
           <input type="text" placeholder="Search for products..." [(ngModel)]="searchQuery" (input)="applyFilters()">
-          <button class="search-clear" *ngIf="searchQuery" (click)="searchQuery=''; applyFilters()"
-            aria-label="Clear search">
+
+          <button class="search-clear" *ngIf="searchQuery" (click)="searchQuery=''; applyFilters()">
+
             <i class="fas fa-times"></i>
+
           </button>
+
         </div>
 
-        <!-- Desktop inline controls -->
+        <!-- Desktop -->
         <div class="toolbar-inline only-desktop">
+
           <div class="select-pill">
+
             <select [(ngModel)]="categoryFilter" (change)="applyFilters()">
+
               <option value="all">All Categories</option>
-              <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.label }}</option>
+
+              <option *ngFor="let cat of categories" [value]="cat.id">
+
+                {{cat.label}}
+
+              </option>
+
             </select>
+
             <i class="fas fa-chevron-down"></i>
+
           </div>
+
           <div class="select-pill select-pill--dark">
+
             <select [(ngModel)]="sortOption" (change)="applyFilters()">
+
               <option value="newest">Newest</option>
               <option value="priceLow">Price: Low to High</option>
               <option value="priceHigh">Price: High to Low</option>
               <option value="name">Name: A-Z</option>
+
             </select>
+
             <i class="fas fa-chevron-down"></i>
+
           </div>
+
         </div>
 
-        <!-- Mobile filter trigger -->
+        <!-- Mobile -->
         <button class="filter-trigger only-mobile" (click)="toggleFilters()">
+
           <i class="fas fa-sliders-h"></i>
-          <span>Filters</span>
-          <span class="filter-trigger__count" *ngIf="activeFilterCount > 0">{{ activeFilterCount }}</span>
+
+          <!-- <span>Filters</span> -->
+
+          <span class="filter-trigger__count" *ngIf="activeFilterCount>0">
+
+            {{activeFilterCount}}
+
+          </span>
+
         </button>
+
       </div>
 
-      <!-- Category avatars -->
-      <div class="category-row">
-        <button *ngFor="let cat of categories" class="category-card" [class.active]="cat.id === activeCategory"
-          (click)="selectCategory(cat.id)">
-          <span class="category-card__avatar">
-            <img [src]="cat.image" [alt]="cat.label">
-          </span>
-          <span class="category-card__label">{{ cat.label }}</span>
-          <span class="category-card__count">{{ cat.count }}+ items</span>
-        </button>
-      </div>
     </div>
+
+    <!-- ================= CATEGORY CARD ================= -->
+
+    <div class="category-container">
+
+      <div class="category-row">
+
+        <button *ngFor="let cat of categories" class="category-card" [class.active]="cat.id===activeCategory"
+          (click)="selectCategory(cat.id)">
+
+          <span class="category-card__avatar">
+
+            <img [src]="cat.image" [alt]="cat.label">
+
+          </span>
+
+          <span class="category-card__label">
+
+            {{cat.label}}
+
+          </span>
+
+          <span class="category-card__count">
+
+            {{cat.count}}+ items
+
+          </span>
+
+        </button>
+
+      </div>
+
+    </div>
+
   </header>
 
+  <!-- Spacer for floating cards -->
   <div class="shop-toolbar-spacer"></div>
 
+  <!-- ============ BODY: SIDEBAR + MAIN ============ -->
+  <div class="shop-body">
+
+    <!-- ================= SIDEBAR (Filters) ================= -->
+    <aside class="shop-sidebar" [class.shop-sidebar--open]="showFilters">
+
+      <div class="sidebar-header">
+        <h3>Filters</h3>
+        <button class="clear-link" (click)="clearFilters()">Clear all</button>
+        <button class="sidebar-close only-mobile" (click)="toggleFilters()" aria-label="Close filters">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="filter-group">
+        <h4 class="filter-group__title">Category</h4>
+
+        <label class="filter-check">
+          <input type="checkbox" [checked]="activeCategory === 'all'" (change)="selectCategory('all')">
+          <span class="filter-check__box"></span>
+          <span class="filter-check__label">All Categories</span>
+        </label>
+
+        <label class="filter-check" *ngFor="let cat of categories.slice(1)">
+          <input type="checkbox" [checked]="activeCategory === cat.id" (change)="selectCategory(cat.id)">
+          <span class="filter-check__box"></span>
+          <span class="filter-check__label">{{ cat.label }}</span>
+        </label>
+      </div>
+
+    </aside>
+
+    <!-- Mobile backdrop for filter drawer -->
+    <div class="sidebar-backdrop only-mobile" *ngIf="showFilters" (click)="toggleFilters()">
+    </div>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="shop-main">
+
+      <!-- Offer Banner -->
+      <div class="offer-banner">
+        <img src="assets/products/free_delivery.png" alt="Limited time offer, up to 25% off on pet accessories"
+          class="offer-banner__img">
+      </div>
+
+      <!-- Products section (unchanged, hook stays for later) -->
+      <section class="products-section">
+        <!-- product grid / list goes here later, ts data untouched -->
+      </section>
+
+    </main>
+
+  </div>
+
+
+
 </div>
+
+<section class="products-section">
+
+  <div class="products-grid">
+
+    <div class="product-card" *ngFor="let product of filteredProducts">
+
+      <!-- Image -->
+      <div class="product-card__image-wrap">
+
+        <span class="product-card__badge" *ngIf="product.deals">
+          {{ product.deals }}
+        </span>
+
+        <img [src]="product.thumbnail_image" [alt]="product.product_name" class="product-card__image">
+
+      </div>
+
+      <!-- Info -->
+      <div class="product-card__info">
+
+        <span class="product-card__brand">TAILCART</span>
+
+        <h3 class="product-card__name">
+          {{ product.product_name }}
+        </h3>
+
+        <span class="product-card__rating" *ngIf="product.reviews_stars">
+          {{ product.reviews_stars }}★ | {{ product.review_count || 0 }}
+        </span>
+
+        <div class="product-card__price-row">
+
+          <span class="product-card__price">
+            ₹{{ product.selling_price }}
+          </span>
+
+          <span class="product-card__original-price" *ngIf="product.discount_percentage as d; else noDiscount">
+            ₹{{ product.original_price }}
+            <span class="product-card__discount-pct">
+              ({{ d }}% off)
+            </span>
+          </span>
+
+          <ng-template #noDiscount></ng-template>
+
+        </div>
+
+        <!-- <div class="product-card__offer" *ngIf="product.offer_price">
+          <i class="fas fa-plus-circle"></i>
+          Offer Price: ₹{{ product.offer_price }}
+        </div> -->
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Load more -->
+  <div class="load-more-wrap" *ngIf="nextPageUrl">
+    <button class="load-more-btn" (click)="loadMore()" [disabled]="isLoading">
+      {{ isLoading ? 'Loading...' : 'Load More' }}
+    </button>
+  </div>
+
+</section>

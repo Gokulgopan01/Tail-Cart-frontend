@@ -118,7 +118,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     {
       id: 'all',
       label: 'All',
-      image: 'assets/products/offer_banner.png',
+      image: 'assets/products/catdog_friends-HomeCover1.png',
       count: 250
     },
     {
@@ -217,6 +217,13 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     return Math.round(((orig - sell) / orig) * 100);
   }
 
+  calculateOfferPrice(selling: string): number {
+    const sell = parseFloat(selling);
+    if (!sell) return 0;
+    // Extra flat discount shown as "Offer Price" (adjust % as per your business logic)
+    return Math.round(sell * 0.7);
+  }
+
   extractUniqueColors() {
     const colorSet = new Set<string>();
     this.products.forEach(p => {
@@ -269,8 +276,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.filteredProducts = this.sortProducts(temp);
   }
-
-
   sortProducts(list: Product[]): Product[] {
     const sorted = [...list];
     switch (this.sortOption) {
