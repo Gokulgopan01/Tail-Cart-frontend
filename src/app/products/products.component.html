@@ -125,11 +125,14 @@
 
           <div class="product-card" *ngFor="let product of filteredProducts">
 
-            <div class="product-card__image-wrap">
+            <div class="product-card__image-wrap" [routerLink]="['/product', product.id]">
               <span class="product-card__badge" *ngIf="product.deals">
                 {{ product.deals }}
               </span>
               <img [src]="product.thumbnail_image" [alt]="product.product_name" class="product-card__image">
+              <div class="product-card__overlay">
+                <span class="view-btn">View</span>
+              </div>
             </div>
 
             <div class="product-card__info">

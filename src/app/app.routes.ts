@@ -14,6 +14,7 @@ import { PetPublicComponent } from './pet-public/pet-public.component';
 import { PetProfileComponent } from './pet-profile/pet-profile.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { MyOrdersComponent } from './my-orders/my-orders.component';
+import { ProductDetailComponent } from './product-detail/product-detail.component';
 
 export const routes: Routes = [
 
@@ -34,6 +35,7 @@ export const routes: Routes = [
   { path: 'pet/:uuid', component: PetPublicComponent },
   { path: 'checkout', component: CheckoutComponent },
   { path: 'myorders', component: MyOrdersComponent },
+  { path: 'product/:id', component: ProductDetailComponent },
   { path: '**', component: AuthComponent },
   {
     path: 'admin/products',

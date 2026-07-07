@@ -19,6 +19,7 @@
 .breadcrumb span {
   cursor: pointer;
   transition: color 0.2s;
+  white-space: nowrap;
 }
 
 .breadcrumb span:hover {
@@ -461,5 +462,47 @@ select.error {
 
   .main-image-container {
     max-height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-detail-page {
+    padding: 1.5rem 1rem 8rem 1rem; /* Reduced horizontal padding, added bottom padding for mobile nav */
+  }
+
+  .breadcrumb {
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .detail-container {
+    gap: 1.5rem;
+  }
+
+  .main-image-container {
+    max-height: 350px;
+    border-radius: 8px;
+  }
+
+  .thumb-box {
+    width: 64px;
+    height: 64px;
+  }
+
+  .product-title {
+    font-size: 1.5rem;
+  }
+
+  .selling-price {
+    font-size: 2rem;
+  }
+
+  .action-card {
+    padding: 1.2rem;
+  }
+
+  .details-section h3 {
+    font-size: 1.2rem;
   }
 }

@@ -27,10 +27,12 @@
 /* ===================== HERO ===================== */
 .shop-hero {
   position: relative;
-  min-height: 300px;
+  min-height: 500px;
   padding-bottom: 150px;
   /* room for the overlapping toolbar card */
   overflow: visible;
+  display: flex;
+  flex-direction: column;
 }
 
 .shop-hero__bg {
@@ -44,12 +46,12 @@
 
 .shop-hero__scrim {
   position: absolute;
-  inset: 0;
+  /* inset: 0;
   background: linear-gradient(100deg,
       rgba(20, 15, 10, 0.82) 0%,
       rgba(20, 15, 10, 0.6) 32%,
       rgba(20, 15, 10, 0.15) 58%,
-      rgba(20, 15, 10, 0) 75%);
+      rgba(20, 15, 10, 0) 75%); */
 }
 
 .shop-hero__nav {
@@ -102,7 +104,8 @@
 .shop-hero__text {
   position: relative;
   z-index: 2;
-  padding: 40px 24px 0;
+  padding: 0 24px 20px;
+  margin-top: auto;
   max-width: 460px;
   color: #ffffff;
 }
@@ -407,7 +410,7 @@
 
   .shop-hero__text {
     max-width: 100%;
-    padding: 32px 20px 0;
+    padding: 0 20px;
   }
 
   .shop-hero__text h1 {
@@ -663,6 +666,43 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.4s ease;
+}
+
+.product-card__image-wrap:hover .product-card__image {
+  transform: scale(1.05);
+}
+
+.product-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.product-card__image-wrap:hover .product-card__overlay {
+  opacity: 1;
+}
+
+.view-btn {
+  background: #ffffff;
+  color: #1a1a1a;
+  padding: 8px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  transform: translateY(10px);
+  transition: transform 0.3s ease;
+}
+
+.product-card__image-wrap:hover .view-btn {
+  transform: translateY(0);
 }
 
 .product-card__badge {
