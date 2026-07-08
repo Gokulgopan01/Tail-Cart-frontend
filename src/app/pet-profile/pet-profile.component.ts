@@ -158,7 +158,7 @@ export class PetProfileComponent implements OnInit {
         ? this.pet.pet_photo
         : `http://127.0.0.1:8000${this.pet.pet_photo}`;
     }
-    return 'assets/icons/pet1.svg';
+    return 'assets/images/default-pet.png';
   }
 
   private showSnackbar(message: string): void {

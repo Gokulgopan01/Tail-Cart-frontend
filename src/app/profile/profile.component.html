@@ -1,215 +1,563 @@
-<div class="profile-page-modern">
-  <!-- 1. Hero Profile Header -->
-  <header class="profile-header">
-    <div class="header-photo-wrapper">
-      <img [src]="getOwnerPhotoUrl()" alt="Owner" class="profile-avatar-img" (error)="handleOwnerImageError($event)">
-      <div class="header-overlay"></div>
-    </div>
+<!-- Profile Hero (place directly below your existing navbar) -->
+<section class="profile-hero">
+  <div class="profile-card">
 
-    <div class="header-info-bar">
-      <div class="header-text-group">
-        <span class="header-tagline">OWNER & CURATOR :</span>
-        <h1 class="header-name">{{ profile.owner_name || 'Gokul' }}</h1>
+    <!-- Cover area — placeholder "word" cover until a real cover-photo field
+         is added to the API. No upload logic here on purpose. -->
+    <div class="cover-photo">
+      <div class="cover-pattern" aria-hidden="true">
+        <i class="fas fa-paw"></i>
+        <i class="fas fa-paw"></i>
+        <i class="fas fa-paw"></i>
+        <i class="fas fa-paw"></i>
+        <i class="fas fa-paw"></i>
       </div>
-      <button class="btn-edit-profile" (click)="toggleEditMode()">
-        <i class="fas fa-pen"></i> Edit Profile
-      </button>
+      <span class="cover-word">TailCart</span>
     </div>
-  </header>
 
-  <main class="profile-container">
-    <!-- 2. Identity & Contact Card -->
-    <section class="glass-card section-padding">
-      <h2 class="section-label">IDENTITY & CONTACT</h2>
+    <div class="profile-content">
+      <div class="avatar-ring">
+        <img [src]="getOwnerPhotoUrl()" alt="{{ profile.owner_name || 'Owner' }}" class="profile-avatar"
+          (error)="handleOwnerImageError($event)">
+      </div>
 
-      <div class="info-grid">
+      <div class="profile-info">
+        <div class="name-row">
+          <h1 class="owner-name">{{ profile.owner_name || 'Add your name' }}</h1>
+          <span class="verified-badge" *ngIf="hasProfile" title="Verified profile">
+            <i class="fas fa-check"></i>
+          </span>
+        </div>
+
+        <p class="role-label">Pet Parent</p>
+
+        <p class="joined-date">
+          <i class="far fa-calendar"></i>
+          Joined {{ profile.created_at ? (profile.created_at | date:'MMMM yyyy') : 'recently' }}
+        </p>
+      </div>
+
+      <div class="profile-actions">
+        <button class="btn-edit-profile" (click)="toggleEditMode()">
+          <i class="fas fa-pen"></i> Edit Profile
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Quick-stats row -->
+<section class="profile-stats">
+  <div class="stats-grid">
+
+    <div class="stat-card stat-pets">
+      <div class="stat-icon"><i class="fas fa-paw"></i></div>
+      <div class="stat-body">
+        <span class="stat-number">{{ pets.length }}</span>
+        <span class="stat-label">Pets</span>
+        <span class="stat-link">View all pets</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-tags">
+      <div class="stat-icon"><i class="fas fa-tag"></i></div>
+      <div class="stat-body">
+        <span class="stat-number">{{ tailTagsCount }}</span>
+        <span class="stat-label">Tail Tags</span>
+        <span class="stat-link">Manage tags</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-orders">
+      <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
+      <div class="stat-body">
+        <span class="stat-number">{{ ordersCount }}</span>
+        <span class="stat-label">Orders</span>
+        <span class="stat-link">View orders</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-documents">
+      <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+      <div class="stat-body">
+        <span class="stat-number">{{ documentsCount }}</span>
+        <span class="stat-label">Documents</span>
+        <span class="stat-link">In Vault</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-emergency">
+      <div class="stat-icon"><i class="fas fa-heart"></i></div>
+      <div class="stat-body">
+        <span class="stat-number">{{ (profile.emergency_contact_name ? 1 : 0) + (profile.emergency_contact_phone ? 1 :
+          0) }}</span>
+        <span class="stat-label">Emergency Contacts</span>
+        <span class="stat-link">Manage</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- Personal Information + Emergency Contact -->
+<section class="info-section">
+  <div class="info-grid">
+
+    <!-- Personal Information -->
+    <div class="info-card">
+      <div class="info-card-header">
+        <h3><i class="fas fa-user"></i> Personal Information</h3>
+        <span class="info-edit-link" (click)="toggleEditMode()">Edit</span>
+      </div>
+
+      <div class="info-body-grid">
+
         <div class="info-row">
-          <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
-          <div class="info-content">
+          <i class="fas fa-user info-icon"></i>
+          <div class="info-text">
+            <span class="info-label">Full Name</span>
+            <span class="info-value">{{ profile.owner_name || '—' }}</span>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <i class="fas fa-phone info-icon"></i>
+          <div class="info-text">
             <span class="info-label">Phone</span>
-            <p class="info-value">{{ profile.owner_phone || '907223948' }}</p>
+            <span class="info-value">{{ profile.owner_phone || '—' }}</span>
           </div>
         </div>
 
         <div class="info-row">
-          <div class="info-icon"><i class="fas fa-envelope"></i></div>
-          <div class="info-content">
+          <i class="fas fa-envelope info-icon"></i>
+          <div class="info-text">
             <span class="info-label">Email</span>
-            <p class="info-value">{{ profile.owner_email || 'gokul@gmail.com' }}</p>
+            <span class="info-value">{{ profile.owner_email || '—' }}</span>
           </div>
         </div>
 
         <div class="info-row">
-          <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
-          <div class="info-content">
+          <i class="fas fa-map-marker-alt info-icon"></i>
+          <div class="info-text">
             <span class="info-label">Address</span>
-            <p class="info-value">{{ profile.owner_address || 'greenland nediyavilla' }}</p>
+            <span class="info-value">{{ profile.owner_address || '—' }}</span>
           </div>
         </div>
+
+        <div class="info-row">
+          <i class="far fa-calendar info-icon"></i>
+          <div class="info-text">
+            <span class="info-label">Member Since</span>
+            <span class="info-value">{{ profile.created_at ? (profile.created_at | date:'d MMMM y') : '—' }}</span>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <i class="fas fa-city info-icon"></i>
+          <div class="info-text">
+            <span class="info-label">City / State</span>
+            <span class="info-value">
+              {{ profile.owner_city || '—' }}<ng-container *ngIf="profile.owner_state">, {{ profile.owner_state
+                }}</ng-container>
+            </span>
+          </div>
+        </div>
+
       </div>
-    </section>
+    </div>
 
-    <!-- 3. Emergency Card -->
-    <section class="glass-card section-padding emergency-theme">
-      <h2 class="section-label danger">EMERGENCY</h2>
-      <div class="emergency-details">
-        <span class="info-label">Additional Contacting</span>
-        <h3 class="emergency-name">{{ profile.emergency_contact_name || 'Gowri' }}</h3>
-        <p class="emergency-phone">{{ profile.emergency_contact_phone || '7854888555' }}</p>
-
-        <a [href]="'tel:' + (profile.emergency_contact_phone || '7854888555')" class="btn-emergency-call">
-          <i class="fas fa-phone-alt"></i> Call Now
-        </a>
+    <!-- Emergency Contact -->
+    <div class="info-card emergency-card">
+      <div class="info-card-header">
+        <h3><i class="fas fa-shield-alt"></i> Emergency Contact</h3>
+        <span class="info-edit-link" (click)="toggleEditMode()">Edit</span>
       </div>
-    </section>
 
-    <!-- 4. Your Pets Section -->
-    <div class="pets-header">
-      <h2 class="section-label">YOUR PETS</h2>
-      <button class="btn-add-pet" (click)="startAddPet()">
-        <i class="fas fa-plus"></i> Add Pet
+      <div class="info-body"
+        *ngIf="profile.emergency_contact_name || profile.emergency_contact_phone; else noEmergency">
+        <div class="emergency-name-row">
+          <span class="emergency-name">{{ profile.emergency_contact_name || '—' }}</span>
+        </div>
+
+        <div class="info-row" *ngIf="profile.emergency_contact_phone">
+          <i class="fas fa-phone info-icon"></i>
+          <div class="info-text">
+            <span class="info-value">{{ profile.emergency_contact_phone }}</span>
+          </div>
+        </div>
+
+        <div class="emergency-actions" *ngIf="profile.emergency_contact_phone">
+          <a class="btn-call" href="tel:{{ profile.emergency_contact_phone }}">
+            <i class="fas fa-phone"></i> Call Now
+          </a>
+          <a class="btn-whatsapp" href="https://wa.me/{{ profile.emergency_contact_phone }}" target="_blank">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <ng-template #noEmergency>
+        <div class="info-empty">
+          <p>No emergency contact added yet.</p>
+          <span class="info-edit-link" (click)="toggleEditMode()">+ Add contact</span>
+        </div>
+      </ng-template>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- My Pets + Tail Vault Summary -->
+<section class="pets-section">
+  <div class="pets-grid-layout">
+
+    <!-- My Pets -->
+    <div class="pets-card">
+      <div class="pets-card-header">
+        <h3><i class="fas fa-paw"></i> My Pets</h3>
+        <button class="btn-add-pet-header" (click)="startAddPet()">
+          <i class="fas fa-plus"></i> Add Pet
+        </button>
+      </div>
+
+      <div class="pets-loading" *ngIf="loadingPets">
+        <i class="fas fa-spinner fa-spin"></i> Loading pets…
+      </div>
+
+      <div class="pets-empty" *ngIf="!loadingPets && pets.length === 0">
+        <p>No pets added yet.</p>
+        <button class="btn-add-pet" (click)="startAddPet()">
+          <i class="fas fa-plus"></i> Add your first pet
+        </button>
+      </div>
+
+      <div class="pets-row" *ngIf="!loadingPets && pets.length > 0">
+
+        <div class="pet-tile" *ngFor="let pet of pets" (click)="viewPetProfile(pet.pet_id, $event)">
+
+          <div class="pet-photo-wrap">
+            <img [src]="getPetPhotoUrl(pet)" alt="{{ pet.pet_name }}" class="pet-photo"
+              (error)="handleImageError($event)">
+          </div>
+
+          <div class="pet-tile-body">
+            <div class="pet-name-row">
+              <span class="pet-name">{{ pet.pet_name }}</span>
+            </div>
+            <span class="pet-breed">{{ pet.breed || pet.species }}</span>
+
+            <span class="pet-status-badge" [class.status-lost]="pet.is_lost" [class.status-safe]="!pet.is_lost">
+              {{ pet.is_lost ? 'Lost' : 'Safe' }}
+            </span>
+
+            <div class="pet-meta-row" *ngIf="pet.age">
+              <i class="far fa-clock"></i>
+              <span>{{ pet.age }} {{ pet.age === 1 ? 'year' : 'years' }} old</span>
+            </div>
+
+            <div class="pet-meta-row" *ngIf="pet.alerts && pet.alerts.length > 0">
+              <i class="fas fa-bell"></i>
+              <span>{{ pet.alerts.length }} active alert{{ pet.alerts.length > 1 ? 's' : '' }}</span>
+            </div>
+
+            <button class="btn-view-profile" (click)="viewPetProfile(pet.pet_id, $event)">
+              View Profile <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Add Pet tile — always last in the grid when pets already exist -->
+        <div class="pet-tile pet-tile-add" (click)="startAddPet()">
+          <div class="add-pet-icon">
+            <i class="fas fa-plus"></i>
+          </div>
+          <span class="add-pet-label">Add Pet</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Tail Vault Summary -->
+    <div class="vault-card">
+      <div class="vault-card-header">
+        <h3><i class="fas fa-shield-alt"></i> Tail Vault Summary</h3>
+      </div>
+
+      <div class="vault-list">
+        <div class="vault-row">
+          <div class="vault-row-label">
+            <i class="fas fa-file-medical"></i>
+            <span>Pets on file</span>
+          </div>
+          <div class="vault-row-value">{{ pets.length }} <i class="fas fa-chevron-right"></i></div>
+        </div>
+
+        <div class="vault-row">
+          <div class="vault-row-label">
+            <i class="fas fa-file-alt"></i>
+            <span>Documents</span>
+          </div>
+          <div class="vault-row-value">{{ documentsCount }} <i class="fas fa-chevron-right"></i></div>
+        </div>
+
+        <div class="vault-row">
+          <div class="vault-row-label">
+            <i class="fas fa-shopping-bag"></i>
+            <span>Orders</span>
+          </div>
+          <div class="vault-row-value">{{ ordersCount }} <i class="fas fa-chevron-right"></i></div>
+        </div>
+
+        <div class="vault-row">
+          <div class="vault-row-label">
+            <i class="fas fa-bell"></i>
+            <span>Reminders</span>
+          </div>
+          <div class="vault-row-value">0 <i class="fas fa-chevron-right"></i></div>
+        </div>
+      </div>
+
+      <button class="btn-go-vault">
+        Go to Vault <i class="fas fa-arrow-right"></i>
       </button>
     </div>
 
-    <section class="pets-grid" *ngIf="pets.length > 0; else emptyPets">
-      <div class="pet-modern-card" *ngFor="let pet of pets">
-        <div class="pet-img-container">
-          <img [src]="getPetPhotoUrl(pet)" [alt]="pet.pet_name" class="pet-photo">
-          <div class="pet-age-tag">{{ pet.age }} Years</div>
+  </div>
+</section>
+
+
+<!-- Add / Edit Pet Modal -->
+<div class="modal-overlay" *ngIf="isPetFormVisible" (click)="cancelPetForm()" @modalFade>
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h3>
+        <i class="fas fa-paw"></i>
+        {{ editingPet ? 'Edit Pet' : 'Add a New Pet' }}
+      </h3>
+      <button class="modal-close" (click)="cancelPetForm()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Photo -->
+      <div class="photo-upload-row">
+        <div class="pet-photo-preview-wrap">
+          <img *ngIf="petPhotoPreview" [src]="petPhotoPreview" alt="Pet photo" class="pet-photo-preview">
+          <img *ngIf="!petPhotoPreview" [src]="'assets/icons/' + currentPetAvatar + '.svg'" alt="Pet avatar"
+            class="pet-photo-preview pet-photo-avatar">
         </div>
 
-        <div class="pet-card-content">
-          <h3 class="pet-title">{{ pet.pet_name }}</h3>
-          <p class="pet-subtitle">{{ pet.species }} • {{ pet.breed || 'Unique' }}</p>
-
-          <div class="pet-card-actions">
-            <button class="btn-pet-action view" [routerLink]="['/pet-profile', pet.pet_id]">
-              <i class="fas fa-eye"></i> View
-            </button>
-            <button class="btn-pet-action edit" (click)="editPet(pet, $event)">
-              <i class="fas fa-edit"></i> Edit
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Empty State -->
-    <ng-template #emptyPets>
-      <div class="empty-pets-modern">
-        <div class="empty-icon"><i class="fas fa-paw"></i></div>
-        <h3>No fur-babies yet?</h3>
-        <p>Your companion's profile belongs here.</p>
-        <button class="btn-add-pet-global" (click)="startAddPet()">Add New Pet</button>
-      </div>
-    </ng-template>
-
-  </main>
-
-  <!-- Modals (Modernized logic) -->
-  <div class="modal-overlay-modern" *ngIf="isEditMode" [@modalFade]>
-    <div class="modal-card-modern">
-      <div class="modal-header-modern">
-        <h2>Edit Owner Profile</h2>
-        <button class="close-modal-btn" (click)="toggleEditMode()"><i class="fas fa-times"></i></button>
-      </div>
-      <form (ngSubmit)="onSubmit()" #profileForm="ngForm" class="modal-form-modern">
-        <div class="photo-upload-section">
-          <div class="photo-preview-box">
-            <img [src]="ownerPhotoPreview || getOwnerPhotoUrl()" class="preview-img">
-          </div>
-          <label class="btn-photo-select">
-            <input type="file" (change)="onOwnerPhotoSelected($event)" hidden>
-            Change Photo
+        <div class="photo-upload-actions">
+          <label class="btn-upload-photo">
+            <i class="fas fa-camera"></i> Upload Photo
+            <input type="file" accept="image/*" hidden (change)="onPetPhotoSelected($event)">
           </label>
-        </div>
-
-        <div class="form-grid-modern">
-          <div class="input-block">
-            <label>Full Name</label>
-            <input type="text" name="owner_name" [(ngModel)]="profile.owner_name" required>
-          </div>
-          <div class="input-block">
-            <label>Phone Number</label>
-            <input type="tel" name="owner_phone" [(ngModel)]="profile.owner_phone">
-          </div>
-          <div class="input-block">
-            <label>Email</label>
-            <input type="email" name="owner_email" [(ngModel)]="profile.owner_email">
-          </div>
-          <div class="input-block">
-            <label>Address</label>
-            <textarea name="owner_address" [(ngModel)]="profile.owner_address" rows="2"></textarea>
-          </div>
-          <div class="input-block half">
-            <label>Emergency Contact</label>
-            <input type="text" name="emergency_contact_name" [(ngModel)]="profile.emergency_contact_name">
-          </div>
-          <div class="input-block half">
-            <label>Emergency Phone</label>
-            <input type="tel" name="emergency_contact_phone" [(ngModel)]="profile.emergency_contact_phone">
-          </div>
-        </div>
-
-        <div class="modal-footer-modern">
-          <button type="button" class="btn-cancel" (click)="toggleEditMode()">Discard</button>
-          <button type="submit" class="btn-save-modern" [disabled]="profileForm.invalid || isLoading">
-            {{ isLoading ? 'Saving...' : 'Save Changes' }}
+          <button type="button" class="btn-remove-photo" *ngIf="petPhotoPreview" (click)="removePetPhoto()">
+            Remove
           </button>
         </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Pet Form Modal -->
-  <div class="modal-overlay-modern" *ngIf="isPetFormVisible" [@modalFade]>
-    <div class="modal-card-modern">
-      <div class="modal-header-modern">
-        <h2>{{ editingPet ? 'Modify Pet' : 'Register New Pet' }}</h2>
-        <button class="close-modal-btn" (click)="cancelPetForm()"><i class="fas fa-times"></i></button>
       </div>
-      <form (ngSubmit)="savePet()" #petForm="ngForm" class="modal-form-modern">
-        <div class="photo-upload-section">
-          <div class="photo-preview-box">
-            <img [src]="petPhotoPreview || getPetPhotoUrl(currentPet)" class="preview-img">
+
+      <!-- Avatar picker (shown when no photo uploaded) -->
+      <div class="avatar-picker" *ngIf="!petPhotoPreview">
+        <span class="field-label">Or pick an avatar</span>
+        <div class="avatar-options">
+          <button type="button" class="avatar-option" [class.selected]="currentPetAvatar === 'pet1'"
+            (click)="selectPetAvatar('pet1')">
+            <img src="assets/icons/pet1.svg" alt="Dog avatar">
+          </button>
+          <button type="button" class="avatar-option" [class.selected]="currentPetAvatar === 'cat-play'"
+            (click)="selectPetAvatar('cat-play')">
+            <img src="assets/icons/cat-play.svg" alt="Cat avatar">
+          </button>
+          <button type="button" class="avatar-option" [class.selected]="currentPetAvatar === 'bird'"
+            (click)="selectPetAvatar('bird')">
+            <img src="assets/icons/bird.svg" alt="Bird avatar">
+          </button>
+        </div>
+      </div>
+
+      <!-- Form fields -->
+      <form class="pet-form" (ngSubmit)="savePet()" #petForm="ngForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Pet Name</label>
+            <input type="text" name="pet_name" [(ngModel)]="currentPet.pet_name" placeholder="e.g. Bella" required>
           </div>
-          <label class="btn-photo-select">
-            <input type="file" (change)="onPetPhotoSelected($event)" hidden>
-            Change Image
-          </label>
+          <div class="form-group">
+            <label>Gender</label>
+            <select name="gender" [(ngModel)]="currentPet.gender" required>
+              <option value="" disabled selected>Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
         </div>
 
-        <div class="form-grid-modern">
-          <div class="input-block">
-            <label>Pet Name</label>
-            <input type="text" name="pet_name" [(ngModel)]="currentPet.pet_name" required>
-          </div>
-          <div class="input-block half">
+        <div class="form-row">
+          <div class="form-group">
             <label>Species</label>
             <select name="species" [(ngModel)]="currentPet.species" required>
+              <option value="" disabled selected>Select</option>
               <option value="Dog">Dog</option>
               <option value="Cat">Cat</option>
               <option value="Bird">Bird</option>
               <option value="Other">Other</option>
             </select>
           </div>
-          <div class="input-block half">
+
+          <div class="form-group">
             <label>Breed</label>
-            <input type="text" name="breed" [(ngModel)]="currentPet.breed">
-          </div>
-          <div class="input-block">
-            <label>Age (Years)</label>
-            <input type="number" name="age" [(ngModel)]="currentPet.age">
+            <input type="text" name="breed" [(ngModel)]="currentPet.breed" placeholder="e.g. Golden Retriever">
           </div>
         </div>
 
-        <div class="modal-footer-modern">
-          <button type="button" class="btn-cancel" (click)="cancelPetForm()">Discard</button>
-          <button type="submit" class="btn-save-modern" [disabled]="petForm.invalid || loadingPets">
-            {{ loadingPets ? 'Syncing...' : 'Save Pet' }}
-          </button>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Age (years)</label>
+            <input type="number" name="age" [(ngModel)]="currentPet.age" min="0" placeholder="0">
+          </div>
+
+          <div class="form-group form-group-toggle">
+            <label>Status</label>
+            <label class="toggle-switch">
+              <input type="checkbox" name="is_lost" [(ngModel)]="currentPet.is_lost">
+              <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+              </span>
+              <span class="toggle-text" [class.text-lost]="currentPet.is_lost">
+                {{ currentPet.is_lost ? 'Lost' : 'Safe' }}
+              </span>
+            </label>
+          </div>
         </div>
+
+        <div class="form-group">
+          <label>About</label>
+          <input type="text" name="about" [(ngModel)]="currentPet.about" placeholder="About your pet">
+        </div>
+
       </form>
     </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="cancelPetForm()" [disabled]="loadingPets">Cancel</button>
+      <button class="btn-primary" (click)="savePet()"
+        [disabled]="loadingPets || !currentPet.pet_name || !currentPet.species">
+        <i class="fas fa-spinner fa-spin" *ngIf="loadingPets"></i>
+        {{ loadingPets ? 'Saving…' : (editingPet ? 'Save Changes' : 'Add Pet') }}
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Edit Profile Modal -->
+<div class="modal-overlay" *ngIf="isEditMode" (click)="hasProfile && cancelEdit()" @modalFade>
+  <div class="modal-panel modal-panel-wide" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h3>
+        <i class="fas fa-user"></i>
+        {{ hasProfile ? 'Edit Profile' : 'Complete Your Profile' }}
+      </h3>
+      <button class="modal-close" *ngIf="hasProfile" (click)="cancelEdit()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Photo -->
+      <div class="photo-upload-row">
+        <div class="owner-photo-preview-wrap">
+          <img [src]="ownerPhotoPreview || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
+            alt="Profile photo" class="owner-photo-preview" (error)="handleOwnerImageError($event)">
+        </div>
+
+        <div class="photo-upload-actions">
+          <label class="btn-upload-photo">
+            <i class="fas fa-camera"></i> Upload Photo
+            <input type="file" accept="image/*" hidden (change)="onOwnerPhotoSelected($event)">
+          </label>
+          <button type="button" class="btn-remove-photo" *ngIf="ownerPhotoPreview" (click)="removeOwnerPhoto()">
+            Remove
+          </button>
+        </div>
+      </div>
+
+      <form class="profile-form" (ngSubmit)="onSubmit()" #profileForm="ngForm">
+
+        <div class="form-section-label">Personal Information</div>
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="owner_name" [(ngModel)]="profile.owner_name" placeholder="e.g. Gowri" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="owner_email" [(ngModel)]="profile.owner_email" placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" name="owner_phone" [(ngModel)]="profile.owner_phone" placeholder="+91 98765 43210"
+              required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Address</label>
+          <input type="text" name="owner_address" [(ngModel)]="profile.owner_address" placeholder="Street address"
+            required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" name="owner_city" [(ngModel)]="profile.owner_city" placeholder="e.g. Trivandrum"
+              required>
+          </div>
+          <div class="form-group">
+            <label>State</label>
+            <input type="text" name="owner_state" [(ngModel)]="profile.owner_state" placeholder="e.g. Kerala" required>
+          </div>
+        </div>
+
+        <div class="form-section-label">Emergency Contact</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Contact Name</label>
+            <input type="text" name="emergency_contact_name" [(ngModel)]="profile.emergency_contact_name"
+              placeholder="e.g. Gokul">
+          </div>
+          <div class="form-group">
+            <label>Contact Phone</label>
+            <input type="tel" name="emergency_contact_phone" [(ngModel)]="profile.emergency_contact_phone"
+              placeholder="+91 98765 67890">
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" *ngIf="hasProfile" (click)="cancelEdit()" [disabled]="isLoading">Cancel</button>
+      <button class="btn-primary" (click)="onSubmit()" [disabled]="isLoading || !profile.owner_name.trim()">
+        <i class="fas fa-spinner fa-spin" *ngIf="isLoading"></i>
+        {{ isLoading ? 'Saving…' : 'Save Profile' }}
+      </button>
+    </div>
+
   </div>
 </div>

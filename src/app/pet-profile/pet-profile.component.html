@@ -1,82 +1,338 @@
-<div class="pet-profile-page" *ngIf="!isLoading && pet" @fadeUp>
-  <!-- 1. Navigation Pill Bar -->
-  <nav class="nav-pill-wrapper">
-    <div class="nav-pill-container">
-      <button class="nav-pill-btn" routerLink="/profile">
-        <span>My<br>Profile</span>
-      </button>
-      <button class="nav-pill-btn active">
-        <span>Pet<br>Profile</span>
-      </button>
-      <button class="nav-pill-btn" [routerLink]="['/pet-public']" [queryParams]="{user_id: userId, pet_id: pet.pet_id}">
-        <span>Public<br>Profile</span>
-      </button>
-    </div>
+<div class="pet-profile-page" *ngIf="pet">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a routerLink="/profile" class="back-link">
+      <i class="fa-solid fa-arrow-left"></i>
+      Back to Profile
+    </a>
   </nav>
 
-  <main class="pet-content-scroll">
-    <!-- 2. Hero Image Section -->
-    <div class="pet-hero-container">
-      <div class="photo-card">
-        <div class="status-pill top-left" [class.lost]="pet.is_lost">
-          <span class="dot"></span>
-          {{ pet.is_lost ? 'REPORTED LOST' : 'SAFE' }}
-        </div>
-        <img [src]="getPetPhoto()" [alt]="pet.pet_name" class="hero-pet-image">
-      </div>
+  <!-- Hero Card -->
+  <section class="hero-card">
+
+    <div class="pet-image">
+      <img [src]="getPetPhoto()" [alt]="pet.pet_name">
+
+      <button class="change-photo">
+        <i class="fa-solid fa-camera"></i>
+        Change Photo
+      </button>
     </div>
 
-    <!-- 3. Identity Section -->
-    <section class="identity-section-modern">
-      <h1 class="pet-main-name">{{ pet.pet_name }}</h1>
-      <div class="verified-companion">
-        <i class="fas fa-certificate verified-icon"></i> Verified Companion
+    <div class="hero-content">
+
+      <div class="top-row">
+        <div>
+          <h1>{{pet.pet_name}}</h1>
+
+          <span class="verified">
+            <i class="fa-solid fa-shield-dog"></i>
+            Verified Pet
+          </span>
+        </div>
+
+        <button class="edit-btn">
+          Edit Profile
+        </button>
+
       </div>
 
-      <div class="identity-pills">
-        <div class="info-pill">
-          <i class="fas fa-paw"></i> {{ pet.breed || pet.species }}
+      <div class="quick-info">
+
+        <div class="info-box">
+          <span>Species</span>
+          <h4>{{pet.species}}</h4>
         </div>
-        <div class="info-pill">
-          <i class="far fa-calendar-alt"></i> {{ pet.age }} Year{{ pet.age !== 1 ? 's' : '' }} Old
+
+        <div class="info-box">
+          <span>Breed</span>
+          <h4>{{pet.breed}}</h4>
         </div>
-        <div class="info-pill">
-          <i class="fas fa-mars"></i> {{ pet.gender }}
+
+        <div class="info-box">
+          <span>Age</span>
+          <h4>{{pet.age}} Years</h4>
+        </div>
+
+        <div class="info-box">
+          <span>Gender</span>
+          <h4>{{pet.gender}}</h4>
+        </div>
+
+      </div>
+
+      <div class="about">
+        <h3>About</h3>
+        <p>{{pet.about || 'No description added'}}</p>
+      </div>
+
+      <!-- Status bar -->
+      <div class="status" [class.lost]="pet.is_lost">
+
+        <div class="status-icon">
+          <i class="fa-solid fa-circle-check" *ngIf="!pet.is_lost"></i>
+          <i class="fa-solid fa-triangle-exclamation" *ngIf="pet.is_lost"></i>
+        </div>
+
+        <div class="status-text">
+          <h4>{{ pet.is_lost ? 'Missing Pet' : 'Not Lost' }}</h4>
+          <span>
+            {{ pet.is_lost
+            ? 'This pet is currently marked as lost.'
+            : 'This pet is not marked as lost.' }}
+          </span>
+        </div>
+
+        <!-- "Mark as Lost" is only available while the pet isn't already lost -->
+        <button class="mark-lost-btn" *ngIf="!pet.is_lost">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          Mark as Lost
+        </button>
+
+        <button class="mark-found-btn" *ngIf="pet.is_lost">
+          <i class="fa-solid fa-circle-check"></i>
+          Mark as Found
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Small Cards -->
+  <section class="stats-grid">
+
+    <div class="stat-card">
+      <h5>Pet ID</h5>
+      <p>#{{pet.pet_id}}</p>
+    </div>
+
+    <div class="stat-card">
+      <h5>Microchip</h5>
+      <!-- <p>{{pet.microchip_id || 'Not Added'}}</p> -->
+    </div>
+
+    <div class="stat-card">
+      <h5>Tag</h5>
+      <!-- <p>{{pet.tag_id ? pet.tag_id : 'No Tag Linked'}}</p> -->
+    </div>
+
+    <div class="stat-card">
+      <h5>Weight</h5>
+      <!-- <p>{{pet.weight ? (pet.weight + ' kg') : 'Not Added'}}</p> -->
+    </div>
+
+    <div class="stat-card">
+      <h5>Blood Group</h5>
+      <!-- <p>{{pet.blood_group || 'Not Added'}}</p> -->
+    </div>
+
+  </section>
+
+  <!-- Two Column -->
+  <section class="details-grid">
+
+    <!-- Left column -->
+    <!-- <div class="left-col">
+
+      <div class="card">
+        <h2><i class="fa-solid fa-heart-pulse"></i> Health Overview</h2>
+
+        <div class="health-empty" *ngIf="!pet.health_records?.length">
+          <div class="health-empty-icon">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <h4>No health records yet</h4>
+          <p>Add vaccination, medical records and regular checkups</p>
+          <button class="green-btn">Add Health Record</button>
+        </div>
+
+        <div class="health-mini-stats">
+          <div class="mini-stat mini-stat-blue">
+            <i class="fa-solid fa-syringe"></i>
+            <span>{{pet.vaccinations_count || 0}}</span>
+            <label>Vaccinations</label>
+          </div>
+          <div class="mini-stat mini-stat-orange">
+            <i class="fa-solid fa-file-medical"></i>
+            <span>{{pet.medical_records_count || 0}}</span>
+            <label>Medical Records</label>
+          </div>
+          <div class="mini-stat mini-stat-orange">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>{{pet.allergies_count || 0}}</span>
+            <label>Allergies</label>
+          </div>
+          <div class="mini-stat mini-stat-blue">
+            <i class="fa-solid fa-pills"></i>
+            <span>{{pet.medications_count || 0}}</span>
+            <label>Medications</label>
+          </div>
         </div>
       </div>
-    </section>
 
-    <!-- 4. Owner Management Actions -->
-    <section class="management-actions">
-      <h3 class="section-title">MANAGEMENT</h3>
-      <div class="action-grid">
-        <button class="action-card" (click)="toggleLostStatus()" [class.warning]="!pet.is_lost">
-          <i class="fas" [ngClass]="pet.is_lost ? 'fa-home' : 'fa-bullhorn'"></i>
-          <span>{{ pet.is_lost ? 'Mark as Safe' : 'Report Lost' }}</span>
+      <div class="card">
+        <h2><i class="fa-solid fa-tag"></i> Linked Smart Tag</h2>
+
+        <div class="smart-tag-empty" *ngIf="!pet.smart_tag_id">
+          <div class="smart-tag-icon">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <div>
+            <h4>No Smart Tag linked</h4>
+            <p>Link a Smart Tag to help find {{pet.pet_name}} if lost.</p>
+            <button class="green-outline-btn">Link Smart Tag</button>
+          </div>
+        </div>
+
+        <div class="smart-tag-linked" *ngIf="pet.smart_tag_id">
+          <div class="smart-tag-icon">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <div>
+            <h4>Smart Tag Linked</h4>
+            <p>Tag ID: {{pet.smart_tag_id}}</p>
+          </div>
+        </div>
+      </div>
+
+    </div> -->
+
+    <!-- Right column -->
+    <div class="right-col">
+
+      <div class="card">
+        <h2><i class="fa-solid fa-paw"></i> Pet Details</h2>
+
+        <div class="row">
+          <label>Species</label>
+          <span>{{pet.species}}</span>
+        </div>
+
+        <div class="row">
+          <label>Breed</label>
+          <span>{{pet.breed}}</span>
+        </div>
+
+        <div class="row">
+          <label>Gender</label>
+          <span>{{pet.gender}}</span>
+        </div>
+
+        <div class="row">
+          <label>Age</label>
+          <span>{{pet.age}} Years</span>
+        </div>
+
+        <div class="row">
+          <label>About</label>
+          <span>{{pet.about || '—'}}</span>
+        </div>
+
+        <div class="row">
+          <label>Date Added</label>
+          <!-- <span>{{pet.created_at | date:'MMM d, y'}}</span> -->
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><i class="fa-solid fa-bell"></i> Alerts</h2>
+
+        <div *ngIf="pet.alerts?.length==0" class="empty">
+          <i class="fa-solid fa-circle-check"></i>
+          <h4>No alerts</h4>
+          <p>You'll see important alerts and notifications here.</p>
+        </div>
+
+        <div class="alert-card" *ngFor="let alert of pet.alerts">
+          <div>
+            <h4>{{alert.sender_name}}</h4>
+            <small>{{alert.created_at}}</small>
+          </div>
+          <p>{{alert.message}}</p>
+          <span><i class="fa-solid fa-location-dot"></i> {{alert.location}}</span>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Activity + Promo -->
+  <section class="bottom-grid">
+
+    <div class="card activity-card">
+
+      <div class="tabs">
+        <button class="tab active">
+          <i class="fa-solid fa-list"></i> Activity Feed
         </button>
-        <button class="action-card" (click)="editPet()">
-          <i class="fas fa-pen"></i>
-          <span>Edit Details</span>
+        <button class="tab">
+          <i class="fa-solid fa-heart-pulse"></i> Health Timeline
         </button>
-        <button class="action-card danger" (click)="deletePet()">
-          <i class="fas fa-trash-alt"></i>
-          <span>Remove Pet</span>
+        <button class="tab">
+          <i class="fa-solid fa-file"></i> Documents
+        </button>
+        <button class="tab">
+          <i class="fa-solid fa-image"></i> Gallery
         </button>
       </div>
-    </section>
 
-    <!-- 5. About Me Section -->
-    <section class="bio-section white-card">
-      <h2 class="section-heading">About Me</h2>
-      <p class="bio-text">
-        {{ pet.about || pet.pet_name }}
-      </p>
-    </section>
-  </main>
-</div>
+      <div class="timeline">
 
-<!-- Loading State -->
-<div class="loading-state" *ngIf="isLoading">
-  <div class="spinner"></div>
-  <p>Loading {{ pet?.pet_name || 'Companion' }} Profile...</p>
+        <div class="timeline-item">
+          <div class="dot dot-green"><i class="fa-solid fa-paw"></i></div>
+          <div>
+            <h4>Pet Profile Created</h4>
+            <span>Recently</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="dot dot-purple"><i class="fa-solid fa-pen"></i></div>
+          <div>
+            <h4>Profile Updated</h4>
+            <span>Recently</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="dot dot-blue"><i class="fa-solid fa-camera"></i></div>
+          <div>
+            <h4>Photo Uploaded</h4>
+            <span>Recently</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card promo-card">
+      <div class="promo-illustration">
+        <div class="promo-circle">
+          <i class="fa-solid fa-paw"></i>
+        </div>
+        <div class="promo-heart">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+      </div>
+
+      <h3>Keep {{pet.pet_name}} safe &amp; healthy</h3>
+      <p>Add health records, link a smart tag, and keep all important information updated.</p>
+
+      <ul class="promo-checklist">
+        <li><i class="fa-solid fa-check"></i> Record vaccinations</li>
+        <li><i class="fa-solid fa-check"></i> Add medical history</li>
+        <li><i class="fa-solid fa-check"></i> Link smart tag</li>
+        <li><i class="fa-solid fa-check"></i> Get reminders</li>
+      </ul>
+
+      <button class="green-btn">Explore Features</button>
+    </div>
+
+  </section>
+
 </div>

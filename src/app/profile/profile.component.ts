@@ -25,6 +25,8 @@ export interface Pet {
   pet_photo: string | null;
   alerts?: Alert[];
   owner?: number;
+  gender: string;
+  about: string;
 
 }
 
@@ -114,8 +116,17 @@ export class ProfileComponent implements OnInit {
     age: 0,
     is_lost: false,
     pet_photo: null,
-    alerts: []
+    alerts: [],
+    gender: '',
+    about: ''
+
   };
+
+  //home dummy cards count
+  ordersCount: number = 1;
+  tailTagsCount: number = 1;
+  documentsCount: number = 1;
+
 
   // Frontend avatars for pets (backup)
   petAvatars: Map<number, string> = new Map();
@@ -364,7 +375,9 @@ export class ProfileComponent implements OnInit {
       age: 0,
       is_lost: false,
       pet_photo: null,
-      alerts: []
+      alerts: [],
+      gender: '',
+      about: '',
     };
     this.petPhotoPreview = null;
     this.petPhotoFile = null;
@@ -390,7 +403,9 @@ export class ProfileComponent implements OnInit {
       age: 0,
       is_lost: false,
       pet_photo: null,
-      alerts: []
+      alerts: [],
+      gender: '',
+      about: '',
     };
     this.petPhotoPreview = null;
     this.petPhotoFile = null;
@@ -404,7 +419,9 @@ export class ProfileComponent implements OnInit {
     const formData = new FormData();
     formData.append('pet_name', this.currentPet.pet_name);
     formData.append('species', this.currentPet.species);
+    formData.append('gender', this.currentPet.gender);
     formData.append('breed', this.currentPet.breed || '');
+    formData.append('about', this.currentPet.about);
     formData.append('age', this.currentPet.age.toString());
     formData.append('is_lost', this.currentPet.is_lost.toString());
     formData.append('owner', this.userId || '');
@@ -504,6 +521,13 @@ export class ProfileComponent implements OnInit {
     event.stopPropagation();
     this.selectedPet = pet;
     this.isPreviewModalOpen = true;
+  }
+
+  viewPetProfile(petId: number | null, event: Event): void {
+    event.stopPropagation();
+    if (petId) {
+      this.router.navigate(['/pet-profile', petId]);
+    }
   }
 
   closePreviewModal(): void {
