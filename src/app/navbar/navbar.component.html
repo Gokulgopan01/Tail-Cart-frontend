@@ -58,18 +58,12 @@
           </div>
           <div class="utility-text">
             <div class="user-main">
-              <span class="text-primary">Login / Sign up</span>
-            </div>
-            <div class="user-sub">
-              <span class="text-secondary">My account</span>
+              <span class="text-primary">Profile</span>
               <i class="fas fa-chevron-down sub-icon"></i>
             </div>
           </div>
         </div>
         <div class="dropdown-menu">
-          <a routerLink="/profile" class="dropdown-item">Owner Profile</a>
-          <a routerLink="/profile" class="dropdown-item">Pet Profile</a>
-          <a routerLink="/pet-public" class="dropdown-item">Pet Lost Profile</a>
           <button (click)="logout()" class="dropdown-item logout-btn">Logout</button>
         </div>
       </div>
@@ -98,8 +92,7 @@
 </div>
 
 <!-- MOBILE/TABLET NAVBAR (Existing luxury-navbar) -->
-<nav class="luxury-navbar" [class.scrolled]="isScrolled" [class.hidden]="isPastHalfScreen"
-  *ngIf="!hideTopNav">
+<nav class="luxury-navbar" [class.scrolled]="isScrolled" [class.hidden]="isPastHalfScreen" *ngIf="!hideTopNav">
   <div class="nav-floating-body">
     <div class="nav-container container">
       <!-- Left: Menu Toggle -->

@@ -135,70 +135,33 @@
   <section class="details-grid">
 
     <!-- Left column -->
-    <!-- <div class="left-col">
-
-      <div class="card">
-        <h2><i class="fa-solid fa-heart-pulse"></i> Health Overview</h2>
-
-        <div class="health-empty" *ngIf="!pet.health_records?.length">
-          <div class="health-empty-icon">
-            <i class="fa-solid fa-circle-check"></i>
+    <div class="left-col">
+      <div class="card promo-card">
+        <div class="promo-illustration">
+          <div class="promo-circle">
+            <i class="fa-solid fa-paw"></i>
           </div>
-          <h4>No health records yet</h4>
-          <p>Add vaccination, medical records and regular checkups</p>
-          <button class="green-btn">Add Health Record</button>
-        </div>
-
-        <div class="health-mini-stats">
-          <div class="mini-stat mini-stat-blue">
-            <i class="fa-solid fa-syringe"></i>
-            <span>{{pet.vaccinations_count || 0}}</span>
-            <label>Vaccinations</label>
-          </div>
-          <div class="mini-stat mini-stat-orange">
-            <i class="fa-solid fa-file-medical"></i>
-            <span>{{pet.medical_records_count || 0}}</span>
-            <label>Medical Records</label>
-          </div>
-          <div class="mini-stat mini-stat-orange">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <span>{{pet.allergies_count || 0}}</span>
-            <label>Allergies</label>
-          </div>
-          <div class="mini-stat mini-stat-blue">
-            <i class="fa-solid fa-pills"></i>
-            <span>{{pet.medications_count || 0}}</span>
-            <label>Medications</label>
+          <div class="promo-heart">
+            <i class="fa-solid fa-heart"></i>
           </div>
         </div>
+
+        <h3>Keep {{pet.pet_name}} safe &amp; healthy</h3>
+        <p>Add health records, link a smart tag, and keep all important information updated.</p>
+
+        <ul class="promo-checklist">
+          <li><i class="fa-solid fa-check"></i> Record vaccinations</li>
+          <li><i class="fa-solid fa-check"></i> Add medical history</li>
+          <li><i class="fa-solid fa-check"></i> Link smart tag</li>
+          <li><i class="fa-solid fa-check"></i> Get reminders</li>
+        </ul>
+
+        <button class="green-btn">Explore Features</button>
       </div>
 
-      <div class="card">
-        <h2><i class="fa-solid fa-tag"></i> Linked Smart Tag</h2>
+      <div class="card"></div>
 
-        <div class="smart-tag-empty" *ngIf="!pet.smart_tag_id">
-          <div class="smart-tag-icon">
-            <i class="fa-solid fa-qrcode"></i>
-          </div>
-          <div>
-            <h4>No Smart Tag linked</h4>
-            <p>Link a Smart Tag to help find {{pet.pet_name}} if lost.</p>
-            <button class="green-outline-btn">Link Smart Tag</button>
-          </div>
-        </div>
-
-        <div class="smart-tag-linked" *ngIf="pet.smart_tag_id">
-          <div class="smart-tag-icon">
-            <i class="fa-solid fa-qrcode"></i>
-          </div>
-          <div>
-            <h4>Smart Tag Linked</h4>
-            <p>Tag ID: {{pet.smart_tag_id}}</p>
-          </div>
-        </div>
-      </div>
-
-    </div> -->
+    </div>
 
     <!-- Right column -->
     <div class="right-col">
@@ -256,81 +219,6 @@
         </div>
       </div>
 
-    </div>
-
-  </section>
-
-  <!-- Activity + Promo -->
-  <section class="bottom-grid">
-
-    <div class="card activity-card">
-
-      <div class="tabs">
-        <button class="tab active">
-          <i class="fa-solid fa-list"></i> Activity Feed
-        </button>
-        <button class="tab">
-          <i class="fa-solid fa-heart-pulse"></i> Health Timeline
-        </button>
-        <button class="tab">
-          <i class="fa-solid fa-file"></i> Documents
-        </button>
-        <button class="tab">
-          <i class="fa-solid fa-image"></i> Gallery
-        </button>
-      </div>
-
-      <div class="timeline">
-
-        <div class="timeline-item">
-          <div class="dot dot-green"><i class="fa-solid fa-paw"></i></div>
-          <div>
-            <h4>Pet Profile Created</h4>
-            <span>Recently</span>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="dot dot-purple"><i class="fa-solid fa-pen"></i></div>
-          <div>
-            <h4>Profile Updated</h4>
-            <span>Recently</span>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="dot dot-blue"><i class="fa-solid fa-camera"></i></div>
-          <div>
-            <h4>Photo Uploaded</h4>
-            <span>Recently</span>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="card promo-card">
-      <div class="promo-illustration">
-        <div class="promo-circle">
-          <i class="fa-solid fa-paw"></i>
-        </div>
-        <div class="promo-heart">
-          <i class="fa-solid fa-heart"></i>
-        </div>
-      </div>
-
-      <h3>Keep {{pet.pet_name}} safe &amp; healthy</h3>
-      <p>Add health records, link a smart tag, and keep all important information updated.</p>
-
-      <ul class="promo-checklist">
-        <li><i class="fa-solid fa-check"></i> Record vaccinations</li>
-        <li><i class="fa-solid fa-check"></i> Add medical history</li>
-        <li><i class="fa-solid fa-check"></i> Link smart tag</li>
-        <li><i class="fa-solid fa-check"></i> Get reminders</li>
-      </ul>
-
-      <button class="green-btn">Explore Features</button>
     </div>
 
   </section>
