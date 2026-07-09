@@ -32,10 +32,16 @@
           </span>
         </div>
 
-        <button class="edit-btn">
-          Edit Profile
-        </button>
+        <div style="display: flex; gap: 10px;">
+          <button class="edit-btn" (click)="editPet()">
+            Edit Profile
+          </button>
 
+          <button class="delete-btn" (click)="deletePet()"
+            style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 8px; padding: 0.5rem 1rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">
+            <i class="fa-solid fa-trash"></i> Delete
+          </button>
+        </div>
       </div>
 
       <div class="quick-info">
@@ -223,4 +229,133 @@
 
   </section>
 
+</div>
+
+<!-- Add / Edit Pet Modal -->
+<div class="modal-overlay" *ngIf="isPetFormVisible" (click)="cancelPetForm()" @modalFade>
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h3>
+        <i class="fas fa-paw"></i>
+        {{ editingPet ? 'Edit Pet' : 'Add a New Pet' }}
+      </h3>
+      <button class="modal-close" (click)="cancelPetForm()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Photo -->
+      <div class="photo-upload-row">
+        <div class="pet-photo-preview-wrap">
+          <img *ngIf="petPhotoPreview" [src]="petPhotoPreview" alt="Pet photo" class="pet-photo-preview">
+          <img *ngIf="!petPhotoPreview" [src]="'assets/icons/' + currentPetAvatar + '.svg'" alt="Pet avatar"
+            class="pet-photo-preview pet-photo-avatar">
+        </div>
+
+        <div class="photo-upload-actions">
+          <label class="btn-upload-photo">
+            <i class="fas fa-camera"></i> Upload Photo
+            <input type="file" accept="image/*" hidden (change)="onPetPhotoSelected($event)">
+          </label>
+          <button type="button" class="btn-remove-photo" *ngIf="petPhotoPreview" (click)="removePetPhoto()">
+            Remove
+          </button>
+        </div>
+      </div>
+
+      <!-- Avatar picker (shown when no photo uploaded) -->
+      <div class="avatar-picker" *ngIf="!petPhotoPreview">
+        <span class="field-label">Or pick an avatar</span>
+        <div class="avatar-options">
+          <button type="button" class="avatar-option" [class.selected]="currentPetAvatar === 'pet1'"
+            (click)="selectPetAvatar('pet1')">
+            <img src="assets/icons/pet1.svg" alt="Dog avatar">
+          </button>
+          <button type="button" class="avatar-option" [class.selected]="currentPetAvatar === 'cat-play'"
+            (click)="selectPetAvatar('cat-play')">
+            <img src="assets/icons/cat-play.svg" alt="Cat avatar">
+          </button>
+          <button type="button" class="avatar-option" [class.selected]="currentPetAvatar === 'bird'"
+            (click)="selectPetAvatar('bird')">
+            <img src="assets/icons/bird.svg" alt="Bird avatar">
+          </button>
+        </div>
+      </div>
+
+      <!-- Form fields -->
+      <form class="pet-form" (ngSubmit)="savePet()" #petForm="ngForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Pet Name</label>
+            <input type="text" name="pet_name" [(ngModel)]="currentPet.pet_name" placeholder="e.g. Bella" required>
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select name="gender" [(ngModel)]="currentPet.gender" required>
+              <option value="" disabled selected>Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Species</label>
+            <select name="species" [(ngModel)]="currentPet.species" required>
+              <option value="" disabled selected>Select</option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Bird">Bird</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Breed</label>
+            <input type="text" name="breed" [(ngModel)]="currentPet.breed" placeholder="e.g. Golden Retriever">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Age (years)</label>
+            <input type="number" name="age" [(ngModel)]="currentPet.age" min="0" placeholder="0">
+          </div>
+
+          <div class="form-group form-group-toggle">
+            <label>Status</label>
+            <label class="toggle-switch">
+              <input type="checkbox" name="is_lost" [(ngModel)]="currentPet.is_lost">
+              <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+              </span>
+              <span class="toggle-text" [class.text-lost]="currentPet.is_lost">
+                {{ currentPet.is_lost ? 'Lost' : 'Safe' }}
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>About</label>
+          <input type="text" name="about" [(ngModel)]="currentPet.about" placeholder="About your pet">
+        </div>
+
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="cancelPetForm()" [disabled]="loadingPets">Cancel</button>
+      <button class="btn-primary" (click)="savePet()"
+        [disabled]="loadingPets || !currentPet.pet_name || !currentPet.species">
+        <i class="fas fa-spinner fa-spin" *ngIf="loadingPets"></i>
+        {{ loadingPets ? 'Saving…' : (editingPet ? 'Save Changes' : 'Add Pet') }}
+      </button>
+    </div>
+
+  </div>
 </div>

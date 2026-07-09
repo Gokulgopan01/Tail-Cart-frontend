@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { FormsModule } from '@angular/forms';
 
 interface Alert {
   id: number;
@@ -32,7 +33,7 @@ interface Pet {
 @Component({
   selector: 'app-pet-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatSnackBarModule],
+  imports: [CommonModule, RouterModule, MatSnackBarModule, FormsModule],
   templateUrl: './pet-profile.component.html',
   styleUrls: ['./pet-profile.component.css'],
   animations: [
@@ -49,6 +50,15 @@ export class PetProfileComponent implements OnInit {
   userId: string | null = null;
   pet: Pet | null = null;
   isLoading = true;
+
+  // Edit Modal Properties
+  isPetFormVisible = false;
+  editingPet = false;
+  currentPet: Pet = {} as Pet;
+  petPhotoPreview: string | null = null;
+  petPhotoFile: File | null = null;
+  currentPetAvatar: string = 'pet1';
+  loadingPets = false;
 
   private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
 
@@ -148,8 +158,88 @@ export class PetProfileComponent implements OnInit {
   }
 
   editPet(): void {
-    // Navigate to profile with edit query param or just open modal (for now redirecting to profile with tab)
-    this.router.navigate(['/profile'], { queryParams: { editPet: this.petId } });
+    if (!this.pet) return;
+    this.isPetFormVisible = true;
+    this.editingPet = true;
+    this.currentPet = { ...this.pet };
+    this.petPhotoPreview = this.pet.pet_photo;
+    this.currentPetAvatar = this.getDefaultPetAvatar(this.pet.species);
+  }
+
+  cancelPetForm(): void {
+    this.isPetFormVisible = false;
+    this.petPhotoFile = null;
+  }
+
+  onPetPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.petPhotoFile = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.petPhotoPreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.petPhotoFile);
+    }
+  }
+
+  removePetPhoto(): void {
+    this.petPhotoFile = null;
+    this.petPhotoPreview = null;
+  }
+
+  selectPetAvatar(avatar: string): void {
+    this.currentPetAvatar = avatar;
+  }
+
+  private getDefaultPetAvatar(species: string): string {
+    switch (species?.toLowerCase()) {
+      case 'dog': return 'pet1';
+      case 'cat': return 'cat-play';
+      case 'bird': return 'bird';
+      default: return 'pet1';
+    }
+  }
+
+  savePet(): void {
+    if (!this.userId || !this.pet) return;
+    const token = localStorage.getItem('access_token');
+    
+    const formData = new FormData();
+    formData.append('pet_id', this.pet.pet_id!.toString());
+    formData.append('user_id', this.userId);
+    formData.append('pet_name', this.currentPet.pet_name);
+    formData.append('species', this.currentPet.species);
+    formData.append('gender', this.currentPet.gender || '');
+    formData.append('breed', this.currentPet.breed || '');
+    formData.append('about', this.currentPet.about || '');
+    formData.append('age', this.currentPet.age.toString());
+    formData.append('is_lost', this.currentPet.is_lost.toString());
+    formData.append('owner', this.userId);
+    
+    if (this.petPhotoFile) {
+      formData.append('pet_photo', this.petPhotoFile);
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    this.loadingPets = true;
+
+    this.http.put(this.petsApi, formData, { headers }).subscribe({
+      next: (response: any) => {
+        this.loadingPets = false;
+        this.isPetFormVisible = false;
+        this.loadPet();
+        this.showSnackbar('Pet updated successfully');
+      },
+      error: (error) => {
+        this.loadingPets = false;
+        console.error('Save pet error:', error);
+        this.showSnackbar('Error saving pet');
+      }
+    });
   }
 
   getPetPhoto(): string {
