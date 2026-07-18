@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private bannerTimer: any;
 
   slideDirection: 'forward' | 'backward' = 'forward';
-
+  activeTab: 'new' | 'bestsellers' = 'bestsellers';
   contentState: 'idle' | 'exit' | 'enter' = 'idle';
   imageState: 'idle' | 'exit' | 'enter' = 'idle';
 
@@ -72,6 +72,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'Wooden QR Keychain',
       price: '₹688',
       img: 'assets/Home/product_trending_1.png',
+      description: "Hard wood based product",
       category: 'DOGS'
     },
     {
@@ -79,6 +80,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'Metal QR Keychain',
       price: '₹499',
       img: 'assets/Home/product_trending_2.jpg',
+      description: "Hard wood based product",
       category: 'CATS'
     },
     {
@@ -86,6 +88,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'Fiberglass QR Keychain',
       price: '₹499',
       img: 'assets/Home/product_trending_3.png',
+      description: "Hard wood based product",
       category: 'BIRDS'
     },
     {
@@ -93,6 +96,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'GPS Tracker Collar',
       price: '₹499',
       img: 'assets/Home/product_trending_4.png',
+      description: "Hard wood based product",
       category: 'DOGS'
     }
   ];
@@ -100,7 +104,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   categories = [
     { name: 'Keychains', img: 'assets/Home/dog_catagory.png' },
     { name: 'Toys', img: 'assets/Home/toys_catagory.png' },
-    { name: 'Foods', img: 'assets/Home/toys_catagory.png' },
+    { name: 'Foods', img: 'assets/Home/Foods.png' },
     { name: 'Accessories', img: 'assets/Home/accesories.png' }
   ];
   selectedCategory: string = 'All Products';
@@ -113,9 +117,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private hasAutoPlayed = false;
 
   @ViewChild('featureVideo', { static: false }) featureVideo!: ElementRef<HTMLVideoElement>;
-
-  // ── Hero Background Video State ───────────────────────────────
   @ViewChild('heroVideo', { static: false }) heroVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('carouselTrack') carouselTrack!: ElementRef<HTMLElement>;
+
   isHeroPlaying = true;
   isHeroMuted = true; // must start muted for autoplay to be allowed by browsers
   private heroHasAutoPlayed = false;
@@ -161,6 +165,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private stopBannerTimer() {
     if (this.bannerTimer) clearInterval(this.bannerTimer);
   }
+
 
 
 
@@ -275,6 +280,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       const footerRect = footer.getBoundingClientRect();
       if (footerRect.top < window.innerHeight) this.isScrolled = false;
     }
+  }
+
+  scrollCarousel(direction: 1 | -1) {
+    this.carouselTrack.nativeElement.scrollBy({ left: direction * 300, behavior: 'smooth' });
   }
 
   scrollToTop(): void {
