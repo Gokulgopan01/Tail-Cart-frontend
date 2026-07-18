@@ -27,19 +27,19 @@
       <button class="btn-shop" (click)="navigateToShop()">
         Shop Now
       </button>
-    </div>
 
-    <!-- Bottom-left video controls -->
-    <div class="video-controls hero-fade-in">
-      <button class="control-btn" (click)="toggleHeroPlay()"
-        [attr.aria-label]="isHeroPlaying ? 'Pause video' : 'Play video'">
-        <i class="fas" [ngClass]="isHeroPlaying ? 'fa-pause' : 'fa-play'"></i>
-      </button>
+      <!-- Video controls -->
+      <div class="hero-video-controls">
+        <button class="control-btn" (click)="toggleHeroPlay()"
+          [attr.aria-label]="isHeroPlaying ? 'Pause video' : 'Play video'">
+          <i class="fas" [ngClass]="isHeroPlaying ? 'fa-pause' : 'fa-play'"></i>
+        </button>
 
-      <button class="control-btn" (click)="toggleHeroMute()"
-        [attr.aria-label]="isHeroMuted ? 'Unmute video' : 'Mute video'">
-        <i class="fas" [ngClass]="isHeroMuted ? 'fa-volume-mute' : 'fa-volume-up'"></i>
-      </button>
+        <button class="control-btn" (click)="toggleHeroMute()"
+          [attr.aria-label]="isHeroMuted ? 'Unmute video' : 'Mute video'">
+          <i class="fas" [ngClass]="isHeroMuted ? 'fa-volume-mute' : 'fa-volume-up'"></i>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -282,6 +282,11 @@
 </section>
 
 <section class="category-bento-section">
+  <div class="recommended-header">
+    <span class="eyebrow">Shop By Category</span>
+    <h2 class="title">Explore Collections</h2>
+  </div>
+
   <div class="bento-grid">
 
     <!-- LEFT — large hero cell (Keychains) -->
@@ -376,105 +381,15 @@
   </div>
 </section>
 
-<!-- Service Highlights Bar -->
-<section class="service-highlights-section">
-
-  <div class="highlights-marquee">
-
-    <div class="highlights-track">
-
-      <!-- Repeat Items -->
-      <div class="highlight-item">
-        <div class="highlight-icon">
-          <i class="fas fa-truck"></i>
-        </div>
-        <div class="highlight-text">
-          <strong>Free Delivery</strong>
-          <span>On first 3 orders</span>
-        </div>
-      </div>
-
-      <div class="highlight-item">
-        <div class="highlight-icon">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <div class="highlight-text">
-          <strong>Secure Payment</strong>
-          <span>100% protected</span>
-        </div>
-      </div>
-
-      <div class="highlight-item">
-        <div class="highlight-icon">
-          <i class="fas fa-paw"></i>
-        </div>
-        <div class="highlight-text">
-          <strong>Best Quality</strong>
-          <span>For your pets</span>
-        </div>
-      </div>
-
-      <div class="highlight-item">
-        <div class="highlight-icon">
-          <i class="fas fa-headset"></i>
-        </div>
-        <div class="highlight-text">
-          <strong>24/7 Support</strong>
-          <span>We're here to help</span>
-        </div>
-      </div>
-
-      <!-- Duplicate for seamless loop -->
-
-      <div class="highlight-item">
-        <div class="highlight-icon">
-          <i class="fas fa-truck"></i>
-        </div>
-        <div class="highlight-text">
-          <strong>Free Delivery</strong>
-          <span>On first 3 orders</span>
-        </div>
-      </div>
-
-      <div class="highlight-item">
-        <div class="highlight-icon">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <div class="highlight-text">
-          <strong>Secure Payment</strong>
-          <span>100% protected</span>
-        </div>
-      </div>
-
-      <div class="highlight-item">
-        <div class="highlight-icon">
-          <i class="fas fa-paw"></i>
-        </div>
-        <div class="highlight-text">
-          <strong>Best Quality</strong>
-          <span>For your pets</span>
-        </div>
-      </div>
-
-      <div class="highlight-item">
-        <div class="highlight-icon">
-          <i class="fas fa-headset"></i>
-        </div>
-        <div class="highlight-text">
-          <strong>24/7 Support</strong>
-          <span>We're here to help</span>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
 <!-- ==========================================================================
      ECOSYSTEM HERO CAROUSEL
 ========================================================================== -->
+<div style="background-color: #ffffff; padding: 60px 0 20px;">
+  <div class="recommended-header" style="margin-bottom: 0;">
+    <span class="eyebrow">Services</span>
+    <h2 class="title">Services We Provide</h2>
+  </div>
+</div>
 <section class="eco-hero" [style.--accent]="services[activeEcosystemIndex].color">
 
   <!-- Crossfading full-bleed background image stack -->

@@ -121,6 +121,7 @@ section {
 
 .hero-actions {
   display: flex;
+  align-items: center;
   gap: 16px;
 }
 
@@ -143,8 +144,7 @@ section {
 }
 
 /* Video controls now flow inline under the action buttons */
-.video-controls {
-  margin-top: 40px;
+.hero-video-controls {
   display: flex;
   gap: 12px;
 }
@@ -767,13 +767,21 @@ section {
   margin-top: 60px;
   background: linear-gradient(135deg, #0f5b33, #164a2f, #0f5b33);
   color: white;
-  border-radius: 24px;
-  padding: 22px 40px;
-  /* shorter top/bottom padding */
+
+  /* Break out to full viewport width */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+
+  /* Keep inner content aligned with the max-1500px container */
+  padding: 22px max(40px, calc((100vw - 1420px) / 2));
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
   overflow: hidden;
 }
 
@@ -971,7 +979,7 @@ section {
 
   .difference-banner {
     padding: 24px 20px;
-    border-radius: 16px;
+    /* border-radius: 16px; */
     margin-top: 40px;
   }
 
@@ -1679,6 +1687,7 @@ section {
   margin-right: -50vw;
   overflow: hidden;
   background: #ffffff;
+  padding-top: 60px;
 }
 
 
@@ -1686,7 +1695,7 @@ section {
 .bento-grid {
   display: grid;
   grid-template-columns: 42% 58%;
-  height: 100vh;
+  height: calc(100vh - 170px);
   width: 100%;
   /* gap: 1px; */
 }
@@ -1912,7 +1921,7 @@ section {
 .recommended-section {
   width: 100%;
   max-width: 100%;
-  padding: 64px 48px 80px;
+  padding: 24px 48px 80px;
   background: #ffffff;
   box-sizing: border-box;
 }
