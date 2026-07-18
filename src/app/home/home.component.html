@@ -1,84 +1,50 @@
 <!-- Hero Section -->
-<!-- Hero Section -->
 <section class="hero-wrapper">
-  <div class="hero-bg"></div>
 
-  <!-- Decorative connector dots over the photo -->
-  <!-- <div class="hero-connector" aria-hidden="true">
-    <span class="connector-dot"><i class="fas fa-paw"></i></span>
-    <span class="connector-line"></span>
-    <span class="connector-dot"><i class="fas fa-heart"></i></span>
-    <span class="connector-line"></span>
-    <span class="connector-dot"><i class="fas fa-shield-halved"></i></span>
-  </div> -->
+  <!-- Background Video -->
+  <video #heroVideo class="hero-video" [muted]="isHeroMuted" autoplay loop playsinline>
+    <source src="assets/videos/hero_bg.mp4" type="video/mp4">
+  </video>
 
-  <!-- Floating feature cards stacked on the right -->
-  <div class="hero-float-card hero-float-alerts">
-    <div class="float-icon float-icon-bell"><i class="fas fa-bell"></i></div>
-    <div class="float-text">
-      <strong>Instant Alerts</strong>
-      <span>Get Notified Immediately If Your Pet Is Found.</span>
-    </div>
-  </div>
+  <!-- Dark overlay for text readability -->
+  <div class="hero-overlay"></div>
 
-  <div class="hero-float-card hero-float-location">
-    <div class="float-icon"><i class="fas fa-location-dot"></i></div>
-    <div class="float-text">
-      <strong>Live Location</strong>
-      <span>Always Know Where They Are.</span>
-    </div>
-  </div>
-
-  <div class="hero-float-card hero-float-records">
-    <div class="float-icon float-icon-record"><i class="fas fa-notes-medical"></i></div>
-    <div class="float-text">
-      <strong>Medical Records</strong>
-      <span>All Info, Always Accessible.</span>
-    </div>
-  </div>
-
-  <!-- Main content left -->
+  <!-- Main content -->
   <div class="hero-content">
-    <h1 class="hero-title_hero fade-up">
+    <span class="hero-badge">NEW</span>
+
+    <h1 class="hero-title hero">
       Never Lose<br>
-      <span class="highlight-green">Your Pet</span> Again.
+      Your Pet Again.
     </h1>
-    <p class="hero-desc fade-up">
+
+    <p class="hero-desc hero-fade-in">
       Smart QR Pet Tags with Instant Owner Alerts,<br class="desktop-only">
-      Live Location Sharing, Medical Records &amp;<br class="desktop-only">
-      Emergency Recovery Tools.
+      Live Location Sharing
     </p>
-    <div class="hero-actions fade-up">
-      <button class="btn-primary-green" (click)="navigateToShop()">
-        <span class="btn-icon-box">
-          <i class="fas fa-paw"></i>
-        </span>
-        Protect My Pet
-      </button>
-      <button class="btn-outline-green" (click)="scrollToHowItWorks()">
-        <span class="play-btn-icon"><i class="fas fa-play"></i></span>
-        How It Works
+
+    <div class="hero-actions hero-fade-in">
+      <button class="btn-shop" (click)="navigateToShop()">
+        Shop Now
       </button>
     </div>
 
-    <!-- Trust row -->
-    <div class="hero-trust fade-up">
-      <div class="trust-avatars">
-        <img src="assets/Home/avatar1.png" alt="" class="trust-avatar" onerror="this.style.display='none'">
-        <img src="assets/Home/avatar2.png" alt="" class="trust-avatar" onerror="this.style.display='none'">
-        <img src="assets/Home/avatar3.png" alt="" class="trust-avatar" onerror="this.style.display='none'">
-        <div class="trust-avatar trust-avatar-fallback">+</div>
-      </div>
-      <div class="trust-text">
-        <div class="trust-stars">
-          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-          <i class="fas fa-star"></i><i class="fas fa-star"></i>
-        </div>
-        <span>Trusted by 10,000+ pet parents</span>
-      </div>
+    <!-- Bottom-left video controls -->
+    <div class="video-controls hero-fade-in">
+      <button class="control-btn" (click)="toggleHeroPlay()"
+        [attr.aria-label]="isHeroPlaying ? 'Pause video' : 'Play video'">
+        <i class="fas" [ngClass]="isHeroPlaying ? 'fa-pause' : 'fa-play'"></i>
+      </button>
+
+      <button class="control-btn" (click)="toggleHeroMute()"
+        [attr.aria-label]="isHeroMuted ? 'Unmute video' : 'Mute video'">
+        <i class="fas" [ngClass]="isHeroMuted ? 'fa-volume-mute' : 'fa-volume-up'"></i>
+      </button>
     </div>
   </div>
+
 </section>
+
 
 <!-- Stats Bar -->
 <section class="stats-bar-section">
@@ -174,15 +140,20 @@
         </p>
 
         <!-- Trusted by pet parents -->
-        <div class="trusted-row">
-          <div class="trusted-avatars">
-            <img src="/assets/products/Dog.png" alt="Dog" class="trusted-avatar">
-            <img src="/assets/products/cat.png" alt="Cat" class="trusted-avatar">
-            <img src="/assets/Home/cat.png" alt="Poodle" class="trusted-avatar">
-            <div class="trusted-count">1,200+</div>
+        <!-- Trust row -->
+        <div class="hero-trust fade-up">
+          <div class="trust-avatars">
+            <img src="assets/Home/avatar1.png" alt="" class="trust-avatar" onerror="this.style.display='none'">
+            <img src="assets/Home/avatar2.png" alt="" class="trust-avatar" onerror="this.style.display='none'">
+            <img src="assets/Home/avatar3.png" alt="" class="trust-avatar" onerror="this.style.display='none'">
+            <div class="trust-avatar trust-avatar-fallback">+</div>
           </div>
-          <div class="trusted-text">
-            Trusted by pet parents
+          <div class="trust-text">
+            <div class="trust-stars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <span>Trusted by 10,000+ pet parents</span>
           </div>
         </div>
       </div>

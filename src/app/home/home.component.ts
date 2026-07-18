@@ -126,6 +126,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('featureVideo', { static: false }) featureVideo!: ElementRef<HTMLVideoElement>;
 
+  // ── Hero Background Video State ───────────────────────────────
+  @ViewChild('heroVideo', { static: false }) heroVideo!: ElementRef<HTMLVideoElement>;
+  isHeroPlaying = true;
+  isHeroMuted = true; // must start muted for autoplay to be allowed by browsers
+  private heroHasAutoPlayed = false;
+
   activeEcosystemIndex = 0;
 
   contentAnimating = false;
@@ -155,6 +161,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initializeVideo();
+    this.initializeHeroVideo();
   }
 
   ngOnDestroy(): void {
@@ -225,7 +232,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return 'hidden';
   }
 
-  // ── Video & Scroll Logic ─────────────────────────────────────
+  // ── Feature Video & Scroll Logic ──────────────────────────────
   private initializeVideo(): void {
     const video = this.featureVideo?.nativeElement;
     if (!video) return;
@@ -236,6 +243,47 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.hasAutoPlayed) {
       video.play().then(() => this.hasAutoPlayed = true).catch(() => this.showPlayButton());
     }
+  }
+
+  // ── Hero Background Video Logic ───────────────────────────────
+  private initializeHeroVideo(): void {
+    const video = this.heroVideo?.nativeElement;
+    if (!video) return;
+    video.muted = this.isHeroMuted;
+    video.autoplay = true;
+    video.playsInline = true;
+    video.load();
+    if (!this.heroHasAutoPlayed) {
+      video.play()
+        .then(() => {
+          this.heroHasAutoPlayed = true;
+          this.isHeroPlaying = true;
+        })
+        .catch(() => {
+          this.isHeroPlaying = false;
+        });
+    }
+  }
+
+  toggleHeroPlay(): void {
+    const video = this.heroVideo?.nativeElement;
+    if (!video) return;
+
+    if (video.paused) {
+      video.play();
+      this.isHeroPlaying = true;
+    } else {
+      video.pause();
+      this.isHeroPlaying = false;
+    }
+  }
+
+  toggleHeroMute(): void {
+    const video = this.heroVideo?.nativeElement;
+    if (!video) return;
+
+    video.muted = !video.muted;
+    this.isHeroMuted = video.muted;
   }
 
   @HostListener('window:scroll', [])
