@@ -81,39 +81,37 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 1,
       name: 'Wooden QR Keychain',
       price: '₹688',
-      img: 'assets/images/product_trending_1.png',
+      img: 'assets/Home/product_trending_1.png',
       category: 'DOGS'
     },
     {
       id: 2,
       name: 'Metal QR Keychain',
       price: '₹499',
-      img: 'assets/images/product_trending_2.jpg',
+      img: 'assets/Home/product_trending_2.jpg',
       category: 'CATS'
     },
     {
       id: 3,
       name: 'Fiberglass QR Keychain',
       price: '₹499',
-      img: 'assets/images/product_trending_3.png',
+      img: 'assets/Home/product_trending_3.png',
       category: 'BIRDS'
     },
     {
       id: 4,
       name: 'GPS Tracker Collar',
       price: '₹499',
-      img: 'assets/images/product_trending_4.png',
+      img: 'assets/Home/product_trending_4.png',
       category: 'DOGS'
     }
   ];
 
   categories = [
-    { name: 'Dogs', img: 'assets/Home/dog_catagory.png' },
-    { name: 'Cats', img: 'assets/Home/cat_catagory.png' },
-    { name: 'Toys', img: 'assets/Home/toys_catagory.png' },
-    { name: 'Other', img: 'assets/Home/accesories.png' },
-    { name: 'QR Keychains', img: 'assets/images/product_trending_1.png' },
-    { name: 'GPRS Belts', img: 'assets/images/product_trending_3.png' }
+    { name: 'Keychains', img: 'assets/Home/dog_catagory.png' },
+    { name: 'Toys', img: 'assets/Home/cat_catagory.png' },
+    { name: 'Foods', img: 'assets/Home/toys_catagory.png' },
+    { name: 'Accessories', img: 'assets/Home/accesories.png' }
   ];
   selectedCategory: string = 'All Products';
 

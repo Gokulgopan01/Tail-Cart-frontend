@@ -395,7 +395,7 @@ section {
 
 .difference-grid-layout {
   display: grid;
-  grid-template-columns: 1fr 420px 1.4fr;
+  grid-template-columns: 1fr 550px 1.4fr;
   align-items: center;
   gap: 0;
   /* removed gap so cards bleed into the green circle */
@@ -594,22 +594,10 @@ section {
   width: 100%;
 }
 
-.difference-center-dog::before {
-  content: "";
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #2f7a4b, #1f5c37);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 0;
-}
-
 .diff-dog-image {
-  width: 100%;
-  max-width: 420px;
+  width: 1000px;
+  max-width: none;
+  min-width: 1000px;
   object-fit: contain;
   filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.20));
   animation: floatDog 6s ease-in-out infinite;
@@ -693,7 +681,7 @@ section {
 }
 
 .tag-actual-img {
-  width: 120px;
+  width: 220px;
   transition: 0.4s ease;
 }
 
@@ -1999,6 +1987,244 @@ section {
   .recommended-section .section-container {
     width: 100%;
     padding: 0 16px;
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   BENTO CATEGORIES SECTION — full-bleed, no margins
+   ══════════════════════════════════════════════════════════════ */
+
+.category-bento-section {
+  /* break out of any parent container to go edge-to-edge */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: 42% 58%;
+  height: 100vh;
+  width: 100%;
+  gap: 4px;
+}
+
+.bento-right {
+  display: grid;
+  grid-template-rows: 62% calc(38% - 4px);
+  gap: 4px;
+  height: 100%;
+}
+
+.bento-top-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  height: 100%;
+}
+
+/* ── Shared cell styling ─────────────────────────────────────── */
+
+.bento-cell {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  background: #111;
+  text-decoration: none;
+}
+
+.cell-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bento-cell:hover .cell-media {
+  transform: scale(1.045);
+}
+
+.cell-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none;
+}
+
+.cell-label {
+  position: absolute;
+  top: 24px;
+  left: 28px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+}
+
+.cell-label .arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.bento-cell:hover .cell-label .arrow {
+  transform: translateX(4px);
+}
+
+/* ── Individual cells ────────────────────────────────────────── */
+
+.cell-large {
+  grid-row: 1 / -1;
+  height: 100%;
+}
+
+.cell-video,
+.cell-image {
+  height: 100%;
+}
+
+.cell-banner {
+  height: 100%;
+}
+
+/* ── Video controls ──────────────────────────────────────────── */
+
+.video-controls {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+}
+
+.video-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.video-btn:hover {
+  background: #fff;
+  transform: scale(1.08);
+}
+
+.play-button-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.play-button-overlay:hover {
+  background: #fff;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.play-button-overlay.hidden {
+  display: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE — stacked, no full-viewport height (avoids awkward crops)
+   ══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  .bento-grid {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: 4px;
+  }
+
+  .cell-large {
+    height: 62vh;
+  }
+
+  .bento-right {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .bento-top-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 42vh;
+  }
+
+  .cell-banner {
+    height: 32vh;
+  }
+
+  .cell-label {
+    top: 16px;
+    left: 16px;
+    font-size: 0.9rem;
+  }
+
+  .video-controls {
+    bottom: 12px;
+    right: 12px;
+  }
+
+  .video-btn {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bento-top-row {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .cell-video,
+  .cell-image {
+    height: 32vh;
+  }
+
+  .cell-large {
+    height: 50vh;
+  }
+
+  .cell-banner {
+    height: 28vh;
   }
 }
 

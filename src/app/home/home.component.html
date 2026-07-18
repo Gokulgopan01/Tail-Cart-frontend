@@ -160,7 +160,7 @@
 
       <!-- Center: Dog Image -->
       <div class="difference-center-dog">
-        <img src="assets/Home/tailcart_hero_dog.png" alt="Happy dog with tag" class="diff-dog-image">
+        <img src="assets/Home/how_it_works.png" alt="Happy dog with tag" class="diff-dog-image">
       </div>
 
       <!-- Right: Comparison Cards -->
@@ -170,12 +170,10 @@
         <div class="comparison-card traditional-card">
           <h3 class="card-title">Traditional Tags</h3>
           <p class="card-subtitle">Phone number only</p>
-
           <div class="tag-image-wrapper">
-            <img src="assets/Home/traditional_tag.png" alt="Traditional Tag" class="tag-actual-img"
+            <img src="assets/Home/traditional.png" alt="Traditional Tag" class="tag-actual-img"
               onerror="this.style.display='none'">
           </div>
-
           <ul class="fail-features-list">
             <li><span class="x-icon"><i class="fas fa-xmark"></i></span> No real-time location</li>
             <li><span class="x-icon"><i class="fas fa-xmark"></i></span> No owner notification</li>
@@ -195,7 +193,7 @@
           <h3 class="card-title">TailiCart Smart Tag</h3>
 
           <div class="tag-image-wrapper">
-            <img src="assets/Home/smart_tag.png" alt="Smart Tag" class="tag-actual-img"
+            <img src="assets/Home/tailtags.png" alt="Smart Tag" class="tag-actual-img"
               onerror="this.style.display='none'">
           </div>
 
@@ -227,136 +225,6 @@
 
   </div>
 </section>
-
-
-
-
-<!-- ══════════════════════════════════════
-   CATEGORIES SECTION
-══════════════════════════════════════ -->
-
-<section class="categories-section">
-  <div class="categories-layout">
-
-    <!-- INTRO -->
-    <div class="intro-panel">
-      <span class="intro-tag">EXPLORE OUR COLLECTIONS</span>
-      <h2>Everything<br>Your Pet Needs</h2>
-      <p>From playful moments to everyday care, find everything to keep your pets happy and healthy.</p>
-      <div class="intro-actions">
-        <a routerLink="/shop" class="shop-btn">SHOP ALL COLLECTIONS →</a>
-        <span class="paw-icon">🐾</span>
-      </div>
-    </div>
-
-    <!-- DOGS -->
-    <div class="category-card dog-card" (click)="navigateToShop()">
-      <div class="card-icon-badge">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path
-            d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2 .344-2.5 3.5-2.5 3.5L2 8l-.5 3.5 1 1.5H4v2l2 1.5h4l1-1V14l3-1.5V10l-4-4.828z" />
-        </svg>
-      </div>
-      <img src="assets/Home/dog_catagory.png" alt="Dogs">
-      <div class="category-content">
-        <h3>For Dogs</h3>
-        <p>Essentials for every happy pup</p>
-        <a class="explore-btn">EXPLORE →</a>
-      </div>
-    </div>
-
-    <!-- CATS -->
-    <div class="category-card cat-card" (click)="navigateToShop()">
-      <div class="card-icon-badge">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path
-            d="M12 5C8 5 5 7.5 5 11c0 1.5.5 3 1.5 4L5 17l2.5-.5C8.5 17.5 10 18 12 18s3.5-.5 4.5-1.5L19 17l-1.5-2C18.5 14 19 12.5 19 11c0-3.5-3-6-7-6z" />
-          <path d="M5 5L7 9M19 5L17 9" />
-        </svg>
-      </div>
-      <img src="assets/Home/cat_catagory.png" alt="Cats">
-      <div class="category-content">
-        <h3>For Cats</h3>
-        <p>Everything for curious and cute cats</p>
-        <a class="explore-btn">EXPLORE →</a>
-      </div>
-    </div>
-
-    <!-- TOYS — full image, text overlaid at bottom-left -->
-    <div class="toys-banner" (click)="navigateToShop()">
-      <div class="card-icon-badge">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <circle cx="12" cy="12" r="3" />
-          <path
-            d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" />
-        </svg>
-      </div>
-      <img src="assets/Home/toys_catagory.png" alt="Toys">
-      <div class="toys-content">
-        <span class="toys-tag">PLAY. CHEW. REPEAT.</span>
-        <h3>Toys &amp; Fun</h3>
-        <p>Engaging toys for active minds and happy tails.</p>
-        <a class="toys-explore-btn">EXPLORE TOYS →</a>
-      </div>
-    </div>
-
-    <!-- FOOD — full image, text overlaid -->
-    <div class="category-small food-card" (click)="navigateToShop()">
-      <div class="card-icon-badge">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M4 4h16v2a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4z" />
-          <path d="M8 10v10M16 10v10" />
-        </svg>
-      </div>
-      <img src="assets/images/product_trending_1.png" alt="Food">
-      <div class="category-content">
-        <h3>Food &amp; Treats</h3>
-        <p>Nutritious food and tasty treats for their well-being.</p>
-        <a class="explore-btn">EXPLORE →</a>
-      </div>
-    </div>
-
-    <!-- ACCESSORIES — full image, text overlaid -->
-    <div class="category-small accessories-card" (click)="navigateToShop()">
-      <div class="card-icon-badge">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <circle cx="12" cy="8" r="4" />
-          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-        </svg>
-      </div>
-      <img src="assets/Home/accesories.png" alt="Accessories">
-      <div class="category-content">
-        <h3>Accessories</h3>
-        <p>Collars, leashes, beds and more.</p>
-        <a class="explore-btn">EXPLORE →</a>
-      </div>
-    </div>
-
-  </div>
-</section>
-<!-- ══════════════════════════════════════
-     SPECIAL OFFERS / PROMO BANNERS
-══════════════════════════════════════ -->
-<section class="offer-banner-section-modern">
-  <div class="section-container">
-    <div class="promo-banners-grid">
-
-      <!-- Banner 1: 50% OFF -->
-      <div class="promo-banner-card banner-discount" style="background-image: url('assets/Home/premium_foods.png')">
-      </div>
-
-      <!-- Banner 2: Free Delivery -->
-      <div class="promo-banner-card banner-treats" style="background-image: url('assets/Home/delivery_add.png')">
-      </div>
-
-      <!-- Banner 3: 50% OFF -->
-      <div class="promo-banner-card banner-new" style="background-image: url('assets/Home/50offer.png')">
-      </div>
-
-    </div>
-  </div>
-</section>
-
 
 <!-- ══════════════════════════════════════
      BEST SELLER / TOP PICKS SECTION
@@ -403,175 +271,105 @@
   </div>
 </section>
 
-<!-- ── How TailCart Protects Section ── -->
-<section class="protection-how-it-works">
-  <div class="hiw-inner">
 
-    <!-- Left: Text + Steps -->
-    <div class="hiw-left">
-      <span class="hiw-badge">
-        <i class="fas fa-shield-halved"></i> Smart Pet Protection
-      </span>
-      <h2 class="hiw-heading">How TailCart <br><span class="hiw-accent">Protection Works</span></h2>
-      <p class="hiw-subtext">Our smart tag and platform work together to keep your pet safe and help you bring them home
-        faster.</p>
 
-      <div class="hiw-steps">
 
-        <div class="hiw-step">
-          <div class="hiw-num">1</div>
-          <div class="hiw-icon-wrap">
-            <i class="fas fa-address-card"></i>
-          </div>
-          <div>
-            <h4 class="hiw-step-title">Register Your Pet</h4>
-            <p class="hiw-step-desc">Create your pet's profile with important details.</p>
-          </div>
-        </div>
+<section class="category-bento-section">
+  <div class="bento-grid">
 
-        <div class="hiw-step">
-          <div class="hiw-num">2</div>
-          <div class="hiw-icon-wrap">
-            <i class="fas fa-paw"></i>
-          </div>
-          <div>
-            <h4 class="hiw-step-title">Attach TailCart Tag</h4>
-            <p class="hiw-step-desc">Securely attach the smart tag to your pet's collar.</p>
-          </div>
-        </div>
-
-        <div class="hiw-step">
-          <div class="hiw-num">3</div>
-          <div class="hiw-icon-wrap">
-            <i class="fas fa-search"></i>
-          </div>
-          <div>
-            <h4 class="hiw-step-title">Pet Gets Lost</h4>
-            <p class="hiw-step-desc">Someone finds your pet and scans the QR code.</p>
-          </div>
-        </div>
-
-        <div class="hiw-step">
-          <div class="hiw-num">4</div>
-          <div class="hiw-icon-wrap">
-            <i class="fas fa-location-dot"></i>
-          </div>
-          <div>
-            <h4 class="hiw-step-title">Location Shared</h4>
-            <p class="hiw-step-desc">Finder instantly sees location and your pet's profile.</p>
-          </div>
-        </div>
-
-        <div class="hiw-step">
-          <div class="hiw-num">5</div>
-          <div class="hiw-icon-wrap">
-            <i class="fas fa-shield-alt"></i>
-          </div>
-          <div>
-            <h4 class="hiw-step-title">Connect Securely</h4>
-            <p class="hiw-step-desc">We connect you both safely and get your pet home.</p>
-          </div>
-        </div>
-
+    <!-- LEFT — large hero cell (Keychains) -->
+    <a class="bento-cell cell-large" (click)="navigateToShop()" [style.cursor]="'pointer'">
+      <img [src]="categories[0].img" [alt]="categories[0].name" class="cell-media">
+      <div class="cell-overlay"></div>
+      <div class="cell-label">
+        <span>{{ categories[0].name }}</span>
+        <span class="arrow">→</span>
       </div>
-    </div>
+    </a>
 
-    <!-- Right: Modern Visual Area -->
-    <div class="hiw-right">
+    <!-- RIGHT — split into a top row + a bottom banner -->
+    <div class="bento-right">
 
-      <!-- Background Glow -->
-      <div class="hiw-glow"></div>
+      <div class="bento-top-row">
 
-      <!-- Main Pet + Owner Image -->
-      <img src="/assets/Home/how_it_works.png" alt="Pet owner hugging dog" class="hiw-pet-img">
+        <!-- Toys — VIDEO cell -->
+        <div class="bento-cell cell-video">
+          <video #heroVideo class="cell-media" [muted]="isHeroMuted" playsinline loop autoplay preload="auto">
+            <source src="assets/Home/toys_showcase.mp4" type="video/mp4">
+          </video>
+          <div class="cell-overlay"></div>
 
-      <!-- Small floating check badge -->
-      <div class="hiw-mini-check">
-        <i class="fas fa-check"></i>
-      </div>
-
-      <!-- Success Card -->
-      <div class="hiw-success-card">
-        <div class="success-icon">
-          <i class="fas fa-check"></i>
-        </div>
-
-        <div>
-          <h5>You're all set!</h5>
-          <p>Your pet is protected and ready.</p>
-        </div>
-      </div>
-
-      <!-- Phone Mockup -->
-      <div class="hiw-phone-card">
-
-        <div class="phone-notch"></div>
-
-        <div class="phone-header">
-          <img src="/assets/Home/how_it_works.png">
-          <div>
-            <h6>Rocky</h6>
-            <span>Active</span>
+          <div class="cell-label">
+            <span>{{ categories[1].name }}</span>
+            <span class="arrow">→</span>
           </div>
+
+          <!-- Video controls -->
+          <div class="video-controls">
+            <button class="video-btn" type="button" (click)="toggleHeroPlay(); $event.stopPropagation()"
+              [attr.aria-label]="isHeroPlaying ? 'Pause video' : 'Play video'">
+              <svg *ngIf="isHeroPlaying" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <rect x="6" y="5" width="4" height="14" rx="1"></rect>
+                <rect x="14" y="5" width="4" height="14" rx="1"></rect>
+              </svg>
+              <svg *ngIf="!isHeroPlaying" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M8 5v14l11-7L8 5z"></path>
+              </svg>
+            </button>
+
+            <button class="video-btn" type="button" (click)="toggleHeroMute(); $event.stopPropagation()"
+              [attr.aria-label]="isHeroMuted ? 'Unmute video' : 'Mute video'">
+              <svg *ngIf="!isHeroMuted" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M3 10v4h4l5 5V5L7 10H3z"></path>
+                <path d="M16.5 12a4.5 4.5 0 0 0-2.5-4.03v8.06A4.5 4.5 0 0 0 16.5 12z"></path>
+                <path
+                  d="M14 4.35v2.06c2.3.86 4 3.03 4 5.59s-1.7 4.73-4 5.59v2.06c3.45-.89 6-4.01 6-7.65s-2.55-6.76-6-7.65z">
+                </path>
+              </svg>
+              <svg *ngIf="isHeroMuted" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M3 10v4h4l5 5V5L7 10H3z"></path>
+                <path
+                  d="M19 8.5l-1.41-1.41L15 9.68l-2.59-2.59L11 8.5l2.59 2.59L11 13.68l1.41 1.41L15 12.5l2.59 2.59L19 13.68l-2.59-2.59L19 8.5z">
+                </path>
+              </svg>
+            </button>
+          </div>
+
+          <button *ngIf="!isHeroPlaying" class="play-button-overlay" type="button"
+            (click)="toggleHeroPlay(); $event.stopPropagation()" aria-label="Play video">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+              <path d="M8 5v14l11-7L8 5z"></path>
+            </svg>
+          </button>
         </div>
 
-        <div class="phone-map">
-          <div class="map-pin">
-            <i class="fas fa-paw"></i>
+        <!-- Foods — image cell -->
+        <a class="bento-cell cell-image" (click)="selectCategory('Foods'); navigateToShop()">
+          <img [src]="categories[2].img" [alt]="categories[2].name" class="cell-media">
+          <div class="cell-overlay"></div>
+          <div class="cell-label">
+            <span>{{ categories[2].name }}</span>
+            <span class="arrow">→</span>
           </div>
-        </div>
-
-        <div class="phone-footer">
-          <div class="phone-footer-row">
-            <span class="phone-footer-label">Last seen</span>
-            <span class="phone-footer-time">8min</span>
-          </div>
-          <div class="phone-footer-status">2 min ago</div>
-          <div class="phone-footer-address">
-            <i class="fas fa-location-dot"></i> Central Park, New York, NY
-          </div>
-        </div>
+        </a>
 
       </div>
 
-      <!-- Floating Tech Badge -->
-      <div class="hiw-tech-card">
-        <i class="fas fa-shield-halved"></i>
-        <div>
-          <h5>Smart Technology</h5>
-          <span>Real-time protection and peace of mind</span>
+      <!-- Accessories — full-width banner -->
+      <a class="bento-cell cell-banner" (click)="selectCategory('Accessories'); navigateToShop()">
+        <img [src]="categories[3].img" [alt]="categories[3].name" class="cell-media">
+        <div class="cell-overlay"></div>
+        <div class="cell-label">
+          <span>{{ categories[3].name }}</span>
+          <span class="arrow">→</span>
         </div>
-      </div>
-
-      <!-- Paw Badges -->
-      <div class="hiw-paw-badge paw1">
-        <i class="fas fa-paw"></i>
-      </div>
-
-      <div class="hiw-paw-badge paw2">
-        <i class="fas fa-paw"></i>
-      </div>
-
-      <!-- Bottom Feature Strip -->
-      <div class="hiw-feature-strip">
-        <div class="hiw-feature-item">
-          <i class="fas fa-shield-halved"></i> Secure &amp; Reliable
-        </div>
-        <div class="hiw-feature-item">
-          <i class="fas fa-bolt"></i> Instant Notifications
-        </div>
-        <div class="hiw-feature-item">
-          <i class="fas fa-lock"></i> Privacy First
-        </div>
-        <div class="hiw-feature-item">
-          <i class="fas fa-users"></i> Community Powered
-        </div>
-      </div>
+      </a>
 
     </div>
-
   </div>
 </section>
+
+
 
 <!-- Service Highlights Bar -->
 <section class="service-highlights-section">
