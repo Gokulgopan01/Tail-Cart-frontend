@@ -272,8 +272,6 @@
 </section>
 
 
-
-
 <section class="category-bento-section">
   <div class="bento-grid">
 
@@ -368,8 +366,6 @@
     </div>
   </div>
 </section>
-
-
 
 <!-- Service Highlights Bar -->
 <section class="service-highlights-section">
@@ -467,86 +463,96 @@
 
 </section>
 
-<section class="ecosystem-hero" [style.background]="services[activeEcosystemIndex].color">
+<!-- ==========================================================================
+     ECOSYSTEM HERO CAROUSEL
+========================================================================== -->
 
-  <!-- Background Glow -->
-  <div class="hero-bg-overlay"></div>
+<section class="eco-hero" [style.--accent]="services[activeEcosystemIndex].color">
 
-  <!-- Navbar -->
-  <div class="hero-topbar">
-    <div class="hero-logo">
-      <i class="fas fa-paw"></i>
+  <!-- Crossfading full-bleed background image stack -->
+  <div class="eco-hero__bg-stack">
+    <div *ngFor="let service of services; let i = index" class="eco-hero__bg"
+      [class.is-active]="i === activeEcosystemIndex" [style.background-image]="'url(' + service.img + ')'"></div>
+    <div class="eco-hero__scrim"></div>
+  </div>
+
+  <div class="eco-hero__inner">
+
+    <!-- ── Top band: copy block (left) + thumbnail filmstrip (right) ── -->
+    <div class="eco-hero__top">
+
+      <!-- Copy block -->
+      <div class="eco-hero__content" [class.eco-hero__content--exit]="contentState === 'exit'"
+        [class.eco-hero__content--enter]="contentState === 'enter'"
+        [class.eco-hero__content--back]="slideDirection === 'backward'">
+        <span class="eco-hero__eyebrow">
+          <i class="eco-hero__eyebrow-dash"></i>
+          Smart Pet Ecosystem
+        </span>
+
+        <h2 class="eco-hero__title">{{ services[activeEcosystemIndex].name }}</h2>
+
+        <p class="eco-hero__desc">{{ services[activeEcosystemIndex].desc }}</p>
+
+        <!-- <button type="button" class="eco-hero__cta" (click)="navigateToService(services[activeEcosystemIndex].route)">
+          <span class="eco-hero__cta-dot"></span>
+          {{ services[activeEcosystemIndex].cta }}
+        </button> -->
+      </div>
+
+      <!-- Thumbnail filmstrip / carousel navigation -->
+      <div class="eco-hero__filmstrip" [class.is-forward]="slideDirection === 'forward'"
+        [class.is-backward]="slideDirection === 'backward'">
+        <button *ngFor="let service of services; let i = index" type="button" class="eco-thumb"
+          [ngClass]="getSlideClass(i)" [style.--thumb-accent]="service.color" (click)="selectEcosystemTab(i)">
+          <span class="eco-thumb__image" [style.background-image]="'url(' + service.img + ')'"></span>
+          <span class="eco-thumb__meta">
+            <span class="eco-thumb__label">{{ service.id }}</span>
+            <span class="eco-thumb__name">{{ service.name }}</span>
+          </span>
+        </button>
+      </div>
+
     </div>
-  </div>
 
-  <!-- LEFT CONTENT -->
-  <div class="hero-content" [class.content-exit-forward]="contentState === 'exit' && slideDirection === 'forward'"
-    [class.content-exit-backward]="contentState === 'exit' && slideDirection === 'backward'"
-    [class.content-enter-forward]="contentState === 'enter' && slideDirection === 'forward'"
-    [class.content-enter-backward]="contentState === 'enter' && slideDirection === 'backward'">
+    <!-- ── Bottom nav bar: arrows / progress line / counter ── -->
+    <div class="eco-hero__nav">
 
-    <!-- Slide Counter -->
-    <div class="hero-counter">
-      <span class="active-number">
-        {{ (activeEcosystemIndex + 1).toString().padStart(2,'0') }}
-      </span>
-      <span class="total-number">
-        /{{ services.length.toString().padStart(2,'0') }}
-      </span>
-      <div class="counter-line"></div>
+      <div class="eco-hero__arrows">
+        <button type="button" class="eco-hero__arrow"
+          (click)="selectEcosystemTab((activeEcosystemIndex - 1 + services.length) % services.length)"
+          aria-label="Previous slide">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+        <button type="button" class="eco-hero__arrow"
+          (click)="selectEcosystemTab((activeEcosystemIndex + 1) % services.length)" aria-label="Next slide">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="eco-hero__progress">
+        <span class="eco-hero__progress-fill"
+          [style.width.%]="((activeEcosystemIndex + 1) / services.length) * 100"></span>
+      </div>
+
+      <div class="eco-hero__count">
+        <span class="eco-hero__count-current">
+          {{ (activeEcosystemIndex + 1) < 10 ? '0' + (activeEcosystemIndex + 1) : (activeEcosystemIndex + 1) }} </span>
+            <span class="eco-hero__count-total">
+              / {{ services.length < 10 ? '0' + services.length : services.length }} </span>
+      </div>
+
     </div>
 
-    <!-- Title -->
-    <h1 class="hero-title">{{ services[activeEcosystemIndex].name }}</h1>
-
-    <!-- Description -->
-    <p class="hero-description">{{ services[activeEcosystemIndex].desc }}</p>
-
-    <!-- CTA -->
-    <button class="hero-btn" (click)="navigateToService(services[activeEcosystemIndex].route)">
-      {{ services[activeEcosystemIndex].cta }}
-      <i class="fas fa-arrow-right"></i>
-    </button>
-
-    <!-- Progress -->
-    <!-- <div class="hero-progress">
-      <span *ngFor="let service of services; let i = index" class="progress-item"
-        [class.active]="activeEcosystemIndex === i" (click)="selectEcosystemTab(i)">
-      </span>
-    </div> -->
   </div>
-
-  <!-- IMAGE -->
-  <div class="hero-image-section" [class.image-exit-forward]="imageState === 'exit' && slideDirection === 'forward'"
-    [class.image-exit-backward]="imageState === 'exit' && slideDirection === 'backward'"
-    [class.image-enter-forward]="imageState === 'enter' && slideDirection === 'forward'"
-    [class.image-enter-backward]="imageState === 'enter' && slideDirection === 'backward'">
-
-    <div class="orbit-ring ring-1"></div>
-    <div class="orbit-ring ring-2"></div>
-    <img [src]="services[activeEcosystemIndex].img" [alt]="services[activeEcosystemIndex].name" class="hero-image" />
-  </div>
-
-  <!-- ARROWS -->
-  <button class="hero-arrow left"
-    (click)="selectEcosystemTab((activeEcosystemIndex - 1 + services.length) % services.length)">
-    <i class="fas fa-arrow-left"></i>
-  </button>
-  <button class="hero-arrow right" (click)="selectEcosystemTab((activeEcosystemIndex + 1) % services.length)">
-    <i class="fas fa-arrow-right"></i>
-  </button>
-
-  <!-- Bottom Dots -->
-  <div class="hero-service-nav">
-
-    <button *ngFor="let service of services; let i=index" [class.active]="activeEcosystemIndex === i"
-      (click)="selectEcosystemTab(i)">
-      {{service.name}}
-    </button>
-
-  </div>
-
 </section>
+
 
 <!-- ══════════════════════════════════════════
      FAQ Section — TailCart

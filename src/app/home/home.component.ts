@@ -20,17 +20,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   contentState: 'idle' | 'exit' | 'enter' = 'idle';
   imageState: 'idle' | 'exit' | 'enter' = 'idle';
 
-  offerBanners = [
-    {
-      img: 'assets/Home/discount_add.png'
-    },
-    {
-      img: 'assets/Home/free_delivery_add.png'
-    },
-    {
-      img: 'assets/Home/buy2_add.png'
-    }
-  ];
+
 
   // ── Bento Grid Ecosystem State ────────────────────────────────
   activeVaultStep: number = 1;
@@ -42,7 +32,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 'keychain',
       name: 'Tail Tag',
       desc: 'Premium aerospace-grade smart tags with instant scan recovery technology.',
-      img: 'assets/Home/tailtag.png',
+      img: 'assets/Home/tag_line.jpg',
       color: '#003c30',
       route: '/shop',
       cta: 'Explore Tags'
@@ -51,7 +41,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 'vault',
       name: 'Tail Vault',
       desc: 'Securely manage all your pet\'s health records and paperwork in one place.',
-      img: 'assets/Home/tailvault.png',
+      img: 'assets/Home/hero_document_locker.png',
       color: '#6b4f1d',
       route: '/documents',
       cta: 'Open Vault'
@@ -60,7 +50,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 'reminders',
       name: 'Smart Scheduler',
       desc: 'Never miss a critical care date with intelligent alerts.',
-      img: 'assets/Home/SmartScheduler.png',
+      img: 'assets/Home/hero_alert_system.png',
       color: '#1f2a44',
       route: '/document',
       cta: 'Set Reminders'
@@ -69,7 +59,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: 'doctor',
       name: 'Tail Care+',
       desc: '24/7 AI-powered health insights for your pets.',
-      img: 'assets/Home/Doctor.png',
+      img: 'assets/Home/hero_ai_doctor.png',
       color: '#4a1f36',
       route: '/doctor-ai',
       cta: 'Ask AI Doctor'
@@ -109,7 +99,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   categories = [
     { name: 'Keychains', img: 'assets/Home/dog_catagory.png' },
-    { name: 'Toys', img: 'assets/Home/cat_catagory.png' },
+    { name: 'Toys', img: 'assets/Home/toys_catagory.png' },
     { name: 'Foods', img: 'assets/Home/toys_catagory.png' },
     { name: 'Accessories', img: 'assets/Home/accesories.png' }
   ];
@@ -138,7 +128,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    this.startBannerTimer();
+
     this.startVaultAnimation();
     this.checkScroll();
 
@@ -167,26 +157,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.stopVaultAnimation();
   }
 
-  // ── Banner Carousel Logic ─────────────────────────────────────
-  private startBannerTimer() {
-    this.bannerTimer = setInterval(() => {
-      this.nextBanner();
-    }, 5000);
-  }
 
   private stopBannerTimer() {
     if (this.bannerTimer) clearInterval(this.bannerTimer);
   }
 
-  nextBanner() {
-    this.activeBannerIndex = (this.activeBannerIndex + 1) % this.offerBanners.length;
-  }
 
-  setBanner(index: number) {
-    this.activeBannerIndex = index;
-    this.stopBannerTimer();
-    this.startBannerTimer();
-  }
 
   // ── Category Filtering Logic ────────────────────────────────
   selectCategory(category: string): void {
