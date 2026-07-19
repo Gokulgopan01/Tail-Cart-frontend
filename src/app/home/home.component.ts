@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   activeVaultStep: number = 1;
   vaultToastMessage: string = '';
   private vaultAnimationTimer: any;
+  private ecoTimer: any;
 
   services = [
     {
@@ -156,6 +157,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.startVaultAnimation();
     this.checkScroll();
+    
+    this.ecoTimer = setInterval(() => {
+      this.selectEcosystemTab((this.activeEcosystemIndex + 1) % this.services.length);
+    }, 4000);
 
     // Load cart items count
     const savedCart = localStorage.getItem('cart_items');
@@ -180,6 +185,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.stopBannerTimer();
     this.stopVaultAnimation();
+    if (this.ecoTimer) {
+      clearInterval(this.ecoTimer);
+    }
   }
 
 
@@ -227,8 +235,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getSlideClass(index: number): string {
     if (index === this.activeEcosystemIndex) return 'active';
-    if (index === (this.activeEcosystemIndex - 1 + this.services.length) % this.services.length) return 'prev';
     if (index === (this.activeEcosystemIndex + 1) % this.services.length) return 'next';
+    if (index === (this.activeEcosystemIndex - 1 + this.services.length) % this.services.length) return 'prev';
     return 'hidden';
   }
 

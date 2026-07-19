@@ -3023,13 +3023,15 @@ section {
 }
 
 .eco-hero__filmstrip {
-  display: flex;
-  align-items: flex-end;
-  gap: 0.9rem;
+  position: relative;
+  width: 350px; /* Accommodates active (190) + next (138) + gap */
+  height: 148px;
+  margin-left: auto; /* Ensure it stays pushed to the right if flex isn't enough */
 }
 
 .eco-thumb {
-  position: relative;
+  position: absolute;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -3041,13 +3043,9 @@ section {
   background: rgba(10, 14, 12, 0.4);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 
-  /* animated dimensions -- this is what makes the carousel "move" */
-  flex: 0 0 auto;
-  width: 108px;
-  height: 108px;
-  opacity: 0.55;
-  transform: translateY(0) scale(1);
+  /* animated dimensions */
   transition:
+    left 560ms var(--ease-slide),
     width 560ms var(--ease-slide),
     height 560ms var(--ease-slide),
     opacity 480ms ease,
@@ -3055,19 +3053,41 @@ section {
     box-shadow 480ms ease;
 }
 
-.eco-thumb.prev,
-.eco-thumb.next {
-  width: 138px;
-  height: 128px;
-  opacity: 0.85;
-}
-
 .eco-thumb.active {
+  left: 0;
   width: 190px;
   height: 148px;
   opacity: 1;
   transform: translateY(-14px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+.eco-thumb.next {
+  left: 205px; /* 190px active width + 15px gap */
+  width: 138px;
+  height: 128px;
+  opacity: 0.85;
+  z-index: 1;
+}
+
+.eco-thumb.prev {
+  left: -160px; /* Slides left out */
+  width: 190px;
+  height: 148px;
+  opacity: 0;
+  transform: translateY(-14px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.eco-thumb.hidden {
+  left: 360px; /* Slides in from right */
+  width: 138px;
+  height: 128px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .eco-thumb.active::before {
@@ -3121,14 +3141,6 @@ section {
   font-weight: 600;
   color: var(--ink);
   line-height: 1.2;
-}
-
-.eco-thumb.hidden .eco-thumb__name {
-  display: none;
-}
-
-.eco-thumb.hidden .eco-thumb__label {
-  display: none;
 }
 
 /* directional emphasis: the card leaving "active" briefly overshoots

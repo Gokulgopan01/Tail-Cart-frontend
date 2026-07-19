@@ -395,8 +395,9 @@
   <!-- Crossfading full-bleed background image stack -->
   <div class="eco-hero__bg-stack">
     <div *ngFor="let service of services; let i = index" class="eco-hero__bg"
-      [class.is-active]="i === activeEcosystemIndex" [style.background-image]="!service.video ? 'url(' + service.img + ')' : 'none'">
-      <video *ngIf="service.video" class="eco-hero__bg-video" [muted]="isEcoMuted" playsinline loop autoplay preload="auto">
+      [class.is-active]="i === activeEcosystemIndex">
+      <div *ngIf="!service.video" class="eco-hero__bg-media eco-hero__bg-media--image" [style.background-image]="'url(' + service.img + ')'"></div>
+      <video *ngIf="service.video" class="eco-hero__bg-media eco-hero__bg-video" [muted]="isEcoMuted" playsinline loop autoplay preload="auto">
         <source [src]="service.video" type="video/mp4">
       </video>
     </div>
