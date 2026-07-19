@@ -138,6 +138,53 @@ export class DocumentsComponent implements OnInit {
     return Array(this.totalPages).fill(0).map((x, i) => i + 1);
   }
 
+  // Reminder Pagination State
+  remCurrentPage: number = 1;
+  remPageSize: number = 6;
+
+  get remTotalPages(): number {
+    return Math.ceil(this.filteredRemainders.length / this.remPageSize);
+  }
+
+  get paginatedRemainders(): Remainder[] {
+    const startIndex = (this.remCurrentPage - 1) * this.remPageSize;
+    return this.filteredRemainders.slice(startIndex, startIndex + this.remPageSize);
+  }
+
+  get remTotalItems(): number {
+    return this.filteredRemainders.length;
+  }
+
+  get remPaginationStartIndex(): number {
+    return this.remTotalItems === 0 ? 0 : (this.remCurrentPage - 1) * this.remPageSize + 1;
+  }
+
+  get remPaginationEndIndex(): number {
+    return Math.min(this.remCurrentPage * this.remPageSize, this.remTotalItems);
+  }
+
+  remGoToPage(page: number): void {
+    if (page >= 1 && page <= this.remTotalPages) {
+      this.remCurrentPage = page;
+    }
+  }
+
+  remNextPage(): void {
+    if (this.remCurrentPage < this.remTotalPages) {
+      this.remCurrentPage++;
+    }
+  }
+
+  remPreviousPage(): void {
+    if (this.remCurrentPage > 1) {
+      this.remCurrentPage--;
+    }
+  }
+
+  remGetPagesArray(): number[] {
+    return Array(this.remTotalPages).fill(0).map((x, i) => i + 1);
+  }
+
   // Modal States
   showUploadModal: boolean = false;
   showEditRemainderModal: boolean = false;
@@ -431,6 +478,7 @@ export class DocumentsComponent implements OnInit {
     });
 
     this.filteredRemainders = filtered;
+    this.remCurrentPage = 1; // Reset to page 1 on filter
     this.updateBannerCounts();
   }
 
@@ -597,7 +645,7 @@ export class DocumentsComponent implements OnInit {
 
     if (confirm('Are you sure you want to delete this document?')) {
       const token = localStorage.getItem('access_token');
-      this.http.delete(`${this.documentsApi}${documentId}/`, {
+      this.http.delete(`${this.documentsApi}?document_id=${documentId}`, {
         headers: { Authorization: `Bearer ${token}` }
       }).subscribe({
         next: () => {

@@ -39,7 +39,7 @@
   <!-- RIGHT CONTENT AREA -->
   <main class="vault-main-content">
     <!-- Desktop Header -->
-    <header class="vault-header-desktop">
+    <header class="vault-header-desktop" *ngIf="activeTab === 'documents'">
       <div class="header-left">
         <h1 class="page-title">Pet Documents</h1>
         <p class="page-subtitle">Store vaccination records, prescriptions, insurance papers, lab reports, adoption
@@ -213,78 +213,207 @@
       </section>
 
       <!-- Reminders View -->
-      <section *ngIf="activeTab === 'remainders'" class="fade-in">
-        <!-- Same structure as Documents but for reminders -->
-        <div class="summary-grid-mobile">
-          <div class="dual-card blue-shade">
-            <div class="card-icon-box">
-              <i class="fas fa-clock"></i>
-            </div>
-            <div class="card-info">
-              <span class="card-label">Upcoming</span>
-              <h4 class="card-value">{{ upcomingCount }} <small>Items</small></h4>
-            </div>
+      <section *ngIf="activeTab === 'remainders'" class="fade-in reminders-section" style="margin-top: 90px;">
+
+        <header class="vault-header-desktop" style="margin-bottom: 30px;">
+          <div class="header-left">
+            <h1 class="page-title">Reminders</h1>
+            <p class="page-subtitle">Never miss vaccinations, medications, insurance renewals, or checkups for your
+              pets.</p>
           </div>
-          <div class="dual-card violet-shade">
-            <div class="card-icon-box">
-              <i class="fas fa-exclamation-circle"></i>
+        </header>
+
+        <div class="reminders-stats-grid">
+          <!-- Card 1: Upcoming -->
+          <div class="stat-card stat-blue">
+            <div class="stat-header">
+              <i class="far fa-clock stat-icon"></i>
+              <span class="stat-title">Upcoming</span>
             </div>
-            <div class="card-info">
-              <span class="card-label">Overdue</span>
-              <h4 class="card-value">{{ overdueCount }} <small>Items</small></h4>
+            <div class="stat-body">
+              <h2 class="stat-value">{{ upcomingCount || 4 }}</h2>
+              <span class="stat-unit">Items</span>
             </div>
+            <div class="stat-footer">Next: Tomorrow</div>
+          </div>
+
+          <!-- Card 2: Overdue -->
+          <div class="stat-card stat-purple">
+            <div class="stat-header">
+              <i class="fas fa-exclamation-circle stat-icon"></i>
+              <span class="stat-title">Overdue</span>
+            </div>
+            <div class="stat-body">
+              <h2 class="stat-value">{{ overdueCount || 1 }}</h2>
+              <span class="stat-unit">Item</span>
+            </div>
+            <div class="stat-footer">Check now</div>
+          </div>
+
+          <!-- Card 3: This Month -->
+          <div class="stat-card stat-green">
+            <div class="stat-header">
+              <i class="far fa-calendar-alt stat-icon"></i>
+              <span class="stat-title">This Month</span>
+            </div>
+            <div class="stat-body">
+              <h2 class="stat-value">3</h2>
+              <span class="stat-unit">Items</span>
+            </div>
+            <div class="stat-footer">June 2025</div>
+          </div>
+
+          <!-- Card 4: Completed -->
+          <div class="stat-card stat-orange">
+            <div class="stat-header">
+              <i class="far fa-check-circle stat-icon"></i>
+              <span class="stat-title">Completed</span>
+            </div>
+            <div class="stat-body">
+              <h2 class="stat-value">12</h2>
+              <span class="stat-unit">Items</span>
+            </div>
+            <div class="stat-footer">View history</div>
           </div>
         </div>
 
         <div class="recent-files-section">
-          <div class="section-header">
-            <h2 class="section-title">All Reminders</h2>
-            <button class="circle-add-btn-small" (click)="openCreateRemainderModal()"
-              style="background: none; border: none; color: var(--vault-accent); font-size: 1.2rem; cursor: pointer;">
-              <i class="fas fa-plus"></i>
-            </button>
+          <div class="reminders-controls-row">
+            <div class="rem-tabs">
+              <button class="rem-tab" [class.active]="selectedStatus === ''"
+                (click)="selectedStatus = ''; filterRemainders()">All Reminders</button>
+              <button class="rem-tab" [class.active]="selectedStatus === 'upcoming'"
+                (click)="selectedStatus = 'upcoming'; filterRemainders()">Upcoming</button>
+              <button class="rem-tab" [class.active]="selectedStatus === 'overdue'"
+                (click)="selectedStatus = 'overdue'; filterRemainders()">Overdue</button>
+              <button class="rem-tab" [class.active]="selectedStatus === 'completed'"
+                (click)="selectedStatus = 'completed'; filterRemainders()">Completed</button>
+            </div>
+
+            <div class="rem-actions">
+              <button class="rem-filter-btn">
+                <i class="fas fa-filter"></i> Filter <i class="fas fa-chevron-down"
+                  style="font-size: 0.75em; margin-left: 4px;"></i>
+              </button>
+              <button class="rem-add-btn" (click)="openCreateRemainderModal()">
+                <i class="fas fa-plus"></i> Add Reminder
+              </button>
+            </div>
           </div>
 
-          <div class="files-list">
-            <ng-container *ngIf="filteredRemainders.length > 0; else noRemainders">
-              <div *ngFor="let rem of filteredRemainders" class="file-row-luxury reminder-card">
-                <div class="file-icon-wrapper" [ngClass]="rem.statusInfo?.type + '-icon-bg'"
-                  (click)="editRemainder(rem)">
-                  <i class="fas" [ngClass]="{
-                  'fa-exclamation-circle': rem.statusInfo?.type === 'overdue',
-                  'fa-clock': rem.statusInfo?.type === 'upcoming',
-                  'fa-calendar-alt': rem.statusInfo?.type === 'scheduled',
-                  'fa-check-circle': rem.statusInfo?.type === 'completed'
-                }"></i>
-                </div>
-                <div class="file-content" (click)="editRemainder(rem)">
-                  <div class="title-row" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h4 class="file-name">{{ rem.title }}</h4>
-                    <span class="pet-tag-lite">{{ getPetName(rem.pet) }}</span>
+          <div class="reminders-table-container">
+            <div class="rem-list-header">
+              <div class="col-rem">Reminder</div>
+              <div class="col-pet">Pet</div>
+              <div class="col-date">Due Date</div>
+              <div class="col-time">Time Left</div>
+              <div class="col-status">Status</div>
+              <div class="col-actions">Actions</div>
+            </div>
+            
+            <div class="rem-list-body">
+              <ng-container *ngIf="paginatedRemainders.length > 0; else noRemainders">
+                <div *ngFor="let rem of paginatedRemainders" class="rem-list-row">
+                  
+                  <!-- Reminder Info -->
+                  <div class="col-rem" (click)="editRemainder(rem)">
+                    <div class="rem-icon-badge" [ngClass]="rem.statusInfo?.type">
+                      <i class="fas" [ngClass]="{
+                        'fa-exclamation-circle': rem.statusInfo?.type === 'overdue',
+                        'fa-clock': rem.statusInfo?.type === 'upcoming',
+                        'fa-calendar-alt': rem.statusInfo?.type === 'scheduled',
+                        'fa-check-circle': rem.statusInfo?.type === 'completed',
+                        'fa-shield-alt': !rem.statusInfo?.type
+                      }"></i>
+                    </div>
+                    <div class="rem-text-block">
+                      <h4 class="rem-title">{{ rem.title }}</h4>
+                      <span class="rem-subtitle">{{ rem.alert_type || 'General' }}</span>
+                    </div>
                   </div>
-                  <p class="file-meta">
-                    {{ rem.remainder_date | date:'MMM dd, yyyy' }} • {{ rem.reminder_time }}
-                  </p>
-                </div>
-                <div class="file-time-actions">
-                  <button class="menu-dots" (click)="toggleMenu(rem.alert_id, $event)">
-                    <i class="fas fa-ellipsis-v"></i>
-                  </button>
-                  <div class="menu-popover" *ngIf="openMenuId === rem.alert_id" (click)="$event.stopPropagation()">
-                    <button class="popover-btn" *ngIf="rem.statusInfo?.type !== 'completed'"
-                      (click)="markAsCompleted(rem); closeMenu()">
-                      <i class="fas fa-check"></i> Mark Done
-                    </button>
-                    <button class="popover-btn" (click)="editRemainder(rem); closeMenu()">
-                      <i class="far fa-edit"></i> Edit
-                    </button>
-                    <button class="popover-btn text-danger" (click)="deleteRemainder(rem.alert_id); closeMenu()">
-                      <i class="far fa-trash-alt"></i> Delete
-                    </button>
+
+                  <!-- Pet Info -->
+                  <div class="col-pet">
+                    <div class="pet-avatar-placeholder">
+                       <img src="assets/images/bruno.jpg" alt="Pet Avatar" onerror="this.src='https://ui-avatars.com/api/?name=Pet&background=random'" class="pet-avatar-small" />
+                    </div>
+                    <div class="rem-text-block">
+                      <h4 class="rem-title">{{ getPetName(rem.pet) }}</h4>
+                      <span class="rem-subtitle">Pet</span>
+                    </div>
                   </div>
+
+                  <!-- Due Date -->
+                  <div class="col-date">
+                    <div class="rem-text-block">
+                      <h4 class="rem-title">{{ rem.remainder_date | date:'dd MMM yyyy' }}</h4>
+                      <span class="rem-subtitle">{{ rem.remainder_date | date:'EEE' }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Time Left -->
+                  <div class="col-time">
+                    <div class="rem-text-block" [ngClass]="rem.statusInfo?.type">
+                      <h4 class="rem-time-main">{{ rem.statusInfo?.text || 'Scheduled' }}</h4>
+                    </div>
+                  </div>
+
+                  <!-- Status -->
+                  <div class="col-status">
+                     <span class="rem-status-badge" [ngClass]="rem.statusInfo?.type">{{ rem.statusInfo?.type | titlecase }}</span>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="col-actions">
+                    <div style="position: relative;">
+                      <button class="action-icon-btn" (click)="toggleMenu(rem.alert_id, $event)">
+                        <i class="fas fa-ellipsis-v"></i>
+                      </button>
+                      <div class="menu-popover list-popover" *ngIf="openMenuId === rem.alert_id" (click)="$event.stopPropagation()">
+                        <button class="popover-btn" *ngIf="rem.statusInfo?.type !== 'completed'"
+                          (click)="markAsCompleted(rem); closeMenu()">
+                          <i class="fas fa-check"></i> Mark Done
+                        </button>
+                        <button class="popover-btn" (click)="editRemainder(rem); closeMenu()">
+                          <i class="far fa-edit"></i> Edit
+                        </button>
+                        <button class="popover-btn text-danger" (click)="deleteRemainder(rem.alert_id); closeMenu()">
+                          <i class="far fa-trash-alt"></i> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
+              </ng-container>
+              <ng-template #noRemainders>
+                <div class="empty-list-state" style="padding: 40px; text-align: center; color: #64748b;">No reminders found.</div>
+              </ng-template>
+            </div>
+            
+            <!-- Reminders Pagination -->
+            <div class="pagination-footer" *ngIf="filteredRemainders.length > 0" style="padding: 16px 24px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #fff;">
+              <span class="pagination-info" style="color: #64748b; font-size: 0.9rem;">
+                Showing {{ remPaginationStartIndex }} to {{ remPaginationEndIndex }} of {{ remTotalItems }} reminders
+              </span>
+              <div class="pagination-controls" style="display: flex; gap: 8px;">
+                <button class="page-btn" [disabled]="remCurrentPage === 1" [class.disabled]="remCurrentPage === 1" (click)="remPreviousPage()" style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <button *ngFor="let page of remGetPagesArray()" class="page-btn" [class.active]="remCurrentPage === page" (click)="remGoToPage(page)" style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; font-weight: 500;">
+                  {{ page }}
+                </button>
+                <button class="page-btn" [disabled]="remCurrentPage === remTotalPages" [class.disabled]="remCurrentPage === remTotalPages" (click)="remNextPage()" style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
               </div>
-            </ng-container>
+            </div>
+          </div>
+          
+          <!-- Ending Banner -->
+          <div class="reminders-info-banner">
+            <i class="fas fa-info-circle banner-icon"></i>
+            <span>Add reminders to keep your pet healthy and never miss important dates.</span>
           </div>
         </div>
       </section>
