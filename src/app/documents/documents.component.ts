@@ -138,6 +138,20 @@ export class DocumentsComponent implements OnInit {
     return Array(this.totalPages).fill(0).map((x, i) => i + 1);
   }
 
+  // Mobile Sidebar State
+  isMobileSidebarOpen: boolean = false;
+
+  toggleMobileSidebar(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.isMobileSidebarOpen = !this.isMobileSidebarOpen;
+  }
+
+  closeMobileSidebar(): void {
+    this.isMobileSidebarOpen = false;
+  }
+
   // Reminder Pagination State
   remCurrentPage: number = 1;
   remPageSize: number = 6;

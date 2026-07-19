@@ -395,8 +395,12 @@
   <!-- Crossfading full-bleed background image stack -->
   <div class="eco-hero__bg-stack">
     <div *ngFor="let service of services; let i = index" class="eco-hero__bg"
-      [class.is-active]="i === activeEcosystemIndex" [style.background-image]="'url(' + service.img + ')'"></div>
-    <div class="eco-hero__scrim"></div>
+      [class.is-active]="i === activeEcosystemIndex" [style.background-image]="!service.video ? 'url(' + service.img + ')' : 'none'">
+      <video *ngIf="service.video" class="eco-hero__bg-video" [muted]="isEcoMuted" playsinline loop autoplay preload="auto">
+        <source [src]="service.video" type="video/mp4">
+      </video>
+    </div>
+    <div class="eco-hero__scrim cinematic-overlay"></div>
   </div>
 
   <div class="eco-hero__inner">
@@ -456,6 +460,16 @@
             <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round" />
           </svg>
+        </button>
+      </div>
+
+      <!-- Video Controls (only show if active slide has a video) -->
+      <div class="eco-video-controls" *ngIf="services[activeEcosystemIndex].video">
+        <button class="eco-control-btn" (click)="toggleEcoPlay($event)" [attr.aria-label]="isEcoPlaying ? 'Pause video' : 'Play video'">
+          <i class="fas" [ngClass]="isEcoPlaying ? 'fa-pause' : 'fa-play'"></i>
+        </button>
+        <button class="eco-control-btn" (click)="toggleEcoMute($event)" [attr.aria-label]="isEcoMuted ? 'Unmute video' : 'Mute video'">
+          <i class="fas" [ngClass]="isEcoMuted ? 'fa-volume-mute' : 'fa-volume-up'"></i>
         </button>
       </div>
 

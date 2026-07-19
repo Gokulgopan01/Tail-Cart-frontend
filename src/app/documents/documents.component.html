@@ -1,7 +1,10 @@
 <div class="vault-wrapper two-column-layout" (click)="closeMenu()">
 
+  <!-- Mobile Sidebar Backdrop -->
+  <div class="sidebar-backdrop" *ngIf="isMobileSidebarOpen" (click)="closeMobileSidebar()"></div>
+
   <!-- LEFT SIDEBAR -->
-  <aside class="vault-sidebar dark-green-sidebar">
+  <aside class="vault-sidebar dark-green-sidebar" [class.mobile-open]="isMobileSidebarOpen">
     <div class="sidebar-sticky-inner">
       <div class="sidebar-header">
         <div class="header-logo-container">
@@ -38,6 +41,17 @@
 
   <!-- RIGHT CONTENT AREA -->
   <main class="vault-main-content">
+
+    <!-- Mobile Top Nav -->
+    <div class="mobile-top-nav">
+      <button class="hamburger-btn" (click)="toggleMobileSidebar($event)">
+        <i class="fas fa-bars"></i>
+      </button>
+      <h2 class="mobile-page-title">Tail Vault</h2>
+      <!-- Spacer for flex layout -->
+      <div style="width: 24px;"></div>
+    </div>
+
     <!-- Desktop Header -->
     <header class="vault-header-desktop" *ngIf="activeTab === 'documents'">
       <div class="header-left">
@@ -213,7 +227,7 @@
       </section>
 
       <!-- Reminders View -->
-      <section *ngIf="activeTab === 'remainders'" class="fade-in reminders-section" style="margin-top: 90px;">
+      <section *ngIf="activeTab === 'remainders'" class="fade-in reminders-section" style="margin-top: 10px;">
 
         <header class="vault-header-desktop" style="margin-bottom: 30px;">
           <div class="header-left">
@@ -310,11 +324,11 @@
               <div class="col-status">Status</div>
               <div class="col-actions">Actions</div>
             </div>
-            
+
             <div class="rem-list-body">
               <ng-container *ngIf="paginatedRemainders.length > 0; else noRemainders">
                 <div *ngFor="let rem of paginatedRemainders" class="rem-list-row">
-                  
+
                   <!-- Reminder Info -->
                   <div class="col-rem" (click)="editRemainder(rem)">
                     <div class="rem-icon-badge" [ngClass]="rem.statusInfo?.type">
@@ -335,7 +349,9 @@
                   <!-- Pet Info -->
                   <div class="col-pet">
                     <div class="pet-avatar-placeholder">
-                       <img src="assets/images/bruno.jpg" alt="Pet Avatar" onerror="this.src='https://ui-avatars.com/api/?name=Pet&background=random'" class="pet-avatar-small" />
+                      <img src="assets/images/bruno.jpg" alt="Pet Avatar"
+                        onerror="this.src='https://ui-avatars.com/api/?name=Pet&background=random'"
+                        class="pet-avatar-small" />
                     </div>
                     <div class="rem-text-block">
                       <h4 class="rem-title">{{ getPetName(rem.pet) }}</h4>
@@ -360,7 +376,8 @@
 
                   <!-- Status -->
                   <div class="col-status">
-                     <span class="rem-status-badge" [ngClass]="rem.statusInfo?.type">{{ rem.statusInfo?.type | titlecase }}</span>
+                    <span class="rem-status-badge" [ngClass]="rem.statusInfo?.type">{{ rem.statusInfo?.type | titlecase
+                      }}</span>
                   </div>
 
                   <!-- Actions -->
@@ -369,7 +386,8 @@
                       <button class="action-icon-btn" (click)="toggleMenu(rem.alert_id, $event)">
                         <i class="fas fa-ellipsis-v"></i>
                       </button>
-                      <div class="menu-popover list-popover" *ngIf="openMenuId === rem.alert_id" (click)="$event.stopPropagation()">
+                      <div class="menu-popover list-popover" *ngIf="openMenuId === rem.alert_id"
+                        (click)="$event.stopPropagation()">
                         <button class="popover-btn" *ngIf="rem.statusInfo?.type !== 'completed'"
                           (click)="markAsCompleted(rem); closeMenu()">
                           <i class="fas fa-check"></i> Mark Done
@@ -387,29 +405,37 @@
                 </div>
               </ng-container>
               <ng-template #noRemainders>
-                <div class="empty-list-state" style="padding: 40px; text-align: center; color: #64748b;">No reminders found.</div>
+                <div class="empty-list-state" style="padding: 40px; text-align: center; color: #64748b;">No reminders
+                  found.</div>
               </ng-template>
             </div>
-            
+
             <!-- Reminders Pagination -->
-            <div class="pagination-footer" *ngIf="filteredRemainders.length > 0" style="padding: 16px 24px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #fff;">
+            <div class="pagination-footer" *ngIf="filteredRemainders.length > 0"
+              style="padding: 16px 24px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #fff;">
               <span class="pagination-info" style="color: #64748b; font-size: 0.9rem;">
                 Showing {{ remPaginationStartIndex }} to {{ remPaginationEndIndex }} of {{ remTotalItems }} reminders
               </span>
               <div class="pagination-controls" style="display: flex; gap: 8px;">
-                <button class="page-btn" [disabled]="remCurrentPage === 1" [class.disabled]="remCurrentPage === 1" (click)="remPreviousPage()" style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                <button class="page-btn" [disabled]="remCurrentPage === 1" [class.disabled]="remCurrentPage === 1"
+                  (click)="remPreviousPage()"
+                  style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                   <i class="fas fa-chevron-left"></i>
                 </button>
-                <button *ngFor="let page of remGetPagesArray()" class="page-btn" [class.active]="remCurrentPage === page" (click)="remGoToPage(page)" style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; font-weight: 500;">
+                <button *ngFor="let page of remGetPagesArray()" class="page-btn"
+                  [class.active]="remCurrentPage === page" (click)="remGoToPage(page)"
+                  style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; font-weight: 500;">
                   {{ page }}
                 </button>
-                <button class="page-btn" [disabled]="remCurrentPage === remTotalPages" [class.disabled]="remCurrentPage === remTotalPages" (click)="remNextPage()" style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                <button class="page-btn" [disabled]="remCurrentPage === remTotalPages"
+                  [class.disabled]="remCurrentPage === remTotalPages" (click)="remNextPage()"
+                  style="width: 36px; height: 36px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                   <i class="fas fa-chevron-right"></i>
                 </button>
               </div>
             </div>
           </div>
-          
+
           <!-- Ending Banner -->
           <div class="reminders-info-banner">
             <i class="fas fa-info-circle banner-icon"></i>

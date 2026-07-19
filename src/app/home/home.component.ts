@@ -20,7 +20,27 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   contentState: 'idle' | 'exit' | 'enter' = 'idle';
   imageState: 'idle' | 'exit' | 'enter' = 'idle';
 
+  // Eco Hero Video State
+  isEcoMuted: boolean = true;
+  isEcoPlaying: boolean = true;
 
+  toggleEcoPlay(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.isEcoPlaying = !this.isEcoPlaying;
+    const videos = document.querySelectorAll('.eco-hero__bg-video');
+    videos.forEach((v: any) => {
+      if (this.isEcoPlaying) {
+        v.play().catch(() => { });
+      } else {
+        v.pause();
+      }
+    });
+  }
+
+  toggleEcoMute(event?: Event): void {
+    if (event) event.stopPropagation();
+    this.isEcoMuted = !this.isEcoMuted;
+  }
 
   // ── Bento Grid Ecosystem State ────────────────────────────────
   activeVaultStep: number = 1;
@@ -44,7 +64,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       img: 'assets/Home/hero_document_locker.png',
       color: '#6b4f1d',
       route: '/documents',
-      cta: 'Open Vault'
+      cta: 'Open Vault',
+      video: 'assets/videos/tail_vault.mp4'
     },
     {
       id: 'reminders',
