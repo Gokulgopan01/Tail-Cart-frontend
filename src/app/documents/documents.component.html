@@ -64,7 +64,7 @@
           <!-- 4 cards in a row grid -->
           <div class="docs-grid desktop-4-cols">
             <ng-container *ngIf="filteredDocuments.length > 0; else noDocs">
-              <div *ngFor="let doc of filteredDocuments" class="doc-card-horizontal">
+              <div *ngFor="let doc of filteredDocuments | slice:0:4" class="doc-card-horizontal">
                 <div class="doc-card-header">
                   <span class="file-badge" [ngClass]="isImage(doc) ? 'badge-jpg' : 'badge-pdf'">
                     {{ isImage(doc) ? 'JPG' : 'PDF' }}
@@ -73,9 +73,15 @@
                     <i class="fas fa-ellipsis-v"></i>
                   </button>
                   <div class="menu-popover" *ngIf="openMenuId === doc.document_id" (click)="$event.stopPropagation()">
-                    <button (click)="previewDocument(doc); closeMenu()">View</button>
-                    <button (click)="downloadDocument(doc); closeMenu()">Download</button>
-                    <button (click)="deleteDocument(doc.document_id); closeMenu()" class="text-danger">Delete</button>
+                    <button class="popover-btn" (click)="previewDocument(doc); closeMenu()">
+                      <i class="far fa-eye"></i> View
+                    </button>
+                    <button class="popover-btn" (click)="downloadDocument(doc); closeMenu()">
+                      <i class="fas fa-download"></i> Download
+                    </button>
+                    <button class="popover-btn text-danger" (click)="deleteDocument(doc.document_id); closeMenu()">
+                      <i class="far fa-trash-alt"></i> Delete
+                    </button>
                   </div>
                 </div>
 
@@ -93,6 +99,104 @@
                 </div>
               </div>
             </ng-container>
+          </div>
+        </div>
+
+        <!-- Upload Dropzone Inline -->
+        <div class="upload-dropzone-inline" (click)="openUploadModal()">
+          <div class="upload-icon-left">
+            <i class="fas fa-cloud-upload-alt upload-cloud-icon"></i>
+          </div>
+          <div class="upload-text-block">
+            <h3>Upload Pet Documents</h3>
+            <p class="upload-desc">Drag & Drop files here or browse from your computer.</p>
+            <p class="upload-formats">Supports: PDF, JPG, PNG, DOCX &nbsp;&bull;&nbsp; Maximum 20MB</p>
+            <button class="btn-choose-files">
+              <i class="far fa-folder"></i> Choose Files
+            </button>
+          </div>
+        </div>
+
+        <!-- All Documents List View -->
+        <div class="all-documents-section">
+          <div class="section-header" style="margin-bottom: 20px;">
+            <h2 class="section-title" style="font-size: 1.25rem; font-weight: 700;">All Documents</h2>
+          </div>
+          
+          <div class="documents-list-container">
+            <div class="list-header">
+              <div class="col-name">Document Name</div>
+              <div class="col-pet">Pet</div>
+              <div class="col-category">Category</div>
+              <div class="col-date">Uploaded Date</div>
+              <div class="col-size">Size</div>
+              <div class="col-actions">Actions</div>
+            </div>
+            
+            <div class="list-body">
+              <ng-container *ngIf="filteredDocuments.length > 0; else noDocsList">
+                <div *ngFor="let doc of filteredDocuments" class="list-row">
+                  <div class="col-name">
+                    <span class="file-badge-small" [ngClass]="isImage(doc) ? 'badge-jpg' : 'badge-pdf'">
+                      {{ isImage(doc) ? 'JPG' : 'PDF' }}
+                    </span>
+                    <span class="doc-title-text">{{ doc.document_title }}</span>
+                  </div>
+                  <div class="col-pet">
+                    <div class="pet-avatar-placeholder">
+                       <img src="assets/images/bruno.jpg" alt="Pet Avatar" onerror="this.src='https://ui-avatars.com/api/?name=Pet&background=random'" class="pet-avatar-small" />
+                    </div>
+                    <span class="pet-name-text">{{ getPetName(doc.pet) }}</span>
+                  </div>
+                  <div class="col-category">
+                    <i class="fas fa-shield-alt category-icon"></i>
+                    <span class="category-text">{{ doc.document_type || 'General' }}</span>
+                  </div>
+                  <div class="col-date">
+                    {{ doc.upload_date | date:'dd MMM yyyy' }}
+                  </div>
+                  <div class="col-size">
+                    {{ doc.file_size || '1.2 MB' }}
+                  </div>
+                  <div class="col-actions">
+                    <button class="action-icon-btn" (click)="downloadDocument(doc)"><i class="fas fa-download"></i></button>
+                    <button class="action-icon-btn"><i class="fas fa-share-alt"></i></button>
+                    <div style="position: relative;">
+                      <button class="action-icon-btn" (click)="toggleMenu(doc.document_id, $event)"><i class="fas fa-ellipsis-v"></i></button>
+                      <div class="menu-popover list-popover" *ngIf="openMenuId === doc.document_id" (click)="$event.stopPropagation()">
+                        <button class="popover-btn" (click)="previewDocument(doc); closeMenu()">
+                          <i class="far fa-eye"></i> View
+                        </button>
+                        <button class="popover-btn text-danger" (click)="deleteDocument(doc.document_id); closeMenu()">
+                          <i class="far fa-trash-alt"></i> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-template #noDocsList>
+                <div class="empty-list-state">No documents found.</div>
+              </ng-template>
+            </div>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="pagination-footer">
+            <span class="pagination-info">Showing 1 to 5 of 15 documents</span>
+            <div class="pagination-controls">
+              <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+          
+          <!-- Tip Banner -->
+          <div class="tip-banner">
+            <i class="fas fa-shield-alt"></i>
+            <span>Keep your pet's documents updated for better care and quick access when needed.</span>
           </div>
         </div>
       </section>
@@ -156,11 +260,15 @@
                     <i class="fas fa-ellipsis-v"></i>
                   </button>
                   <div class="menu-popover" *ngIf="openMenuId === rem.alert_id" (click)="$event.stopPropagation()">
-                    <button *ngIf="rem.statusInfo?.type !== 'completed'"
-                      (click)="markAsCompleted(rem); closeMenu()">Mark
-                      Done</button>
-                    <button (click)="editRemainder(rem); closeMenu()">Edit</button>
-                    <button (click)="deleteRemainder(rem.alert_id); closeMenu()" class="text-danger">Delete</button>
+                    <button class="popover-btn" *ngIf="rem.statusInfo?.type !== 'completed'" (click)="markAsCompleted(rem); closeMenu()">
+                      <i class="fas fa-check"></i> Mark Done
+                    </button>
+                    <button class="popover-btn" (click)="editRemainder(rem); closeMenu()">
+                      <i class="far fa-edit"></i> Edit
+                    </button>
+                    <button class="popover-btn text-danger" (click)="deleteRemainder(rem.alert_id); closeMenu()">
+                      <i class="far fa-trash-alt"></i> Delete
+                    </button>
                   </div>
                 </div>
               </div>
