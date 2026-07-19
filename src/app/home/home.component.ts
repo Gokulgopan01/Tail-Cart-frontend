@@ -157,10 +157,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.startVaultAnimation();
     this.checkScroll();
-    
+
     this.ecoTimer = setInterval(() => {
       this.selectEcosystemTab((this.activeEcosystemIndex + 1) % this.services.length);
-    }, 4000);
+    }, 8000);
 
     // Load cart items count
     const savedCart = localStorage.getItem('cart_items');
