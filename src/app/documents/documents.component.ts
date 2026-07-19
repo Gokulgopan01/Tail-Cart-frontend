@@ -241,7 +241,7 @@ export class DocumentsComponent implements OnInit {
         next: (docs) => {
           this.documents = docs.map(doc => ({
             ...doc,
-            document_type: this.extractDocType(doc.document_title),
+            document_type: doc.document_type || this.extractDocType(doc.document_title),
             file_name: this.extractFileName(doc.document_file),
             file_size: this.calculateFileSize(doc.document_file)
           }));
