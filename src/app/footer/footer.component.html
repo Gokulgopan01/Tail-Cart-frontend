@@ -1,162 +1,96 @@
 <footer class="footer">
+  <div class="footer-container">
 
-  <!-- Floating trust card — sits astride the top edge of the footer -->
-  <div class="trust-float">
-    <div class="trust-float-track">
-      <div class="trust-pill">
-        <i class="fas fa-paw"></i>
-        <div class="trust-pill-text">
-          <strong>Pet&nbsp;Friendly</strong>
-          <span>Because pets deserve the best</span>
-        </div>
-      </div>
-      <div class="trust-pill">
-        <i class="fas fa-heart"></i>
-        <div class="trust-pill-text">
-          <strong>Loved by Pets</strong>
-          <span>Happy pets, happy parents</span>
-        </div>
-      </div>
-      <div class="trust-pill">
-        <i class="fas fa-box-open"></i>
-        <div class="trust-pill-text">
-          <strong>5000+ Products</strong>
-          <span>Wide range for every pet</span>
-        </div>
-      </div>
-      <div class="trust-pill">
-        <i class="fas fa-users"></i>
-        <div class="trust-pill-text">
-          <strong>10K+ Pet Parents</strong>
-          <span>Thank you for trusting us</span>
-        </div>
-      </div>
-      <div class="trust-pill">
-        <i class="fas fa-certificate"></i>
-        <div class="trust-pill-text">
-          <strong>Quality Assured</strong>
-          <span>Premium quality you can trust</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-top">
-
-    <!-- Brand Column -->
-    <div class="footer-brand-col">
+    <!-- Column 1: Brand -->
+    <div class="footer-col brand-col">
       <div class="footer-logo">
-        <span class="brand-logo-badge"><i class="fas fa-paw"></i></span>
+        <i class="fas fa-paw logo-icon"></i>
         <span class="brand-name">TailCart</span>
       </div>
       <p class="brand-tagline">
-        Everything your pet needs, delivered with love.
+        Protect. Care. Reunite.
+      </p>
+      <p class="brand-desc">
+        TailCart is your complete smart pet ecosystem—bringing together QR pet identification, secure document storage,
+        intelligent reminders, and AI-powered pet care in one seamless platform.
       </p>
 
       <div class="footer-features">
         <div class="feature-item">
-          <i class="fas fa-truck"></i>
-          <div class="feature-text">
-            <strong>Free Delivery</strong>
-            <span>On orders above $49</span>
-          </div>
+          <i class="fa-regular fa-shield-check"></i>
+          <span>Safer Pets</span>
         </div>
+        <div class="feature-divider"></div>
         <div class="feature-item">
-          <i class="fas fa-shield-halved"></i>
-          <div class="feature-text">
-            <strong>Secure Payments</strong>
-            <span>100% safe &amp; secure</span>
-          </div>
+          <i class="fa-regular fa-heart"></i>
+          <span>Smarter Care</span>
         </div>
+        <div class="feature-divider"></div>
         <div class="feature-item">
-          <i class="fas fa-headset"></i>
-          <div class="feature-text">
-            <strong>24/7 Support</strong>
-            <span>We're here for you</span>
-          </div>
+          <i class="fa-regular fa-leaf"></i>
+          <span>Stronger Bonds</span>
         </div>
       </div>
     </div>
 
-    <!-- Links Columns Container -->
-    <div class="footer-links-container">
+    <!-- Column 2: Quick Links -->
+    <div class="footer-col links-col">
+      <h4 class="col-title">QUICK LINKS</h4>
+      <div class="title-underline"></div>
 
-      <details class="links-column" open>
-        <summary>
-          <h4>Products</h4>
-          <i class="fas fa-chevron-down summary-chevron"></i>
-        </summary>
-        <ul>
-          <li><a routerLink="/shop">Dog Supplies</a></li>
-          <li><a routerLink="/shop">Cat Supplies</a></li>
-          <li><a routerLink="/shop">Food &amp; Treats</a></li>
-          <li><a routerLink="/shop">Toys &amp; Accessories</a></li>
-          <li><a routerLink="/shop">Health &amp; Wellness</a></li>
-          <li><a routerLink="/shop">Grooming</a></li>
-          <li><a routerLink="/shop">Sale &amp; Offers</a></li>
-          <li><a routerLink="/shop">New Arrivals</a></li>
-        </ul>
-      </details>
-
-      <details class="links-column" open>
-        <summary>
-          <h4>Company</h4>
-          <i class="fas fa-chevron-down summary-chevron"></i>
-        </summary>
-        <ul>
-          <li><a routerLink="/about">About Us</a></li>
-          <li><a href="#">Our Story</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">Press</a></li>
-          <li><a href="#">Sustainability</a></li>
-          <li><a href="#">Affiliate Program</a></li>
-          <li><a routerLink="/contact">Contact Us</a></li>
-        </ul>
-      </details>
-
-      <details class="links-column" open>
-        <summary>
-          <h4>Support</h4>
-          <i class="fas fa-chevron-down summary-chevron"></i>
-        </summary>
-        <ul>
-          <li><a href="#">Help Center</a></li>
-          <li><a href="#">Track Order</a></li>
-          <li><a href="#">Shipping &amp; Delivery</a></li>
-          <li><a href="#">Returns &amp; Refunds</a></li>
-          <li><a href="#">FAQs</a></li>
-          <li><a href="#">Size Guide</a></li>
-          <li><a href="#">Terms of Service</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-        </ul>
-      </details>
-
+      <div class="quick-links-list">
+        <a routerLink="/home"><span>Home</span> <i class="fas fa-chevron-right"></i></a>
+        <a routerLink="/shop" [queryParams]="{category: 'tags'}"><span>Tail Tag</span> <i
+            class="fas fa-chevron-right"></i></a>
+        <a routerLink="/document"><span>Tail Vault</span> <i class="fas fa-chevron-right"></i></a>
+        <a routerLink="/document"><span>Smart Scheduler</span> <i class="fas fa-chevron-right"></i></a>
+        <a routerLink="/doctor-ai"><span>AI Pet Doctor</span> <i class="fas fa-chevron-right"></i></a>
+        <a routerLink="/shop"><span>Shop</span> <i class="fas fa-chevron-right"></i></a>
+        <a routerLink="/contact"><span>Contact</span> <i class="fas fa-chevron-right"></i></a>
+      </div>
     </div>
 
-    <!-- Newsletter Column -->
-    <div class="footer-newsletter-col">
-      <h4>Stay Updated</h4>
-      <p class="newsletter-desc">
-        Subscribe to get exclusive offers, pet care tips and updates from TailCart.
-      </p>
+    <!-- Column 3: Connect -->
+    <div class="footer-col connect-col">
+      <h4 class="col-title">CONNECT WITH US</h4>
+      <div class="title-underline"></div>
 
-      <div class="newsletter-form">
-        <div class="input-wrapper">
-          <i class="far fa-envelope mail-icon"></i>
-          <input type="email" placeholder="Your email address" class="subscribe-input" #emailInput>
-        </div>
-        <button class="subscribe-btn" (click)="subscribeNewsletter(emailInput.value); emailInput.value=''">
-          <span>Subscribe</span> <i class="fas fa-arrow-right"></i>
-        </button>
+      <div class="email-pill">
+        <i class="far fa-envelope"></i>
+        <span>hellotailcart.com</span>
       </div>
 
       <div class="social-circles">
-        <a href="#" class="social-circle" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="social-circle" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="social-circle" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="#" class="social-circle" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        <a href="#" class="social-circle"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-circle"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-circle">
+          <!-- X logo -->
+          <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+            <path
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        </a>
+        <a href="#" class="social-circle"><i class="fab fa-linkedin-in"></i></a>
       </div>
+    </div>
+
+    <!-- Column 4: Newsletter -->
+    <div class="footer-col newsletter-col">
+      <h4 class="col-title">STAY CONNECTED</h4>
+      <div class="title-underline"></div>
+
+      <p class="newsletter-desc">
+        Receive pet care tips, feature updates, and exclusive offers.
+      </p>
+
+      <div class="newsletter-form">
+        <input type="email" placeholder="Enter your email" class="subscribe-input" #emailInput>
+        <button class="subscribe-btn" (click)="subscribeNewsletter(emailInput.value); emailInput.value=''">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+
+      <p class="privacy-note">We respect your privacy. No spam, ever.</p>
     </div>
 
   </div>
@@ -164,30 +98,16 @@
   <!-- Bottom Bar -->
   <div class="footer-bottom">
     <div class="footer-copyright">
-      <span class="copy-badge"><i class="fas fa-paw"></i></span>
-      <span>&copy; 2024 TailCart. All rights reserved.</span>
-    </div>
-
-    <div class="payment-badges">
-      <div class="payment-card visa-card"><span class="visa-text">VISA</span></div>
-      <div class="payment-card mastercard-card">
-        <div class="mc-circles">
-          <span class="mc-circle mc-red"></span>
-          <span class="mc-circle mc-orange"></span>
-        </div>
-      </div>
-      <div class="payment-card amex-card"><span class="amex-text">AMEX</span></div>
-      <div class="payment-card paypal-card"><span class="paypal-text">PayPal</span></div>
-      <div class="payment-card applepay-card"><i class="fab fa-apple"></i><span class="apple-pay-text">Pay</span></div>
+      <i class="fas fa-paw paw-accent"></i>
+      <span>&copy; 2026 TailCart. All Rights Reserved.</span>
     </div>
 
     <div class="legal-links">
-      <a href="#">Privacy</a>
-      <span class="legal-pipe">·</span>
+      <a href="#">Privacy Policy</a>
+      <span class="legal-dot"></span>
       <a href="#">Terms</a>
-      <span class="legal-pipe">·</span>
-      <a href="#">Refunds</a>
+      <span class="legal-dot"></span>
+      <a href="#">Cookies</a>
     </div>
   </div>
-
 </footer>
