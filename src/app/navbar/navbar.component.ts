@@ -74,9 +74,10 @@ export class NavbarComponent implements OnInit {
     this.isPastHalfScreen = st > (window.innerHeight / 2);
 
     // Determine scroll direction for hiding navbar
+    const isHomePage = this.router.url === '/' || this.router.url.startsWith('/home');
     if (st > this.lastScrollTop && st > 80) {
-      // Downscroll code
-      this.isScrollingDown = true;
+      // Downscroll code - only hide on home page
+      this.isScrollingDown = isHomePage;
     } else {
       // Upscroll code
       this.isScrollingDown = false;

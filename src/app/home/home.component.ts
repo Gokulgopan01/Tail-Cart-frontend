@@ -309,6 +309,40 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       const footerRect = footer.getBoundingClientRect();
       if (footerRect.top < window.innerHeight) this.isScrolled = false;
     }
+
+    this.muteOutOfScopeVideos();
+  }
+
+  private muteOutOfScopeVideos(): void {
+    const windowHeight = window.innerHeight;
+
+    // 1. Feature Video
+    if (this.featureVideo?.nativeElement) {
+      const rect = this.featureVideo.nativeElement.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > windowHeight) {
+        this.featureVideo.nativeElement.muted = true;
+        this.isDetailedVideoMuted = true;
+      }
+    }
+
+    // 2. Hero Video
+    if (this.heroVideo?.nativeElement) {
+      const rect = this.heroVideo.nativeElement.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > windowHeight) {
+        this.heroVideo.nativeElement.muted = true;
+        this.isHeroMuted = true;
+      }
+    }
+
+    // 3. Eco Hero Videos
+    const ecoSection = document.querySelector('.eco-hero');
+    if (ecoSection) {
+      const rect = ecoSection.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > windowHeight) {
+        this.isEcoMuted = true;
+        document.querySelectorAll('.eco-hero__bg-video').forEach((v: any) => v.muted = true);
+      }
+    }
   }
 
   scrollCarousel(direction: 1 | -1) {
