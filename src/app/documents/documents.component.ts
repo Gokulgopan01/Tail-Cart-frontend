@@ -81,7 +81,7 @@ export class DocumentsComponent implements OnInit {
   openMenuId: number | null = null;
 
   // UI State
-  activeTab: 'documents' | 'remainders' = 'documents';
+  activeTab: 'documents' | 'remainders' | 'pets' = 'documents';
   docsViewMode: 'grid' | 'list' = 'grid';
   remainderViewMode: 'list' | 'calendar' = 'list';
   searchQuery: string = '';
