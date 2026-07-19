@@ -91,6 +91,53 @@ export class DocumentsComponent implements OnInit {
   selectedStatus: string = '';
   dateFilter: string = 'all';
 
+  // Pagination State
+  currentPage: number = 1;
+  pageSize: number = 5;
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredDocuments.length / this.pageSize);
+  }
+
+  get paginatedDocuments(): Document[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.filteredDocuments.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  get totalDocuments(): number {
+    return this.filteredDocuments.length;
+  }
+
+  get paginationStartIndex(): number {
+    return this.totalDocuments === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
+  }
+
+  get paginationEndIndex(): number {
+    return Math.min(this.currentPage * this.pageSize, this.totalDocuments);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  getPagesArray(): number[] {
+    return Array(this.totalPages).fill(0).map((x, i) => i + 1);
+  }
+
   // Modal States
   showUploadModal: boolean = false;
   showEditRemainderModal: boolean = false;
@@ -325,6 +372,7 @@ export class DocumentsComponent implements OnInit {
     }
 
     this.filteredDocuments = filtered;
+    this.currentPage = 1; // Reset to page 1 when filtering
   }
 
   sortDocuments(type: 'all' | 'pictures'): void {

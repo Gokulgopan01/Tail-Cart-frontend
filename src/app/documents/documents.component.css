@@ -19,7 +19,6 @@
   min-width: 300px;
   padding: 0;
   color: var(--vault-primary);
-  overflow-x: hidden;
 }
 
 /* Two Column Layout */
@@ -30,21 +29,23 @@
 
 /* Sidebar */
 .vault-sidebar {
-  width: 280px;
+  width: 250px;
   flex-shrink: 0;
-  height: 100vh;
+  background: #062f21;
+}
+
+.sidebar-sticky-inner {
   position: sticky;
-  margin-top: 100px;
+  top: 0;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  padding: 40px 24px 24px;
+  box-sizing: border-box;
 }
 
 .dark-green-sidebar {
-  background: #062f21;
-  /* Dark green background */
   color: #fff;
-  padding: 40px 24px 24px;
-  box-sizing: border-box;
 }
 
 .header-logo-container {
@@ -1321,8 +1322,10 @@
 
 .list-popover {
   right: 0;
-  top: 100%;
-  margin-top: 4px;
+  bottom: 100%;
+  top: auto;
+  margin-bottom: 4px;
+  margin-top: 0;
 }
 
 /* Pagination */
@@ -1456,4 +1459,11 @@
 .popover-btn.text-danger:hover {
   background: #fef2f2;
   color: #dc2626;
+}
+
+.page-btn.disabled,
+.page-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f8fafc;
 }
