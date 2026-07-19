@@ -2796,6 +2796,8 @@ section {
   --ink: #f6f4ee;
   --ink-dim: rgba(246, 244, 238, 0.72);
   --ease-slide: cubic-bezier(0.65, 0, 0.35, 1);
+  --transition-dur: 800ms;
+  --bg-transition-dur: 900ms;
 
   position: relative;
   isolation: isolate;
@@ -2819,7 +2821,7 @@ section {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 900ms var(--ease-slide);
+  transition: opacity var(--bg-transition-dur) var(--ease-slide);
   will-change: opacity;
   background-size: cover;
   background-position: center;
@@ -2837,12 +2839,15 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.08);
-  transition: transform 6000ms linear;
+  transform: scale(1.05);
+  filter: blur(8px);
+  transition: transform var(--bg-transition-dur) var(--ease-slide), filter var(--bg-transition-dur) var(--ease-slide);
+  will-change: transform, filter;
 }
 
 .eco-hero__bg.is-active .eco-hero__bg-media {
   transform: scale(1);
+  filter: blur(0);
 }
 
 .eco-hero__bg-media--image {
@@ -3035,22 +3040,26 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border: none;
-  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
   padding: 0;
   overflow: hidden;
   cursor: pointer;
-  background: rgba(10, 14, 12, 0.4);
+  background: rgba(10, 14, 12, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transform-origin: bottom center;
 
   /* animated dimensions */
   transition:
-    left 560ms var(--ease-slide),
-    width 560ms var(--ease-slide),
-    height 560ms var(--ease-slide),
-    opacity 480ms ease,
-    transform 560ms var(--ease-slide),
-    box-shadow 480ms ease;
+    left var(--transition-dur) var(--ease-slide),
+    width var(--transition-dur) var(--ease-slide),
+    height var(--transition-dur) var(--ease-slide),
+    opacity var(--transition-dur) var(--ease-slide),
+    transform var(--transition-dur) var(--ease-slide),
+    box-shadow var(--transition-dur) var(--ease-slide),
+    border-color var(--transition-dur) var(--ease-slide);
 }
 
 .eco-thumb.active {
@@ -3058,16 +3067,18 @@ section {
   width: 190px;
   height: 148px;
   opacity: 1;
-  transform: translateY(-14px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(-14px) scale(1.05);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), 0 0 32px var(--thumb-accent, rgba(255,255,255,0.2));
+  border: 1px solid rgba(255, 255, 255, 0.35);
   z-index: 2;
 }
 
 .eco-thumb.next {
-  left: 205px; /* 190px active width + 15px gap */
+  left: 215px; /* Leaves gap for active scale */
   width: 138px;
   height: 128px;
   opacity: 0.85;
+  transform: translateY(0) scale(0.95);
   z-index: 1;
 }
 
@@ -3076,16 +3087,17 @@ section {
   width: 190px;
   height: 148px;
   opacity: 0;
-  transform: translateY(-14px);
+  transform: translateY(-14px) scale(0.95);
   pointer-events: none;
   z-index: 0;
 }
 
 .eco-thumb.hidden {
-  left: 360px; /* Slides in from right */
+  left: 380px; /* Slides in from right */
   width: 138px;
   height: 128px;
   opacity: 0;
+  transform: translateY(0) scale(0.95);
   pointer-events: none;
   z-index: 0;
 }
@@ -3096,10 +3108,11 @@ section {
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 3px;
   background: var(--thumb-accent, var(--accent));
-  filter: brightness(1.8) saturate(1.4);
-  z-index: 2;
+  box-shadow: 0 0 12px var(--thumb-accent, var(--accent));
+  filter: brightness(1.6) saturate(1.2);
+  z-index: 3;
 }
 
 .eco-thumb__image {
@@ -3997,4 +4010,86 @@ section {
 .eco-control-btn:hover {
   background: rgba(255, 255, 255, 0.25);
   transform: scale(1.08);
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS: ECO HERO (max-width: 450px)
+   ========================================================================== */
+@media (max-width: 450px) {
+  .eco-hero,
+  .eco-hero__inner {
+    min-height: 100vh;
+  }
+
+  .eco-hero__inner {
+    padding: 2rem 1.5rem 2rem;
+  }
+
+  .eco-hero__scrim.cinematic-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.85) 100%);
+  }
+
+  .eco-hero__eyebrow {
+    font-size: 12px;
+  }
+
+  .eco-hero__title {
+    font-size: clamp(2.2rem, 8vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .eco-hero__desc {
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 90%;
+    margin-bottom: 2rem;
+  }
+
+  /* Center the filmstrip and restrict width */
+  .eco-hero__filmstrip {
+    width: 100%;
+    height: 180px;
+    margin: 0 auto;
+    display: block; /* Use block so absolute positioning works relative to full width */
+  }
+
+  /* Single floating card style */
+  .eco-thumb.active {
+    left: 50%;
+    width: 170px;
+    height: 180px;
+    border-radius: 22px;
+    transform: translateX(-50%) translateY(0) scale(1);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 24px var(--thumb-accent, rgba(0, 255, 100, 0.2));
+  }
+
+  /* Hide next/hidden cards off-screen right */
+  .eco-thumb.next,
+  .eco-thumb.hidden {
+    left: 150%;
+    width: 170px;
+    height: 180px;
+    opacity: 0;
+    transform: translateX(-50%) translateY(0) scale(0.9);
+  }
+
+  /* Slide previous card off-screen left */
+  .eco-thumb.prev {
+    left: -50%;
+    width: 170px;
+    height: 180px;
+    opacity: 0;
+    transform: translateX(-50%) translateY(0) scale(0.9);
+  }
+
+  /* Spring-like easing for mobile */
+  .eco-thumb {
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.15) !important;
+  }
 }
