@@ -1,101 +1,192 @@
 <div class="cart-container">
 
-  <div class="cart-image-banner">
-    <div class="banner-overlay"></div>
-    <div class="banner-content">
-      <h2 class="cart-heading">My Cart</h2>
-      <a class="see-orders-link" routerLink="/myorders">
-        <i class="fas fa-box"></i> See My Orders
-      </a>
-    </div>
-  </div>
-
-  <!-- Free Delivery Banner -->
-  <div class="free-delivery-hero-banner">
-    <div class="container">
-      <div class="fd-content">
-        <i class="fas fa-truck-fast"></i>
-        <span>Enjoy <strong>FREE DELIVERY</strong> on all orders! 🚚</span>
+  <!-- Modern Desktop Hero Banner -->
+  <div class="cart-desktop-hero">
+    <!-- Paw prints background -->
+    <i class="fas fa-paw paw-bg paw-1"></i>
+    <i class="fas fa-paw paw-bg paw-2"></i>
+    <i class="fas fa-paw paw-bg paw-3"></i>
+    <i class="fas fa-paw paw-bg paw-4"></i>
+    
+    <div class="hero-content">
+      <div class="hero-left">
+        <h1 class="hero-title">Shopping Cart</h1>
+        <p class="hero-subtitle">{{ getTotalItems() }} Items in your cart</p>
+        <div class="hero-breadcrumbs">
+          <a routerLink="/">Home</a> / <a routerLink="/store">Store</a> / <span class="active">Cart</span>
+        </div>
+      </div>
+      <div class="hero-right">
+        <a class="btn-outline-pill" routerLink="/store">
+          <i class="fas fa-chevron-left"></i> Continue Shopping
+        </a>
+        <a class="btn-primary-pill" routerLink="/myorders">
+          <i class="fas fa-box"></i> See My Orders
+        </a>
       </div>
     </div>
   </div>
 
   <ng-container *ngIf="!loading; else loadingTpl">
-    <div class="cart-items-list" *ngIf="cartItems.length > 0; else emptyCart">
-      <div class="cart-product-card" *ngFor="let item of cartItems; let i = index">
-        <div class="product-main-row">
-          <!-- Image Box -->
-          <div class="img-box">
-            <span class="sale-tag" *ngIf="i % 2 === 0">SALE</span>
+    <div class="cart-main-layout" *ngIf="cartItems.length > 0; else emptyCart">
+      
+      <!-- LEFT COLUMN: Cart Items -->
+      <div class="cart-items-section">
+        <div class="premium-cart-card" *ngFor="let item of cartItems; let i = index">
+          <!-- Left: Image -->
+          <div class="card-img-container">
             <img [src]="item.product_image" alt="Item" onerror="this.onerror=null; this.src='assets/images/photo2.jpg'">
           </div>
 
-          <!-- Info Column -->
-          <div class="info-col">
-            <div class="title-trash-row">
-              <div class="titles">
-                <h3 class="p-title">{{ item.product_name }}</h3>
-                <p class="p-subtitle">{{ item.pet_name || 'Generic Pet' }}</p>
-                <div class="rating-stars">
-                  <i class="fas fa-star text-gold"></i>
-                  <i class="fas fa-star text-gold"></i>
-                  <i class="fas fa-star text-gold"></i>
-                  <i class="fas fa-star text-gold"></i>
-                  <i class="far fa-star text-gold"></i>
+          <!-- Middle: Info -->
+          <div class="card-info-container">
+            <h3 class="card-product-title">{{ item.product_name }}</h3>
+            <span class="category-badge">Accessories</span>
+            <div class="rating-reviews">
+              <span class="stars">⭐⭐⭐⭐⭐</span> <span class="reviews-count">(128 Reviews)</span>
+            </div>
+            
+            <div class="variants-row">
+              <div class="variant-group">
+                <span class="variant-label">Color</span>
+                <div class="color-circles">
+                  <span class="color-circle" style="background-color: #8b5a2b;"></span>
+                  <span class="color-circle" style="background-color: #000000;"></span>
+                  <span class="color-circle" style="background-color: #555555;"></span>
                 </div>
               </div>
-              <button class="trash-btn" (click)="removeItem(item)">
-                <i class="far fa-trash-alt"></i>
-              </button>
+              <div class="variant-group">
+                <span class="variant-label">Size</span>
+                <div class="size-pills">
+                  <span class="size-pill active">S</span>
+                  <span class="size-pill">M</span>
+                  <span class="size-pill">L</span>
+                </div>
+              </div>
             </div>
 
-            <div class="qty-price-row">
-              <div class="qty-pill">
-                <button (click)="updateQuantity(item, item.quantity - 1)" [disabled]="item.quantity <= 1">−</button>
-                <span>{{ item.quantity }}</span>
-                <button (click)="updateQuantity(item, item.quantity + 1)">+</button>
-              </div>
-              <div class="price-val">₹{{ item.product_price }}</div>
+            <div class="stock-status">
+              <span class="stock-dot"></span> In Stock
+            </div>
+
+            <p class="product-description">
+              Premium genuine leather harness designed for maximum comfort and durability.
+            </p>
+          </div>
+
+          <!-- Right: Price & Actions -->
+          <div class="card-actions-container">
+            <div class="price-top">
+              <span class="item-price">₹{{ item.product_price }}</span>
+              <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+            </div>
+            
+            <div class="qty-selector-modern">
+              <button (click)="updateQuantity(item, item.quantity - 1)" [disabled]="item.quantity <= 1">−</button>
+              <span>{{ item.quantity }}</span>
+              <button (click)="updateQuantity(item, item.quantity + 1)">+</button>
+            </div>
+
+            <div class="subtotal-bottom">
+              <span class="item-subtotal">₹{{ item.product_price * item.quantity | number:'1.2-2' }}</span>
+              <button class="remove-btn" (click)="removeItem(item)">
+                <i class="far fa-trash-alt"></i> Remove
+              </button>
             </div>
           </div>
         </div>
-
       </div>
 
-      <!-- Modern Summary Details Section Before Checkout Bar -->
-      <div class="modern-summary-block">
-        <h4 class="summary-head">Order Details</h4>
-        <div class="summary-line">
-          <span class="s-label">Items Total ({{ getTotalItems() }})</span>
-          <span class="s-val">₹{{ getSubtotal() | number:'1.2-2' }}</span>
-        </div>
-        <div class="summary-line">
-          <span class="s-label">Tax (18% GST)</span>
-          <span class="s-val">₹{{ getTax() | number:'1.2-2' }}</span>
-        </div>
-        <div class="summary-line highlight-shipping">
-          <span class="s-label"><i class="fas fa-truck text-green"></i> Shipping</span>
-          <span class="s-val text-green">FREE</span>
+      <!-- RIGHT COLUMN: Order Summary (Sticky) -->
+      <div class="order-summary-section">
+        <div class="summary-card-sticky">
+          <h3 class="summary-title">Order Summary</h3>
+          <hr class="summary-divider">
+          
+          <div class="summary-row">
+            <span class="s-label">Items ({{ getTotalItems() }})</span>
+            <span class="s-val">₹{{ getSubtotal() | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="s-label">Subtotal</span>
+            <span class="s-val">₹{{ getSubtotal() | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="s-label">Shipping</span>
+            <span class="s-val text-green">FREE</span>
+          </div>
+          <div class="summary-row">
+            <span class="s-label">Discount</span>
+            <span class="s-val text-green">-₹500</span>
+          </div>
+          <div class="summary-row">
+            <span class="s-label">GST (18%)</span>
+            <span class="s-val">₹{{ getTax() | number:'1.2-2' }}</span>
+          </div>
+
+          <hr class="summary-divider">
+          
+          <div class="summary-total-row">
+            <span class="total-label">Total</span>
+            <span class="total-val">₹{{ totalAmount | number:'1.2-2' }}</span>
+          </div>
+
+          <div class="coupon-section">
+            <div class="coupon-input-group">
+              <i class="fas fa-tag coupon-icon"></i>
+              <input type="text" placeholder="Enter coupon code">
+              <button class="apply-btn">Apply</button>
+            </div>
+          </div>
+
+          <div class="savings-card">
+            <i class="fas fa-check-circle"></i>
+            <div class="savings-text">
+              <strong>You Saved ₹500</strong>
+              <span>Great! You're getting a discount.</span>
+            </div>
+          </div>
+
+          <button class="btn-checkout-primary" (click)="checkout()">
+            <i class="fas fa-lock"></i> Proceed to Checkout
+          </button>
+          
+          <button class="btn-secondary-outline" routerLink="/myorders">
+            <i class="fas fa-box"></i> See My Orders
+          </button>
+          
+          <button class="btn-tertiary-ghost" routerLink="/store">
+            <i class="fas fa-arrow-left"></i> Continue Shopping
+          </button>
+
+          <div class="secure-checkout-info">
+            <i class="fas fa-shield-alt"></i>
+            <div class="secure-text">
+              <strong>Secure Checkout</strong>
+              <span>Your payment is safe and encrypted</span>
+            </div>
+          </div>
+
+          <div class="payment-icons">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
+            <div class="more-payments">+2</div>
+          </div>
+
         </div>
       </div>
+      
     </div>
 
     <ng-template #emptyCart>
       <div class="empty-cart-view">
         <i class="fas fa-shopping-basket"></i>
         <h3>Your cart is empty</h3>
-        <button class="shop-btn" routerLink="/shop">Start Shopping</button>
+        <button class="shop-btn" routerLink="/store">Start Shopping</button>
       </div>
     </ng-template>
-
-    <!-- Sticky Bottom Checkout Console -->
-    <div class="cart-bottom-fixed" *ngIf="cartItems.length > 0">
-      <div class="subtotal-space">
-        <div class="sub-text">Subtotal ({{ getTotalItems() }} items)</div>
-        <div class="sub-price">₹{{ totalAmount | number:'1.2-2' }}</div>
-      </div>
-      <button class="checkout-btn-solid" (click)="checkout()">CHECKOUT</button>
-    </div>
   </ng-container>
 
 </div>

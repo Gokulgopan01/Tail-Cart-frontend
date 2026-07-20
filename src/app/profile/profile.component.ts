@@ -134,7 +134,7 @@ export class ProfileComponent implements OnInit {
 
   private profileApi = 'http://127.0.0.1:8000/api/user/profile/';
   private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
-  private petApi = 'http://127.0.0.1:8000/api/user/pet/';
+  private petdetailsApi = 'http://127.0.0.1:8000/api/user/pets/shared_use/';
   private resolveAlertApi = 'http://127.0.0.1:8000/api/alerts/resolve/';
 
   constructor(
@@ -319,7 +319,7 @@ export class ProfileComponent implements OnInit {
     });
 
     this.http.get<Pet[]>(
-      `${this.petsApi}?user_id=${this.userId}`,
+      `${this.petdetailsApi}?user_id=${this.userId}`,
       { headers }
     ).subscribe({
       next: (response) => {

@@ -63,7 +63,7 @@ export class DocumentsComponent implements OnInit {
   remainders: Remainder[] = [];
   filteredDocuments: Document[] = [];
   filteredRemainders: Remainder[] = [];
-  userPets: { id: number, name: string }[] = [];
+  userPets: { id: number, name: string, photo?: string }[] = [];
   userName: string = 'Gokul';
   storageUsedPercent: number = 60;
 
@@ -81,7 +81,8 @@ export class DocumentsComponent implements OnInit {
   openMenuId: number | null = null;
 
   // UI State
-  activeTab: 'documents' | 'remainders' | 'pets' = 'documents';
+  activeTab: 'documents' | 'remainders' = 'documents';
+  isPetsDropdownOpen: boolean = false;
   docsViewMode: 'grid' | 'list' = 'grid';
   remainderViewMode: 'list' | 'calendar' = 'list';
   searchQuery: string = '';
@@ -266,11 +267,11 @@ export class DocumentsComponent implements OnInit {
     const token = localStorage.getItem('access_token');
     if (!this.userId) return;
 
-    this.http.get<any[]>(`http://127.0.0.1:8000/api/user/pets/?user_id=${this.userId}`, {
+    this.http.get<any[]>(`http://127.0.0.1:8000/api/user/pets/shared_use/?user_id=${this.userId}`, {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (pets) => {
-        this.userPets = pets.map(p => ({ id: p.pet_id, name: p.pet_name }));
+        this.userPets = pets.map(p => ({ id: p.pet_id, name: p.pet_name, photo: p.pet_photo }));
         console.log('Processed Pets:', this.userPets);
         // If creating a new remainder, preselect the first pet
         if (!this.editingRemainder && this.userPets.length > 0) {

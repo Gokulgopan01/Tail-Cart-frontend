@@ -25,10 +25,22 @@
         <button class="nav-item" [class.active]="activeTab === 'remainders'" (click)="activeTab = 'remainders'">
           <i class="far fa-bell nav-icon"></i> Reminders
         </button>
-        <button class="nav-item" [class.active]="activeTab === 'pets'" (click)="activeTab = 'pets'">
-          <i class="fas fa-paw nav-icon"></i> My Pets
+        <button class="nav-item" [class.active]="isPetsDropdownOpen" (click)="isPetsDropdownOpen = !isPetsDropdownOpen" style="display: flex; justify-content: space-between; align-items: center;">
+          <span><i class="fas fa-paw nav-icon"></i> My Pets</span>
+          <i class="fas" [ngClass]="isPetsDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'" style="font-size: 0.8em; margin-right: 8px;"></i>
         </button>
       </nav>
+
+      <div class="sidebar-pets-section" *ngIf="isPetsDropdownOpen && userPets && userPets.length > 0">
+        <h3 style="padding: 0 20px; font-size: 14px; color: #64748b; margin-top: 10px; margin-bottom: 10px;">Available Pets</h3>
+        <div class="sidebar-pet-item" *ngFor="let pet of userPets" style="display: flex; align-items: center; padding: 8px 20px;">
+          <img [src]="pet.photo ? 'http://127.0.0.1:8000' + pet.photo : 'https://ui-avatars.com/api/?name=Pet&background=random'" 
+               [alt]="pet.name" 
+               style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; margin-right: 12px;" 
+               onerror="this.src='https://ui-avatars.com/api/?name=Pet&background=random'">
+          <span style="font-weight: 500; font-size: 14px; color: #f8fafc;">{{ pet.name }}</span>
+        </div>
+      </div>
 
       <div class="security-card dark-security-card">
         <div class="security-icon-wrapper">

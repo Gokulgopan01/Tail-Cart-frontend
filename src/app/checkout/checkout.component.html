@@ -22,60 +22,131 @@
   </div>
 
   <ng-container *ngIf="!loading; else loadingTpl">
-    <div class="checkout-main container">
+    <div class="cart-main-layout" *ngIf="cartItems.length > 0; else emptyCart">
+      
+      <!-- LEFT COLUMN: Checkout Items -->
+      <div class="cart-items-section">
+        <div class="premium-cart-card" *ngFor="let item of cartItems; let i = index">
+          <!-- Left: Image -->
+          <div class="card-img-container">
+            <img [src]="item.product_image" alt="Item" onerror="this.onerror=null; this.src='assets/images/photo2.jpg'">
+          </div>
 
-      <div class="order-summary-box">
-        <h3 class="section-title">Order Review</h3>
-
-        <div class="checkout-items-list" *ngIf="cartItems.length > 0">
-          <div class="c-item" *ngFor="let item of cartItems">
-            <div class="c-img-box">
-              <img [src]="item.product_image" alt="Item" onerror="this.src='assets/images/photo2.jpg'">
+          <!-- Middle: Info -->
+          <div class="card-info-container">
+            <h3 class="card-product-title">{{ item.product_name }}</h3>
+            <span class="category-badge">Accessories</span>
+            <div class="rating-reviews">
+              <span class="stars">⭐⭐⭐⭐⭐</span> <span class="reviews-count">(128 Reviews)</span>
             </div>
-            <div class="c-info">
-              <h4 class="c-name">{{ item.product_name }}</h4>
-              <p class="c-pet">{{ item.pet_name || 'Generic Pet' }}</p>
-              <div class="c-price-qty">
-                <span class="c-qty">Qty: {{ item.quantity }}</span>
-                <span class="c-price">₹{{ item.product_price }}</span>
+            
+            <div class="variants-row">
+              <div class="variant-group">
+                <span class="variant-label">Color</span>
+                <div class="color-circles">
+                  <span class="color-circle" style="background-color: #8b5a2b;"></span>
+                </div>
+              </div>
+              <div class="variant-group">
+                <span class="variant-label">Size</span>
+                <div class="size-pills">
+                  <span class="size-pill active">S</span>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="luxury-divider"></div>
-
-        <div class="totals-section">
-          <div class="t-row">
-            <span class="t-label">Subtotal ({{ getTotalItems() }} items)</span>
-            <span class="t-value">₹{{ getSubtotal() | number:'1.2-2' }}</span>
-          </div>
-          <div class="t-row">
-            <span class="t-label">Tax (18% GST)</span>
-            <span class="t-value">₹{{ getTax() | number:'1.2-2' }}</span>
-          </div>
-          <div class="t-row highlight">
-            <span class="t-label"><i class="fas fa-truck text-green"></i> Shipping</span>
-            <span class="t-value text-green">FREE</span>
+            <p class="product-description">
+              Pet: {{ item.pet_name || 'Generic Pet' }}
+            </p>
           </div>
 
-          <div class="grand-total-row">
-            <span class="gt-label">Total to Pay</span>
-            <span class="gt-value">₹{{ totalAmount | number:'1.2-2' }}</span>
+          <!-- Right: Price & Actions (Read-only for checkout) -->
+          <div class="card-actions-container">
+            <div class="price-top">
+              <span class="item-price">₹{{ item.product_price }}</span>
+            </div>
+            
+            <div class="qty-readonly-modern">
+              <span>Qty: {{ item.quantity }}</span>
+            </div>
+
+            <div class="subtotal-bottom">
+              <span class="item-subtotal">₹{{ item.product_price * item.quantity | number:'1.2-2' }}</span>
+            </div>
           </div>
         </div>
       </div>
 
+      <!-- RIGHT COLUMN: Order Summary (Sticky) -->
+      <div class="order-summary-section">
+        <div class="summary-card-sticky">
+          <h3 class="summary-title">Order Summary</h3>
+          <hr class="summary-divider">
+          
+          <div class="summary-row">
+            <span class="s-label">Items ({{ getTotalItems() }})</span>
+            <span class="s-val">₹{{ getSubtotal() | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="s-label">Subtotal</span>
+            <span class="s-val">₹{{ getSubtotal() | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="s-label">Shipping</span>
+            <span class="s-val text-green">FREE</span>
+          </div>
+          <div class="summary-row">
+            <span class="s-label">Discount</span>
+            <span class="s-val text-green">-₹500</span>
+          </div>
+          <div class="summary-row">
+            <span class="s-label">GST (18%)</span>
+            <span class="s-val">₹{{ getTax() | number:'1.2-2' }}</span>
+          </div>
+
+          <hr class="summary-divider">
+          
+          <div class="summary-total-row">
+            <span class="total-label">Total</span>
+            <span class="total-val">₹{{ totalAmount | number:'1.2-2' }}</span>
+          </div>
+
+          <button class="btn-checkout-primary" (click)="placeOrder()">
+            <i class="fas fa-check-circle"></i> Place Order
+          </button>
+          
+          <button class="btn-tertiary-ghost" routerLink="/cart">
+            <i class="fas fa-arrow-left"></i> Edit Cart
+          </button>
+
+          <div class="secure-checkout-info">
+            <i class="fas fa-shield-alt"></i>
+            <div class="secure-text">
+              <strong>Secure Checkout</strong>
+              <span>Your payment is safe and encrypted</span>
+            </div>
+          </div>
+
+          <div class="payment-icons">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
+            <div class="more-payments">+2</div>
+          </div>
+
+        </div>
+      </div>
+      
     </div>
 
-    <!-- Sticky Bottom Place Order Action -->
-    <div class="checkout-bottom-fixed" *ngIf="cartItems.length > 0">
-      <button class="place-order-btn" (click)="placeOrder()">
-        <span>PLACE ORDER</span>
-        <i class="fas fa-arrow-right"></i>
-      </button>
-      <p class="secure-text"><i class="fas fa-lock"></i> Secure & Encrypted checkout</p>
-    </div>
+    <ng-template #emptyCart>
+      <div class="empty-cart-view">
+        <i class="fas fa-shopping-basket"></i>
+        <h3>Your order is empty</h3>
+        <button class="shop-btn" routerLink="/store">Return to Store</button>
+      </div>
+    </ng-template>
   </ng-container>
 
 </div>
