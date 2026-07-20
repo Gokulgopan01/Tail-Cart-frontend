@@ -158,27 +158,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.fetchProducts();
     this.fetchCartCount();
-    this.fetchUserPets();
-  }
-
-  fetchUserPets() {
-    const userId = localStorage.getItem('user_id');
-    const token = localStorage.getItem('access_token');
-    if (!userId || !token) return;
-
-    this.http.get<any>(`${this.profileApi}?user_id=${userId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    }).subscribe({
-      next: (res) => {
-        if (res && res.pets) {
-          this.userPets = res.pets;
-          if (this.userPets.length > 0) {
-            this.selectedPetId = this.userPets[0].pet_id.toString();
-          }
-        }
-      },
-      error: (err) => console.error('Failed to load user pets', err)
-    });
   }
 
   fetchProducts(url: string = this.productsApi) {

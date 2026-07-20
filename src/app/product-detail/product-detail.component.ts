@@ -44,14 +44,14 @@ export class ProductDetailComponent implements OnInit {
   quantity: number = 1;
   petSelectError = false;
 
-  private profileApi = 'http://127.0.0.1:8000/api/user/profile/';
+  private profileApi = 'http://127.0.0.1:8000/api/user/pets/shared_use/';
 
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
     private snackBar: MatSnackBar,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -87,7 +87,12 @@ export class ProductDetailComponent implements OnInit {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (res) => {
-        if (res && res.pets) {
+        if (res && Array.isArray(res)) {
+          this.userPets = res;
+          if (this.userPets.length > 0) {
+            this.selectedPetId = this.userPets[0].pet_id.toString();
+          }
+        } else if (res && res.pets) {
           this.userPets = res.pets;
           if (this.userPets.length > 0) {
             this.selectedPetId = this.userPets[0].pet_id.toString();
@@ -121,7 +126,7 @@ export class ProductDetailComponent implements OnInit {
 
   addToCart(): void {
     if (!this.product) return;
-    
+
     const userId = localStorage.getItem('user_id');
     if (!userId) {
       this.showSnackbar('Please log in first', 'error');
