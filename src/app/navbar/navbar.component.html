@@ -54,11 +54,11 @@
       <div class="nav-dropdown-wrapper">
         <div class="utility-item user-item" routerLink="/profile">
           <div class="utility-avatar">
-            <img src="assets/icons/nav_profile_icon.jpeg" alt="Profile">
+            <img [src]="ownerPhoto" alt="Profile">
           </div>
           <div class="utility-text">
             <div class="user-main">
-              <span class="text-primary">Profile</span>
+              <span class="text-primary">{{ ownerName || 'Profile' }}</span>
               <i class="fas fa-chevron-down sub-icon"></i>
             </div>
           </div>
@@ -118,7 +118,7 @@
       <!-- Right: Profile Icon -->
       <div class="nav-icons-mobile">
         <a class="nav-avatar-mobile" routerLink="/profile" title="Profile">
-          <img src="assets/icons/nav_profile_icon.jpeg" alt="Profile">
+          <img [src]="ownerPhoto" alt="Profile">
         </a>
       </div>
     </div>

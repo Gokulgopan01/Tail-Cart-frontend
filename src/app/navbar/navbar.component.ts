@@ -3,6 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-navbar',
@@ -26,7 +27,10 @@ export class NavbarComponent implements OnInit {
   // Mobile sidebar accordion states
   activeSidebarGroup: string | null = null;
 
-  constructor(private router: Router) {
+  ownerName: string = '';
+  ownerPhoto: string = 'assets/icons/nav_profile_icon.jpeg';
+
+  constructor(private router: Router, private http: HttpClient) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
@@ -63,6 +67,31 @@ export class NavbarComponent implements OnInit {
       } catch (e) {
         this.cartItems = 0;
       }
+    }
+
+    this.fetchUserProfile();
+  }
+
+  fetchUserProfile() {
+    const userId = localStorage.getItem('user_id');
+    const token = localStorage.getItem('token');
+
+    if (userId && token) {
+      const headers = { 'Authorization': `Bearer ${token}` };
+      this.http.get<any>(`http://127.0.0.1:8000/api/user/profile/shared_use/?user_id=${userId}`, { headers })
+        .subscribe({
+          next: (res) => {
+            if (res && res.owner_name) {
+              this.ownerName = res.owner_name.split(' ')[0];
+            }
+            if (res && res.owner_photo) {
+              this.ownerPhoto = `http://127.0.0.1:8000${res.owner_photo}`;
+            }
+          },
+          error: (err) => {
+            console.error('Error fetching user profile in navbar', err);
+          }
+        });
     }
   }
 
