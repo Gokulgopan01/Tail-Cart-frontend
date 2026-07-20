@@ -39,6 +39,15 @@ export class NavbarComponent implements OnInit {
       this.hideTopNav = url.includes('/profile') || url.includes('/checkout') || url.includes('/product') || url.includes('/shop') || isPetPublic;
       this.hideBottomNav = url.includes('/auth') || url.includes('/product') || url.includes('/checkout') || isPetPublic;
       this.updateActiveIndex(url);
+
+      // Check auth state on navigation (e.g. after login)
+      const token = localStorage.getItem('access_token');
+      if (token && !this.ownerName) {
+        this.fetchUserProfile();
+      } else if (!token) {
+        this.ownerName = '';
+        this.ownerPhoto = 'assets/icons/nav_profile_icon.jpeg';
+      }
     });
   }
 
@@ -74,10 +83,10 @@ export class NavbarComponent implements OnInit {
 
   fetchUserProfile() {
     const userId = localStorage.getItem('user_id');
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
+    const headers = { Authorization: `Bearer ${token}` };
 
     if (userId && token) {
-      const headers = { 'Authorization': `Bearer ${token}` };
       this.http.get<any>(`http://127.0.0.1:8000/api/user/profile/shared_use/?user_id=${userId}`, { headers })
         .subscribe({
           next: (res) => {
