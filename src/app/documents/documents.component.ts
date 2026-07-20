@@ -76,6 +76,7 @@ export class DocumentsComponent implements OnInit {
 
   overdueCount: number = 0;
   upcomingCount: number = 0;
+  completedCount: number = 0;
 
   // Row Item Dropdown State
   openMenuId: number | null = null;
@@ -370,7 +371,8 @@ export class DocumentsComponent implements OnInit {
 
   updateBannerCounts(): void {
     this.overdueCount = this.remainders.filter(r => r.statusInfo?.type === 'overdue').length;
-    this.upcomingCount = this.remainders.filter(r => r.statusInfo?.type === 'upcoming').length;
+    this.upcomingCount = this.remainders.filter(r => r.is_active === true).length;
+    this.completedCount = this.remainders.filter(r => r.is_active === false).length;
   }
 
   // --- Dynamic Counters ---

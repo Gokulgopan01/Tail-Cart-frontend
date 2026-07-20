@@ -296,10 +296,10 @@
               <span class="stat-title">Completed</span>
             </div>
             <div class="stat-body">
-              <h2 class="stat-value">12</h2>
+              <h2 class="stat-value">{{ completedCount || 0 }}</h2>
               <span class="stat-unit">Items</span>
             </div>
-            <div class="stat-footer">View history</div>
+            <div class="stat-footer">Well done!</div>
           </div>
         </div>
 
@@ -583,38 +583,66 @@
 
   <!-- Remainder Modal -->
   <div class="modal-root scrollable-modal" *ngIf="showEditRemainderModal" (click)="closeEditRemainderModal()">
-    <div class="modal-card small-modal" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>{{ editingRemainder ? 'Edit Reminder' : 'Create Reminder' }}</h3>
-        <button class="close-btn" (click)="closeEditRemainderModal()"><i class="fas fa-times"></i></button>
+    <div class="modal-card premium-upload-modal" (click)="$event.stopPropagation()">
+      
+      <div class="premium-modal-header">
+        <div>
+          <h3 class="premium-modal-title">{{ editingRemainder ? 'Edit Reminder' : 'Create Reminder' }}</h3>
+          <p class="premium-modal-subtitle">{{ editingRemainder ? 'Update your pet reminder details' : 'Add a new reminder for your pet' }}</p>
+        </div>
+        <button class="premium-close-btn" (click)="closeEditRemainderModal()"><i class="fas fa-times"></i></button>
       </div>
+
       <div class="modal-body">
-        <form [formGroup]="remainderForm" class="modern-form">
-          <div class="form-group">
-            <label>Pet</label>
-            <select formControlName="pet" class="modern-select">
-              <option value="" disabled hidden>Select pet</option>
-              <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
-            </select>
-          </div>
-          <div class="form-group">
+        <form [formGroup]="remainderForm" class="premium-form">
+          <div class="form-group-premium">
             <label>Title</label>
-            <input type="text" formControlName="title" class="modern-input" placeholder="e.g. Rabies Booster">
+            <div class="input-with-icon">
+              <i class="fas fa-font"></i>
+              <input type="text" formControlName="title" placeholder="e.g. Rabies Booster">
+            </div>
           </div>
-          <div class="form-group">
-            <label>Date</label>
-            <input type="date" formControlName="remainder_date" class="modern-input">
+
+          <div class="form-group-premium">
+            <label>Pet</label>
+            <div class="input-with-icon">
+              <i class="fas fa-paw"></i>
+              <select formControlName="pet">
+                <option value="" disabled hidden>Select Pet</option>
+                <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-chevron"></i>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Time</label>
-            <input type="time" formControlName="reminder_time" class="modern-input">
+
+          <div class="form-row-2" style="margin-bottom: 0;">
+            <div class="form-group-premium">
+              <label>Date</label>
+              <div class="input-with-icon">
+                <i class="far fa-calendar-alt"></i>
+                <input type="date" formControlName="remainder_date">
+              </div>
+            </div>
+            
+            <div class="form-group-premium">
+              <label>Time</label>
+              <div class="input-with-icon">
+                <i class="far fa-clock"></i>
+                <input type="time" formControlName="reminder_time">
+              </div>
+            </div>
           </div>
-          <div class="form-actions">
-            <button type="button" class="btn-lite" (click)="closeEditRemainderModal()">Cancel</button>
-            <button type="button" class="btn-primary" (click)="saveRemainder()"
-              [disabled]="remainderForm.invalid || isSavingRemainder">
-              Save Reminder
-            </button>
+
+          <div class="premium-form-actions">
+            <button type="button" class="btn-premium-cancel" (click)="closeEditRemainderModal()">Cancel</button>
+            <div class="submit-btn-wrapper">
+              <button type="button" class="btn-premium-submit" (click)="saveRemainder()"
+                [disabled]="remainderForm.invalid || isSavingRemainder">
+                <i class="fas" [ngClass]="editingRemainder ? 'fa-save' : 'fa-bell'"></i> 
+                {{ isSavingRemainder ? 'Saving...' : 'Save Reminder' }}
+              </button>
+              <span class="submit-subtitle">You'll be notified on time</span>
+            </div>
           </div>
         </form>
       </div>
