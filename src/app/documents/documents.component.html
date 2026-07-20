@@ -489,51 +489,92 @@
 
   <!-- Modals (Preserved from before) -->
   <div class="modal-root" *ngIf="showUploadModal" (click)="closeUploadModal()">
-    <div class="modal-card small-modal" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>Upload Document</h3>
-        <button class="close-btn" (click)="closeUploadModal()"><i class="fas fa-times"></i></button>
-      </div>
-      <div class="modal-body">
-        <div class="upload-dropzone" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
-          (drop)="onDrop($event)" [class.drag-over]="isDragOver" (click)="fileInput.click()">
-          <i class="fas fa-cloud-upload-alt fa-3x text-muted"
-            style="margin-bottom: 15px; color: #94a3b8; font-size: 3rem;"></i>
-          <h4 style="margin: 0 0 10px; color: #1e293b;">Click or Drag files here</h4>
-          <p style="margin: 0; color: #64748b; font-size: 0.9rem;">Supports PDF, JPG, PNG (Max 10MB)</p>
-          <input type="file" #fileInput multiple (change)="onFileSelected($event)" style="display: none"
-            accept=".pdf,.jpg,.jpeg,.png">
+    <div class="modal-card premium-upload-modal" (click)="$event.stopPropagation()">
+      
+      <div class="premium-modal-header">
+        <div>
+          <h3 class="premium-modal-title">Add Document</h3>
+          <p class="premium-modal-subtitle">Upload and add document details</p>
         </div>
-        <form [formGroup]="uploadForm" class="modern-form">
-          <div class="form-group">
-            <label>Title</label>
-            <input type="text" formControlName="document_title" class="modern-input"
-              placeholder="e.g. Rabies Certificate">
+        <button class="premium-close-btn" (click)="closeUploadModal()"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="premium-upload-dropzone" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)" [class.drag-over]="isDragOver">
+          
+          <div *ngIf="selectedFiles.length === 0" class="dropzone-empty-state" (click)="fileInput.click()">
+            <div class="upload-icon-circle">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h4>Click or Drag Files Here</h4>
+            <p>Supports PDF, JPG, PNG (Max 10MB)</p>
           </div>
-          <div class="form-group">
-            <label>Document Type</label>
-            <select formControlName="document_type" class="modern-select">
-              <option value="" disabled hidden>Select document type</option>
-              <option value="Pet Vaccination Record">Vaccination records</option>
-              <option value="Pet Medical Record">Medical reports</option>
-              <option value="Pet Prescription">Vet prescriptions</option>
-              <option value="Veterinary Document">Insurance documents</option>
-              <option value="Other Pet Document">Others</option>
-            </select>
+
+          <div *ngIf="selectedFiles.length > 0" class="dropzone-files-state">
+            <div class="selected-file-pill" *ngFor="let file of selectedFiles">
+              <div class="file-pill-icon"><i class="far fa-file-alt"></i></div>
+              <div class="file-pill-info">
+                <span class="file-pill-name">{{ file.name }}</span>
+                <span class="file-pill-size">{{ (file.size / 1024 / 1024).toFixed(1) }} MB</span>
+              </div>
+              <div class="file-pill-success"><i class="fas fa-check-circle"></i></div>
+              <button class="remove-file-btn" (click)="removeFile(file); $event.stopPropagation()"><i class="fas fa-times"></i></button>
+            </div>
+            <button class="add-more-btn" (click)="fileInput.click()">+ Add another file</button>
           </div>
-          <div class="form-group">
+
+          <input type="file" #fileInput multiple (change)="onFileSelected($event)" style="display: none" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+
+        <form [formGroup]="uploadForm" class="premium-form">
+          <div class="form-row-2">
+            <div class="form-group-premium">
+              <label>Document Type</label>
+              <div class="input-with-icon">
+                <i class="fas fa-list-ul"></i>
+                <select formControlName="document_type">
+                  <option value="" disabled hidden>Select Document Type</option>
+                  <option value="Pet Vaccination Record">Vaccination records</option>
+                  <option value="Pet Medical Record">Medical reports</option>
+                  <option value="Pet Prescription">Vet prescriptions</option>
+                  <option value="Veterinary Document">Insurance documents</option>
+                  <option value="Other Pet Document">Others</option>
+                </select>
+                <i class="fas fa-chevron-down select-chevron"></i>
+              </div>
+            </div>
+            
+            <div class="form-group-premium">
+              <label>Title</label>
+              <div class="input-with-icon">
+                <i class="fas fa-font"></i>
+                <input type="text" formControlName="document_title" placeholder="Enter document title">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group-premium" style="margin-bottom: 0;">
             <label>Pet</label>
-            <select formControlName="pet" class="modern-select">
-              <option value="" disabled hidden>Select pet</option>
-              <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
-            </select>
+            <div class="input-with-icon">
+              <i class="fas fa-paw"></i>
+              <select formControlName="pet">
+                <option value="" disabled hidden>Select Pet</option>
+                <option *ngFor="let pet of userPets" [value]="pet.id">{{ pet.name }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-chevron"></i>
+            </div>
           </div>
-          <div class="form-actions">
-            <button type="button" class="btn-lite" (click)="closeUploadModal()">Cancel</button>
-            <button type="button" class="btn-primary" (click)="uploadDocuments()"
-              [disabled]="uploadForm.invalid || selectedFiles.length === 0 || isUploading">
-              {{ isUploading ? 'Uploading...' : 'Upload Now' }}
-            </button>
+
+          <div class="premium-form-actions">
+            <button type="button" class="btn-premium-cancel" (click)="closeUploadModal()">Cancel</button>
+            <div class="submit-btn-wrapper">
+              <button type="button" class="btn-premium-submit" (click)="uploadDocuments()"
+                [disabled]="uploadForm.invalid || selectedFiles.length === 0 || isUploading">
+                <i class="fas fa-cloud-upload-alt"></i> {{ isUploading ? 'Uploading...' : 'Upload Document' }}
+              </button>
+              <span class="submit-subtitle">Your document will be securely uploaded</span>
+            </div>
           </div>
         </form>
       </div>
