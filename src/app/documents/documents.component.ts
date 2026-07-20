@@ -77,6 +77,8 @@ export class DocumentsComponent implements OnInit {
   overdueCount: number = 0;
   upcomingCount: number = 0;
   completedCount: number = 0;
+  thisMonthCount: number = 0;
+  currentMonthName: string = '';
 
   // Row Item Dropdown State
   openMenuId: number | null = null;
@@ -373,6 +375,14 @@ export class DocumentsComponent implements OnInit {
     this.overdueCount = this.remainders.filter(r => r.statusInfo?.type === 'overdue').length;
     this.upcomingCount = this.remainders.filter(r => r.is_active === true).length;
     this.completedCount = this.remainders.filter(r => r.is_active === false).length;
+
+    const now = new Date();
+    this.currentMonthName = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+    this.thisMonthCount = this.remainders.filter(r => {
+      if (!r.remainder_date) return false;
+      const rDate = new Date(r.remainder_date);
+      return rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear();
+    }).length;
   }
 
   // --- Dynamic Counters ---

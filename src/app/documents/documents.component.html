@@ -283,10 +283,10 @@
               <span class="stat-title">This Month</span>
             </div>
             <div class="stat-body">
-              <h2 class="stat-value">3</h2>
+              <h2 class="stat-value">{{ thisMonthCount || 0 }}</h2>
               <span class="stat-unit">Items</span>
             </div>
-            <div class="stat-footer">June 2025</div>
+            <div class="stat-footer">{{ currentMonthName }}</div>
           </div>
 
           <!-- Card 4: Completed -->
