@@ -1060,7 +1060,7 @@
 .nav-label {
   position: absolute;
   bottom: 12px;
-  color: #62a39f;
+  color: #ffffff;
   font-weight: 600;
   font-size: 0.75rem;
   opacity: 0;
@@ -1075,7 +1075,7 @@
   width: 56px;
   height: 56px;
   background: #142220;
-  color: #62a39f;
+  color: #ffffff;
 }
 
 .bottom-nav-link.active .bottom-nav-icon::before {
