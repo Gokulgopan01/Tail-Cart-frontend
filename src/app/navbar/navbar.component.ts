@@ -125,10 +125,22 @@ export class NavbarComponent implements OnInit {
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    this.updateBodyScroll();
   }
 
   closeMobileMenu() {
     this.isMobileMenuOpen = false;
+    this.updateBodyScroll();
+  }
+
+  private updateBodyScroll() {
+    if (typeof document !== 'undefined') {
+      if (this.isMobileMenuOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
   }
 
   navigateToHome() {

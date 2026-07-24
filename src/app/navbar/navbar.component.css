@@ -603,9 +603,7 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
 }
 
 .brand-text-desktop {
