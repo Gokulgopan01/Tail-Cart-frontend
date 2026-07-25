@@ -4206,3 +4206,30 @@ section {
     transform: translate(-50%, -50%) scale(1) !important;
   }
 }
+
+/* -------------------------------------------
+   Stat Card Scroll Animation
+------------------------------------------- */
+.stat-card {
+  opacity: 0;
+  transform: translateY(20px);
+  filter: blur(8px);
+  will-change: transform, opacity, filter;
+  transition: opacity 600ms ease-out, transform 600ms ease-out, filter 600ms ease-out;
+}
+
+.stat-card.stat-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  transition-delay: var(--stat-stagger-delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-card {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

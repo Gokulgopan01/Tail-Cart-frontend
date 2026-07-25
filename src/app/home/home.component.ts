@@ -187,12 +187,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           // Stagger logic: based on the order they enter the screen
-          const delay = visibleCount * 50; 
+          const delay = visibleCount * 50;
           (entry.target as HTMLElement).style.setProperty('--stagger-delay', `${delay}ms`);
-          
+
           // Add the visible class to trigger the CSS animation
           entry.target.classList.add('visible');
-          
+
           // Stop observing once it has entered
           observer.unobserve(entry.target);
           visibleCount++;
@@ -200,10 +200,27 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }, { threshold: 0.1 });
 
-    // Select and observe all product cards
+    // Setup IntersectionObserver for stat card entrance animations
+    const statObserver = new IntersectionObserver((entries) => {
+      let visibleCount = 0;
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const delay = visibleCount * 100;
+          (entry.target as HTMLElement).style.setProperty('--stat-stagger-delay', `${delay}ms`);
+          entry.target.classList.add('stat-visible');
+          statObserver.unobserve(entry.target);
+          visibleCount++;
+        }
+      });
+    }, { threshold: 0.1 });
+
+    // Select and observe cards
     setTimeout(() => {
       document.querySelectorAll('.product-card').forEach((card) => {
         observer.observe(card);
+      });
+      document.querySelectorAll('.stat-card').forEach((card) => {
+        statObserver.observe(card);
       });
     }, 100);
   }
@@ -375,11 +392,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   scrollCarousel(direction: 1 | -1) {
     if (this.isScrolling) return;
-    
+
     const track = this.carouselTrack.nativeElement;
     const startX = track.scrollLeft;
     const distance = direction * 350; // Adjust scroll distance as needed
-    
+
     // Respect user preference for reduced motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
