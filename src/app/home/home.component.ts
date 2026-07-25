@@ -180,6 +180,32 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.initializeVideo();
     this.initializeHeroVideo();
+
+    // Setup IntersectionObserver for product card entrance animations
+    const observer = new IntersectionObserver((entries) => {
+      let visibleCount = 0;
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Stagger logic: based on the order they enter the screen
+          const delay = visibleCount * 50; 
+          (entry.target as HTMLElement).style.setProperty('--stagger-delay', `${delay}ms`);
+          
+          // Add the visible class to trigger the CSS animation
+          entry.target.classList.add('visible');
+          
+          // Stop observing once it has entered
+          observer.unobserve(entry.target);
+          visibleCount++;
+        }
+      });
+    }, { threshold: 0.1 });
+
+    // Select and observe all product cards
+    setTimeout(() => {
+      document.querySelectorAll('.product-card').forEach((card) => {
+        observer.observe(card);
+      });
+    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -345,8 +371,44 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  private isScrolling = false;
+
   scrollCarousel(direction: 1 | -1) {
-    this.carouselTrack.nativeElement.scrollBy({ left: direction * 300, behavior: 'smooth' });
+    if (this.isScrolling) return;
+    
+    const track = this.carouselTrack.nativeElement;
+    const startX = track.scrollLeft;
+    const distance = direction * 350; // Adjust scroll distance as needed
+    
+    // Respect user preference for reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      track.scrollBy({ left: distance, behavior: 'auto' });
+      return;
+    }
+
+    const duration = 600; // Total duration in ms
+    const startTime = performance.now();
+    this.isScrolling = true;
+
+    // Approximate cubic-bezier(0.22, 1, 0.36, 1) easing (easeOutQuart)
+    const easeOut = (t: number) => 1 - Math.pow(1 - t, 4);
+
+    const animateScroll = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOut(progress);
+
+      track.scrollLeft = startX + (distance * easedProgress);
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      } else {
+        this.isScrolling = false;
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
   }
 
   scrollToTop(): void {
