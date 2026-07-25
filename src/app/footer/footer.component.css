@@ -348,3 +348,43 @@
     padding: 24px 20px;
   }
 }
+/* -------------------------------------------
+   Footer Motion Upgrades
+------------------------------------------- */
+
+/* 1. Staggered Column Reveal */
+.footer-col {
+  opacity: 0;
+  transform: translateY(30px);
+  will-change: transform, opacity;
+  transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer-visible .footer-col:nth-child(1) { transition-delay: 100ms; opacity: 1; transform: translateY(0); }
+.footer-visible .footer-col:nth-child(2) { transition-delay: 200ms; opacity: 1; transform: translateY(0); }
+.footer-visible .footer-col:nth-child(3) { transition-delay: 300ms; opacity: 1; transform: translateY(0); }
+.footer-visible .footer-col:nth-child(4) { transition-delay: 400ms; opacity: 1; transform: translateY(0); }
+
+/* 2. Quick Links Hover */
+.quick-links-list a, .footer-links a {
+  display: inline-flex;
+  transition: transform 300ms ease, color 300ms ease;
+}
+.quick-links-list a:hover, .footer-links a:hover {
+  transform: translateX(6px);
+  color: var(--brand-green);
+}
+
+/* 3. Social Icons Bounce */
+.social-icon {
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1), background-color 300ms ease;
+}
+.social-icon:hover {
+  transform: translateY(-4px) scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-col { transition: opacity 700ms ease !important; transform: none !important; opacity: 0; }
+  .footer-visible .footer-col { opacity: 1; }
+  .quick-links-list a, .footer-links a, .social-icon { transform: none !important; }
+}

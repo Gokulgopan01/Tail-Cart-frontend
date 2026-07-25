@@ -509,3 +509,44 @@ body.qv-modal-open .filter-modal-body {
   touch-action: pan-y !important;
   /* Re-enable for the modal contents */
 }
+/* -------------------------------------------
+   Global Button Motion Upgrades
+------------------------------------------- */
+
+/* Standardize Hover and Active States for common buttons */
+button:not([disabled]), 
+.btn-shop, 
+.utility-item, 
+.video-btn,
+.nav-link {
+  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms ease, background-color 250ms ease, color 250ms ease !important;
+}
+
+/* Base Primary buttons */
+.btn-primary-green:hover, 
+.btn-shop:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary-green:active,
+.btn-shop:active {
+  transform: translateY(1px) scale(0.97);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Secondary / Outline Buttons */
+.btn-outline-green:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(47, 122, 75, 0.15);
+}
+.btn-outline-green:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button, .btn-shop, .utility-item, .video-btn, .nav-link, .btn-primary-green, .btn-outline-green {
+    transition: background-color 250ms ease, color 250ms ease !important;
+    transform: none !important;
+  }
+}
