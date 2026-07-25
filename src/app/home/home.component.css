@@ -4233,3 +4233,176 @@ section {
     filter: none !important;
   }
 }
+
+/* -------------------------------------------
+   Difference Section Assemble Animation
+------------------------------------------- */
+
+/* Initial states */
+.difference-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  will-change: transform, opacity;
+  transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Applying to wrapper to avoid conflicting with .diff-dog-image float animation */
+.difference-center-dog {
+  opacity: 0;
+  transform: scale(0.85);
+  will-change: transform, opacity;
+  transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.difference-right {
+  opacity: 0;
+  transform: translateX(40px);
+  will-change: transform, opacity;
+  transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* VS Badge Bounce Animation */
+@keyframes vsBadgePop {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.vs-badge {
+  opacity: 0;
+  /* keep it centered but invisible initially */
+  transform: translate(-50%, -50%) scale(0); 
+}
+
+/* Active states when diff-visible is added to .difference-grid-layout */
+.diff-visible .difference-left {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.diff-visible .difference-center-dog {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.diff-visible .difference-right {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.diff-visible .vs-badge {
+  /* 150ms delay as requested, keeping the centering translate */
+  animation: vsBadgePop 550ms cubic-bezier(0.22, 1, 0.36, 1) 150ms forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .difference-left,
+  .difference-center-dog,
+  .difference-right {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .vs-badge {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+}
+
+/* -------------------------------------------
+   FAQ Section Animations
+------------------------------------------- */
+
+/* Initial states */
+.faq-hero-img {
+  opacity: 0;
+  transform: translateX(-30px);
+  will-change: transform, opacity;
+  transition: opacity 600ms ease-out, transform 600ms ease-out;
+}
+
+.faq-green-circle {
+  opacity: 0;
+  transform: scale(0.8);
+  will-change: transform, opacity;
+  transition: opacity 600ms ease-out, transform 600ms ease-out;
+}
+
+.faq-accordion-item {
+  opacity: 0;
+  transform: translateY(24px);
+  will-change: transform, opacity;
+  transition: opacity 600ms ease-out, transform 600ms ease-out;
+}
+
+/* Active states via .faq-visible */
+.faq-visible .faq-hero-img {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 100ms; /* Starts 100ms after circle */
+}
+
+.faq-visible .faq-green-circle {
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0ms;
+}
+
+/* Stagger accordion items 80ms apart */
+.faq-visible .faq-accordion-item:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 100ms; }
+.faq-visible .faq-accordion-item:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 180ms; }
+.faq-visible .faq-accordion-item:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 260ms; }
+.faq-visible .faq-accordion-item:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 340ms; }
+.faq-visible .faq-accordion-item:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 420ms; }
+.faq-visible .faq-accordion-item:nth-child(6) { opacity: 1; transform: translateY(0); transition-delay: 500ms; }
+
+/* Smooth Accordion Height Animation */
+.faq-accordion-content {
+  display: grid !important; 
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 350ms ease-in-out;
+  overflow: hidden;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.faq-accordion-content.show {
+  grid-template-rows: 1fr;
+}
+
+.faq-answer-inner {
+  min-height: 0;
+  padding-top: 8px;
+  padding-bottom: 16px;
+}
+
+/* Chevron Rotation */
+.faq-chevron-svg {
+  transition: transform 350ms ease-in-out;
+}
+
+.faq-accordion-item.active .faq-chevron-svg {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-hero-img, .faq-green-circle, .faq-accordion-item, .faq-accordion-content, .faq-chevron-svg {
+    transition: none !important;
+  }
+  .faq-hero-img, .faq-green-circle, .faq-accordion-item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

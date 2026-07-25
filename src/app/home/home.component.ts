@@ -214,7 +214,28 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }, { threshold: 0.1 });
 
-    // Select and observe cards
+    // Setup IntersectionObserver for difference section "assemble" animation
+    const diffObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('diff-visible');
+          diffObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    // Setup IntersectionObserver for FAQ section animation
+    const faqObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Add visible class, then stagger items based on index via CSS child selectors or JS
+          entry.target.classList.add('faq-visible');
+          faqObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    // Select and observe cards and sections
     setTimeout(() => {
       document.querySelectorAll('.product-card').forEach((card) => {
         observer.observe(card);
@@ -222,6 +243,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       document.querySelectorAll('.stat-card').forEach((card) => {
         statObserver.observe(card);
       });
+
+      const diffGrid = document.querySelector('.difference-grid-layout');
+      if (diffGrid) diffObserver.observe(diffGrid);
+
+      const faqSection = document.querySelector('.faq-modern-section');
+      if (faqSection) faqObserver.observe(faqSection);
     }, 100);
   }
 
