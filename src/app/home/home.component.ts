@@ -249,7 +249,71 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const faqSection = document.querySelector('.faq-modern-section');
       if (faqSection) faqObserver.observe(faqSection);
+
+      this.setupBentoInteractions();
     }, 100);
+  }
+
+  setupBentoInteractions(): void {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // 1. Bento Grid Reveal Observer
+    const bentoObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('bento-visible');
+          bentoObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    const bentoGrid = document.querySelector('.bento-grid');
+    if (bentoGrid) bentoObserver.observe(bentoGrid);
+
+    // 2. Magnetic Arrow Logic
+    if (!reducedMotion) {
+      document.querySelectorAll('.bento-cell').forEach((cell) => {
+        const arrow = cell.querySelector('.arrow') as HTMLElement;
+        if (!arrow) return;
+
+        cell.addEventListener('mousemove', (e: any) => {
+          const rect = cell.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          // max offset ~6px
+          const moveX = (x / rect.width) * 12;
+          const moveY = (y / rect.height) * 12;
+          
+          arrow.style.transform = `translate(${moveX}px, ${moveY}px)`;
+          arrow.style.transition = 'none';
+        });
+
+        cell.addEventListener('mouseleave', () => {
+          arrow.style.transform = 'translate(0px, 0px)';
+          arrow.style.transition = 'transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1)';
+        });
+      });
+    }
+
+    // 3. Parallax for Banner
+    const bannerMedia = document.querySelector('.cell-banner .cell-media') as HTMLElement;
+    if (bannerMedia && !reducedMotion) {
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            const rect = bentoGrid?.getBoundingClientRect();
+            if (rect && rect.top < window.innerHeight && rect.bottom > 0) {
+              // Calculate scroll progress relative to the viewport
+              const shift = (window.scrollY - (rect.top + window.scrollY)) * 0.15;
+              bannerMedia.style.transform = `translateY(${shift}px) scale(1.15)`;
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {

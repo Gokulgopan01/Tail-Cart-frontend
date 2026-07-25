@@ -4406,3 +4406,87 @@ section {
     transform: none !important;
   }
 }
+
+/* -------------------------------------------
+   Category Bento Grid Animations
+------------------------------------------- */
+
+/* Initial Clip-Path State */
+.bento-cell {
+  clip-path: inset(0 100% 0 0);
+  will-change: clip-path;
+  transition: clip-path 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Base states for staggered delays */
+.cell-large { transition-delay: 0ms; }
+.cell-video, .cell-image { transition-delay: 150ms; }
+.cell-banner { transition-delay: 300ms; }
+
+/* Triggered by .bento-visible on parent */
+.bento-visible .bento-cell {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Label Reveal */
+.cell-label {
+  opacity: 0;
+  transform: translateY(100%);
+  will-change: transform, opacity;
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1), opacity 600ms ease;
+}
+
+/* The label delay is cell's delay + 150ms */
+.bento-visible .cell-large .cell-label { transition-delay: 150ms; opacity: 1; transform: translateY(0); }
+.bento-visible .cell-video .cell-label, 
+.bento-visible .cell-image .cell-label { transition-delay: 300ms; opacity: 1; transform: translateY(0); }
+.bento-visible .cell-banner .cell-label { transition-delay: 450ms; opacity: 1; transform: translateY(0); }
+
+/* Idle Video Breathing */
+@keyframes videoBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+.cell-video:not(.video-playing) .cell-media {
+  animation: videoBreathe 6s ease-in-out infinite;
+}
+
+/* Reset animation when playing so it doesn't conflict with normal playback */
+.cell-video.video-playing .cell-media {
+  animation: none;
+}
+
+/* Hover Color-Wash */
+.cell-overlay {
+  background: linear-gradient(135deg, rgba(47, 122, 75, 0.6), transparent 50%, transparent);
+  background-size: 300% 300%;
+  background-position: 100% 100%;
+  transition: background-position 500ms ease;
+}
+
+.bento-cell:hover .cell-overlay {
+  background-position: 0% 0%;
+}
+
+/* Respect Prefers-Reduced-Motion */
+@media (prefers-reduced-motion: reduce) {
+  .bento-cell {
+    clip-path: none !important;
+    transition: opacity 700ms ease !important;
+    opacity: 0;
+  }
+  .bento-visible .bento-cell {
+    opacity: 1;
+  }
+  .cell-label {
+    transform: translateY(0) !important;
+    transition-delay: 0ms !important;
+  }
+  .cell-video .cell-media {
+    animation: none !important;
+  }
+  .cell-overlay {
+    transition: none !important;
+  }
+}

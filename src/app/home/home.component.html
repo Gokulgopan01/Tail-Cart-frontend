@@ -305,7 +305,7 @@
       <div class="bento-top-row">
 
         <!-- Toys — VIDEO cell -->
-        <div class="bento-cell cell-video">
+        <div class="bento-cell cell-video" [class.video-playing]="isHeroPlaying">
           <video #heroVideo class="cell-media" [muted]="isHeroMuted" playsinline loop autoplay preload="auto">
             <source src="assets/videos/pet_toys.mp4" type="video/mp4">
           </video>
