@@ -17,57 +17,19 @@
     </div>
 
     <div class="shop-hero__text">
-      <span class="eyebrow">Everything for your pets</span>
-      <h1>All in one happy place <span class="eyebrow-paw">🐾</span></h1>
-      <p>Premium products for pets, picked with love and care.</p>
+      <span class="eyebrow">OUR PRODUCTS</span>
+      <h1>Everything your pet<br>needs, in one place.</h1>
+      <p>Smart essentials, everyday comfort, and products designed to keep your pets happy and safe.</p>
     </div>
 
-    <div class="shop-toolbar">
-      <div class="shop-toolbar__row">
-        <div class="search-field">
-          <i class="fas fa-search"></i>
-          <input type="text" placeholder="Search for products..." [(ngModel)]="searchQuery" (input)="applyFilters()">
-          <button class="search-clear" *ngIf="searchQuery" (click)="searchQuery=''; applyFilters()">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
 
-        <div class="toolbar-inline only-desktop">
-          <div class="select-pill">
-            <select [(ngModel)]="categoryFilter" (change)="applyFilters()">
-              <option value="all">All Categories</option>
-              <option *ngFor="let cat of categories" [value]="cat.id">{{cat.label}}</option>
-            </select>
-            <i class="fas fa-chevron-down"></i>
-          </div>
 
-          <div class="select-pill select-pill--dark">
-            <select [(ngModel)]="sortOption" (change)="applyFilters()">
-              <option value="newest">Newest</option>
-              <option value="priceLow">Price: Low to High</option>
-              <option value="priceHigh">Price: High to Low</option>
-              <option value="name">Name: A-Z</option>
-            </select>
-            <i class="fas fa-chevron-down"></i>
-          </div>
-        </div>
-
-        <button class="filter-trigger only-mobile" (click)="toggleFilters()">
-          <i class="fas fa-sliders-h"></i>
-          <span class="filter-trigger__count" *ngIf="activeFilterCount>0">{{activeFilterCount}}</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="category-container">
-      <div class="category-row">
-        <button *ngFor="let cat of categories" class="category-card" [class.active]="cat.id===activeCategory"
+    <div class="category-segmented-container">
+      <div class="category-segmented">
+        <button *ngFor="let cat of categories" class="seg-btn" [class.active]="cat.id===activeCategory"
           (click)="selectCategory(cat.id)">
-          <span class="category-card__avatar">
-            <img [src]="cat.image" [alt]="cat.label">
-          </span>
-          <span class="category-card__label">{{cat.label}}</span>
-          <span class="category-card__count">{{cat.count}}+ items</span>
+          <i [class]="cat.icon"></i>
+          <span class="seg-label">{{cat.label}}</span>
         </button>
       </div>
     </div>

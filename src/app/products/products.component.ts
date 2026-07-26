@@ -48,7 +48,7 @@ interface ApiResponse {
 interface Category {
   id: string;
   label: string;
-  image: string;
+  icon: string;
   count: number;
 }
 
@@ -117,39 +117,39 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   categories: Category[] = [
     {
       id: 'all',
-      label: 'All',
-      image: 'assets/products/catdog_friends-HomeCover1.png',
+      label: 'All Products',
+      icon: 'fas fa-th-large',
       count: 250
     },
     {
       id: 'dogs',
       label: 'Dogs',
-      image: 'assets/products/Dog.png',
+      icon: 'fas fa-dog',
       count: 120
     },
     {
       id: 'cats',
       label: 'Cats',
-      image: 'assets/products/cat.png',
+      icon: 'fas fa-cat',
       count: 95
-    },
-    {
-      id: 'food',
-      label: 'Food',
-      image: 'assets/products/food.png',
-      count: 80
-    },
-    {
-      id: 'toys',
-      label: 'Toys',
-      image: 'assets/products/toys.png',
-      count: 65
     },
     {
       id: 'accessories',
       label: 'Accessories',
-      image: 'assets/products/accessories.png',
+      icon: 'fas fa-bone',
       count: 70
+    },
+    {
+      id: 'safety',
+      label: 'Safety',
+      icon: 'fas fa-shield-alt',
+      count: 40
+    },
+    {
+      id: 'care',
+      label: 'Care',
+      icon: 'fas fa-pump-soap',
+      count: 65
     }
   ];
 
