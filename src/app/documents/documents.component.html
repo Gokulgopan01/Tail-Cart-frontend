@@ -115,6 +115,9 @@
                     <button class="popover-btn" (click)="downloadDocument(doc); closeMenu()">
                       <i class="fas fa-download"></i> Download
                     </button>
+                    <button class="popover-btn" (click)="closeMenu()">
+                      <i class="fas fa-share-alt"></i> Share
+                    </button>
                     <button class="popover-btn text-danger" (click)="deleteDocument(doc.document_id); closeMenu()">
                       <i class="far fa-trash-alt"></i> Delete
                     </button>
@@ -196,22 +199,23 @@
                   <div class="col-size">
                     {{ doc.file_size || '1.2 MB' }}
                   </div>
-                  <div class="col-actions">
-                    <button class="action-icon-btn" (click)="downloadDocument(doc)"><i
-                        class="fas fa-download"></i></button>
-                    <button class="action-icon-btn"><i class="fas fa-share-alt"></i></button>
-                    <div style="position: relative;">
-                      <button class="action-icon-btn" (click)="toggleMenu(doc.document_id, $event)"><i
-                          class="fas fa-ellipsis-v"></i></button>
-                      <div class="menu-popover list-popover" *ngIf="openMenuId === doc.document_id"
-                        (click)="$event.stopPropagation()">
-                        <button class="popover-btn" (click)="previewDocument(doc); closeMenu()">
-                          <i class="far fa-eye"></i> View
-                        </button>
-                        <button class="popover-btn text-danger" (click)="deleteDocument(doc.document_id); closeMenu()">
-                          <i class="far fa-trash-alt"></i> Delete
-                        </button>
-                      </div>
+                  <div class="col-actions" style="position: relative;">
+                    <button class="action-icon-btn" (click)="toggleMenu(doc.document_id, $event)"><i
+                        class="fas fa-ellipsis-v"></i></button>
+                    <div class="menu-popover" *ngIf="openMenuId === doc.document_id"
+                      (click)="$event.stopPropagation()">
+                      <button class="popover-btn" (click)="previewDocument(doc); closeMenu()">
+                        <i class="far fa-eye"></i> View
+                      </button>
+                      <button class="popover-btn" (click)="downloadDocument(doc); closeMenu()">
+                        <i class="fas fa-download"></i> Download
+                      </button>
+                      <button class="popover-btn" (click)="closeMenu()">
+                        <i class="fas fa-share-alt"></i> Share
+                      </button>
+                      <button class="popover-btn text-danger" (click)="deleteDocument(doc.document_id); closeMenu()">
+                        <i class="far fa-trash-alt"></i> Delete
+                      </button>
                     </div>
                   </div>
                 </div>

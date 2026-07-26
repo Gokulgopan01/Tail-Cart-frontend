@@ -1095,32 +1095,40 @@
     margin-right: 0;
     padding: 0;
   }
+
   .vault-main-content {
     padding-left: 12px;
     padding-right: 12px;
   }
+
   .doc-card-horizontal {
     padding: 12px;
   }
+
   .doc-card-footer .doc-title {
     font-size: 0.9rem;
     margin-bottom: 4px;
   }
+
   .doc-meta-row {
     font-size: 0.65rem;
     flex-wrap: nowrap;
   }
+
   .file-badge {
     padding: 2px 6px;
     font-size: 0.6rem;
   }
+
   .doc-card-header {
     margin-bottom: 12px;
   }
+
   .doc-preview-area {
     min-height: 80px;
     margin-bottom: 12px;
   }
+
   .doc-preview-area .preview-icon {
     font-size: 2.5rem;
   }
@@ -1356,14 +1364,6 @@
   background: #f1f5f9;
 }
 
-.list-popover {
-  right: 0;
-  bottom: 100%;
-  top: auto;
-  margin-bottom: 4px;
-  margin-top: 0;
-}
-
 /* Pagination */
 .pagination-footer {
   display: flex;
@@ -1442,17 +1442,30 @@
     padding: 16px;
   }
 
-  .col-name { grid-area: name; }
-  .col-pet { grid-area: pet; }
-  .col-category { grid-area: category; }
-  .col-date { grid-area: date; }
-  .col-size { 
-    grid-area: size; 
-    text-align: right; 
+  .col-name {
+    grid-area: name;
   }
-  .col-actions { 
-    grid-area: actions; 
-    justify-content: flex-end; 
+
+  .col-pet {
+    grid-area: pet;
+  }
+
+  .col-category {
+    grid-area: category;
+  }
+
+  .col-date {
+    grid-area: date;
+  }
+
+  .col-size {
+    grid-area: size;
+    text-align: right;
+  }
+
+  .col-actions {
+    grid-area: actions;
+    place-self: center end;
   }
 }
 
@@ -1466,7 +1479,7 @@
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   padding: 8px;
-  z-index: 105;
+  z-index: 999;
   min-width: 130px;
   display: flex;
   flex-direction: column;
@@ -1637,6 +1650,22 @@
 @media (max-width: 576px) {
   .reminders-stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .action-icon-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .action-icon-btn:hover {
+    color: #1e293b;
+    background: #f1f5f9;
   }
 }
 
@@ -2073,7 +2102,7 @@
     position: relative;
   }
 
-  .col-actions {
+  .rem-list-row .col-actions {
     position: absolute;
     top: 16px;
     right: 16px;
