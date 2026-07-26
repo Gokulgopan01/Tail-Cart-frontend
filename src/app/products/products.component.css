@@ -1625,3 +1625,45 @@
     padding: 10px 14px;
   }
 }
+
+@media (max-width: 600px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-left: -16px;
+    margin-right: -16px;
+    padding: 0 8px;
+  }
+
+  .product-card__info {
+    padding: 10px 8px 12px;
+  }
+
+  .product-card__name {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .product-card__price-wrap {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .product-card__price {
+    font-size: 14px;
+  }
+
+  .product-card__original-price {
+    font-size: 11px;
+  }
+
+  .add-to-cart-btn {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
+  .add-to-cart-btn i {
+    font-size: 12px;
+  }
+}
