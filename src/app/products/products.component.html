@@ -36,7 +36,7 @@
 
   </header>
 
-  <div class="shop-toolbar-spacer"></div>
+
 
   <!-- ============ BODY: SIDEBAR + MAIN ============ -->
   <div class="shop-body">
@@ -51,27 +51,116 @@
         </button>
       </div>
 
+      <!-- CATEGORY -->
       <div class="filter-group">
-        <h4 class="filter-group__title">Category</h4>
-
+        <div class="filter-group__header">
+          <h4 class="filter-group__title">CATEGORY</h4>
+          <i class="fas fa-chevron-up"></i>
+        </div>
+        
         <label class="filter-check">
           <input type="checkbox" [checked]="activeCategory === 'all'" (change)="selectCategory('all')">
           <span class="filter-check__box"></span>
           <span class="filter-check__label">All Categories</span>
         </label>
-
+        
+        <!-- Render existing categories -->
         <label class="filter-check" *ngFor="let cat of categories.slice(1)">
           <input type="checkbox" [checked]="activeCategory === cat.id" (change)="selectCategory(cat.id)">
           <span class="filter-check__box"></span>
           <span class="filter-check__label">{{ cat.label }}</span>
         </label>
+        <!-- Adding extra requested categories hardcoded to match design -->
+        <label class="filter-check">
+          <input type="checkbox" (change)="selectCategory('collars')">
+          <span class="filter-check__box"></span>
+          <span class="filter-check__label">Collars</span>
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" (change)="selectCategory('toys')">
+          <span class="filter-check__box"></span>
+          <span class="filter-check__label">Toys</span>
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" (change)="selectCategory('bowls')">
+          <span class="filter-check__box"></span>
+          <span class="filter-check__label">Bowls & Feeders</span>
+        </label>
       </div>
+
+      <!-- PRICE RANGE -->
+      <div class="filter-group">
+        <div class="filter-group__header">
+          <h4 class="filter-group__title">PRICE RANGE</h4>
+          <i class="fas fa-chevron-up"></i>
+        </div>
+        <div class="price-slider-container">
+          <input type="range" min="0" max="2000" [(ngModel)]="maxPrice" (change)="applyFilters()" class="price-slider">
+          <div class="price-labels">
+            <span>₹0</span>
+            <span>₹{{maxPrice}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PET TYPE -->
+      <div class="filter-group">
+        <div class="filter-group__header">
+          <h4 class="filter-group__title">PET TYPE</h4>
+          <i class="fas fa-chevron-up"></i>
+        </div>
+        <label class="filter-check">
+          <input type="checkbox">
+          <span class="filter-check__box"></span>
+          <span class="filter-check__label">Dogs</span>
+        </label>
+        <label class="filter-check">
+          <input type="checkbox">
+          <span class="filter-check__box"></span>
+          <span class="filter-check__label">Cats</span>
+        </label>
+      </div>
+
+      <button class="reset-filters-btn" (click)="clearFilters()">Reset Filters</button>
     </aside>
 
     <div class="sidebar-backdrop only-mobile" *ngIf="showFilters" (click)="toggleFilters()"></div>
 
     <!-- ================= MAIN CONTENT ================= -->
     <main class="shop-main">
+
+      <!-- Clean Shopping Toolbar -->
+      <div class="clean-toolbar">
+        <div class="clean-toolbar__left only-mobile">
+          <button class="clean-filter-btn" (click)="toggleFilters()">
+            <i class="fas fa-sliders-h"></i> Filters
+            <span class="filter-badge" *ngIf="activeFilterCount > 0">{{activeFilterCount}}</span>
+          </button>
+        </div>
+        
+        <div class="clean-toolbar__center">
+          <div class="clean-search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery" (input)="applyFilters()">
+            <button class="clean-search-clear" *ngIf="searchQuery" (click)="searchQuery=''; applyFilters()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="clean-toolbar__right">
+          <div class="clean-sort">
+            <span class="sort-label">Sort by:</span>
+            <select [(ngModel)]="sortOption" (change)="applyFilters()">
+              <option value="newest">Featured</option>
+              <option value="priceLow">Price: Low to High</option>
+              <option value="priceHigh">Price: High to Low</option>
+              <option value="name">Name: A-Z</option>
+            </select>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+      </div>
 
       <!-- Offer Banner -->
       <div class="offer-banner">
