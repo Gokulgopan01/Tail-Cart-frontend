@@ -89,6 +89,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedMaterial = 'ALL';
   sortOption = 'newest';
   showFilters = false; // mobile filter sheet
+  showMobileCategories = false;
   maxPrice = 15000;
   materialOptions = ['ALL', 'Wood', 'Metal', 'Steel', 'Fiber', 'Plastic'];
   selectedColor = 'ALL';
@@ -112,6 +113,55 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   categoryFilter = 'all';
   activeCategory = 'all';
+  
+  minPrice = 0;
+  showMobilePrice = false;
+
+  mobilePriceRanges = [
+    { label: 'All Prices', min: 0, max: 15000 },
+    { label: '₹33 - ₹400', min: 33, max: 400 },
+    { label: '₹400 - ₹500', min: 400, max: 500 },
+    { label: '₹500 - ₹1000', min: 500, max: 1000 },
+    { label: '₹1000 - ₹1500', min: 1000, max: 1500 },
+    { label: '₹1500+', min: 1500, max: 15000 }
+  ];
+  activeMobilePriceRange = this.mobilePriceRanges[0];
+
+  toggleMobileCategories() {
+    this.showMobileCategories = !this.showMobileCategories;
+    document.body.style.overflow = this.showMobileCategories ? 'hidden' : '';
+  }
+
+  selectMobileCategory(catId: string) {
+    this.activeCategory = catId;
+    this.categoryFilter = catId;
+    this.applyFilters();
+  }
+
+  clearMobileCategory() {
+    this.activeCategory = 'all';
+    this.categoryFilter = 'all';
+    this.applyFilters();
+  }
+
+  toggleMobilePrice() {
+    this.showMobilePrice = !this.showMobilePrice;
+    document.body.style.overflow = this.showMobilePrice ? 'hidden' : '';
+  }
+
+  selectMobilePriceRange(range: any) {
+    this.activeMobilePriceRange = range;
+    this.minPrice = range.min;
+    this.maxPrice = range.max;
+    this.applyFilters();
+  }
+
+  clearMobilePrice() {
+    this.activeMobilePriceRange = this.mobilePriceRanges[0];
+    this.minPrice = 0;
+    this.maxPrice = 15000;
+    this.applyFilters();
+  }
 
   private productsApi = 'http://127.0.0.1:8000/api/manager/products/';
   private profileApi = 'http://127.0.0.1:8000/api/user/profile/';
@@ -251,9 +301,10 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // Price
-    temp = temp.filter(
-      product => parseFloat(product.selling_price) <= this.maxPrice
-    );
+    temp = temp.filter(product => {
+      const pPrice = parseFloat(product.selling_price);
+      return pPrice >= this.minPrice && pPrice <= this.maxPrice;
+    });
 
     this.filteredProducts = this.sortProducts(temp);
   }
@@ -280,7 +331,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     let count = 0;
     if (this.selectedMaterial !== 'ALL') count++;
     if (this.selectedColor !== 'ALL') count++;
-    if (this.maxPrice < 15000) count++;
+    if (this.maxPrice < 15000 || this.minPrice > 0) count++;
     return count;
   }
 

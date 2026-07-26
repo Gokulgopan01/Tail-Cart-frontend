@@ -131,13 +131,6 @@
 
       <!-- Clean Shopping Toolbar -->
       <div class="clean-toolbar">
-        <div class="clean-toolbar__left only-mobile">
-          <button class="clean-filter-btn" (click)="toggleFilters()">
-            <i class="fas fa-sliders-h"></i> Filters
-            <span class="filter-badge" *ngIf="activeFilterCount > 0">{{activeFilterCount}}</span>
-          </button>
-        </div>
-
         <div class="clean-toolbar__center">
           <div class="clean-search">
             <i class="fas fa-search"></i>
@@ -148,7 +141,23 @@
           </div>
         </div>
 
-        <div class="clean-toolbar__right">
+        <!-- Mobile Actions Row -->
+        <div class="clean-toolbar__mobile-actions only-mobile">
+          <button class="mobile-action-btn icon-only" (click)="toggleFilters()">
+            <i class="fas fa-sliders-h"></i>
+            <span class="filter-badge" *ngIf="activeFilterCount > 0">{{activeFilterCount}}</span>
+          </button>
+
+          <button class="mobile-action-btn" (click)="toggleMobileCategories()">
+            Category <i class="fas fa-chevron-down"></i>
+          </button>
+
+          <button class="mobile-action-btn" (click)="toggleMobilePrice()">
+            Price <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+
+        <div class="clean-toolbar__right only-desktop">
           <div class="clean-sort">
             <span class="sort-label">Sort by:</span>
             <select [(ngModel)]="sortOption" (change)="applyFilters()">
@@ -180,9 +189,9 @@
               </button>
               <img [src]="product.thumbnail_image" [alt]="product.product_name" class="product-card__image"
                 [routerLink]="['/product', product.id]">
-                <div class="product-card__overlay" [routerLink]="['/product', product.id]">
-                  <span class="view-btn">Quick View</span>
-                </div>
+              <div class="product-card__overlay" [routerLink]="['/product', product.id]">
+                <span class="view-btn">Quick View</span>
+              </div>
             </div>
 
             <div class="product-card__info">
@@ -230,7 +239,7 @@
 
   <!-- Tail Tag Feature Banner -->
   <div class="tail-tag-banner">
-    
+
     <!-- Left visuals -->
     <div class="tail-tag-banner__visuals">
       <img src="assets/products/tailtag_phone.png" alt="Phone Profile" class="tt-phone">
@@ -272,5 +281,147 @@
     </div>
 
   </div>
+
+  <!-- Shop by Category -->
+  <section class="shop-by-category">
+    <h2 class="section-title">Shop by Category</h2>
+    <div class="category-cards">
+      <div class="category-card">
+        <div class="cat-card-img">
+          <img src="assets/products/pet_safety_cat.png" alt="Pet Safety">
+        </div>
+        <div class="cat-card-content">
+          <h3>Pet Safety</h3>
+          <p>Keep your pet safe wherever they go.</p>
+          <a href="#" class="shop-now-link">Shop Now &rarr;</a>
+        </div>
+      </div>
+      <div class="category-card">
+        <div class="cat-card-img">
+          <img src="assets/products/everyday_care_cat.png" alt="Everyday Care">
+        </div>
+        <div class="cat-card-content">
+          <h3>Everyday Care</h3>
+          <p>Grooming, hygiene & health essentials.</p>
+          <a href="#" class="shop-now-link">Shop Now &rarr;</a>
+        </div>
+      </div>
+      <div class="category-card">
+        <div class="cat-card-img">
+          <img src="assets/products/accessories_cat.png" alt="Accessories">
+        </div>
+        <div class="cat-card-content">
+          <h3>Accessories</h3>
+          <p>Stylish & comfortable for every pet.</p>
+          <a href="#" class="shop-now-link">Shop Now &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust / Benefits Bar -->
+  <section class="trust-bar">
+    <div class="trust-item">
+      <i class="fas fa-truck"></i>
+      <div class="trust-text">
+        <strong>Free Shipping</strong>
+        <span>On orders above ₹999</span>
+      </div>
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-item">
+      <i class="fas fa-undo-alt"></i>
+      <div class="trust-text">
+        <strong>Easy Returns</strong>
+        <span>Hassle-free returns</span>
+      </div>
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-item">
+      <i class="fas fa-shield-alt"></i>
+      <div class="trust-text">
+        <strong>Secure Payments</strong>
+        <span>100% safe & secure</span>
+      </div>
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-item">
+      <i class="fas fa-paw"></i>
+      <div class="trust-text">
+        <strong>Happy Pets</strong>
+        <span>Products they will love</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="tc-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h2>TAILCART</h2>
+        <p>Premium pet care & lifestyle.</p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <a href="#">Shop</a>
+        <a href="#">Vault</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-links">
+        <h3>Customer Support</h3>
+        <a href="#">Shipping Policy</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 TailCart. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Mobile Categories Bottom Sheet -->
+  <div class="mobile-bottom-sheet" [class.open]="showMobileCategories">
+    <div class="mbs-header">
+      <h3>Categories</h3>
+      <button class="mbs-close" (click)="toggleMobileCategories()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="mbs-body">
+      <div class="mbs-category-item" *ngFor="let cat of categories" (click)="selectMobileCategory(cat.id)"
+        [class.active]="activeCategory === cat.id">
+        <span>{{cat.label}}</span>
+        <i class="fas fa-check" *ngIf="activeCategory === cat.id"></i>
+      </div>
+    </div>
+    <div class="mbs-footer">
+      <button class="mbs-btn-clear" (click)="clearMobileCategory()">Clear</button>
+      <button class="mbs-btn-apply" (click)="toggleMobileCategories()">Apply</button>
+    </div>
+  </div>
+  <div class="mbs-backdrop" *ngIf="showMobileCategories" (click)="toggleMobileCategories()"></div>
+
+  <!-- Mobile Price Bottom Sheet -->
+  <div class="mobile-bottom-sheet" [class.open]="showMobilePrice">
+    <div class="mbs-header">
+      <h3>Price Range</h3>
+      <button class="mbs-close" (click)="toggleMobilePrice()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="mbs-body">
+      <div class="mbs-category-item" *ngFor="let range of mobilePriceRanges" (click)="selectMobilePriceRange(range)" [class.active]="activeMobilePriceRange.label === range.label">
+        <span>{{range.label}}</span>
+        <i class="fas fa-check" *ngIf="activeMobilePriceRange.label === range.label"></i>
+      </div>
+    </div>
+    <div class="mbs-footer">
+      <button class="mbs-btn-clear" (click)="clearMobilePrice()">Clear</button>
+      <button class="mbs-btn-apply" (click)="toggleMobilePrice()">Apply</button>
+    </div>
+  </div>
+  <div class="mbs-backdrop" *ngIf="showMobilePrice" (click)="toggleMobilePrice()"></div>
 
 </div>
