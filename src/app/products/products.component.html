@@ -57,13 +57,13 @@
           <h4 class="filter-group__title">CATEGORY</h4>
           <i class="fas fa-chevron-up"></i>
         </div>
-        
+
         <label class="filter-check">
           <input type="checkbox" [checked]="activeCategory === 'all'" (change)="selectCategory('all')">
           <span class="filter-check__box"></span>
           <span class="filter-check__label">All Categories</span>
         </label>
-        
+
         <!-- Render existing categories -->
         <label class="filter-check" *ngFor="let cat of categories.slice(1)">
           <input type="checkbox" [checked]="activeCategory === cat.id" (change)="selectCategory(cat.id)">
@@ -137,7 +137,7 @@
             <span class="filter-badge" *ngIf="activeFilterCount > 0">{{activeFilterCount}}</span>
           </button>
         </div>
-        
+
         <div class="clean-toolbar__center">
           <div class="clean-search">
             <i class="fas fa-search"></i>
@@ -147,7 +147,7 @@
             </button>
           </div>
         </div>
-        
+
         <div class="clean-toolbar__right">
           <div class="clean-sort">
             <span class="sort-label">Sort by:</span>
@@ -162,11 +162,7 @@
         </div>
       </div>
 
-      <!-- Offer Banner -->
-      <div class="offer-banner">
-        <img src="assets/products/free_delivery.png" alt="Limited time offer, up to 25% off on pet accessories"
-          class="offer-banner__img">
-      </div>
+
 
       <!-- ============ PRODUCTS (moved inside shop-main) ============ -->
       <section class="products-section">
@@ -175,36 +171,45 @@
 
           <div class="product-card" *ngFor="let product of filteredProducts">
 
-            <div class="product-card__image-wrap" [routerLink]="['/product', product.id]">
+            <div class="product-card__image-wrap">
               <span class="product-card__badge" *ngIf="product.deals">
                 {{ product.deals }}
               </span>
-              <img [src]="product.thumbnail_image" [alt]="product.product_name" class="product-card__image">
-              <div class="product-card__overlay">
-                <span class="view-btn">View</span>
-              </div>
+              <button class="product-card__fav" aria-label="Add to wishlist">
+                <i class="far fa-heart"></i>
+              </button>
+              <img [src]="product.thumbnail_image" [alt]="product.product_name" class="product-card__image"
+                [routerLink]="['/product', product.id]">
+                <div class="product-card__overlay" [routerLink]="['/product', product.id]">
+                  <span class="view-btn">Quick View</span>
+                </div>
             </div>
 
             <div class="product-card__info">
-              <span class="product-card__brand">TAILCART</span>
-
+              <span class="product-card__category">{{ product.product_material || 'Accessories' }}</span>
               <h3 class="product-card__name">{{ product.product_name }}</h3>
 
-              <span class="product-card__rating" *ngIf="product.reviews_stars">
-                {{ product.reviews_stars }}★ | {{ product.review_count || 0 }}
-              </span>
-
-              <div class="product-card__price-row">
-                <span class="product-card__price">₹{{ product.selling_price }}</span>
-
-                <span class="product-card__original-price" *ngIf="product.discount_percentage as d; else noDiscount">
-                  ₹{{ product.original_price }}
-                  <span class="product-card__discount-pct">({{ d }}% off)</span>
-                </span>
-
-                <ng-template #noDiscount></ng-template>
+              <div class="product-card__rating">
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+                <span class="rating-score">({{ product.reviews_stars || '4.8' }})</span>
               </div>
 
+              <div class="product-card__bottom">
+                <div class="product-card__price-wrap">
+                  <span class="product-card__price">₹{{ product.selling_price }}</span>
+                  <span class="product-card__original-price" *ngIf="product.original_price">₹{{ product.original_price
+                    }}</span>
+                </div>
+                <button class="add-to-cart-btn" aria-label="Add to cart">
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
             </div>
 
           </div>
@@ -213,13 +218,58 @@
 
         <div class="load-more-wrap" *ngIf="nextPageUrl">
           <button class="load-more-btn" (click)="loadMore()" [disabled]="isLoading">
-            {{ isLoading ? 'Loading...' : 'Load More' }}
+            {{ isLoading ? 'Loading...' : 'Load More Products ↓' }}
           </button>
         </div>
 
       </section>
 
     </main>
+
+  </div>
+
+  <!-- Tail Tag Feature Banner -->
+  <div class="tail-tag-banner">
+    
+    <!-- Left visuals -->
+    <div class="tail-tag-banner__visuals">
+      <img src="assets/products/tailtag_phone.png" alt="Phone Profile" class="tt-phone">
+      <img src="assets/products/tailtag_qr.png" alt="QR Tag" class="tt-tag">
+    </div>
+
+    <!-- Center Text -->
+    <div class="tail-tag-banner__content">
+      <span class="tt-eyebrow">OUR MOST LOVED</span>
+      <h2>Never lose them.<br>Always find them.</h2>
+      <p class="tt-desc">Smart QR identification for your pet.</p>
+      <p class="tt-flow">Scan &rarr; View Pet Profile &rarr; Alert Owner</p>
+      <button class="tt-cta">Explore Tail Tag &rarr;</button>
+    </div>
+
+    <!-- Right Features -->
+    <div class="tail-tag-banner__features">
+      <div class="tt-feature">
+        <div class="tt-icon"><i class="fas fa-qrcode"></i></div>
+        <div class="tt-text">
+          <strong>Instant Profile Access</strong>
+          <p>Anyone can scan and view your pet's profile.</p>
+        </div>
+      </div>
+      <div class="tt-feature">
+        <div class="tt-icon"><i class="far fa-bell"></i></div>
+        <div class="tt-text">
+          <strong>Real-time Alerts</strong>
+          <p>Get notified when your pet is found.</p>
+        </div>
+      </div>
+      <div class="tt-feature">
+        <div class="tt-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="tt-text">
+          <strong>Secure & Reliable</strong>
+          <p>Your pet's safety is our priority.</p>
+        </div>
+      </div>
+    </div>
 
   </div>
 

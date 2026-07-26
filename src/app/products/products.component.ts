@@ -102,6 +102,8 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   primaryQvImage: string | null = null;
   selectedShadeIndex = 0;
 
+
+
   // Selection State
   userPets: Pet[] = [];
   selectedPetId: string = '';
