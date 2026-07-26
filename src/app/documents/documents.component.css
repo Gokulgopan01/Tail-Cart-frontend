@@ -2,7 +2,8 @@
 :host {
   display: block;
   font-family: 'Outfit', sans-serif;
-  --vault-bg: #f8fafc;
+  --vault-bg: #f1ede5;
+
   --vault-primary: #1e293b;
   --vault-accent: #3b82f6;
   --vault-card-bg: #ffffff;
@@ -1087,7 +1088,40 @@
 
 @media (max-width: 600px) {
   .docs-grid.desktop-4-cols {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+  }
+  .vault-main-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .doc-card-horizontal {
+    padding: 12px;
+  }
+  .doc-card-footer .doc-title {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+  .doc-meta-row {
+    font-size: 0.65rem;
+    flex-wrap: nowrap;
+  }
+  .file-badge {
+    padding: 2px 6px;
+    font-size: 0.6rem;
+  }
+  .doc-card-header {
+    margin-bottom: 12px;
+  }
+  .doc-preview-area {
+    min-height: 80px;
+    margin-bottom: 12px;
+  }
+  .doc-preview-area .preview-icon {
+    font-size: 2.5rem;
   }
 
   .header-right {
@@ -1901,8 +1935,12 @@
   padding: 16px 24px;
   background: #fff;
   border-bottom: 1px solid #f1f5f9;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
   z-index: 90;
 }
 
@@ -1933,6 +1971,10 @@
   animation: fadeIn 0.3s forwards;
 }
 
+.mobile-sidebar-close {
+  display: none;
+}
+
 @keyframes fadeIn {
   to {
     opacity: 1;
@@ -1954,8 +1996,25 @@
     left: 0;
   }
 
+  .mobile-sidebar-close {
+    display: block;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 101;
+  }
+
   .mobile-top-nav {
     display: flex;
+  }
+
+  .vault-main-content {
+    padding-top: 65px;
   }
 }
 

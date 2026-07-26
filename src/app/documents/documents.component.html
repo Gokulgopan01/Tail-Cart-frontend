@@ -7,6 +7,9 @@
   <aside class="vault-sidebar dark-green-sidebar" [class.mobile-open]="isMobileSidebarOpen">
     <div class="sidebar-sticky-inner">
       <div class="sidebar-header">
+        <button class="mobile-sidebar-close" (click)="closeMobileSidebar()">
+          <i class="fas fa-times"></i>
+        </button>
         <div class="header-logo-container">
           <div class="logo-shield">
             <i class="fas fa-paw"></i>
@@ -25,19 +28,24 @@
         <button class="nav-item" [class.active]="activeTab === 'remainders'" (click)="activeTab = 'remainders'">
           <i class="far fa-bell nav-icon"></i> Reminders
         </button>
-        <button class="nav-item" [class.active]="isPetsDropdownOpen" (click)="isPetsDropdownOpen = !isPetsDropdownOpen" style="display: flex; justify-content: space-between; align-items: center;">
+        <button class="nav-item" [class.active]="isPetsDropdownOpen" (click)="isPetsDropdownOpen = !isPetsDropdownOpen"
+          style="display: flex; justify-content: space-between; align-items: center;">
           <span><i class="fas fa-paw nav-icon"></i> My Pets</span>
-          <i class="fas" [ngClass]="isPetsDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'" style="font-size: 0.8em; margin-right: 8px;"></i>
+          <i class="fas" [ngClass]="isPetsDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'"
+            style="font-size: 0.8em; margin-right: 8px;"></i>
         </button>
       </nav>
 
       <div class="sidebar-pets-section" *ngIf="isPetsDropdownOpen && userPets && userPets.length > 0">
-        <h3 style="padding: 0 20px; font-size: 14px; color: #64748b; margin-top: 10px; margin-bottom: 10px;">Available Pets</h3>
-        <div class="sidebar-pet-item" *ngFor="let pet of userPets" style="display: flex; align-items: center; padding: 8px 20px;">
-          <img [src]="pet.photo ? 'http://127.0.0.1:8000' + pet.photo : 'https://ui-avatars.com/api/?name=Pet&background=random'" 
-               [alt]="pet.name" 
-               style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; margin-right: 12px;" 
-               onerror="this.src='https://ui-avatars.com/api/?name=Pet&background=random'">
+        <h3 style="padding: 0 20px; font-size: 14px; color: #64748b; margin-top: 10px; margin-bottom: 10px;">Available
+          Pets</h3>
+        <div class="sidebar-pet-item" *ngFor="let pet of userPets"
+          style="display: flex; align-items: center; padding: 8px 20px;">
+          <img
+            [src]="pet.photo ? 'http://127.0.0.1:8000' + pet.photo : 'https://ui-avatars.com/api/?name=Pet&background=random'"
+            [alt]="pet.name"
+            style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; margin-right: 12px;"
+            onerror="this.src='https://ui-avatars.com/api/?name=Pet&background=random'">
           <span style="font-weight: 500; font-size: 14px; color: #f8fafc;">{{ pet.name }}</span>
         </div>
       </div>
@@ -490,7 +498,7 @@
   <!-- Modals (Preserved from before) -->
   <div class="modal-root" *ngIf="showUploadModal" (click)="closeUploadModal()">
     <div class="modal-card premium-upload-modal" (click)="$event.stopPropagation()">
-      
+
       <div class="premium-modal-header">
         <div>
           <h3 class="premium-modal-title">Add Document</h3>
@@ -502,7 +510,7 @@
       <div class="modal-body">
         <div class="premium-upload-dropzone" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
           (drop)="onDrop($event)" [class.drag-over]="isDragOver">
-          
+
           <div *ngIf="selectedFiles.length === 0" class="dropzone-empty-state" (click)="fileInput.click()">
             <div class="upload-icon-circle">
               <i class="fas fa-cloud-upload-alt"></i>
@@ -519,12 +527,14 @@
                 <span class="file-pill-size">{{ (file.size / 1024 / 1024).toFixed(1) }} MB</span>
               </div>
               <div class="file-pill-success"><i class="fas fa-check-circle"></i></div>
-              <button class="remove-file-btn" (click)="removeFile(file); $event.stopPropagation()"><i class="fas fa-times"></i></button>
+              <button class="remove-file-btn" (click)="removeFile(file); $event.stopPropagation()"><i
+                  class="fas fa-times"></i></button>
             </div>
             <button class="add-more-btn" (click)="fileInput.click()">+ Add another file</button>
           </div>
 
-          <input type="file" #fileInput multiple (change)="onFileSelected($event)" style="display: none" accept=".pdf,.jpg,.jpeg,.png">
+          <input type="file" #fileInput multiple (change)="onFileSelected($event)" style="display: none"
+            accept=".pdf,.jpg,.jpeg,.png">
         </div>
 
         <form [formGroup]="uploadForm" class="premium-form">
@@ -544,7 +554,7 @@
                 <i class="fas fa-chevron-down select-chevron"></i>
               </div>
             </div>
-            
+
             <div class="form-group-premium">
               <label>Title</label>
               <div class="input-with-icon">
@@ -584,11 +594,12 @@
   <!-- Remainder Modal -->
   <div class="modal-root scrollable-modal" *ngIf="showEditRemainderModal" (click)="closeEditRemainderModal()">
     <div class="modal-card premium-upload-modal" (click)="$event.stopPropagation()">
-      
+
       <div class="premium-modal-header">
         <div>
           <h3 class="premium-modal-title">{{ editingRemainder ? 'Edit Reminder' : 'Create Reminder' }}</h3>
-          <p class="premium-modal-subtitle">{{ editingRemainder ? 'Update your pet reminder details' : 'Add a new reminder for your pet' }}</p>
+          <p class="premium-modal-subtitle">{{ editingRemainder ? 'Update your pet reminder details' : 'Add a new
+            reminder for your pet' }}</p>
         </div>
         <button class="premium-close-btn" (click)="closeEditRemainderModal()"><i class="fas fa-times"></i></button>
       </div>
@@ -623,7 +634,7 @@
                 <input type="date" formControlName="remainder_date">
               </div>
             </div>
-            
+
             <div class="form-group-premium">
               <label>Time</label>
               <div class="input-with-icon">
@@ -638,7 +649,7 @@
             <div class="submit-btn-wrapper">
               <button type="button" class="btn-premium-submit" (click)="saveRemainder()"
                 [disabled]="remainderForm.invalid || isSavingRemainder">
-                <i class="fas" [ngClass]="editingRemainder ? 'fa-save' : 'fa-bell'"></i> 
+                <i class="fas" [ngClass]="editingRemainder ? 'fa-save' : 'fa-bell'"></i>
                 {{ isSavingRemainder ? 'Saving...' : 'Save Reminder' }}
               </button>
               <span class="submit-subtitle">You'll be notified on time</span>
