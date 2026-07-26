@@ -1009,6 +1009,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  position: relative;
 }
 
 .file-badge {
@@ -1432,28 +1433,41 @@
   }
 
   .list-row {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "name actions"
+      "pet category"
+      "date size";
+    gap: 8px 12px;
     padding: 16px;
   }
 
-  .col-actions {
-    justify-content: flex-start;
+  .col-name { grid-area: name; }
+  .col-pet { grid-area: pet; }
+  .col-category { grid-area: category; }
+  .col-date { grid-area: date; }
+  .col-size { 
+    grid-area: size; 
+    text-align: right; 
+  }
+  .col-actions { 
+    grid-area: actions; 
+    justify-content: flex-end; 
   }
 }
 
 /* Popover Menu Styling */
 .menu-popover {
   position: absolute;
-  top: 100%;
-  right: 0;
+  top: 25px;
+  right: -5px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   padding: 8px;
-  z-index: 100;
-  min-width: 150px;
+  z-index: 105;
+  min-width: 130px;
   display: flex;
   flex-direction: column;
   gap: 4px;
