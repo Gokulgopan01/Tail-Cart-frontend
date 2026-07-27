@@ -128,9 +128,6 @@ export class ProfileComponent implements OnInit {
   documentsCount: number = 1;
 
 
-  // Frontend avatars for pets (backup)
-  petAvatars: Map<number, string> = new Map();
-  currentPetAvatar: string = 'pet1';
 
   private profileApi = 'http://127.0.0.1:8000/api/user/profile/';
   private petsApi = 'http://127.0.0.1:8000/api/user/pets/';
@@ -326,13 +323,6 @@ export class ProfileComponent implements OnInit {
         this.pets = response || [];
         this.allpets = response || [];
         this.loadingPets = false;
-
-        // Initialize pet avatars if not already set
-        response?.forEach(pet => {
-          if (pet.pet_id && !this.petAvatars.has(pet.pet_id)) {
-            this.petAvatars.set(pet.pet_id, this.getDefaultPetAvatar(pet.species));
-          }
-        });
       },
       error: (error) => {
         this.pets = [];
@@ -381,7 +371,6 @@ export class ProfileComponent implements OnInit {
     };
     this.petPhotoPreview = null;
     this.petPhotoFile = null;
-    this.currentPetAvatar = 'pet1';
   }
 
   editPet(pet: Pet, event?: Event): void {
@@ -390,7 +379,6 @@ export class ProfileComponent implements OnInit {
     this.editingPet = true;
     this.currentPet = { ...pet };
     this.petPhotoPreview = pet.pet_photo;
-    this.currentPetAvatar = this.petAvatars.get(pet.pet_id!) || this.getDefaultPetAvatar(pet.species);
   }
 
   cancelPetForm(): void {
@@ -409,7 +397,6 @@ export class ProfileComponent implements OnInit {
     };
     this.petPhotoPreview = null;
     this.petPhotoFile = null;
-    this.currentPetAvatar = 'pet1';
   }
 
   savePet(): void {
@@ -453,11 +440,6 @@ export class ProfileComponent implements OnInit {
         this.loadingPets = false;
         this.isPetFormVisible = false;
 
-        // Save avatar locally if no photo uploaded
-        if (response?.pet_id && !this.petPhotoFile) {
-          this.petAvatars.set(response.pet_id, this.currentPetAvatar);
-        }
-
         this.loadPets();
         this.showSnackbar(this.editingPet ? 'Pet updated successfully' : 'Pet added successfully');
       },
@@ -491,10 +473,6 @@ export class ProfileComponent implements OnInit {
       next: () => {
         this.pets = this.pets.filter(p => p.pet_id !== pet.pet_id);
         this.allpets = this.allpets.filter(p => p.pet_id !== pet.pet_id);
-
-        if (pet.pet_id) {
-          this.petAvatars.delete(pet.pet_id);
-        }
 
         this.showSnackbar('Pet deleted successfully');
       },
@@ -615,13 +593,8 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // Select avatar for pet (frontend only)
-  selectPetAvatar(avatar: string): void {
-    this.currentPetAvatar = avatar;
-  }
-
   // Get default avatar based on species
-  private getDefaultPetAvatar(species: string): string {
+  getDefaultPetAvatar(species: string): string {
     switch (species?.toLowerCase()) {
       case 'dog': return 'pet1';
       case 'cat': return 'cat-play';
@@ -644,10 +617,6 @@ export class ProfileComponent implements OnInit {
         return `http://127.0.0.1:8000${pet.pet_photo}`;
       }
       return pet.pet_photo;
-    }
-
-    if (pet.pet_id && this.petAvatars.has(pet.pet_id)) {
-      return `assets/icons/${this.petAvatars.get(pet.pet_id)}.svg`;
     }
 
     return `assets/icons/${this.getDefaultPetAvatar(pet.species)}.svg`;

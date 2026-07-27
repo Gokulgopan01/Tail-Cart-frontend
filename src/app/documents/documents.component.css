@@ -717,6 +717,8 @@
 
 /* Empty States Centered */
 .empty-state {
+  grid-column: 1 / -1;
+  width: 100%;
   text-align: center;
   padding: 60px 20px;
   display: flex;
@@ -742,6 +744,34 @@
 
 .lottie-empty lottie-player {
   margin: 0 auto;
+}
+
+.empty-list-state {
+  grid-column: 1 / -1;
+  padding: 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 12px;
+  margin: 20px;
+  border: 1px dashed #cbd5e1;
+}
+
+.empty-list-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 15px 0 8px;
+}
+
+.empty-list-subtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
+  max-width: 350px;
 }
 
 /* Animations */

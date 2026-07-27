@@ -13,11 +13,11 @@
         <h1 class="hero-title">Shopping Cart</h1>
         <p class="hero-subtitle">{{ getTotalItems() }} Items in your cart</p>
         <div class="hero-breadcrumbs">
-          <a routerLink="/">Home</a> / <a routerLink="/store">Store</a> / <span class="active">Cart</span>
+          <a routerLink="/">Home</a> / <a routerLink="/shop">Store</a> / <span class="active">Cart</span>
         </div>
       </div>
       <div class="hero-right">
-        <a class="btn-outline-pill" routerLink="/store">
+        <a class="btn-outline-pill" routerLink="/shop">
           <i class="fas fa-chevron-left"></i> Continue Shopping
         </a>
         <a class="btn-primary-pill" routerLink="/myorders">
@@ -155,7 +155,7 @@
             <i class="fas fa-box"></i> See My Orders
           </button>
           
-          <button class="btn-tertiary-ghost" routerLink="/store">
+          <button class="btn-tertiary-ghost" routerLink="/shop">
             <i class="fas fa-arrow-left"></i> Continue Shopping
           </button>
 
@@ -184,7 +184,7 @@
       <div class="empty-cart-view">
         <i class="fas fa-shopping-basket"></i>
         <h3>Your cart is empty</h3>
-        <button class="shop-btn" routerLink="/store">Start Shopping</button>
+        <button class="shop-btn" routerLink="/shop">Start Shopping</button>
       </div>
     </ng-template>
   </ng-container>

@@ -221,7 +221,13 @@
                 </div>
               </ng-container>
               <ng-template #noDocsList>
-                <div class="empty-list-state">No documents found.</div>
+                <div class="empty-list-state">
+                  <lottie-player src="assets/not_datas.json" background="transparent" speed="1"
+                    style="width: 150px; height: 150px; margin: 0 auto;" loop autoplay>
+                  </lottie-player>
+                  <h3 class="empty-list-title">No documents available</h3>
+                  <p class="empty-list-subtitle">Try adjusting your search or upload a new document.</p>
+                </div>
               </ng-template>
             </div>
           </div>
@@ -350,7 +356,7 @@
             </div>
 
             <div class="rem-list-body">
-              <ng-container *ngIf="paginatedRemainders.length > 0; else noRemainders">
+              <ng-container *ngIf="paginatedRemainders.length > 0; else noRemaindersList">
                 <div *ngFor="let rem of paginatedRemainders" class="rem-list-row">
 
                   <!-- Reminder Info -->
@@ -428,9 +434,14 @@
 
                 </div>
               </ng-container>
-              <ng-template #noRemainders>
-                <div class="empty-list-state" style="padding: 40px; text-align: center; color: #64748b;">No reminders
-                  found.</div>
+              <ng-template #noRemaindersList>
+                <div class="empty-list-state">
+                  <lottie-player src="assets/not_datas.json" background="transparent" speed="1"
+                    style="width: 150px; height: 150px; margin: 0 auto;" loop autoplay>
+                  </lottie-player>
+                  <h3 class="empty-list-title">No reminders available</h3>
+                  <p class="empty-list-subtitle">You haven't set any reminders yet. Create one to stay on top of your pet's care.</p>
+                </div>
               </ng-template>
             </div>
 
@@ -474,26 +485,11 @@
           <lottie-player src="assets/not_datas.json" background="transparent" speed="1"
             style="width: 200px; height: 200px; margin: 0 auto;" loop autoplay>
           </lottie-player>
-          <h3 class="empty-title">No documents found</h3>
-          <p class="empty-subtitle">Your search didn't match anything. Try clearing your filters.</p>
+          <h3 class="empty-title">No documents available</h3>
+          <p class="empty-subtitle">Your search didn't match anything. Try clearing your filters or upload a document.</p>
           <button class="btn-lite" (click)="searchQuery = ''; selectedType = ''; filterDocuments()">
             Clear Filters
           </button>
-        </div>
-      </ng-template>
-
-      <ng-template #noRemainders>
-        <div class="empty-state lottie-empty">
-          <lottie-player src="assets/not_datas.json" background="transparent" speed="1"
-            style="width: 200px; height: 200px; margin: 0 auto;" loop autoplay>
-          </lottie-player>
-          <h3 class="empty-title">No reminders found</h3>
-          <p class="empty-subtitle">You haven't set any reminders yet. Create one to stay on top of your pet's care.</p>
-          <div class="empty-actions">
-            <button class="btn-primary" (click)="openCreateRemainderModal()">
-              Create Reminder
-            </button>
-          </div>
         </div>
       </ng-template>
     </div>

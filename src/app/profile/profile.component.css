@@ -22,15 +22,13 @@
   --ink-soft: #5b6b62;
 
   width: 100%;
-  padding: 28px 24px 0;
+  padding: 0;
   box-sizing: border-box;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .profile-card {
-  max-width: 1480px;
-  margin: 0 auto;
-  border-radius: 20px;
+  width: 100%;
   overflow: hidden;
   background: var(--cream);
   box-shadow: 0 12px 32px rgba(18, 53, 36, 0.1);

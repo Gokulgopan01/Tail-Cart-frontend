@@ -335,8 +335,8 @@
       <div class="photo-upload-row">
         <div class="pet-photo-preview-wrap">
           <img *ngIf="petPhotoPreview" [src]="petPhotoPreview" alt="Pet photo" class="pet-photo-preview">
-          <img *ngIf="!petPhotoPreview" [src]="'assets/icons/' + currentPetAvatar + '.svg'" alt="Pet avatar"
-            class="pet-photo-preview pet-photo-avatar">
+          <img *ngIf="!petPhotoPreview" [src]="'assets/icons/' + getDefaultPetAvatar(currentPet.species) + '.svg'"
+            alt="Pet avatar" class="pet-photo-preview pet-photo-avatar">
         </div>
 
         <div class="photo-upload-actions">
@@ -350,24 +350,7 @@
         </div>
       </div>
 
-      <!-- Avatar picker (shown when no photo uploaded) -->
-      <div class="avatar-picker" *ngIf="!petPhotoPreview">
-        <span class="field-label">Or pick an avatar</span>
-        <div class="avatar-options">
-          <button type="button" class="avatar-option" [class.selected]="currentPetAvatar === 'pet1'"
-            (click)="selectPetAvatar('pet1')">
-            <img src="assets/icons/pet1.svg" alt="Dog avatar">
-          </button>
-          <button type="button" class="avatar-option" [class.selected]="currentPetAvatar === 'cat-play'"
-            (click)="selectPetAvatar('cat-play')">
-            <img src="assets/icons/cat-play.svg" alt="Cat avatar">
-          </button>
-          <button type="button" class="avatar-option" [class.selected]="currentPetAvatar === 'bird'"
-            (click)="selectPetAvatar('bird')">
-            <img src="assets/icons/bird.svg" alt="Bird avatar">
-          </button>
-        </div>
-      </div>
+
 
       <!-- Form fields -->
       <form class="pet-form" (ngSubmit)="savePet()" #petForm="ngForm">
