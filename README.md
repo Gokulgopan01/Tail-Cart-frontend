@@ -1,64 +1,237 @@
-# AppFrontend
+# 🛒 TailCart
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.4.
+**TailCart** is a modern, responsive e-commerce web application built to provide a seamless online shopping experience. It features an intuitive user interface, secure authentication, product browsing, shopping cart management, and a smooth checkout workflow.
 
-## Development server
+---
 
-To start a local development server, run:
+## ✨ Features
+
+* 🔐 User Authentication (Login & Registration)
+* 🛍️ Browse Products by Categories
+* 🔎 Product Search & Filtering
+* ❤️ Wishlist Management
+* 🛒 Shopping Cart
+* ➕ Update Product Quantities
+* 💳 Checkout Flow
+* 📦 Order Management
+* 👤 User Profile & Account Settings
+* 📱 Fully Responsive Design
+* ⚡ Fast and Modern UI
+
+---
+
+## 🖼️ Screens
+
+* Home Page
+* Product Listing
+* Product Details
+* Shopping Cart
+* Wishlist
+* Checkout
+* Order Confirmation
+* User Dashboard
+* Authentication Pages
+
+---
+
+## 🚀 Tech Stack
+
+### Frontend
+
+* Angular
+* TypeScript
+* HTML5
+* CSS3
+* Bootstrap / Tailwind CSS *(update based on your project)*
+* RxJS
+
+### Backend
+
+* Django
+* Django REST Framework
+
+### Database
+
+* MySQL *(or PostgreSQL if applicable)*
+
+### Authentication
+
+* JWT Authentication
+
+---
+
+## 📁 Project Structure
+
+```text
+TailCart/
+│
+├── frontend/
+│   ├── src/
+│   ├── assets/
+│   ├── environments/
+│   └── ...
+│
+├── backend/
+│   ├── api/
+│   ├── users/
+│   ├── products/
+│   ├── orders/
+│   └── ...
+│
+└── README.md
+```
+
+---
+
+## ⚙️ Installation
+
+### Clone the repository
+
+```bash
+git clone https://github.com/Gokulgopan01/Tail-Cart-frontend.git
+cd Tail-Cart-frontend
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Start the development server
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open your browser and visit:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
+
+## 🔧 Backend Setup
 
 ```bash
-ng generate --help
+git clone <backend-repository>
+cd backend
+
+python -m venv venv
 ```
 
-## Building
+Activate the virtual environment
 
-To build the project run:
+### Windows
 
 ```bash
-ng build
+venv\Scripts\activate
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Linux / macOS
 
 ```bash
-ng test
+source venv/bin/activate
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Install dependencies
 
 ```bash
-ng e2e
+pip install -r requirements.txt
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Apply migrations
 
-## Additional Resources
+```bash
+python manage.py migrate
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Run the server
 
-## Git repo
+```bash
+python manage.py runserver
+```
 
-for personal useesessssedddssss
+Backend URL
 
+```
+http://127.0.0.1:8000/
+```
+
+---
+
+## 📸 Screenshots
+
+Add screenshots here after deployment.
+
+```
+screenshots/
+├── home.png
+├── products.png
+├── product-details.png
+├── cart.png
+├── checkout.png
+└── profile.png
+```
+
+---
+
+## 🎯 Future Improvements
+
+* Product Reviews & Ratings
+* Coupon & Discount System
+* Payment Gateway Integration
+* Email Notifications
+* Order Tracking
+* Inventory Management
+* Admin Dashboard Analytics
+* Dark Mode
+* Multi-language Support
+* Progressive Web App (PWA)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository
+2. Create a feature branch
+
+```bash
+git checkout -b feature/new-feature
+```
+
+3. Commit your changes
+
+```bash
+git commit -m "Add new feature"
+```
+
+4. Push the branch
+
+```bash
+git push origin feature/new-feature
+```
+
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 👨‍💻 Author
+
+**Gokul Gopan**
+
+* GitHub: https://github.com/Gokulgopan01
+* LinkedIn: https://linkedin.com/in/gokul-gopan-022b95235
+
+---
+
+⭐ If you like this project, don't forget to give it a **Star** on GitHub!
